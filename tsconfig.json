@@ -1,0 +1,53 @@
+{
+  "$schema": "https://json.schemastore.org/tsconfig",
+  "compilerOptions": {
+    "noEmitOnError": false,  // 禁止类型错误时不输出
+    "skipLibCheck": true,    // 跳过库文件类型检查
+    "strict": false,          // 关闭严格模式
+    "baseUrl": "./",
+    "target": "ES2020",
+    "module": "ESNext",
+    "moduleResolution": "node",
+    "moduleDetection": "force",
+    "lib": [
+      "DOM",
+      "DOM.Iterable",
+      "ESNext"
+    ],
+    "jsx": "preserve",
+    "noEmit": true,
+    "esModuleInterop": true,
+    "resolveJsonModule": true,
+    "isolatedModules": true,
+    "noImplicitAny": true,
+    "incremental": true,
+    "importHelpers": true,
+    "sourceMap": true,
+    "stripInternal": true,
+    "allowSyntheticDefaultImports": true,
+    "forceConsistentCasingInFileNames": true,
+    "strictNullChecks": true,
+    "paths": {
+      "@/*": [
+        "./src/*"
+      ]
+    },
+    "plugins": [
+      {
+        "name": "next"
+      }
+    ],
+    "allowJs": true
+  },
+  "include": [
+    "next-env.d.ts",
+    "src/**/*",
+    ".next/types/**/*.ts",
+    "./tailwind.config.ts"
+  ],
+  "exclude": [
+    "node_modules",
+    "**/.*/",
+    ".git"
+  ]
+}

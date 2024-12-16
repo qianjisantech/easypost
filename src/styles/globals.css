@@ -1,0 +1,235 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+* {
+  box-sizing: border-box;
+}
+
+:root {
+  @apply antialiased;
+
+  --layout-header-height: 40px;
+  --p-main: 8px;
+  --p-tab-content: 16px;
+}
+
+:root[theme='lightDefault'],
+:root[theme='lark'] {
+  --color-green-6: #4caf50;
+  --color-orange-6: #fa8c16;
+  --color-blue-6: #1890ff;
+  --color-volcano-6: #fa541c;
+  --color-pink-6: #eb2f96;
+  --color-geekblue-6: #2f54eb;
+  --color-lime-6: #a0d911;
+  --color-yellow-6: #fadb14;
+  --color-purple-6: #9373ee;
+  --color-red-6: #f5222d;
+  --color-grey-6: rgb(170 170 170);
+  --color-scrollbar-thumb: rgb(0 0 0 / 15%);
+
+  color-scheme: light;
+}
+
+:root[theme='darkDefault'] {
+  --color-green-6: #49aa19;
+  --color-orange-6: #d87a16;
+  --color-blue-6: #177ddc;
+  --color-volcano-6: #d84a1b;
+  --color-pink-6: #cf2f86;
+  --color-geekblue-6: #2b4acb;
+  --color-lime-6: #8bbb11;
+  --color-yellow-6: #d8bd14;
+  --color-purple-6: #9383f1;
+  --color-red-6: #d32029;
+  --color-grey-6: rgb(170 170 170);
+  --color-scrollbar-thumb: rgb(255 255 255 / 30%);
+
+  color-scheme: dark;
+}
+
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--color-scrollbar-thumb);
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+/* 
+在这里设置 Design Token 无法影响到的样式。
+使用了 `tailwindcss/nesting` 预处理 CSS Nesting，参考：https://tailwindcss.com/docs/using-with-preprocessors#nesting
+*/
+
+.ui-menu {
+  .ant-tree.ant-tree-directory {
+    .ant-tree-switcher {
+      @apply flex justify-center items-center w-[15px];
+    }
+
+    .ant-tree-indent .ant-tree-indent-unit {
+      @apply w-[15px];
+    }
+
+    .ant-tree-node-content-wrapper {
+      @apply flex items-center w-0;
+    }
+
+    .ant-tree-treenode {
+      @apply mx-2;
+
+      &.top-folder {
+        &:not(:first-child) {
+          @apply mt-[6px];
+        }
+
+        & > .ant-tree-switcher {
+          @apply hidden;
+        }
+      }
+
+      .ant-tree-icon__customize {
+        @apply w-auto mr-1;
+      }
+    }
+
+    .ant-tree-title {
+      @apply flex-1 overflow-hidden;
+    }
+  }
+}
+
+.ui-tabs {
+  &.ant-tabs {
+    @apply h-full;
+
+    .ui-tabs-nav {
+      @apply pt-2;
+
+      > .ant-tabs-nav-wrap {
+        .ant-tabs-tab:not(.ant-tabs-tab-active) {
+          border-color: transparent;
+
+          &::before {
+            content: '';
+            position: absolute;
+            right: -4px;
+            width: 1px;
+            height: 24px;
+          }
+        }
+
+        .ant-tabs-tab:hover {
+          .main-tabs-tab-close-icon {
+            opacity: 1;
+          }
+        }
+      }
+
+      .ant-tabs-nav-list {
+        @apply relative ml-2;
+      }
+
+      > .ant-tabs-nav {
+        @apply mt-0 h-12;
+
+        > .ant-tabs-nav-wrap {
+          @apply mt-2;
+        }
+      }
+    }
+
+    &.main-tabs {
+      > .ant-tabs-nav {
+        @apply pr-3;
+
+        > .ant-tabs-nav-wrap {
+          @apply h-10;
+        }
+
+        > .ant-tabs-nav-operations {
+          @apply !w-auto;
+        }
+      }
+    }
+
+    .api-details-tabs {
+      @apply h-full;
+
+      > .ant-tabs-nav {
+        @apply px-tabContent;
+      }
+    }
+
+    .ant-tabs-content-holder {
+      .ant-tabs-content {
+        @apply h-full overflow-auto;
+
+        .ant-tabs-tabpane {
+          @apply h-full;
+        }
+      }
+    }
+  }
+}
+
+/* 自定义 Tabs 样式。 */
+.ant-tabs:not(.ant-tabs-card) {
+  > .ant-tabs-nav {
+    .ant-tabs-tab {
+      .ant-tabs-tab-btn {
+        padding: 5px 8px;
+        border-radius: 8px;
+      }
+
+      &:hover {
+        .ant-tabs-tab-btn {
+          background-color: var(--ui-tabs-hover-bg);
+        }
+      }
+
+      &:not(.ant-tabs-tab-active) {
+        &:hover {
+          .ant-tabs-tab-btn {
+            color: var(--ui-tabs-hover-color);
+          }
+        }
+      }
+    }
+  }
+
+  .ant-tabs.ant-tabs-card {
+    > .ant-tabs-nav {
+      .ant-tabs-tab {
+        &:hover,
+        &.ant-tabs-tab-active {
+          color: currentcolor;
+
+          .ant-tabs-tab-btn {
+            color: currentcolor;
+          }
+        }
+      }
+    }
+
+    > .ui-tabs-nav.ant-tabs-nav {
+      .ant-tabs-tab {
+        &:hover,
+        &.ant-tabs-tab-active {
+          color: currentcolor;
+
+          .ant-tabs-tab-btn {
+            color: currentcolor;
+          }
+        }
+      }
+    }
+  }
+}
