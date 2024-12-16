@@ -1,0 +1,1 @@
+goctl api go -api doc/api/easypost.api -dir . doc/api/easypost.api

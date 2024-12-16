@@ -1,14 +1,14 @@
 import { createContext, useContext, useEffect, useMemo, useState } from 'react'
-
 import { current, produce } from 'immer'
 import { nanoid } from 'nanoid'
 
 import type { ApiMenuData } from '@/components/ApiMenu'
-import { apiDirectoryData, creator, recycleGroupData } from '@/data/remote'
+import {  creator } from '@/data/remote'  // 假设这两个是从远程获取的 API
 import { CatalogType } from '@/enums'
 import { getCatalogType, isMenuFolder } from '@/helpers'
 import type { RecycleCatalogType, RecycleData, RecycleDataItem } from '@/types'
 import { moveArrayItem } from '@/utils'
+import {apiRecycleGroupList,apiDirectoryDataList} from '@/api/api/index'
 
 interface MenuHelpers {
   /** 添加一个新的菜单项到菜单列表中。 */
@@ -19,10 +19,10 @@ interface MenuHelpers {
   updateMenuItem: (menuData: Partial<ApiMenuData> & Pick<ApiMenuData, 'id'>) => void
   /** 从回收站中恢复菜单项。 */
   restoreMenuItem: (
-    menuData: Partial<ApiMenuData> & {
-      restoreId: RecycleDataItem['id']
-      catalogType: RecycleCatalogType
-    }
+      menuData: Partial<ApiMenuData> & {
+        restoreId: RecycleDataItem['id']
+        catalogType: RecycleCatalogType
+      }
   ) => void
   /** 移动菜单项。 */
   moveMenuItem: (moveInfo: {
@@ -41,9 +41,7 @@ interface MenuHelpersContextData extends MenuHelpers {
   setMenuSearchWord?: React.Dispatch<React.SetStateAction<MenuHelpersContextData['menuSearchWord']>>
 
   apiDetailDisplay: 'name' | 'path'
-  setApiDetailDisplay: React.Dispatch<
-    React.SetStateAction<MenuHelpersContextData['apiDetailDisplay']>
-  >
+  setApiDetailDisplay: React.Dispatch<React.SetStateAction<MenuHelpersContextData['apiDetailDisplay']>>
 }
 
 const MenuHelpersContext = createContext({} as MenuHelpersContextData)
@@ -51,18 +49,31 @@ const MenuHelpersContext = createContext({} as MenuHelpersContextData)
 export function MenuHelpersContextProvider(props: React.PropsWithChildren) {
   const { children } = props
 
-  const [menuRawList, setMenuRawList] = useState<ApiMenuData[]>()
-  const [recyleRawData, setRecyleRawData] = useState<RecycleData>()
+  // 1. 使用 useState 来保存异步请求的数据
+  const [menuRawList, setMenuRawList] = useState<ApiMenuData[] | undefined>()
+  const [recyleRawData, setRecyleRawData] = useState<RecycleData | undefined>()
 
+  // 2. 使用 useEffect 来触发 API 请求并更新数据
   useEffect(() => {
-    setMenuRawList(apiDirectoryData)
-    setRecyleRawData(recycleGroupData)
+    async function fetchData() {
+      try {
+        const directoryDataListResponse = await apiDirectoryDataList({})
+        const recycleDataResponse = await apiRecycleGroupList({})
+        setRecyleRawData(recycleDataResponse.data)
+        setMenuRawList(directoryDataListResponse.data)
+      } catch (error) {
+        console.error('Failed to fetch data:', error)
+      }
+    }
+
+    fetchData()
   }, [])
 
-  const [menuSearchWord, setMenuSearchWord] = useState<string>()
-  const [apiDetailDisplay, setApiDetailDisplay] =
-    useState<MenuHelpersContextData['apiDetailDisplay']>('name')
+  // 3. 使用状态来管理其他的功能
+  const [menuSearchWord, setMenuSearchWord] = useState<string>('')
+  const [apiDetailDisplay, setApiDetailDisplay] = useState<'name' | 'path'>('name')
 
+  // 4. 创建菜单管理函数
   const menuHelpers = useMemo<MenuHelpers>(() => {
     return {
       addMenuItem: (menuData) => {
@@ -75,28 +86,28 @@ export function MenuHelpersContextProvider(props: React.PropsWithChildren) {
 
           if (shouldRemove) {
             setRecyleRawData((d) =>
-              d
-                ? produce(d, (draft) => {
-                    let catalogType = getCatalogType(item.type)
+                d
+                    ? produce(d, (draft) => {
+                      let catalogType = getCatalogType(item.type)
 
-                    if (catalogType === CatalogType.Markdown) {
-                      catalogType = CatalogType.Http
-                    }
+                      if (catalogType === CatalogType.Markdown) {
+                        catalogType = CatalogType.Http
+                      }
 
-                    if (
-                      catalogType === CatalogType.Http ||
-                      catalogType === CatalogType.Schema ||
-                      catalogType === CatalogType.Request
-                    ) {
-                      const list = draft[catalogType].list
+                      if (
+                          catalogType === CatalogType.Http ||
+                          catalogType === CatalogType.Schema ||
+                          catalogType === CatalogType.Request
+                      ) {
+                        const list = draft[catalogType].list
 
-                      draft[catalogType].list = [
-                        { id: nanoid(6), expiredAt: '30天', creator, deletedItem: item },
-                        ...(list || []),
-                      ]
-                    }
-                  })
-                : d
+                        draft[catalogType].list = [
+                          { id: nanoid(6), expiredAt: '30天', creator, deletedItem: item },
+                          ...(list || []),
+                        ]
+                      }
+                    })
+                    : d
             )
           }
 
@@ -108,17 +119,17 @@ export function MenuHelpersContextProvider(props: React.PropsWithChildren) {
 
       updateMenuItem: ({ id, ...rest }) => {
         setMenuRawList((list) =>
-          list?.map((item) => {
-            if (item.id === id) {
-              return {
-                ...item,
-                ...rest,
-                data: { ...item.data, ...rest.data, name: rest.name || item.name },
-              } as ApiMenuData
-            }
+            list?.map((item) => {
+              if (item.id === id) {
+                return {
+                  ...item,
+                  ...rest,
+                  data: { ...item.data, ...rest.data, name: rest.name || item.name },
+                } as ApiMenuData
+              }
 
-            return item
-          })
+              return item
+            })
         )
       },
 
@@ -154,25 +165,25 @@ export function MenuHelpersContextProvider(props: React.PropsWithChildren) {
             dragMenuIdx: number | null
             dropMenuIdx: number | null
           }>(
-            (acc, item, idx) => {
-              if (item.id === dragKey) {
-                acc.dragMenu = item
-                acc.dragMenuIdx = idx
-              } else if (item.id === dropKey) {
-                acc.dropMenu = item
-                acc.dropMenuIdx = idx
-              }
+              (acc, item, idx) => {
+                if (item.id === dragKey) {
+                  acc.dragMenu = item
+                  acc.dragMenuIdx = idx
+                } else if (item.id === dropKey) {
+                  acc.dropMenu = item
+                  acc.dropMenuIdx = idx
+                }
 
-              return acc
-            },
-            { dragMenu: null, dropMenu: null, dragMenuIdx: null, dropMenuIdx: null }
+                return acc
+              },
+              { dragMenu: null, dropMenu: null, dragMenuIdx: null, dropMenuIdx: null }
           )
 
           if (
-            dragMenu &&
-            dropMenu &&
-            typeof dragMenuIdx === 'number' &&
-            typeof dropMenuIdx === 'number'
+              dragMenu &&
+              dropMenu &&
+              typeof dragMenuIdx === 'number' &&
+              typeof dropMenuIdx === 'number'
           ) {
             return produce(list, (draft) => {
               if (isMenuFolder(dropMenu.type) && dropPosition === 0) {
@@ -196,21 +207,21 @@ export function MenuHelpersContextProvider(props: React.PropsWithChildren) {
   }, [menuRawList, recyleRawData])
 
   return (
-    <MenuHelpersContext.Provider
-      value={{
-        menuRawList,
-        recyleRawData,
+      <MenuHelpersContext.Provider
+          value={{
+            menuRawList,
+            recyleRawData,
 
-        menuSearchWord,
-        setMenuSearchWord,
-        apiDetailDisplay,
-        setApiDetailDisplay,
+            menuSearchWord,
+            setMenuSearchWord,
+            apiDetailDisplay,
+            setApiDetailDisplay,
 
-        ...menuHelpers,
-      }}
-    >
-      {children}
-    </MenuHelpersContext.Provider>
+            ...menuHelpers,
+          }}
+      >
+        {children}
+      </MenuHelpersContext.Provider>
   )
 }
 

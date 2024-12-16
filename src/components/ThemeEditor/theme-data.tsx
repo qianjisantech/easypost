@@ -17,7 +17,7 @@ const defaultThemeToken: Partial<GlobalToken> = {
 }
 
 const previewDefault = (
-  <svg version="1.1" viewBox="0 0 120 80" xmlns="http://www.w3.org/2000/svg">
+  <svg version="1.1" viewBox="0 0 120 80" ns="http://www.w3.org/2000/svg">
     <defs>
       <polygon id="path-1" points="0 0 120 0 120 80 0 80" />
       <path

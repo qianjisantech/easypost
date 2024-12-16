@@ -14,10 +14,10 @@ const types = [
   { name: 'none', type: BodyType.None },
   { name: 'form-data', type: BodyType.FormData },
   { name: 'x-www-form-urlencoded', type: BodyType.UrlEncoded },
-  { name: 'json', type: BodyType.Json },
-  { name: 'xml', type: BodyType.Xml },
+  // { name: 'json', type: BodyType.Json },
+  // { name: 'xml', type: BodyType.Xml },
   { name: 'raw', type: BodyType.Raw },
-  { name: 'binary', type: BodyType.Binary },
+  // { name: 'binary', type: BodyType.Binary },
 ]
 
 interface BodyCompProps {
