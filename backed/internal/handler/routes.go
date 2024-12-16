@@ -4,8 +4,8 @@ package handler
 import (
 	"net/http"
 
-	apiapi "github.com/qianjisantech/easypost/backed/internal/handler//api/api"
-	"github.com/qianjisantech/easypost/backed/internal/svc"
+	apiapi "backed/internal/handler/api/api"
+	"backed/internal/svc"
 
 	"github.com/zeromicro/go-zero/rest"
 )
@@ -15,9 +15,10 @@ func RegisterHandlers(server *rest.Server, serverCtx *svc.ServiceContext) {
 		[]rest.Route{
 			{
 				Method:  http.MethodPost,
-				Path:    "/page",
-				Handler: apiapi.ApiQueryPageHandler(serverCtx),
+				Path:    "/directory/data/list",
+				Handler: apiapi.ApiDirectoryDataQueryHandler(serverCtx),
 			},
 		},
+		rest.WithPrefix("/api/api"),
 	)
 }

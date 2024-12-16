@@ -1,0 +1,46 @@
+syntax = "v1"
+
+info(
+    desc: "api"
+    author: "qianji"
+    email: "2497822530@qq.com"
+)
+
+
+type (
+    ApiDirectoryDataQueryData {
+     Id string      `json:"id"`
+     ParentId string  `json:"parentId"`
+     Name string    `json:"name"`
+     Type string   `json:"type"`
+     Data ApiDirectoryDataQueryDataData `json:"data"`
+    }
+    ApiDirectoryDataQueryDataData {
+        Id string      `json:"id"`
+        Path string  `json:"path"`
+        Name string    `json:"name"`
+        Method string   `json:"method"`
+        Status string   `json:"status"`
+        ResponsibleId   string  `json:"responsibleId"`
+        Tags  []string      `json:"tags"`
+        ServerId string  `json:"serverId"`
+    }
+    ApiDirectoryDataQueryRequest {
+    }
+
+    ApiDirectoryDataQueryResp {
+        Code string `json:"code"`
+        Message string `json:"message"`
+        Data  []ApiDirectoryDataQueryData  `json:"data"`
+    }
+)
+@server (
+    group:  api/api
+    prefix: /api/api
+)
+service easypost-api {
+    @handler  ApiDirectoryDataQuery
+    post  /directory/data/list (ApiDirectoryDataQueryRequest)  returns(ApiDirectoryDataQueryResp)
+
+
+}

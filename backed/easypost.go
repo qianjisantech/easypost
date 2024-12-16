@@ -4,9 +4,9 @@ import (
 	"flag"
 	"fmt"
 
-	"github.com/qianjisantech/easypost/backed/internal/config"
-	"github.com/qianjisantech/easypost/backed/internal/handler"
-	"github.com/qianjisantech/easypost/backed/internal/svc"
+	"backed/internal/config"
+	"backed/internal/handler"
+	"backed/internal/svc"
 
 	"github.com/zeromicro/go-zero/core/conf"
 	"github.com/zeromicro/go-zero/rest"

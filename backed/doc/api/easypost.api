@@ -1,0 +1,10 @@
+import "api/api.api"
+
+info (
+	title:   "easypost后端"
+	desc:    "qianji"
+	author:  "qianji"
+	email:   "2497822530@qq.com"
+	version: "0.1"
+)
+

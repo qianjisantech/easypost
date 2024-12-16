@@ -1,7 +1,7 @@
 import axios from 'axios';
 
 // 获取后端 API 基础 URL（通过 Next.js 环境变量）
-const apiUrl = "https://mock.mengxuegu.com/mock/675aa0a2e413ed0b6bb6b15a/easypost/api";  // 如果环境变量未配置，使用默认的 '/api'
+const apiUrl = "/api";  // 如果环境变量未配置，使用默认的 '/api'
 
 // 创建 axios 实例
 const request = axios.create({

@@ -1,0 +1,6 @@
+Name: easypost-api
+Host: 0.0.0.0
+Port: 8888
+
+Mysql:
+  Datasource: root:123456@tcp(localhost:3306)/easypost?charset=utf8mb4&parseTime=true&loc=Asia%2FShanghai
