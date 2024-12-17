@@ -1,18 +1,19 @@
 package svc
 
 import (
-	"github.com/go-resty/resty/v2"
+	"github.com/zeromicro/go-zero/rest"
 	"proxy/internal/config"
+	"proxy/internal/middleware"
 )
 
 type ServiceContext struct {
-	Config      config.Config
-	ProxyClient *resty.Client
+	Config       config.Config
+	ProxyRequest rest.Middleware
 }
 
 func NewServiceContext(c config.Config) *ServiceContext {
 	return &ServiceContext{
-		Config:      c,
-		ProxyClient: resty.New(),
+		Config:       c,
+		ProxyRequest: middleware.NewProxyMiddleware().Handle,
 	}
 }
