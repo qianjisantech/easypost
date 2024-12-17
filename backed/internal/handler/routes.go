@@ -18,6 +18,16 @@ func RegisterHandlers(server *rest.Server, serverCtx *svc.ServiceContext) {
 				Path:    "/directory/data/list",
 				Handler: apiapi.ApiDirectoryDataQueryHandler(serverCtx),
 			},
+			{
+				Method:  http.MethodPost,
+				Path:    "/info/create",
+				Handler: apiapi.ApiInfoCreateHandler(serverCtx),
+			},
+			{
+				Method:  http.MethodPost,
+				Path:    "/recycle/group/list",
+				Handler: apiapi.ApiRecycleGroupQueryHandler(serverCtx),
+			},
 		},
 		rest.WithPrefix("/api/api"),
 	)

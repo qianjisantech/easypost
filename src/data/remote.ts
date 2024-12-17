@@ -499,16 +499,16 @@ export const recycleGroupData: RecycleData = {
   },
 }
 
-export const initialTabItems: ApiTabItem[] = (() => {
+export const initialTabItems: ({
+  label: string;
+  contentType: MenuItemType.ApiDetail | MenuItemType.ApiSchema | MenuItemType.ApiSchemaFolder | MenuItemType.Doc | MenuItemType.HttpRequest | MenuItemType.RequestFolder | MenuItemType.ApiDetailFolder;
+  key: string
+} | { label: string; contentType: string; key: string })[] = (() => {
   return [
     ...apiDirectoryData
       .filter(({ id }) => {
         return (
-          id === MenuId.示例接口 ||
-          id === MenuId.宠物店 ||
-          id === MenuId.查询宠物详情 ||
-          id === MenuId.SchemaPet ||
-          id === MenuId.引用模型
+          id === ""
         )
       })
       .map(({ id, name, type }) => {

@@ -1,11 +1,9 @@
 import axios from 'axios';
 
 // 获取后端 API 基础 URL（通过 Next.js 环境变量）
-const apiUrl = "/api";  // 如果环境变量未配置，使用默认的 '/api'
-
 // 创建 axios 实例
 const request = axios.create({
-    baseURL: apiUrl, // 使用环境变量的 baseURL
+    baseURL: '/api/', // 使用环境变量的 baseURL
     timeout: 10000,   // 请求超时时间 10 秒
 });
 

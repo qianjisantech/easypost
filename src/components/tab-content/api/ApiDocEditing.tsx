@@ -20,7 +20,7 @@ import { BaseFormItems } from './components/BaseFormItems'
 import { GroupTitle } from './components/GroupTitle'
 import { PathInput, type PathInputProps } from './components/PathInput'
 import { ParamsTab } from './params/ParamsTab'
-
+import {apiInfoCreate} from '@/api/api/index'
 const DEFAULT_NAME = '未命名接口'
 
 const methodOptions: SelectProps['options'] = Object.entries(HTTP_METHOD_CONFIG).map(
@@ -76,10 +76,16 @@ export function ApiDocEditing() {
     const menuName = values.name || DEFAULT_NAME
 
     if (isCreating) {
-      const menuItemId = nanoid(6)
 
+      const menuItemData = {
+        id: '',
+        name: menuName,
+        type: MenuItemType.ApiDetail,
+        data: { ...values, name: menuName },
+      }
+      console.log('menuItemData',JSON.stringify(menuItemData))
       addMenuItem({
-        id: menuItemId,
+        id: '',
         name: menuName,
         type: MenuItemType.ApiDetail,
         data: { ...values, name: menuName },
@@ -87,20 +93,29 @@ export function ApiDocEditing() {
 
       addTabItem(
         {
-          key: menuItemId,
+          key: '',
           label: menuName,
           contentType: MenuItemType.ApiDetail,
         },
         { replaceTab: tabData.key }
       )
+      apiInfoCreate(menuItemData).then(r =>
+           messageApi.success(r.data.message)
+      )
     } else {
+      const menuItemData = {
+        id: tabData.key,
+        name: menuName,
+        data: { ...values, name: menuName },
+      }
+      console.log('menuItemData',JSON.stringify(menuItemData))
       updateMenuItem({
         id: tabData.key,
         name: menuName,
         data: { ...values, name: menuName },
       })
 
-      messageApi.success('保存成功')
+
     }
   }
 

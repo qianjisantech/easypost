@@ -30,25 +30,65 @@ func (l *ApiDirectoryDataQueryLogic) ApiDirectoryDataQuery(req *types.ApiDirecto
 	var datas []types.ApiDirectoryDataQueryData
 
 	for _, r := range res {
-		var tags []string
-		tags = append(tags, *r.Tag)
-		apiDirectoryDataQueryData := &types.ApiDirectoryDataQueryData{
-			Id:       strconv.FormatInt(r.ID, 10),
-			Name:     *r.Name,
-			ParentId: strconv.FormatInt(*r.ParentID, 10),
-			Type:     *r.Type,
-			Data: types.ApiDirectoryDataQueryDataData{
-				Id:            strconv.FormatInt(r.ID, 10),
-				Path:          *r.Path,
-				Name:          *r.Name,
-				Status:        *r.Status,
-				ResponsibleId: strconv.FormatInt(r.ID, 10),
-				Tags:          tags,
-				Method:        *r.Method,
-				ServerId:      strconv.FormatInt(r.ID, 10),
-			},
+
+		if *r.Type == "apiDetail" {
+			apiDetail := &types.ApiDirectoryDataQueryData{
+				Id:   strconv.FormatInt(int64(r.ID), 10),
+				Name: *r.Name,
+				ParentId: func() string {
+					if r.ParentID != nil {
+						return strconv.FormatInt(*r.ParentID, 10)
+					}
+					return "" // 如果 r.Manager 为 nil，则返回空字符串
+				}(),
+				Type: *r.Type,
+				Data: types.ApiDirectoryDataQueryDataData{
+					Id:     strconv.FormatInt(int64(r.ID), 10),
+					Path:   *r.Path,
+					Name:   *r.Name,
+					Status: *r.Status,
+					ResponsibleId: func() string {
+						if r.Manager != nil {
+							return *r.Manager
+						}
+						return "" // 如果 r.Manager 为 nil，则返回空字符串
+					}(),
+					Tags: func() []string {
+						if r.Tag != nil {
+							return []string{*r.Tag} // 如果 Tag 不为空，返回包含该 Tag 的数组
+						}
+						return []string{} // 如果 Tag 为空，返回一个空数组
+					}(),
+					Method:   *r.Method,
+					ServerId: strconv.FormatInt(int64(r.ID), 10),
+				},
+			}
+
+			datas = append(datas, *apiDetail)
 		}
-		datas = append(datas, *apiDirectoryDataQueryData)
+
+		if *r.Type == "apiDetailFolder" {
+			apiDetailFolder := &types.ApiDirectoryDataQueryData{
+				Id:   strconv.FormatInt(int64(r.ID), 10),
+				Name: *r.Name,
+				Type: *r.Type,
+			}
+			datas = append(datas, *apiDetailFolder)
+		}
+		if *r.Type == "doc" {
+			apiDetailFolder := &types.ApiDirectoryDataQueryData{
+				Id:   strconv.FormatInt(int64(r.ID), 10),
+				Name: *r.Name,
+				Type: *r.Type,
+				Data: types.ApiDirectoryDataQueryDataData{
+					Id:      strconv.FormatInt(int64(r.ID), 10),
+					Name:    *r.Name,
+					Content: *r.Content,
+				},
+			}
+			datas = append(datas, *apiDetailFolder)
+		}
+
 	}
 	return &types.ApiDirectoryDataQueryResp{
 		Code:    "200",

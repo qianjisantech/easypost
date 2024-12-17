@@ -12,18 +12,20 @@ const TableNameAPIApiInfo = "api_api_info"
 
 // APIApiInfo mapped from table <api_api_info>
 type APIApiInfo struct {
-	ID         int64      `gorm:"column:id;primaryKey" json:"id"`
+	ID         int32      `gorm:"column:id;primaryKey;autoIncrement:true" json:"id"`
 	Name       *string    `gorm:"column:name" json:"name"`
 	Type       *string    `gorm:"column:type" json:"type"`
 	Path       *string    `gorm:"column:path" json:"path"`
 	Status     *string    `gorm:"column:status" json:"status"`
 	CreateBy   *string    `gorm:"column:create_by" json:"create_by"`
-	CreateTime *time.Time `gorm:"column:create_time" json:"create_time"`
-	IsDeleted  *int32     `gorm:"column:is_deleted;comment:逻辑删除(0是未删除 ,1是删除)" json:"is_deleted"` // 逻辑删除(0是未删除 ,1是删除)
-	Manager    *string    `gorm:"column:manager;comment:负责人" json:"manager"`                     // 负责人
+	CreateTime *time.Time `gorm:"column:create_time;default:CURRENT_TIMESTAMP" json:"create_time"`
+	IsDeleted  *bool      `gorm:"column:is_deleted" json:"is_deleted"`
+	Manager    *string    `gorm:"column:manager;comment:负责人" json:"manager"` // 负责人
 	Tag        *string    `gorm:"column:tag" json:"tag"`
 	Method     *string    `gorm:"column:method" json:"method"`
 	ParentID   *int64     `gorm:"column:parent_id" json:"parent_id"`
+	Content    *string    `gorm:"column:content" json:"content"`
+	Remark     *string    `gorm:"column:remark" json:"remark"`
 }
 
 // TableName APIApiInfo's table name

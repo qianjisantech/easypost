@@ -18,12 +18,78 @@ type ApiDirectoryDataQueryDataData struct {
 	ResponsibleId string   `json:"responsibleId"`
 	Tags          []string `json:"tags"`
 	ServerId      string   `json:"serverId"`
+	Content       string   `json:"content"`
 }
 
 type ApiDirectoryDataQueryRequest struct {
 }
 
 type ApiDirectoryDataQueryResp struct {
+	Code    string                      `json:"code"`
+	Message string                      `json:"message"`
+	Data    []ApiDirectoryDataQueryData `json:"data"`
+}
+
+type ApiInfoCreateData struct {
+	Method        string                       `json:"method"`
+	Path          string                       `json:"path"`
+	Name          string                       `json:"name"`
+	Status        string                       `json:"status"`
+	ResponsibleId string                       `json:"responsibleId,optional"`
+	Tags          []string                     `json:"tags,optional"`
+	ServerId      string                       `json:"serverId,optional"`
+	Description   string                       `json:"description,optional"`
+	Parameters    ApiInfoCreateDataParameters  `json:"parameters,optional"`
+	Responses     []ApiInfoCreateDataResponse  `json:"responses,optional"`
+	RequestBody   ApiInfoCreateDataRequestBody `json:"requestBody,optional"`
+}
+
+type ApiInfoCreateDataJsonSchema struct {
+	Type       string   `json:"type"`
+	Properties []string `json:"properties"`
+}
+
+type ApiInfoCreateDataParameters struct {
+	Path []string `json:"path"`
+}
+
+type ApiInfoCreateDataRequestBody struct {
+	Type       string                                  `json:"type"`
+	Parameters []ApiInfoCreateDataRequestBodyParameter `json:"parameters,optional"`
+	JsonSchema string                                  `json:"jsonSchema"`
+}
+
+type ApiInfoCreateDataRequestBodyParameter struct {
+	Id      string `json:"id"`
+	Name    string `json:"name"`
+	Type    string `json:"type"`
+	Example string `json:"example"`
+}
+
+type ApiInfoCreateDataResponse struct {
+	Id          string                      `json:"id"`
+	Code        int                         `json:"code"`
+	Name        string                      `json:"name"`
+	ContentType string                      `json:"contentType"`
+	JsonSchema  ApiInfoCreateDataJsonSchema `json:"jsonSchema"`
+}
+
+type ApiInfoCreateRequest struct {
+	Id   string            `json:"id"`
+	Name string            `json:"name"`
+	Type string            `json:"type"`
+	Data ApiInfoCreateData `json:"data"`
+}
+
+type ApiInfoCreateResp struct {
+	Code    string `json:"code"`
+	Message string `json:"message"`
+}
+
+type ApiRecycleGroupQueryRequest struct {
+}
+
+type ApiRecycleGroupQueryResp struct {
 	Code    string                      `json:"code"`
 	Message string                      `json:"message"`
 	Data    []ApiDirectoryDataQueryData `json:"data"`

@@ -60,7 +60,8 @@ export function MenuHelpersContextProvider(props: React.PropsWithChildren) {
         const directoryDataListResponse = await apiDirectoryDataList({})
         const recycleDataResponse = await apiRecycleGroupList({})
         setRecyleRawData(recycleDataResponse.data)
-        setMenuRawList(directoryDataListResponse.data)
+        console.log('directoryDataListResponse.data',directoryDataListResponse.data.data)
+        setMenuRawList(directoryDataListResponse.data.data)
       } catch (error) {
         console.error('Failed to fetch data:', error)
       }

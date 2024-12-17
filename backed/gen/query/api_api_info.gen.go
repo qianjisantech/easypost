@@ -27,18 +27,20 @@ func newAPIApiInfo(db *gorm.DB, opts ...gen.DOOption) aPIApiInfo {
 
 	tableName := _aPIApiInfo.aPIApiInfoDo.TableName()
 	_aPIApiInfo.ALL = field.NewAsterisk(tableName)
-	_aPIApiInfo.ID = field.NewInt64(tableName, "id")
+	_aPIApiInfo.ID = field.NewInt32(tableName, "id")
 	_aPIApiInfo.Name = field.NewString(tableName, "name")
 	_aPIApiInfo.Type = field.NewString(tableName, "type")
 	_aPIApiInfo.Path = field.NewString(tableName, "path")
 	_aPIApiInfo.Status = field.NewString(tableName, "status")
 	_aPIApiInfo.CreateBy = field.NewString(tableName, "create_by")
 	_aPIApiInfo.CreateTime = field.NewTime(tableName, "create_time")
-	_aPIApiInfo.IsDeleted = field.NewInt32(tableName, "is_deleted")
+	_aPIApiInfo.IsDeleted = field.NewBool(tableName, "is_deleted")
 	_aPIApiInfo.Manager = field.NewString(tableName, "manager")
 	_aPIApiInfo.Tag = field.NewString(tableName, "tag")
 	_aPIApiInfo.Method = field.NewString(tableName, "method")
 	_aPIApiInfo.ParentID = field.NewInt64(tableName, "parent_id")
+	_aPIApiInfo.Content = field.NewString(tableName, "content")
+	_aPIApiInfo.Remark = field.NewString(tableName, "remark")
 
 	_aPIApiInfo.fillFieldMap()
 
@@ -49,18 +51,20 @@ type aPIApiInfo struct {
 	aPIApiInfoDo aPIApiInfoDo
 
 	ALL        field.Asterisk
-	ID         field.Int64
+	ID         field.Int32
 	Name       field.String
 	Type       field.String
 	Path       field.String
 	Status     field.String
 	CreateBy   field.String
 	CreateTime field.Time
-	IsDeleted  field.Int32  // 逻辑删除(0是未删除 ,1是删除)
+	IsDeleted  field.Bool
 	Manager    field.String // 负责人
 	Tag        field.String
 	Method     field.String
 	ParentID   field.Int64
+	Content    field.String
+	Remark     field.String
 
 	fieldMap map[string]field.Expr
 }
@@ -77,18 +81,20 @@ func (a aPIApiInfo) As(alias string) *aPIApiInfo {
 
 func (a *aPIApiInfo) updateTableName(table string) *aPIApiInfo {
 	a.ALL = field.NewAsterisk(table)
-	a.ID = field.NewInt64(table, "id")
+	a.ID = field.NewInt32(table, "id")
 	a.Name = field.NewString(table, "name")
 	a.Type = field.NewString(table, "type")
 	a.Path = field.NewString(table, "path")
 	a.Status = field.NewString(table, "status")
 	a.CreateBy = field.NewString(table, "create_by")
 	a.CreateTime = field.NewTime(table, "create_time")
-	a.IsDeleted = field.NewInt32(table, "is_deleted")
+	a.IsDeleted = field.NewBool(table, "is_deleted")
 	a.Manager = field.NewString(table, "manager")
 	a.Tag = field.NewString(table, "tag")
 	a.Method = field.NewString(table, "method")
 	a.ParentID = field.NewInt64(table, "parent_id")
+	a.Content = field.NewString(table, "content")
+	a.Remark = field.NewString(table, "remark")
 
 	a.fillFieldMap()
 
@@ -115,7 +121,7 @@ func (a *aPIApiInfo) GetFieldByName(fieldName string) (field.OrderExpr, bool) {
 }
 
 func (a *aPIApiInfo) fillFieldMap() {
-	a.fieldMap = make(map[string]field.Expr, 12)
+	a.fieldMap = make(map[string]field.Expr, 14)
 	a.fieldMap["id"] = a.ID
 	a.fieldMap["name"] = a.Name
 	a.fieldMap["type"] = a.Type
@@ -128,6 +134,8 @@ func (a *aPIApiInfo) fillFieldMap() {
 	a.fieldMap["tag"] = a.Tag
 	a.fieldMap["method"] = a.Method
 	a.fieldMap["parent_id"] = a.ParentID
+	a.fieldMap["content"] = a.Content
+	a.fieldMap["remark"] = a.Remark
 }
 
 func (a aPIApiInfo) clone(db *gorm.DB) aPIApiInfo {
