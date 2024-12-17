@@ -1,16 +1,18 @@
 package main
 
 import (
-	"backed/internal/config"
-	"backed/internal/handler"
-	"backed/internal/svc"
 	"flag"
 	"fmt"
+
+	"proxy/internal/config"
+	"proxy/internal/handler"
+	"proxy/internal/svc"
+
 	"github.com/zeromicro/go-zero/core/conf"
 	"github.com/zeromicro/go-zero/rest"
 )
 
-var configFile = flag.String("f", "etc/easypost-api.yaml", "the config file")
+var configFile = flag.String("f", "etc/proxy-api.yaml", "the config file")
 
 func main() {
 	flag.Parse()

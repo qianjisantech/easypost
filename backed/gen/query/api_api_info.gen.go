@@ -41,6 +41,7 @@ func newAPIApiInfo(db *gorm.DB, opts ...gen.DOOption) aPIApiInfo {
 	_aPIApiInfo.ParentID = field.NewInt64(tableName, "parent_id")
 	_aPIApiInfo.Content = field.NewString(tableName, "content")
 	_aPIApiInfo.Remark = field.NewString(tableName, "remark")
+	_aPIApiInfo.ServerID = field.NewString(tableName, "server_id")
 
 	_aPIApiInfo.fillFieldMap()
 
@@ -65,6 +66,7 @@ type aPIApiInfo struct {
 	ParentID   field.Int64
 	Content    field.String
 	Remark     field.String
+	ServerID   field.String
 
 	fieldMap map[string]field.Expr
 }
@@ -95,6 +97,7 @@ func (a *aPIApiInfo) updateTableName(table string) *aPIApiInfo {
 	a.ParentID = field.NewInt64(table, "parent_id")
 	a.Content = field.NewString(table, "content")
 	a.Remark = field.NewString(table, "remark")
+	a.ServerID = field.NewString(table, "server_id")
 
 	a.fillFieldMap()
 
@@ -121,7 +124,7 @@ func (a *aPIApiInfo) GetFieldByName(fieldName string) (field.OrderExpr, bool) {
 }
 
 func (a *aPIApiInfo) fillFieldMap() {
-	a.fieldMap = make(map[string]field.Expr, 14)
+	a.fieldMap = make(map[string]field.Expr, 15)
 	a.fieldMap["id"] = a.ID
 	a.fieldMap["name"] = a.Name
 	a.fieldMap["type"] = a.Type
@@ -136,6 +139,7 @@ func (a *aPIApiInfo) fillFieldMap() {
 	a.fieldMap["parent_id"] = a.ParentID
 	a.fieldMap["content"] = a.Content
 	a.fieldMap["remark"] = a.Remark
+	a.fieldMap["server_id"] = a.ServerID
 }
 
 func (a aPIApiInfo) clone(db *gorm.DB) aPIApiInfo {

@@ -1,0 +1,16 @@
+syntax = "v1"
+
+info (
+	title:   "proxy 服务"
+	desc:    "proxy 服务"
+	author:  "qianji"
+	email:   "2497822530@qq.com"
+	version: "0.1"
+)
+
+service proxy-api {
+	// 定义API接口，post 请求到 /api/v1/request，并返回字节数组
+	@handler ApiProxy
+	post /api/v1/request returns (any)
+}
+

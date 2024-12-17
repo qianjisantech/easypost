@@ -1,0 +1,108 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="AutoImportSettings">
+    <option name="autoReloadType" value="ALL" />
+  </component>
+  <component name="ChangeListManager">
+    <list default="true" id="739ebd12-30da-4953-9654-ff894db03f2c" name="Changes" comment="">
+      <change afterPath="$PROJECT_DIR$/.idea/vcs.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/doc/api/proxy.api" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/go.mod" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../backed/README.md" beforeDir="false" afterPath="$PROJECT_DIR$/../backed/README.md" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../backed/doc/api/api/api.api" beforeDir="false" afterPath="$PROJECT_DIR$/../backed/doc/api/api/api.api" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../backed/easypost.go" beforeDir="false" afterPath="$PROJECT_DIR$/../backed/easypost.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../backed/gen/model/api_api_info.gen.go" beforeDir="false" afterPath="$PROJECT_DIR$/../backed/gen/model/api_api_info.gen.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../backed/gen/query/api_api_info.gen.go" beforeDir="false" afterPath="$PROJECT_DIR$/../backed/gen/query/api_api_info.gen.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../backed/go.mod" beforeDir="false" afterPath="$PROJECT_DIR$/../backed/go.mod" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../backed/go.sum" beforeDir="false" afterPath="$PROJECT_DIR$/../backed/go.sum" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../backed/internal/logic/api/api/apidirectorydataquerylogic.go" beforeDir="false" afterPath="$PROJECT_DIR$/../backed/internal/logic/api/api/apidirectorydataquerylogic.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../backed/internal/types/types.go" beforeDir="false" afterPath="$PROJECT_DIR$/../backed/internal/types/types.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../src/components/tab-content/api/ApiRun.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/../src/components/tab-content/api/ApiRun.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../src/components/tab-content/api/response/RunResponse.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/../src/components/tab-content/api/response/RunResponse.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../src/configs/static.ts" beforeDir="false" afterPath="$PROJECT_DIR$/../src/configs/static.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../src/data/remote.ts" beforeDir="false" afterPath="$PROJECT_DIR$/../src/data/remote.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../src/utils/request.ts" beforeDir="false" afterPath="$PROJECT_DIR$/../src/utils/request.ts" afterDir="false" />
+    </list>
+    <option name="SHOW_DIALOG" value="false" />
+    <option name="HIGHLIGHT_CONFLICTS" value="true" />
+    <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
+    <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="GOROOT" url="file://$USER_HOME$/go/pkg/mod/golang.org/toolchain@v0.0.1-go1.22.9.windows-amd64" />
+  <component name="Git.Settings">
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$/.." />
+  </component>
+  <component name="GitHubPullRequestSearchHistory">{
+  &quot;lastFilter&quot;: {
+    &quot;state&quot;: &quot;OPEN&quot;,
+    &quot;assignee&quot;: &quot;qianjisantech&quot;
+  }
+}</component>
+  <component name="GithubPullRequestsUISettings">{
+  &quot;selectedUrlAndAccountId&quot;: {
+    &quot;url&quot;: &quot;https://github.com/qianjisantech/easypost.git&quot;,
+    &quot;accountId&quot;: &quot;939147ad-e815-4394-a46c-b6ff8aeaab38&quot;
+  }
+}</component>
+  <component name="ProjectColorInfo">{
+  &quot;associatedIndex&quot;: 7
+}</component>
+  <component name="ProjectId" id="2qLQPRjqmcueSNst8hq4cJzLLD1" />
+  <component name="ProjectViewState">
+    <option name="hideEmptyMiddlePackages" value="true" />
+    <option name="showLibraryContents" value="true" />
+  </component>
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    "Go Build.go build proxy.go.executor": "Run",
+    "RunOnceActivity.ShowReadmeOnStart": "true",
+    "RunOnceActivity.go.formatter.settings.were.checked": "true",
+    "RunOnceActivity.go.migrated.go.modules.settings": "true",
+    "RunOnceActivity.go.modules.go.list.on.any.changes.was.set": "true",
+    "git-widget-placeholder": "main",
+    "go.import.settings.migrated": "true",
+    "last_opened_file_path": "D:/项目/qianjisan/easypost/proxy/doc/api",
+    "node.js.detected.package.eslint": "true",
+    "node.js.selected.package.eslint": "(autodetect)",
+    "nodejs_package_manager_path": "npm",
+    "onboarding.tips.debug.path": "D:/项目/qianjisan/easypost/proxy/main.go",
+    "vue.rearranger.settings.migration": "true"
+  }
+}]]></component>
+  <component name="RecentsManager">
+    <key name="CopyFile.RECENT_KEYS">
+      <recent name="D:\项目\qianjisan\easypost\proxy\doc\api" />
+    </key>
+  </component>
+  <component name="RunManager">
+    <configuration name="go build proxy.go" type="GoApplicationRunConfiguration" factoryName="Go Application" temporary="true" nameIsGenerated="true">
+      <module name="proxy" />
+      <working_directory value="$PROJECT_DIR$" />
+      <kind value="FILE" />
+      <package value="proxy" />
+      <directory value="$PROJECT_DIR$" />
+      <filePath value="$PROJECT_DIR$/proxy.go" />
+      <method v="2" />
+    </configuration>
+    <recent_temporary>
+      <list>
+        <item itemvalue="Go Build.go build proxy.go" />
+      </list>
+    </recent_temporary>
+  </component>
+  <component name="SharedIndexes">
+    <attachedChunks>
+      <set>
+        <option value="bundled-gosdk-5df93f7ad4aa-df9ad98b711f-org.jetbrains.plugins.go.sharedIndexes.bundled-GO-242.23339.24" />
+        <option value="bundled-js-predefined-d6986cc7102b-5c90d61e3bab-JavaScript-GO-242.23339.24" />
+      </set>
+    </attachedChunks>
+  </component>
+  <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
+  <component name="TypeScriptGeneratedFilesManager">
+    <option name="version" value="3" />
+  </component>
+  <component name="VgoProject">
+    <settings-migrated>true</settings-migrated>
+  </component>
+</project>

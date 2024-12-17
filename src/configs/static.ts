@@ -57,7 +57,7 @@ export const HTTP_CODE_CONFIG = {
   [201]: {
     value: 201,
     text: '成功',
-    desc: '请求成功，并且创建了一个新资源。这通常是在 POST 请求或部分 PUT 请求后发送的响应',
+    desc: '请求成功，并且创建了一个新资源。这通常是在 POST 请求或部分 PUT 请求后的响应',
   },
   [202]: {
     value: 202,

@@ -1,0 +1,20 @@
+syntax = "v1"
+
+info (
+	title:   "proxy 服务"
+	desc:    "proxy 服务"
+	author:  "qianji"
+	email:   "2497822530@qq.com"
+	version: "0.1"
+)
+
+type (
+	ApiProxyRequest  {}
+	ApiProxyResp  {}
+)
+
+service proxy-api {
+	@handler ApiDirectoryDataQuery
+	post /api/v1/request (ApiProxyRequest) returns (ApiProxyResp)
+}
+

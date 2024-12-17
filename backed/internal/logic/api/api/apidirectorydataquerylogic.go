@@ -56,11 +56,18 @@ func (l *ApiDirectoryDataQueryLogic) ApiDirectoryDataQuery(req *types.ApiDirecto
 					Tags: func() []string {
 						if r.Tag != nil {
 							return []string{*r.Tag} // 如果 Tag 不为空，返回包含该 Tag 的数组
+						} else {
+							return nil // 如果 Tag 为空，返回一个空数组
 						}
-						return []string{} // 如果 Tag 为空，返回一个空数组
+
 					}(),
-					Method:   *r.Method,
-					ServerId: strconv.FormatInt(int64(r.ID), 10),
+					Method: *r.Method,
+					ServerId: func() string {
+						if r.ServerID != nil {
+							return *r.ServerID
+						}
+						return ""
+					}(),
 				},
 			}
 

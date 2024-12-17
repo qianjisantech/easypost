@@ -35,7 +35,7 @@ const defaultResponse = (): ApiDetailsResponse => {
 }
 
 export const creator: Creator = {
-  id: nanoid(6),
+  id: '',
   name: '张三',
   username: '李四',
 }
@@ -508,7 +508,7 @@ export const initialTabItems: ({
     ...apiDirectoryData
       .filter(({ id }) => {
         return (
-          id === ""
+          id === "0"
         )
       })
       .map(({ id, name, type }) => {
@@ -543,7 +543,7 @@ export const initialExpandedKeys: ApiMenuData['id'][] = [
 ]
 
 export const initialCreateApiDetailsData: ApiDetails = {
-  id: nanoid(6),
+  id: '',
   method: HttpMethod.Get,
   status: ApiStatus.Developing,
   serverId: SERVER_INHERIT,

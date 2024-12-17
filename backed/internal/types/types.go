@@ -32,7 +32,7 @@ type ApiDirectoryDataQueryResp struct {
 
 type ApiInfoCreateData struct {
 	Method        string                       `json:"method"`
-	Path          string                       `json:"path"`
+	Path          string                       `json:"path,optional"`
 	Name          string                       `json:"name"`
 	Status        string                       `json:"status"`
 	ResponsibleId string                       `json:"responsibleId,optional"`

@@ -26,6 +26,7 @@ type APIApiInfo struct {
 	ParentID   *int64     `gorm:"column:parent_id" json:"parent_id"`
 	Content    *string    `gorm:"column:content" json:"content"`
 	Remark     *string    `gorm:"column:remark" json:"remark"`
+	ServerID   *string    `gorm:"column:server_id" json:"server_id"`
 }
 
 // TableName APIApiInfo's table name

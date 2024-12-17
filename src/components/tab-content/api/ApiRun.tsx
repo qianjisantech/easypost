@@ -174,19 +174,15 @@ export function ApiRun() {
             data: values.requestBody?.jsonSchema,
             headers: headers
         }
-        console.log("获取值",requestConfig)
         try {
-            await request(requestConfig).then((res)=>{
+            await request(requestConfig).then(res=>{
                 console.log("获取返回值",res)
-                form.setFieldValue('responses',res)
+                // form.setFieldValue('responses',res)
             })
-        }catch (err){
-            console.error('发送失败:', err);
         }finally {
             // 操作完成后，停止 loading 状态
             setLoading(false);
         }
-
 
     };
 
