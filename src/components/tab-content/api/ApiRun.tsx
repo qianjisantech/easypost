@@ -157,6 +157,7 @@ export function ApiRun() {
     }
 // 新的 send 方法
     const send = async (values: ApiDetails) => {
+        // 合并 headers
         const headers = values.parameters?.header?.reduce((acc, item) => {
             if (item.name && item.example) {
                 acc[item.name] = item.example;  // 使用 name 作为 key，example 作为 value
@@ -164,27 +165,40 @@ export function ApiRun() {
             return acc;
         }, {});
 
-      // 输出生成的 headers 对象
+        // 输出生成的 headers 对象
+        console.log("Generated Headers:", headers);
 
         // 启动 loading 状态
         setLoading(true);
-        const requestConfig= {
-            baseURL: values.path,
-            method: values.method,
+
+        const easypostHeaders = {
+            'Api-u': values.path,
+            'Api-o0': `method=${values.method}, timings=true, timeout=300000, rejectUnauthorized=false`
+        };
+
+        // 合并 headers 和 easypostHeaders
+        const requestConfig = {
             data: values.requestBody?.jsonSchema,
-            headers: headers
-        }
+            headers: {
+                ...headers,         // 将动态生成的 headers 合并
+                ...easypostHeaders  // 将 easypostHeaders 合并
+            }
+        };
+
         try {
-            await request(requestConfig).then(res=>{
-                console.log("获取返回值",res)
-                // form.setFieldValue('responses',res)
-            })
-        }finally {
+            // 发送请求
+            await request(requestConfig).then(res => {
+                console.log("获取返回值", res);
+                form.setFieldValue('responses', res);
+            });
+        } catch (e) {
+            console.error('Error:', e);
+        } finally {
             // 操作完成后，停止 loading 状态
             setLoading(false);
         }
-
     };
+
 
     const handleParseQueryParams: PathInputProps['onParseQueryParams'] = (parsedParams) => {
         if (Array.isArray(parsedParams)) {

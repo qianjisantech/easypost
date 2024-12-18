@@ -2,6 +2,8 @@ package middleware
 
 import (
 	"github.com/go-resty/resty/v2"
+	"github.com/zeromicro/go-zero/core/logx"
+	"io/ioutil"
 	"log"
 	"net/http"
 	"strings"
@@ -17,30 +19,34 @@ func NewProxyMiddleware() *ProxyMiddleware {
 // Handle Handler 是中间件的核心处理函数
 func (m *ProxyMiddleware) Handle(next http.HandlerFunc) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
-		response, header := m.ProxyRequest(r)
-		// 将捕获的值设置到响应头
-		w.Header().Set("Accept", header)
-		_, err := w.Write(response)
+		apiu := r.Header.Get("Api-u")
+		apio0 := r.Header.Get("Api-o0")
+		body, err := ioutil.ReadAll(r.Body)
+		if err != nil {
+			logx.WithContext(r.Context()).Errorf("Failed to read request body: %v", err)
+		}
+		requestHeaders := m.getRequestHeaders(apio0)                            //分解请求头
+		resp, respHeaders := m.handleRequestHeaders(requestHeaders, apiu, body) //发送请求
+
+		for k, v := range respHeaders {
+			if len(v) > 1 {
+				w.Header().Set(k, strings.Join(v, ","))
+			} else {
+				w.Header().Set(k, v[0])
+			}
+		}
+		_, err = w.Write(resp)
 		if err != nil {
 			return
 		}
 		// 也可以打印请求头，用于调试
-		log.Printf("Request Headers: %v", r.Header)
+		log.Printf("respHeaders: %v", respHeaders)
 
 		// 调用下一个中间件或最终处理函数
-		next.ServeHTTP(w, r)
+		return
 	}
 }
 
-func (m *ProxyMiddleware) ProxyRequest(r *http.Request) ([]byte, string) {
-
-	apiu := r.Header.Get("Api-u")
-	apio0 := r.Header.Get("Api-o0")
-	headers := m.getRequestHeaders(apio0)
-	resp, header := m.handleRequestHeaders(headers, apiu)
-	accept := header.Get("Content-Type")
-	return resp, accept
-}
 func (m *ProxyMiddleware) getRequestHeaders(apio0 string) map[string]string {
 	// 创建一个空的 map 来存储结果
 	result := make(map[string]string)
@@ -64,15 +70,30 @@ func (m *ProxyMiddleware) getRequestHeaders(apio0 string) map[string]string {
 	return result
 }
 
-func (m *ProxyMiddleware) handleRequestHeaders(headers map[string]string, url string) ([]byte, http.Header) {
-	proxyClient := resty.New()
+func (m *ProxyMiddleware) handleRequestHeaders(headers map[string]string, url string, body interface{}) ([]byte, http.Header) {
+	proxyClient := resty.New().R()
 	method := headers["method"]
 	switch method {
 	case "GET":
-		response, _ := proxyClient.R().Get(url)
+		response, _ := proxyClient.Get(url)
 		return response.Body(), response.Header()
 	case "POST":
-		response, _ := proxyClient.R().Post(url)
+		response, _ := proxyClient.SetBody(body).Post(url)
+		return response.Body(), response.Header()
+	case "PUT":
+		response, _ := proxyClient.Put(url)
+		return response.Body(), response.Header()
+	case "DELETE":
+		response, _ := proxyClient.Delete(url)
+		return response.Body(), response.Header()
+	case "PATCH":
+		response, _ := proxyClient.Patch(url)
+		return response.Body(), response.Header()
+	case "HEAD":
+		response, _ := proxyClient.Head(url)
+		return response.Body(), response.Header()
+	case "OPTIONS":
+		response, _ := proxyClient.Options(url)
 		return response.Body(), response.Header()
 	default:
 		return nil, nil

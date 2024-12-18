@@ -16,6 +16,11 @@ export default {
         destination: `${process.env.API_BASE_URL}/api/:path*`, // 转发请求到环境变量中的 API 基础路径
         basePath: false, // 禁用基础路径，确保路径不被修改
       },
+      {
+        source: '/proxy/:path*', // 匹配前端的 /api 路径
+        destination: `${process.env.PROXY_BASE_URL}/api/:path*`, // 转发请求到环境变量中的 API 基础路径
+        basePath: false, // 禁用基础路径，确保路径不被修改
+      },
     ];
   },
 };

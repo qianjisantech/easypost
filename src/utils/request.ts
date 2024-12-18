@@ -2,6 +2,8 @@ import axios, { AxiosRequestConfig, AxiosResponse } from 'axios';
 
 // 创建自定义请求函数
 export function request(config: AxiosRequestConfig): Promise<AxiosResponse> {
+    config.baseURL='proxy/v1/request'
+    config.method='post'
     // 配置跨域请求（可根据需求进行修改）
     const axiosInstance = axios.create({
         ...config,
@@ -16,7 +18,6 @@ export function request(config: AxiosRequestConfig): Promise<AxiosResponse> {
         config.headers['Authorization'] = config.headers['Authorization'] || 'Bearer your-token';
     }
 
-    console.log('axiosInstance(config)',axiosInstance(config))
     // 返回请求结果
     return axiosInstance(config);
 }
