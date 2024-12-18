@@ -13,7 +13,6 @@ export function request(config: AxiosRequestConfig): Promise<AxiosResponse> {
 
     // 设置必要的请求头，防止跨域请求时没有授权
     if (config.headers) {
-        config.headers['Content-Type'] = config.headers['Content-Type'] || 'application/json';
         // 如果需要认证信息，可以设置Authorization
         config.headers['Authorization'] = config.headers['Authorization'] || 'Bearer your-token';
     }

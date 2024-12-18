@@ -1,29 +1,29 @@
-import {useEffect, useRef, useState} from 'react'
+import { useEffect, useRef, useState } from 'react';
+import { Button, Form, type FormProps, Select, type SelectProps, Space } from 'antd';
+import { nanoid } from 'nanoid';
 
-import { Button, Form, type FormProps, Select, type SelectProps, Space } from 'antd'
-import { nanoid } from 'nanoid'
+import { PageTabStatus } from '@/components/ApiTab/ApiTab.enum';
+import { useTabContentContext } from '@/components/ApiTab/TabContentContext';
+import { InputUnderline } from '@/components/InputUnderline';
+import { ApiRemoveButton } from '@/components/tab-content/api/ApiRemoveButton';
+import { ResponseTab } from '@/components/tab-content/api/components/ResponseTab';
+import { HTTP_METHOD_CONFIG } from '@/configs/static';
+import { useGlobalContext } from '@/contexts/global';
+import { useMenuHelpersContext } from '@/contexts/menu-helpers';
+import { useMenuTabHelpers } from '@/contexts/menu-tab-settings';
+import { initialCreateApiDetailsData } from '@/data/remote';
+import { MenuItemType, ParamType } from '@/enums';
+import type { ApiDetails } from '@/types';
 
-import { PageTabStatus } from '@/components/ApiTab/ApiTab.enum'
-import { useTabContentContext } from '@/components/ApiTab/TabContentContext'
-import { InputUnderline } from '@/components/InputUnderline'
-import { ApiRemoveButton } from '@/components/tab-content/api/ApiRemoveButton'
-import { ResponseTab } from '@/components/tab-content/api/components/ResponseTab'
-import { HTTP_METHOD_CONFIG } from '@/configs/static'
-import { useGlobalContext } from '@/contexts/global'
-import { useMenuHelpersContext } from '@/contexts/menu-helpers'
-import { useMenuTabHelpers } from '@/contexts/menu-tab-settings'
-import { initialCreateApiDetailsData } from '@/data/remote'
-import { MenuItemType, ParamType } from '@/enums'
-import type { ApiDetails } from '@/types'
+import { BaseFormItems } from './components/BaseFormItems';
+import { GroupTitle } from './components/GroupTitle';
+import { PathInput, type PathInputProps } from './components/PathInput';
+import { ParamsTab } from './params/ParamsTab';
+import { request } from "@/utils/request";
+import { RunResponse } from "@/components/tab-content/api/response/RunResponse";
+import { AxiosRequestConfig } from "axios";
 
-import { BaseFormItems } from './components/BaseFormItems'
-import { GroupTitle } from './components/GroupTitle'
-import { PathInput, type PathInputProps } from './components/PathInput'
-import { ParamsTab } from './params/ParamsTab'
-import {request} from "@/utils/request";
-import {RunResponse} from "@/components/tab-content/api/response/RunResponse";
-
-const DEFAULT_NAME = '未命名接口'
+const DEFAULT_NAME = '未命名接口';
 
 const methodOptions: SelectProps['options'] = Object.entries(HTTP_METHOD_CONFIG).map(
     ([method, { color }]) => {
@@ -34,59 +34,61 @@ const methodOptions: SelectProps['options'] = Object.entries(HTTP_METHOD_CONFIG)
           {method}
         </span>
             ),
-        }
+        };
     }
-)
+);
 
 /**
  * API 「运行」部分。
  */
 export function ApiRun() {
-    const [form] = Form.useForm<ApiDetails>()
+    const [form] = Form.useForm<ApiDetails>();
 
-    const { messageApi } = useGlobalContext()
-    const msgKey = useRef<string>()
+    const { messageApi } = useGlobalContext();
+    const msgKey = useRef<string>();
 
-    const { menuRawList, addMenuItem, updateMenuItem } = useMenuHelpersContext()
-    const { addTabItem } = useMenuTabHelpers()
-    const { tabData } = useTabContentContext()
+    const { menuRawList, addMenuItem, updateMenuItem } = useMenuHelpersContext();
+    const { addTabItem } = useMenuTabHelpers();
+    const { tabData } = useTabContentContext();
     const [loading, setLoading] = useState(false);
 
-    const isCreating = tabData.data?.tabStatus === PageTabStatus.Create
+    const isCreating = tabData.data?.tabStatus === PageTabStatus.Create;
+
+    const [requestConfig, setRequestConfig] = useState<AxiosRequestConfig>({});
 
     useEffect(() => {
         if (isCreating) {
-            form.setFieldsValue(initialCreateApiDetailsData)
+            form.setFieldsValue(initialCreateApiDetailsData);
         } else {
             if (menuRawList) {
-                const menuData = menuRawList.find(({ id }) => id === tabData.key)
+                const menuData = menuRawList.find(({ id }) => id === tabData.key);
 
                 if (
                     menuData &&
                     (menuData.type === MenuItemType.ApiDetail || menuData.type === MenuItemType.HttpRequest)
                 ) {
-                    const apiDetails = menuData.data
+                    const apiDetails = menuData.data;
 
                     if (apiDetails) {
-                        form.setFieldsValue(apiDetails)
+                        form.setFieldsValue(apiDetails);
                     }
                 }
             }
         }
-    }, [form, menuRawList, isCreating, tabData.key])
+    }, [form, menuRawList, isCreating, tabData.key]);
 
     const handleFinish: FormProps<ApiDetails>['onFinish'] = (values) => {
-        const menuName = values.name || DEFAULT_NAME
+        const menuName = values.name || DEFAULT_NAME;
 
         if (isCreating) {
-            const menuItemId = nanoid(6)
+            const menuItemId = nanoid(6);
 
             addMenuItem({
                 id: menuItemId,
                 name: menuName,
                 type: MenuItemType.ApiDetail,
                 data: { ...values, name: menuName },
-            })
+            });
 
             addTabItem(
                 {
@@ -95,100 +97,129 @@ export function ApiRun() {
                     contentType: MenuItemType.ApiDetail,
                 },
                 { replaceTab: tabData.key }
-            )
+            );
         } else {
             updateMenuItem({
                 id: tabData.key,
                 name: menuName,
                 data: { ...values, name: menuName },
-            })
+            });
 
-            messageApi.success('保存成功')
+            messageApi.success('保存成功');
         }
-    }
+    };
 
     const handlePathChange: PathInputProps['onValueChange'] = (pathVal) => {
         if (typeof pathVal === 'string') {
             // 匹配任意数量的 { 包围的路径参数。
-            const regex = /\{+([^{}/]+)\}+/g
-            let match: RegExpExecArray | null
-            const pathParams: string[] = []
+            const regex = /\{+([^{}/]+)\}+/g;
+            let match: RegExpExecArray | null;
+            const pathParams: string[] = [];
 
             // 使用 exec 迭代匹配。
             while ((match = regex.exec(pathVal)) !== null) {
                 // match[1] 匹配 {} 包围的参数。
-                const param = match[1]
+                const param = match[1];
 
                 if (param) {
-                    pathParams.push(param)
+                    pathParams.push(param);
                 }
             }
 
-            const oldParameters = form.getFieldValue('parameters') as ApiDetails['parameters']
-            const oldPath = oldParameters?.path
+            const oldParameters = form.getFieldValue('parameters') as ApiDetails['parameters'];
+            const oldPath = oldParameters?.path;
 
             const newPath =
                 pathParams.length >= (oldPath?.length || 0)
                     ? pathParams.reduce(
                         (acc, cur, curIdx) => {
-                            const target = oldPath?.at(curIdx)
+                            const target = oldPath?.at(curIdx);
 
                             if (target) {
-                                acc.splice(curIdx, 1, { ...target, name: cur })
+                                acc.splice(curIdx, 1, { ...target, name: cur });
                             } else {
                                 acc.push({
                                     id: nanoid(4),
                                     name: cur,
                                     type: ParamType.String,
                                     required: true,
-                                })
+                                });
                             }
 
-                            return acc
+                            return acc;
                         },
                         [...(oldPath || [])]
                     )
-                    : oldPath?.slice(0, pathParams.length)
+                    : oldPath?.slice(0, pathParams.length);
 
-            const newParameters: ApiDetails['parameters'] = { ...oldParameters, path: newPath }
+            const newParameters: ApiDetails['parameters'] = { ...oldParameters, path: newPath };
 
-            form.setFieldValue('parameters', newParameters)
+            form.setFieldValue('parameters', newParameters);
         }
-    }
-// 新的 send 方法
+    };
+
+    // send方法
     const send = async (values: ApiDetails) => {
+
+        console.log('apiDetail', values)
         // 合并 headers
         const headers = values.parameters?.header?.reduce((acc, item) => {
             if (item.name && item.example) {
-                acc[item.name] = item.example;  // 使用 name 作为 key，example 作为 value
+                acc[item.name] = item.example; // 使用 name 作为 key，example 作为 value
             }
             return acc;
         }, {});
 
         // 输出生成的 headers 对象
-        console.log("Generated Headers:", headers);
+
 
         // 启动 loading 状态
         setLoading(true);
-
+        const fixedHeaders = {
+            'User-Agent': 'Easypost/1.0.0 (https://easypost.com)',
+            'Accept': '*/*',
+            'Host': '',
+            // 'Accept-Encoding': 'gzip',
+            'Connection': 'keep-alive',
+        };
+        const allHeaders = { ...headers, ...fixedHeaders };
         const easypostHeaders = {
             'Api-u': values.path,
-            'Api-o0': `method=${values.method}, timings=true, timeout=300000, rejectUnauthorized=false`
+            'Api-o0': `method=${values.method}, timings=true, timeout=300000, rejectUnauthorized=false`,
+            'Api-H0': Object.entries(allHeaders)
+                .map(([key, value]) => `${key}=${value}`)
+                .join(', '),
         };
 
         // 合并 headers 和 easypostHeaders
-        const requestConfig = {
-            data: values.requestBody?.jsonSchema,
-            headers: {
-                ...headers,         // 将动态生成的 headers 合并
-                ...easypostHeaders  // 将 easypostHeaders 合并
-            }
-        };
+        if (values.requestBody?.jsonSchema) {
+            setRequestConfig({
+                data: values.requestBody?.jsonSchema,
+                headers: {
+                    ...headers,         // 将动态生成的 headers 合并
+                    ...easypostHeaders, // 将 easypostHeaders 合并
+                },
+            });
+        }
+
+        if (values.requestBody?.parameters) {
+            const formData = new FormData();
+             values.requestBody?.parameters.forEach((item) => {
+                 formData.append(item.name  as string, item.example)
+             })
+            setRequestConfig({
+                data: formData,
+                headers: {
+                    ...headers,         // 将动态生成的 headers 合并
+                    ...easypostHeaders, // 将 easypostHeaders 合并
+                },
+            });
+        }
 
         try {
             // 发送请求
-            await request(requestConfig).then(res => {
-                console.log("获取返回值", res);
+            await request(requestConfig).then((res) => {
+
                 form.setFieldValue('responses', res);
             });
         } catch (e) {
@@ -199,31 +230,30 @@ export function ApiRun() {
         }
     };
 
-
     const handleParseQueryParams: PathInputProps['onParseQueryParams'] = (parsedParams) => {
         if (Array.isArray(parsedParams)) {
-            type Param = NonNullable<ApiDetails['parameters']>['query']
+            type Param = NonNullable<ApiDetails['parameters']>['query'];
 
-            const currentParmas = form.getFieldValue(['parameters', 'query']) as Param
+            const currentParmas = form.getFieldValue(['parameters', 'query']) as Param;
 
-            let newQueryParmas: Param = parsedParams
+            let newQueryParmas: Param = parsedParams;
 
             if (Array.isArray(currentParmas)) {
                 newQueryParmas = parsedParams.reduce((acc, item) => {
-                    const target = acc.find(({ name }) => name === item.name)
+                    const target = acc.find(({ name }) => name === item.name);
 
                     if (!target) {
-                        acc.push(item)
+                        acc.push(item);
                     }
 
-                    return acc
-                }, currentParmas)
+                    return acc;
+                }, currentParmas);
             }
 
-            form.setFieldValue(['parameters', 'query'], newQueryParmas)
+            form.setFieldValue(['parameters', 'query'], newQueryParmas);
 
             if (!msgKey.current) {
-                msgKey.current = '__'
+                msgKey.current = '__';
             }
 
             messageApi.info({
@@ -236,18 +266,18 @@ export function ApiRun() {
                 ),
                 duration: 3,
                 onClose: () => {
-                    msgKey.current = undefined
+                    msgKey.current = undefined;
                 },
-            })
+            });
         }
-    }
+    };
 
     return (
         <Form<ApiDetails>
             className="flex h-full flex-col"
             form={form}
             onFinish={(values) => {
-                handleFinish(values)
+                handleFinish(values);
             }}
         >
             <div className="flex items-center px-tabContent py-3">
@@ -276,7 +306,6 @@ export function ApiRun() {
                     <Button htmlType="submit">
                         保存为用例
                     </Button>
-
                 </Space>
             </div>
 
@@ -287,9 +316,9 @@ export function ApiRun() {
 
                 <GroupTitle className="mb-3 mt-8">返回响应</GroupTitle>
                 <Form.Item noStyle name="responses">
-                    <RunResponse ></RunResponse>
+                    <RunResponse />
                 </Form.Item>
             </div>
         </Form>
-    )
+    );
 }

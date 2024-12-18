@@ -19,14 +19,15 @@ func NewProxyMiddleware() *ProxyMiddleware {
 // Handle Handler 是中间件的核心处理函数
 func (m *ProxyMiddleware) Handle(next http.HandlerFunc) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
-		apiu := r.Header.Get("Api-u")
-		apio0 := r.Header.Get("Api-o0")
+		apiu := r.Header.Get("Api-U")   //请求路径
+		apio0 := r.Header.Get("Api-O0") //请求方式
+		apiH0 := r.Header.Get("Api-H0") //请求头
 		body, err := ioutil.ReadAll(r.Body)
 		if err != nil {
 			logx.WithContext(r.Context()).Errorf("Failed to read request body: %v", err)
 		}
-		requestHeaders := m.getRequestHeaders(apio0)                            //分解请求头
-		resp, respHeaders := m.handleRequestHeaders(requestHeaders, apiu, body) //发送请求
+		//分解请求头
+		resp, respHeaders := m.handleRequestHeaders(apiu, apio0, apiH0, body) //发送请求
 
 		for k, v := range respHeaders {
 			if len(v) > 1 {
@@ -70,30 +71,33 @@ func (m *ProxyMiddleware) getRequestHeaders(apio0 string) map[string]string {
 	return result
 }
 
-func (m *ProxyMiddleware) handleRequestHeaders(headers map[string]string, url string, body interface{}) ([]byte, http.Header) {
-	proxyClient := resty.New().R()
-	method := headers["method"]
+func (m *ProxyMiddleware) handleRequestHeaders(apiU string, apio0 string, apiH0 string, body interface{}) ([]byte, http.Header) {
+	apio0Handle := m.getRequestHeaders(apio0)
+	apiH0Handle := m.getRequestHeaders(apiH0)
+	proxyClient := resty.New().R().SetHeaders(apiH0Handle)
+	method := apio0Handle["method"]
 	switch method {
 	case "GET":
-		response, _ := proxyClient.Get(url)
+		response, _ := proxyClient.Get(apiU)
 		return response.Body(), response.Header()
 	case "POST":
-		response, _ := proxyClient.SetBody(body).Post(url)
+		response, _ := proxyClient.SetBody(body).Post(apiU)
+		log.Printf("response.Body()%s", response.Body())
 		return response.Body(), response.Header()
 	case "PUT":
-		response, _ := proxyClient.Put(url)
+		response, _ := proxyClient.Put(apiU)
 		return response.Body(), response.Header()
 	case "DELETE":
-		response, _ := proxyClient.Delete(url)
+		response, _ := proxyClient.Delete(apiU)
 		return response.Body(), response.Header()
 	case "PATCH":
-		response, _ := proxyClient.Patch(url)
+		response, _ := proxyClient.Patch(apiU)
 		return response.Body(), response.Header()
 	case "HEAD":
-		response, _ := proxyClient.Head(url)
+		response, _ := proxyClient.Head(apiU)
 		return response.Body(), response.Header()
 	case "OPTIONS":
-		response, _ := proxyClient.Options(url)
+		response, _ := proxyClient.Options(apiU)
 		return response.Body(), response.Header()
 	default:
 		return nil, nil

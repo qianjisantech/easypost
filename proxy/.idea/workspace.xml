@@ -5,22 +5,9 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="739ebd12-30da-4953-9654-ff894db03f2c" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/.idea/vcs.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/doc/api/proxy.api" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/go.mod" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../backed/README.md" beforeDir="false" afterPath="$PROJECT_DIR$/../backed/README.md" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../backed/doc/api/api/api.api" beforeDir="false" afterPath="$PROJECT_DIR$/../backed/doc/api/api/api.api" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../backed/easypost.go" beforeDir="false" afterPath="$PROJECT_DIR$/../backed/easypost.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../backed/gen/model/api_api_info.gen.go" beforeDir="false" afterPath="$PROJECT_DIR$/../backed/gen/model/api_api_info.gen.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../backed/gen/query/api_api_info.gen.go" beforeDir="false" afterPath="$PROJECT_DIR$/../backed/gen/query/api_api_info.gen.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../backed/go.mod" beforeDir="false" afterPath="$PROJECT_DIR$/../backed/go.mod" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../backed/go.sum" beforeDir="false" afterPath="$PROJECT_DIR$/../backed/go.sum" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../backed/internal/logic/api/api/apidirectorydataquerylogic.go" beforeDir="false" afterPath="$PROJECT_DIR$/../backed/internal/logic/api/api/apidirectorydataquerylogic.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../backed/internal/types/types.go" beforeDir="false" afterPath="$PROJECT_DIR$/../backed/internal/types/types.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/internal/middleware/proxymiddleware.go" beforeDir="false" afterPath="$PROJECT_DIR$/internal/middleware/proxymiddleware.go" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../src/components/tab-content/api/ApiRun.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/../src/components/tab-content/api/ApiRun.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../src/components/tab-content/api/response/RunResponse.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/../src/components/tab-content/api/response/RunResponse.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../src/configs/static.ts" beforeDir="false" afterPath="$PROJECT_DIR$/../src/configs/static.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../src/data/remote.ts" beforeDir="false" afterPath="$PROJECT_DIR$/../src/data/remote.ts" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../src/utils/request.ts" beforeDir="false" afterPath="$PROJECT_DIR$/../src/utils/request.ts" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -54,7 +41,7 @@
   </component>
   <component name="PropertiesComponent"><![CDATA[{
   "keyToString": {
-    "Go Build.go build proxy.go.executor": "Run",
+    "Go Build.go build proxy.go.executor": "Debug",
     "RunOnceActivity.ShowReadmeOnStart": "true",
     "RunOnceActivity.go.formatter.settings.were.checked": "true",
     "RunOnceActivity.go.migrated.go.modules.settings": "true",
@@ -101,6 +88,17 @@
   <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
   <component name="TypeScriptGeneratedFilesManager">
     <option name="version" value="3" />
+  </component>
+  <component name="Vcs.Log.Tabs.Properties">
+    <option name="TAB_STATES">
+      <map>
+        <entry key="MAIN">
+          <value>
+            <State />
+          </value>
+        </entry>
+      </map>
+    </option>
   </component>
   <component name="VgoProject">
     <settings-migrated>true</settings-migrated>
