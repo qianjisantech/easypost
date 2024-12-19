@@ -1,9 +1,10 @@
 import { useState, useEffect } from 'react';
 import { JsonSchemaEditorProps } from '@/components/JsonSchema';
-import { Tabs, TabsProps } from 'antd';
+import { Segmented, Tabs, TabsProps } from 'antd';
 import { Prism as SyntaxHighlighter } from 'react-syntax-highlighter';
 import { docco } from 'react-syntax-highlighter/dist/esm/styles/prism';
-import DOMPurify from 'dompurify';
+import {solarizedlight} from "react-syntax-highlighter/dist/cjs/styles/prism";
+import {github, monokai} from "react-syntax-highlighter/dist/cjs/styles/hljs";
 
 interface JsonSchemaCardProps extends Pick<JsonSchemaEditorProps, 'value' | 'onChange'> {
     editorProps?: JsonSchemaEditorProps;
@@ -15,7 +16,6 @@ export function RunResponse(props: JsonSchemaCardProps) {
 
     // 使用 useEffect 来监听 value 的变化并更新 body
     useEffect(() => {
-        // 如果 value.data 是对象，需要将其转换为 JSON 字符串
         const data = value.data;
         if (typeof data === 'object') {
             setBodyStr(JSON.stringify(data, null, 2)); // 格式化对象为 JSON 字符串
@@ -23,8 +23,6 @@ export function RunResponse(props: JsonSchemaCardProps) {
             setBodyStr(data || ''); // 如果不是对象，直接赋值
         }
     }, [value.data]);
-
-    console.log('body', body);
 
     // 判断是否是有效的 JSON 字符串
     const isJson = (str: string) => {
@@ -36,36 +34,65 @@ export function RunResponse(props: JsonSchemaCardProps) {
         }
     };
 
-    // Tabs 配置
-    const [alignValue, setAlignValue] = useState<Align>('center');
-    const items: TabsProps['items'] = [
+    const [alignValue, setAlignValue] = useState<Align>('pretty');
+    type Align = 'pretty' | 'raw' | 'preview';
+
+    // 渲染不同的响应体内容
+    const renderResponseBody = () => {
+        switch (alignValue) {
+            case 'pretty':
+                return (
+                    <div
+                        style={{
+                            width: '50%', // 固定宽度为 100%（或根据需要设置为固定值）
+                            height: '400px', // 设置固定高度，例如 400px
+                            border: '2px solid #ffffff', // 实线边框，设置颜色为黑色，厚度为 2px
+                            borderRadius: '4px', // 圆角
+                            backgroundColor: '#ffffff', // 背景色
+                            padding: '8px 12px', // 内边距
+                            fontFamily: 'Arial, sans-serif', // 字体
+                            fontSize: '14px', // 字号
+                            color: '#333', // 字体颜色
+                            whiteSpace: 'pre-wrap', // 保持换行
+                            wordBreak: 'break-word', // 长单词换行
+                            overflowWrap: 'break-word', // 自动换行
+                            overflow: 'auto', // 当内容溢出时，添加滚动条
+                        }}
+                    >
+                        {isJson(body) ? (
+                            <SyntaxHighlighter language="json" style={docco}>
+                                {body}
+                            </SyntaxHighlighter>
+                        ) : (
+                            <SyntaxHighlighter language="html" style={docco}>
+                                {body}
+                            </SyntaxHighlighter>
+                        )}
+                    </div>
+                );
+            case 'raw':
+                return <pre>{body}</pre>; // 原始内容显示
+            case 'preview':
+                return <div>{body}</div>; // 预览内容
+            default:
+                return null;
+        }
+    };
+
+
+    const ResponseInfoItem: TabsProps['items'] = [
         {
             key: 'body',
             label: 'Body',
             children: (
-                <div
-                    style={{
-                        border: '1px solid #dcdfe6', // 模拟边框
-                        borderRadius: '4px', // 圆角
-                        backgroundColor: '#ffffff', // 背景色
-                        padding: '8px 12px', // 内边距
-                        fontFamily: 'Arial, sans-serif', // 字体
-                        fontSize: '14px', // 字号
-                        color: '#333', // 字体颜色
-                        whiteSpace: 'pre-wrap', // 保持换行
-                        wordBreak: 'break-word', // 长单词换行
-                        overflowWrap: 'break-word', // 自动换行
-                    }}
-                >
-                    {/* 如果是有效的 JSON 字符串，则格式化显示；否则，作为普通文本或 HTML 渲染 */}
-                    {isJson(body) ? (
-                        <SyntaxHighlighter language="json" style={docco}>
-                            {body}
-                        </SyntaxHighlighter> // 使用 Prism 来高亮 JSON 内容
-                    ) : (
-                        // 如果不是 JSON 字符串，展示为普通文本或 HTML
-                        <SyntaxHighlighter language={'html'} style={docco}>{body}</SyntaxHighlighter>
-                    )}
+                <div>
+                    <Segmented
+                        value={alignValue}
+                        style={{ marginBottom: 8 }}
+                        onChange={setAlignValue}
+                        options={['pretty', 'raw', 'preview']}
+                    />
+                    {renderResponseBody()} {/* 渲染响应体内容 */}
                 </div>
             ),
         },
@@ -75,14 +102,12 @@ export function RunResponse(props: JsonSchemaCardProps) {
         { key: 'actualRequest', label: '实际请求', children: 'Content of Tab Pane 3' },
     ];
 
-    type Align = 'start' | 'center' | 'end';
-
     return (
         <div>
             <Tabs
-                defaultActiveKey="1"
-                items={items}
-                indicator={{ size: (origin) => origin - 20, align: alignValue }}
+                defaultActiveKey="body"
+                items={ResponseInfoItem}
+                indicator={{ size: (origin) => origin - 20, align: 'center' }}
             />
         </div>
     );

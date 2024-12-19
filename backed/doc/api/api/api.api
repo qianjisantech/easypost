@@ -24,7 +24,31 @@ type (
         ResponsibleId string `json:"responsibleId"`
         Tags []string `json:"tags"`
         ServerId string `json:"serverId"`
-        Content string `json:"content"`
+        Description string  `json:"description"`
+        Parameters  ApiDirectoryDataQueryDataDataParameters `json:"parameters"`
+        Responses  []ApiDirectoryDataQueryDataDataResponse `json:"responses"`
+
+    }
+    ApiDirectoryDataQueryDataDataParameters {
+      Path []string  `json:"path"`
+    }
+    ApiDirectoryDataQueryDataDataResponse {
+      Id string  `json:"id"`
+      Code int   `json:"code"`
+      Name string  `json:"name"`
+      ContentType string  `json:"contentType"`
+     JsonSchema ApiDirectoryDataQueryDataDataResponseJsonSchema `json:"jsonSchema"`
+    }
+    ApiDirectoryDataQueryDataDataResponseJsonSchema {
+      Type string `json:"type"`
+      Properties []ApiDirectoryDataQueryDataDataResponseJsonSchemaProperty `json:"properties"`
+    }
+    ApiDirectoryDataQueryDataDataResponseJsonSchemaProperty {
+       Id string  `json:"id"`
+      Name string `json:"name"`
+      Type string  `json:"type"`
+      Description string  `json:"description"`
+      DisPlayName string  `json:"displayName"`
     }
     ApiDirectoryDataQueryRequest {
     }
@@ -67,7 +91,7 @@ type (
         Example string `json:"example"`
     }
     ApiInfoCreateDataParameters {
-        Path []string `json:"path"`
+        Path []string `json:"path,optional"`
     }
     ApiInfoCreateDataResponse {
         Id string `json:"id"`
@@ -78,12 +102,19 @@ type (
     }
     ApiInfoCreateDataJsonSchema {
         Type string `json:"type"`
-        Properties []string `json:"properties"`
+        Properties []ApiInfoCreateDataJsonSchemaProperty `json:"properties,optional"`
+    }
+    ApiInfoCreateDataJsonSchemaProperty{
+     Id string  `json:"id,optional"`
+     Type string  `json:"type"`
+     Name string  `json:"name"`
+     DisplayName string `json:"displayName,optional"`
+     Description string `json:"description,optional"`
     }
     ApiInfoCreateRequest {
         Id string `json:"id"`
         Name string `json:"name"`
-        Type string `json:"type"`
+        Type string `json:"type,optional"`
         Data ApiInfoCreateData `json:"data"`
     }
     ApiInfoCreateResp {
@@ -101,5 +132,5 @@ service easypost-api {
     @handler ApiRecycleGroupQuery
     post /recycle/group/list (ApiRecycleGroupQueryRequest) returns (ApiRecycleGroupQueryResp)
     @handler ApiInfoCreate
-    post /info/create (ApiInfoCreateRequest) returns (ApiInfoCreateResp)
+    post /info/save (ApiInfoCreateRequest) returns (ApiInfoCreateResp)
 }

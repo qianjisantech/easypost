@@ -72,10 +72,10 @@ export function Doc() {
             <Button
               type="primary"
               onClick={() => {
-                const values: ApiDoc = { id: nanoid(6), name: name || DEFAULT_DOC_NAME, content }
+                const values: ApiDoc = { id: '', name: name || DEFAULT_DOC_NAME, content }
 
                 if (isCreating) {
-                  const menuItemId = nanoid(6)
+                  const menuItemId = ''
 
                   addMenuItem({
                     id: menuItemId,

@@ -39,7 +39,7 @@ export function ParamsEditableTable(props: ParamsEditableTableProps) {
     removable = true,
   } = props
 
-  const newRowRecordId = nanoid(6)
+  const newRowRecordId = ''
 
   const testIsNewRow = (target: Parameter | undefined) =>
     !target?.id || target.id === newRowRecordId

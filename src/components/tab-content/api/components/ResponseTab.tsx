@@ -222,7 +222,7 @@ export function ResponseTab(props: ResponseTabProps) {
         onFinish={(values) => {
           setModalOpen(false)
 
-          const newResId = nanoid(6)
+          const newResId = ''
 
           onChange?.([...(value || []), { ...values, id: newResId }])
 

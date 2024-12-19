@@ -3,6 +3,7 @@ package api
 import (
 	"backed/gen/model"
 	"context"
+	"log"
 	"strconv"
 
 	"backed/internal/svc"
@@ -25,93 +26,172 @@ func NewApiDirectoryDataQueryLogic(ctx context.Context, svcCtx *svc.ServiceConte
 	}
 }
 
-func (l *ApiDirectoryDataQueryLogic) ApiDirectoryDataQuery(req *types.ApiDirectoryDataQueryRequest) (resp *types.ApiDirectoryDataQueryResp, err error) {
-	res := l.queryApiDirectoryData()
+func (l *ApiDirectoryDataQueryLogic) ApiDirectoryDataQuery(req *types.ApiDirectoryDataQueryRequest) (*types.ApiDirectoryDataQueryResp, error) {
+	// 获取 API 详情
+	queryApiApiDetailsResp := l.queryApiApiDetails()
+
+	// 预先分配内存，避免频繁扩展
 	var datas []types.ApiDirectoryDataQueryData
 
-	for _, r := range res {
+	// 遍历 API 详情
+	for _, r := range queryApiApiDetailsResp {
+		apiResponseInfos := l.queryResponses(int64(r.ID))
 
+		// 为响应数据创建空切片
+		var apiDirectoryDataQueryDataDataResponses []types.ApiDirectoryDataQueryDataDataResponse
+
+		// 遍历响应信息
+		for _, apiResponseInfo := range apiResponseInfos {
+			jsonSchemaProperties := l.queryResponseJsonSchemaProperties(apiResponseInfo.ID)
+			var properties []types.ApiDirectoryDataQueryDataDataResponseJsonSchemaProperty
+			if len(jsonSchemaProperties) > 0 {
+				for _, jsonSchemaProperty := range jsonSchemaProperties {
+					addrjsp := &types.ApiDirectoryDataQueryDataDataResponseJsonSchemaProperty{
+						Id:          strconv.FormatInt(jsonSchemaProperty.ID, 10),
+						Name:        *jsonSchemaProperty.Name,
+						Type:        *jsonSchemaProperty.Type,
+						Description: *jsonSchemaProperty.Description,
+						DisPlayName: *jsonSchemaProperty.DisplayName,
+					}
+					properties = append(properties, *addrjsp)
+				}
+			} else {
+				properties = append(properties, types.ApiDirectoryDataQueryDataDataResponseJsonSchemaProperty{})
+			}
+			code := int(*apiResponseInfo.ResponseCode)
+			apiDirectoryDataQueryDataDataResponse := types.ApiDirectoryDataQueryDataDataResponse{
+				Id:          strconv.FormatInt(apiResponseInfo.ID, 10),
+				Code:        code,
+				Name:        *apiResponseInfo.ResponseName,
+				ContentType: *apiResponseInfo.ContentType,
+				JsonSchema: types.ApiDirectoryDataQueryDataDataResponseJsonSchema{
+					Type:       *apiResponseInfo.JSONSchemaType,
+					Properties: properties,
+				},
+			}
+			apiDirectoryDataQueryDataDataResponses = append(apiDirectoryDataQueryDataDataResponses, apiDirectoryDataQueryDataDataResponse)
+		}
+
+		// 处理 apiDetail 类型
 		if *r.Type == "apiDetail" {
-			apiDetail := &types.ApiDirectoryDataQueryData{
+			apiDirectoryDataQueryData := types.ApiDirectoryDataQueryData{
 				Id:   strconv.FormatInt(int64(r.ID), 10),
 				Name: *r.Name,
 				ParentId: func() string {
 					if r.ParentID != nil {
 						return strconv.FormatInt(*r.ParentID, 10)
 					}
-					return "" // 如果 r.Manager 为 nil，则返回空字符串
+					return ""
 				}(),
 				Type: *r.Type,
 				Data: types.ApiDirectoryDataQueryDataData{
-					Id:     strconv.FormatInt(int64(r.ID), 10),
-					Path:   *r.Path,
-					Name:   *r.Name,
-					Status: *r.Status,
-					ResponsibleId: func() string {
-						if r.Manager != nil {
-							return *r.Manager
-						}
-						return "" // 如果 r.Manager 为 nil，则返回空字符串
-					}(),
-					Tags: func() []string {
-						if r.Tag != nil {
-							return []string{*r.Tag} // 如果 Tag 不为空，返回包含该 Tag 的数组
-						} else {
-							return nil // 如果 Tag 为空，返回一个空数组
-						}
-
-					}(),
-					Method: *r.Method,
-					ServerId: func() string {
-						if r.ServerID != nil {
-							return *r.ServerID
-						}
-						return ""
-					}(),
+					Id:            strconv.FormatInt(int64(r.ID), 10),
+					Path:          *r.Path,
+					Name:          *r.Name,
+					Status:        *r.Status,
+					ResponsibleId: getStringOrNil(r.Manager),
+					Tags:          getTags(r.Tag),
+					Method:        *r.Method,
+					ServerId:      getStringOrNil(r.ServerID),
+					Description:   *r.Remark,
+					Responses:     apiDirectoryDataQueryDataDataResponses,
 				},
 			}
-
-			datas = append(datas, *apiDetail)
+			datas = append(datas, apiDirectoryDataQueryData)
 		}
 
+		// 处理 apiDetailFolder 类型
 		if *r.Type == "apiDetailFolder" {
-			apiDetailFolder := &types.ApiDirectoryDataQueryData{
+			apiDetailFolder := types.ApiDirectoryDataQueryData{
 				Id:   strconv.FormatInt(int64(r.ID), 10),
 				Name: *r.Name,
 				Type: *r.Type,
 			}
-			datas = append(datas, *apiDetailFolder)
+			datas = append(datas, apiDetailFolder)
 		}
+
+		// 处理 doc 类型
 		if *r.Type == "doc" {
-			apiDetailFolder := &types.ApiDirectoryDataQueryData{
+			apiDetailFolder := types.ApiDirectoryDataQueryData{
 				Id:   strconv.FormatInt(int64(r.ID), 10),
 				Name: *r.Name,
 				Type: *r.Type,
 				Data: types.ApiDirectoryDataQueryDataData{
-					Id:      strconv.FormatInt(int64(r.ID), 10),
-					Name:    *r.Name,
-					Content: *r.Content,
+					Id:          strconv.FormatInt(int64(r.ID), 10),
+					Name:        *r.Name,
+					Description: *r.Content,
 				},
 			}
-			datas = append(datas, *apiDetailFolder)
+			datas = append(datas, apiDetailFolder)
 		}
-
 	}
+
+	// 返回成功响应
 	return &types.ApiDirectoryDataQueryResp{
 		Code:    "200",
 		Message: "查询成功",
 		Data:    datas,
 	}, nil
-
 }
-func (l *ApiDirectoryDataQueryLogic) queryApiDirectoryData() []*model.APIApiInfo {
-	var result []*model.APIApiInfo
 
-	sql := `
-				select aai.*
-				from api_api_info aai
-				`
+// queryApiApiDetails 获取 API 详情
+func (l *ApiDirectoryDataQueryLogic) queryApiApiDetails() []*model.APIApiDetail {
 	db := l.svcCtx.DB
-	db.WithContext(l.ctx).Raw(sql).Scan(&result)
-	return result
+	var apiDetails []*model.APIApiDetail
+	err := db.WithContext(l.ctx).Find(&apiDetails).Error
+	if err != nil {
+		// 错误处理
+		log.Printf("Error querying API details: %v", err)
+	}
+	return apiDetails
+}
+
+// queryResponses 获取 API 响应信息
+func (l *ApiDirectoryDataQueryLogic) queryResponses(apiId int64) []*model.APIResponseInfo {
+	db := l.svcCtx.DB
+	var apiResponseInfos []*model.APIResponseInfo
+	err := db.WithContext(l.ctx).Where("api_id=?", apiId).Find(&apiResponseInfos).Error
+	if err != nil {
+		// 错误处理
+		log.Printf("Error querying API responses for apiId %d: %v", apiId, err)
+	}
+	return apiResponseInfos
+}
+
+// queryRequestBody 获取 API 请求体
+func (l *ApiDirectoryDataQueryLogic) queryRequestBody(apiId int64) *model.APIRequestBody {
+	db := l.svcCtx.DB
+	var apiAPIRequestBody *model.APIRequestBody
+	err := db.WithContext(l.ctx).Where("api_id=?", apiId).First(&apiAPIRequestBody).Error
+	if err != nil {
+		// 错误处理
+		log.Printf("Error querying API request body for apiId %d: %v", apiId, err)
+	}
+	return apiAPIRequestBody
+}
+func (l *ApiDirectoryDataQueryLogic) queryResponseJsonSchemaProperties(responseId int64) []*model.APIResponseProperty {
+	db := l.svcCtx.DB
+	var apiAPIResponseProperty []*model.APIResponseProperty
+	err := db.WithContext(l.ctx).Where("response_id=?", responseId).Find(&apiAPIResponseProperty).Error
+	if err != nil {
+		// 错误处理
+		log.Printf("Error querying API request body for apiId %d: %v", responseId, err)
+	}
+	return apiAPIResponseProperty
+}
+
+// getStringOrNil 用于安全获取可选字段的值
+func getStringOrNil(ptr *string) string {
+	if ptr != nil {
+		return *ptr
+	}
+	return ""
+}
+
+// getTags 返回 Tag 字段的切片，如果 Tag 为 nil，返回空切片
+func getTags(tag *string) []string {
+	if tag != nil {
+		return []string{*tag}
+	}
+	return nil
 }

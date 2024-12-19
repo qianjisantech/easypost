@@ -16,34 +16,49 @@ import (
 )
 
 var (
-	Q          = new(Query)
-	APIApiInfo *aPIApiInfo
+	Q                   = new(Query)
+	APIApiDetail        *aPIApiDetail
+	APIRequestBody      *aPIRequestBody
+	APIResponseInfo     *aPIResponseInfo
+	APIResponseProperty *aPIResponseProperty
 )
 
 func SetDefault(db *gorm.DB, opts ...gen.DOOption) {
 	*Q = *Use(db, opts...)
-	APIApiInfo = &Q.APIApiInfo
+	APIApiDetail = &Q.APIApiDetail
+	APIRequestBody = &Q.APIRequestBody
+	APIResponseInfo = &Q.APIResponseInfo
+	APIResponseProperty = &Q.APIResponseProperty
 }
 
 func Use(db *gorm.DB, opts ...gen.DOOption) *Query {
 	return &Query{
-		db:         db,
-		APIApiInfo: newAPIApiInfo(db, opts...),
+		db:                  db,
+		APIApiDetail:        newAPIApiDetail(db, opts...),
+		APIRequestBody:      newAPIRequestBody(db, opts...),
+		APIResponseInfo:     newAPIResponseInfo(db, opts...),
+		APIResponseProperty: newAPIResponseProperty(db, opts...),
 	}
 }
 
 type Query struct {
 	db *gorm.DB
 
-	APIApiInfo aPIApiInfo
+	APIApiDetail        aPIApiDetail
+	APIRequestBody      aPIRequestBody
+	APIResponseInfo     aPIResponseInfo
+	APIResponseProperty aPIResponseProperty
 }
 
 func (q *Query) Available() bool { return q.db != nil }
 
 func (q *Query) clone(db *gorm.DB) *Query {
 	return &Query{
-		db:         db,
-		APIApiInfo: q.APIApiInfo.clone(db),
+		db:                  db,
+		APIApiDetail:        q.APIApiDetail.clone(db),
+		APIRequestBody:      q.APIRequestBody.clone(db),
+		APIResponseInfo:     q.APIResponseInfo.clone(db),
+		APIResponseProperty: q.APIResponseProperty.clone(db),
 	}
 }
 
@@ -57,18 +72,27 @@ func (q *Query) WriteDB() *Query {
 
 func (q *Query) ReplaceDB(db *gorm.DB) *Query {
 	return &Query{
-		db:         db,
-		APIApiInfo: q.APIApiInfo.replaceDB(db),
+		db:                  db,
+		APIApiDetail:        q.APIApiDetail.replaceDB(db),
+		APIRequestBody:      q.APIRequestBody.replaceDB(db),
+		APIResponseInfo:     q.APIResponseInfo.replaceDB(db),
+		APIResponseProperty: q.APIResponseProperty.replaceDB(db),
 	}
 }
 
 type queryCtx struct {
-	APIApiInfo IAPIApiInfoDo
+	APIApiDetail        IAPIApiDetailDo
+	APIRequestBody      IAPIRequestBodyDo
+	APIResponseInfo     IAPIResponseInfoDo
+	APIResponseProperty IAPIResponsePropertyDo
 }
 
 func (q *Query) WithContext(ctx context.Context) *queryCtx {
 	return &queryCtx{
-		APIApiInfo: q.APIApiInfo.WithContext(ctx),
+		APIApiDetail:        q.APIApiDetail.WithContext(ctx),
+		APIRequestBody:      q.APIRequestBody.WithContext(ctx),
+		APIResponseInfo:     q.APIResponseInfo.WithContext(ctx),
+		APIResponseProperty: q.APIResponseProperty.WithContext(ctx),
 	}
 }
 

@@ -96,7 +96,8 @@ export function useMenuTabHelpers(): MenuTabHelpers {
       const isSameTabPresent = tabItems.some((item) => item.key === payload.key)
 
       if (isSameTabPresent) {
-        throw new Error('已存在相同的页签。')
+        console.error('已存在相同的页签。')
+        // throw new Error('已存在相同的页签。')
       } else {
         if (replaceTab) {
           setTabItems((items) => items.map((it) => (it.key === replaceTab ? payload : it)))

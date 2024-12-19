@@ -82,10 +82,10 @@ func (m *ProxyMiddleware) handleRequestHeaders(apiU string, apio0 string, apiH0 
 		return response.Body(), response.Header()
 	case "POST":
 		response, _ := proxyClient.SetBody(body).Post(apiU)
-		log.Printf("response.Body()%s", response.Body())
+		log.Printf("response.Body() %s", response.Body())
 		return response.Body(), response.Header()
 	case "PUT":
-		response, _ := proxyClient.Put(apiU)
+		response, _ := proxyClient.SetBody(body).Put(apiU)
 		return response.Body(), response.Header()
 	case "DELETE":
 		response, _ := proxyClient.Delete(apiU)

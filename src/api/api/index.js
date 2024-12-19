@@ -22,9 +22,9 @@ export function apiDirectoryDataList (body) {
     })
 }
 
-export function apiInfoCreate (body) {
+export function apiInfoSave (body) {
     return request({
-        url: '/api/info/create',
+        url: '/api/info/save',
         method: 'post',
         headers: {
             'Content-Type': 'application/json'

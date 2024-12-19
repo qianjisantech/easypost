@@ -22,6 +22,7 @@ import { ParamsTab } from './params/ParamsTab';
 import { request } from "@/utils/request";
 import { RunResponse } from "@/components/tab-content/api/response/RunResponse";
 import { AxiosRequestConfig } from "axios";
+import {apiInfoCreate} from "@/api/api";
 
 const DEFAULT_NAME = '未命名接口';
 
@@ -77,11 +78,23 @@ export function ApiRun() {
         }
     }, [form, menuRawList, isCreating, tabData.key]);
 
-    const handleFinish: FormProps<ApiDetails>['onFinish'] = (values) => {
+    const handleFinish: FormProps<ApiDetails>['onFinish'] = async (values) => {
         const menuName = values.name || DEFAULT_NAME;
 
         if (isCreating) {
-            const menuItemId = nanoid(6);
+            const menuItemId = '';
+            try {
+                await apiInfoCreate({
+                    id: menuItemId,
+                    name: menuName,
+                    type: MenuItemType.ApiDetail,
+                    data: { ...values, name: menuName },
+                }).then(r=>{
+                    console.log('保存接口结果',r)
+                })
+            }catch (err){
+                console.error('保存接口失败',err)
+            }
 
             addMenuItem({
                 id: menuItemId,
@@ -169,11 +182,6 @@ export function ApiRun() {
             }
             return acc;
         }, {});
-
-        // 输出生成的 headers 对象
-
-
-        // 启动 loading 状态
         setLoading(true);
         const fixedHeaders = {
             'User-Agent': 'Easypost/1.0.0 (https://easypost.com)',
@@ -303,9 +311,9 @@ export function ApiRun() {
                         发送
                     </Button>
                     <Button onClick={() => handleFinish(form.getFieldsValue(), true)}>暂存</Button>
-                    <Button htmlType="submit">
-                        保存为用例
-                    </Button>
+                    {/*<Button htmlType="submit">*/}
+                    {/*    保存为用例*/}
+                    {/*</Button>*/}
                 </Space>
             </div>
 

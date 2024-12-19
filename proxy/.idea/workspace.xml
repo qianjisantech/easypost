@@ -5,10 +5,39 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="739ebd12-30da-4953-9654-ff894db03f2c" name="Changes" comment="">
+      <change beforePath="$PROJECT_DIR$/../.env" beforeDir="false" afterPath="$PROJECT_DIR$/../.env" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../backed/doc/api/api/api.api" beforeDir="false" afterPath="$PROJECT_DIR$/../backed/doc/api/api/api.api" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../backed/gen/generator.go" beforeDir="false" afterPath="$PROJECT_DIR$/../backed/gen/generator.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../backed/gen/model/api_api_info.gen.go" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../backed/gen/query/api_api_info.gen.go" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../backed/gen/query/gen.go" beforeDir="false" afterPath="$PROJECT_DIR$/../backed/gen/query/gen.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../backed/go.mod" beforeDir="false" afterPath="$PROJECT_DIR$/../backed/go.mod" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../backed/go.sum" beforeDir="false" afterPath="$PROJECT_DIR$/../backed/go.sum" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../backed/internal/handler/routes.go" beforeDir="false" afterPath="$PROJECT_DIR$/../backed/internal/handler/routes.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../backed/internal/logic/api/api/apidirectorydataquerylogic.go" beforeDir="false" afterPath="$PROJECT_DIR$/../backed/internal/logic/api/api/apidirectorydataquerylogic.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../backed/internal/logic/api/api/apiinfocreatelogic.go" beforeDir="false" afterPath="$PROJECT_DIR$/../backed/internal/logic/api/api/apiinfocreatelogic.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../backed/internal/types/types.go" beforeDir="false" afterPath="$PROJECT_DIR$/../backed/internal/types/types.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../package.json" beforeDir="false" afterPath="$PROJECT_DIR$/../package.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../pnpm-lock.yaml" beforeDir="false" afterPath="$PROJECT_DIR$/../pnpm-lock.yaml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/internal/middleware/proxymiddleware.go" beforeDir="false" afterPath="$PROJECT_DIR$/internal/middleware/proxymiddleware.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../src/api/api/index.js" beforeDir="false" afterPath="$PROJECT_DIR$/../src/api/api/index.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../src/components/ApiMenu/DropdownActions.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/../src/components/ApiMenu/DropdownActions.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../src/components/ApiTab/ApiTab.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/../src/components/ApiTab/ApiTab.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../src/components/ApiTab/ApiTabAction.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/../src/components/ApiTab/ApiTabAction.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../src/components/modals/ModalNewCatalog.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/../src/components/modals/ModalNewCatalog.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../src/components/tab-content/Doc.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/../src/components/tab-content/Doc.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../src/components/tab-content/Schema.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/../src/components/tab-content/Schema.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../src/components/tab-content/api/ApiDocEditing.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/../src/components/tab-content/api/ApiDocEditing.tsx" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../src/components/tab-content/api/ApiRun.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/../src/components/tab-content/api/ApiRun.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../src/utils/request.ts" beforeDir="false" afterPath="$PROJECT_DIR$/../src/utils/request.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../src/components/tab-content/api/components/ParamsEditableTable.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/../src/components/tab-content/api/components/ParamsEditableTable.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../src/components/tab-content/api/components/ResponseTab.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/../src/components/tab-content/api/components/ResponseTab.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../src/components/tab-content/api/response/RunResponse.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/../src/components/tab-content/api/response/RunResponse.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../src/contexts/menu-helpers.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/../src/contexts/menu-helpers.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../src/contexts/menu-tab-settings.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/../src/contexts/menu-tab-settings.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../src/data/remote.ts" beforeDir="false" afterPath="$PROJECT_DIR$/../src/data/remote.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../src/hooks/useHelpers.ts" beforeDir="false" afterPath="$PROJECT_DIR$/../src/hooks/useHelpers.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../src/types.ts" beforeDir="false" afterPath="$PROJECT_DIR$/../src/types.ts" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -41,7 +70,7 @@
   </component>
   <component name="PropertiesComponent"><![CDATA[{
   "keyToString": {
-    "Go Build.go build proxy.go.executor": "Debug",
+    "Go Build.go build proxy.go.executor": "Run",
     "RunOnceActivity.ShowReadmeOnStart": "true",
     "RunOnceActivity.go.formatter.settings.were.checked": "true",
     "RunOnceActivity.go.migrated.go.modules.settings": "true",

@@ -18,7 +18,7 @@ export function useHelpers() {
     addTabItem(
       {
         ...payload,
-        key: nanoid(6),
+        key: '',
         label: newLabel,
         contentType: MenuItemType.ApiDetail,
         data: { tabStatus: PageTabStatus.Create },
@@ -36,7 +36,7 @@ export function useHelpers() {
     addTabItem(
       {
         ...payload,
-        key: nanoid(6),
+        key: '',
         label: newLabel,
         contentType: MenuItemType.HttpRequest,
         data: { tabStatus: PageTabStatus.Create },
@@ -52,7 +52,7 @@ export function useHelpers() {
     addTabItem(
       {
         ...payload,
-        key: nanoid(6),
+        key: '',
         label: '新建 Markdown',
         contentType: MenuItemType.Doc,
         data: { tabStatus: PageTabStatus.Create },
@@ -70,7 +70,7 @@ export function useHelpers() {
     addTabItem(
       {
         ...payload,
-        key: nanoid(6),
+        key: '',
         label: newLabel,
         contentType: MenuItemType.ApiSchema,
         data: { tabStatus: PageTabStatus.Create },

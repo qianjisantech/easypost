@@ -10,15 +10,42 @@ type ApiDirectoryDataQueryData struct {
 }
 
 type ApiDirectoryDataQueryDataData struct {
-	Id            string   `json:"id"`
-	Path          string   `json:"path"`
-	Name          string   `json:"name"`
-	Method        string   `json:"method"`
-	Status        string   `json:"status"`
-	ResponsibleId string   `json:"responsibleId"`
-	Tags          []string `json:"tags"`
-	ServerId      string   `json:"serverId"`
-	Content       string   `json:"content"`
+	Id            string                                  `json:"id"`
+	Path          string                                  `json:"path"`
+	Name          string                                  `json:"name"`
+	Method        string                                  `json:"method"`
+	Status        string                                  `json:"status"`
+	ResponsibleId string                                  `json:"responsibleId"`
+	Tags          []string                                `json:"tags"`
+	ServerId      string                                  `json:"serverId"`
+	Description   string                                  `json:"description"`
+	Parameters    ApiDirectoryDataQueryDataDataParameters `json:"parameters"`
+	Responses     []ApiDirectoryDataQueryDataDataResponse `json:"responses"`
+}
+
+type ApiDirectoryDataQueryDataDataParameters struct {
+	Path []string `json:"path"`
+}
+
+type ApiDirectoryDataQueryDataDataResponse struct {
+	Id          string                                          `json:"id"`
+	Code        int                                             `json:"code"`
+	Name        string                                          `json:"name"`
+	ContentType string                                          `json:"contentType"`
+	JsonSchema  ApiDirectoryDataQueryDataDataResponseJsonSchema `json:"jsonSchema"`
+}
+
+type ApiDirectoryDataQueryDataDataResponseJsonSchema struct {
+	Type       string                                                    `json:"type"`
+	Properties []ApiDirectoryDataQueryDataDataResponseJsonSchemaProperty `json:"properties"`
+}
+
+type ApiDirectoryDataQueryDataDataResponseJsonSchemaProperty struct {
+	Id          string `json:"id"`
+	Name        string `json:"name"`
+	Type        string `json:"type"`
+	Description string `json:"description"`
+	DisPlayName string `json:"displayName"`
 }
 
 type ApiDirectoryDataQueryRequest struct {
@@ -45,12 +72,20 @@ type ApiInfoCreateData struct {
 }
 
 type ApiInfoCreateDataJsonSchema struct {
-	Type       string   `json:"type"`
-	Properties []string `json:"properties"`
+	Type       string                                `json:"type"`
+	Properties []ApiInfoCreateDataJsonSchemaProperty `json:"properties,optional"`
+}
+
+type ApiInfoCreateDataJsonSchemaProperty struct {
+	Id          string `json:"id,optional"`
+	Type        string `json:"type"`
+	Name        string `json:"name"`
+	DisplayName string `json:"displayName,optional"`
+	Description string `json:"description,optional"`
 }
 
 type ApiInfoCreateDataParameters struct {
-	Path []string `json:"path"`
+	Path []string `json:"path,optional"`
 }
 
 type ApiInfoCreateDataRequestBody struct {
@@ -77,7 +112,7 @@ type ApiInfoCreateDataResponse struct {
 type ApiInfoCreateRequest struct {
 	Id   string            `json:"id"`
 	Name string            `json:"name"`
-	Type string            `json:"type"`
+	Type string            `json:"type,optional"`
 	Data ApiInfoCreateData `json:"data"`
 }
 

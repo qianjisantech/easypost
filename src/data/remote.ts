@@ -16,11 +16,11 @@ import {
 import { findFolders } from '@/helpers'
 import type { ApiDetails, ApiDetailsResponse, ApiSchema, Creator, RecycleData } from '@/types'
 
-const RESPONSE_ID_1 = nanoid(6)
-const RESPONSE_ID_2 = nanoid(6)
+const RESPONSE_ID_1 = ''
+const RESPONSE_ID_2 = ''
 
 const defaultResponse = (): ApiDetailsResponse => {
-  const id = nanoid(6)
+  const id = ''
 
   return {
     id,
@@ -47,7 +47,7 @@ export const apiDirectoryData: ApiMenuData[] = [
     name: '🦊 EasyPost 是什么',
     type: MenuItemType.Doc,
     data: {
-      id: nanoid(6),
+      id: '',
       name: '🦊 EasyPost 是什么',
       content: ``,
     },
@@ -69,7 +69,7 @@ export const apiDirectoryData: ApiMenuData[] = [
     name: 'Markdown 文档',
     type: MenuItemType.Doc,
     data: {
-      id: nanoid(6),
+      id: '',
       name: '文档',
       content:'111'},
   },
@@ -79,7 +79,7 @@ export const apiDirectoryData: ApiMenuData[] = [
     name: '示例接口',
     type: MenuItemType.ApiDetail,
     data: {
-      id: nanoid(6),
+      id: '',
       path: '/example',
       name: '示例接口',
       method: HttpMethod.Get,
@@ -93,7 +93,7 @@ export const apiDirectoryData: ApiMenuData[] = [
         },
         // query: [
         //   {
-        //     id: nanoid(6),
+        //     id: '',
         //     name: 'x',
         //     type: ParamType.Array,
         //     enable: true,
@@ -110,7 +110,7 @@ export const apiDirectoryData: ApiMenuData[] = [
     name: '名称超长的示例接口',
     type: MenuItemType.ApiDetail,
     data: {
-      id: nanoid(6),
+      id: '',
       path: '/example',
       name: '名称超长的示例接口',
       method: HttpMethod.Get,
@@ -131,7 +131,7 @@ export const apiDirectoryData: ApiMenuData[] = [
     name: '查询宠物详情',
     type: MenuItemType.ApiDetail,
     data: {
-      id: nanoid(6),
+      id: '',
       path: 'http://111111ate',
       name: '查询宠物详情',
       method: HttpMethod.Post,
@@ -241,7 +241,7 @@ export const apiDirectoryData: ApiMenuData[] = [
     name: '新建宠物信息',
     type: MenuItemType.ApiDetail,
     data: {
-      id: nanoid(6),
+      id: '',
       path: '/pet',
       name: '新建宠物信息',
       method: HttpMethod.Post,
@@ -371,7 +371,7 @@ export const apiDirectoryData: ApiMenuData[] = [
     name: 'https://abc.com',
     type: MenuItemType.HttpRequest,
     data: {
-      id: nanoid(6),
+      id: '',
       path: 'https://abc.com',
       name: '快捷接口示例',
       method: HttpMethod.Get,
@@ -380,7 +380,7 @@ export const apiDirectoryData: ApiMenuData[] = [
       serverId: SERVER_INHERIT,
       responses: [
         {
-          id: nanoid(6),
+          id: '',
           code: 200,
           name: '成功',
           contentType: ContentType.JSON,
@@ -411,14 +411,14 @@ export const recycleGroupData: RecycleData = {
   [CatalogType.Http]: {
     list: [
       {
-        id: nanoid(6),
+        id: '',
         creator,
         deletedItem: {
-          id: nanoid(6),
+          id: '',
           name: '接口1',
           type: MenuItemType.ApiDetail,
           data: {
-            id: nanoid(6),
+            id: '',
             path: '/api',
             name: '接口1',
             method: HttpMethod.Get,
@@ -430,15 +430,15 @@ export const recycleGroupData: RecycleData = {
         expiredAt: '29天',
       },
       {
-        id: nanoid(6),
+        id: '',
         creator,
         deletedItem: {
-          id: nanoid(6),
+          id: '',
           parentId: MenuId.嵌套分组,
           name: '文档1',
           type: MenuItemType.Doc,
           data: {
-            id: nanoid(6),
+            id: '',
             name: '文档1',
             content: '文档内容',
           },
@@ -446,10 +446,10 @@ export const recycleGroupData: RecycleData = {
         expiredAt: '22天',
       },
       {
-        id: nanoid(6),
+        id: '',
         creator,
         deletedItem: {
-          id: nanoid(6),
+          id: '',
           parentId: MenuId.默认分组,
           name: '空分组',
           type: MenuItemType.ApiDetailFolder,
@@ -462,10 +462,10 @@ export const recycleGroupData: RecycleData = {
   [CatalogType.Schema]: {
     list: [
       {
-        id: nanoid(6),
+        id: '',
         creator,
         deletedItem: {
-          id: nanoid(6),
+          id: '',
           name: '示例模型',
           type: MenuItemType.ApiSchema,
         },
@@ -477,14 +477,14 @@ export const recycleGroupData: RecycleData = {
   [CatalogType.Request]: {
     list: [
       {
-        id: nanoid(6),
+        id: '',
         creator,
         deletedItem: {
-          id: nanoid(6),
+          id: '',
           name: '示例请求',
           type: MenuItemType.HttpRequest,
           data: {
-            id: nanoid(6),
+            id: '',
             path: '/request',
             name: '示例请求',
             method: HttpMethod.Get,

@@ -8,7 +8,7 @@ import { CatalogType } from '@/enums'
 import { getCatalogType, isMenuFolder } from '@/helpers'
 import type { RecycleCatalogType, RecycleData, RecycleDataItem } from '@/types'
 import { moveArrayItem } from '@/utils'
-import {apiRecycleGroupList,apiDirectoryDataList} from '@/api/api/index'
+import {apiRecycleGroupList, apiDirectoryDataList, apiInfoCreate} from '@/api/api/index'
 
 interface MenuHelpers {
   /** 添加一个新的菜单项到菜单列表中。 */
@@ -78,6 +78,7 @@ export function MenuHelpersContextProvider(props: React.PropsWithChildren) {
   const menuHelpers = useMemo<MenuHelpers>(() => {
     return {
       addMenuItem: (menuData) => {
+
         setMenuRawList((list = []) => [...list, menuData])
       },
 
@@ -103,7 +104,7 @@ export function MenuHelpersContextProvider(props: React.PropsWithChildren) {
                         const list = draft[catalogType].list
 
                         draft[catalogType].list = [
-                          { id: nanoid(6), expiredAt: '30天', creator, deletedItem: item },
+                          { id: '', expiredAt: '30天', creator, deletedItem: item },
                           ...(list || []),
                         ]
                       }

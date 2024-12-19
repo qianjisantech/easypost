@@ -8,10 +8,10 @@ import (
 	"time"
 )
 
-const TableNameAPIApiInfo = "api_api_info"
+const TableNameAPIApiDetail = "api_api_detail"
 
-// APIApiInfo mapped from table <api_api_info>
-type APIApiInfo struct {
+// APIApiDetail mapped from table <api_api_detail>
+type APIApiDetail struct {
 	ID         int32      `gorm:"column:id;primaryKey;autoIncrement:true" json:"id"`
 	Name       *string    `gorm:"column:name" json:"name"`
 	Type       *string    `gorm:"column:type" json:"type"`
@@ -29,7 +29,7 @@ type APIApiInfo struct {
 	ServerID   *string    `gorm:"column:server_id" json:"server_id"`
 }
 
-// TableName APIApiInfo's table name
-func (*APIApiInfo) TableName() string {
-	return TableNameAPIApiInfo
+// TableName APIApiDetail's table name
+func (*APIApiDetail) TableName() string {
+	return TableNameAPIApiDetail
 }

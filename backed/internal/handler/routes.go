@@ -20,7 +20,7 @@ func RegisterHandlers(server *rest.Server, serverCtx *svc.ServiceContext) {
 			},
 			{
 				Method:  http.MethodPost,
-				Path:    "/info/create",
+				Path:    "/info/save",
 				Handler: apiapi.ApiInfoCreateHandler(serverCtx),
 			},
 			{
