@@ -58,7 +58,7 @@ export const ModalNewCatalog = create(({ formData, ...props }: ModalNewCatalogPr
         form.validateFields().then((values) => {
           addMenuItem({
             ...values,
-            id: '',
+            id:nanoid(6),
             parentId: values.parentId === ROOT_CATALOG ? undefined : values.parentId,
           })
           handleHide()

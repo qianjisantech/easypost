@@ -56,7 +56,7 @@ func (l *ApiDirectoryDataQueryLogic) ApiDirectoryDataQuery(req *types.ApiDirecto
 					properties = append(properties, *addrjsp)
 				}
 			} else {
-				properties = append(properties, types.ApiDirectoryDataQueryDataDataResponseJsonSchemaProperty{})
+				properties = []types.ApiDirectoryDataQueryDataDataResponseJsonSchemaProperty{}
 			}
 			code := int(*apiResponseInfo.ResponseCode)
 			apiDirectoryDataQueryDataDataResponse := types.ApiDirectoryDataQueryDataDataResponse{
@@ -136,7 +136,7 @@ func (l *ApiDirectoryDataQueryLogic) ApiDirectoryDataQuery(req *types.ApiDirecto
 
 // queryApiApiDetails 获取 API 详情
 func (l *ApiDirectoryDataQueryLogic) queryApiApiDetails() []*model.APIApiDetail {
-	db := l.svcCtx.DB
+	db := l.svcCtx.DB.Debug()
 	var apiDetails []*model.APIApiDetail
 	err := db.WithContext(l.ctx).Find(&apiDetails).Error
 	if err != nil {
@@ -148,7 +148,7 @@ func (l *ApiDirectoryDataQueryLogic) queryApiApiDetails() []*model.APIApiDetail 
 
 // queryResponses 获取 API 响应信息
 func (l *ApiDirectoryDataQueryLogic) queryResponses(apiId int64) []*model.APIResponseInfo {
-	db := l.svcCtx.DB
+	db := l.svcCtx.DB.Debug()
 	var apiResponseInfos []*model.APIResponseInfo
 	err := db.WithContext(l.ctx).Where("api_id=?", apiId).Find(&apiResponseInfos).Error
 	if err != nil {
@@ -160,7 +160,7 @@ func (l *ApiDirectoryDataQueryLogic) queryResponses(apiId int64) []*model.APIRes
 
 // queryRequestBody 获取 API 请求体
 func (l *ApiDirectoryDataQueryLogic) queryRequestBody(apiId int64) *model.APIRequestBody {
-	db := l.svcCtx.DB
+	db := l.svcCtx.DB.Debug()
 	var apiAPIRequestBody *model.APIRequestBody
 	err := db.WithContext(l.ctx).Where("api_id=?", apiId).First(&apiAPIRequestBody).Error
 	if err != nil {
@@ -170,7 +170,7 @@ func (l *ApiDirectoryDataQueryLogic) queryRequestBody(apiId int64) *model.APIReq
 	return apiAPIRequestBody
 }
 func (l *ApiDirectoryDataQueryLogic) queryResponseJsonSchemaProperties(responseId int64) []*model.APIResponseProperty {
-	db := l.svcCtx.DB
+	db := l.svcCtx.DB.Debug()
 	var apiAPIResponseProperty []*model.APIResponseProperty
 	err := db.WithContext(l.ctx).Where("response_id=?", responseId).Find(&apiAPIResponseProperty).Error
 	if err != nil {

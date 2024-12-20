@@ -1,34 +1,39 @@
-import axios from 'axios';
+import axios, { AxiosInstance, AxiosError, AxiosResponse } from 'axios';
+import { message } from 'antd';
 
-// 获取后端 API 基础 URL（通过 Next.js 环境变量）
-// 创建 axios 实例
-const request = axios.create({
-    baseURL: '/api/', // 使用环境变量的 baseURL
-    timeout: 10000,   // 请求超时时间 10 秒
+const request: AxiosInstance = axios.create({
+    baseURL: '/api/', // API的基础URL
+    timeout: 10000,   // 请求超时
 });
 
+// 创建一个全局消息提示的组件
+const showMessage = (type: 'success' | 'error', content: string) => {
+    message[type](content); // 通过 message 展示不同类型的消息
+};
+
 // 错误处理函数
-const errorHandler = async (error) => {
+const errorHandler = (error: AxiosError) => {
     if (!error.response) {
-        // 如果没有响应，可能是网络错误或请求超时
-        console.error("Network or timeout error: ", error);
+        // 网络错误或请求超时
+        showMessage('error', 'Network or timeout error');
         return Promise.reject(error);
     }
 
     const { status, data } = error.response;
 
-    // 可以根据 status 码来进行不同的错误处理
+    // 根据 HTTP 状态码显示不同的错误信息
     if (status === 401) {
-        // 处理 401 错误，例如访问令牌失效
-        console.error('Unauthorized access - Token might be expired');
-        // 例如，可以清除 token 或者跳转到登录页面
+        showMessage('error', 'Unauthorized access - Token might be expired');
+        // 清除 Token 或重定向到登录页面
         localStorage.removeItem('access_token');
     } else if (status === 500) {
-        // 处理 500 错误 - 服务端错误
-        console.error('Internal server error', data);
+        showMessage('error', 'Internal server error');
+    } else if (status === 400) {
+        showMessage('error', data.message || 'Bad request');
+    } else if (status === 404) {
+        showMessage('error', 'Resource not found');
     } else {
-        // 其他错误
-        console.error('Request failed with status: ', status, data);
+        showMessage('error', `Request failed with status: ${status}`);
     }
 
     return Promise.reject(error);
@@ -37,10 +42,9 @@ const errorHandler = async (error) => {
 // 请求拦截器
 request.interceptors.request.use(
     (config) => {
-        // 可以在请求头中加入认证 token
         const token = localStorage.getItem('access_token');
         if (token) {
-            config.headers['Authorization'] = `Bearer ${token}`;
+            config.headers['Authorization'] = `Bearer ${token}`; // 添加 Authorization header
         }
         return config;
     },
@@ -49,8 +53,13 @@ request.interceptors.request.use(
 
 // 响应拦截器
 request.interceptors.response.use(
-    (response) => {
-        // 你可以在这里进行一些全局数据的处理，例如统一处理响应数据格式
+    (response: AxiosResponse) => {
+        // 判断响应中的业务逻辑，如果有错误则显示消息
+        if (response.data.code !== '200') {
+            showMessage('error', response.data.message || 'Request failed');
+        } else {
+            // showMessage('success', 'Request successful');
+        }
         return response;
     },
     errorHandler

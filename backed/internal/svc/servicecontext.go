@@ -3,7 +3,9 @@ package svc
 import (
 	"backed/gen/query"
 	"backed/internal/config"
+	"backed/internal/middleware"
 	"github.com/zeromicro/go-zero/core/logx"
+	"github.com/zeromicro/go-zero/rest"
 	"gorm.io/driver/mysql"
 	"gorm.io/gorm"
 	"gorm.io/gorm/logger"
@@ -13,6 +15,7 @@ import (
 type ServiceContext struct {
 	Config config.Config
 	DB     *gorm.DB
+	Log    rest.Middleware
 }
 
 func NewServiceContext(c config.Config) *ServiceContext {
@@ -29,6 +32,7 @@ func NewServiceContext(c config.Config) *ServiceContext {
 	return &ServiceContext{
 		Config: c,
 		DB:     DB,
+		Log:    middleware.NewLogMiddleware().Handle,
 	}
 
 }

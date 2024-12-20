@@ -64,7 +64,7 @@ export function Schema() {
           const menuName = values.name || '未命名数据模型'
 
           if (isCreating) {
-            const menuItemId = ''
+            const menuItemId = nanoid(6)
 
             addMenuItem({
               id: menuItemId,

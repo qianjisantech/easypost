@@ -55,7 +55,7 @@ export function DropdownActions(props: React.PropsWithChildren<DropdownActionsPr
       onClick: (ev) => {
         ev.domEvent.stopPropagation()
 
-        addMenuItem({ ...catalog, id: '' })
+        addMenuItem({ ...catalog, id: nanoid(6) })
       },
     },
     {

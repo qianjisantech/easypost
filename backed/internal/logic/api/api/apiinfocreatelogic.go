@@ -2,15 +2,16 @@ package api
 
 import (
 	"backed/gen/model"
+	"backed/internal/common/errorx"
 	"backed/internal/svc"
 	"backed/internal/types"
 	"context"
 	"fmt"
+	"github.com/zeromicro/go-zero/core/logx"
+
 	"log"
 	"strconv"
 	"strings"
-
-	"github.com/zeromicro/go-zero/core/logx"
 )
 
 type ApiInfoCreateLogic struct {
@@ -64,7 +65,7 @@ func (l *ApiInfoCreateLogic) ApiInfoCreate(req *types.ApiInfoCreateRequest) (res
 	tx := db.WithContext(l.ctx).Save(createAPIApiInfo)
 	if tx.Error != nil {
 		db.Rollback()
-		return nil, fmt.Errorf("failed to create API info: %w", tx.Error)
+		return nil, fmt.Errorf("invalid ID format: %w", err)
 	}
 
 	log.Printf("id%s", createAPIApiInfo.ID)
@@ -83,7 +84,7 @@ func (l *ApiInfoCreateLogic) ApiInfoCreate(req *types.ApiInfoCreateRequest) (res
 		}
 		// 如果 response.Id 不为空，则转换并设置 ID
 		if response.Id != "" {
-			id, err := strconv.Atoi(req.Id)
+			id, err := strconv.Atoi(response.Id)
 			if err != nil {
 				return nil, fmt.Errorf("invalid ID format: %w", err)
 			}
@@ -95,6 +96,10 @@ func (l *ApiInfoCreateLogic) ApiInfoCreate(req *types.ApiInfoCreateRequest) (res
 			return nil, fmt.Errorf("failed to create APIResponseInfo: %w", responseInfo.Error)
 		}
 		for _, property := range response.JsonSchema.Properties {
+			if property.Name == "" {
+				db.Rollback()
+				return nil, errorx.NewDefaultError("字段名必填")
+			}
 			apiResponseProperty := &model.APIResponseProperty{
 				CreateBy:    StringPointer("admin"),
 				Name:        &property.Name,
