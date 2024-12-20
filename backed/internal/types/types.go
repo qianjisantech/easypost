@@ -24,7 +24,23 @@ type ApiDirectoryDataQueryDataData struct {
 }
 
 type ApiDirectoryDataQueryDataDataParameters struct {
-	Path []string `json:"path"`
+	Path   []string                                        `json:"path"`
+	Query  []ApiDirectoryDataQueryDataDataParametersQuery  `json:"query"`
+	Header []ApiDirectoryDataQueryDataDataParametersHeader `json:"header"`
+}
+
+type ApiDirectoryDataQueryDataDataParametersHeader struct {
+	Id      string `json:"id"`
+	Name    string `json:"name"`
+	Type    string `json:"type"`
+	Example string `json:"example"`
+}
+
+type ApiDirectoryDataQueryDataDataParametersQuery struct {
+	Id      string `json:"id"`
+	Name    string `json:"name"`
+	Type    string `json:"type"`
+	Example string `json:"example"`
 }
 
 type ApiDirectoryDataQueryDataDataResponse struct {
@@ -85,7 +101,23 @@ type ApiInfoCreateDataJsonSchemaProperty struct {
 }
 
 type ApiInfoCreateDataParameters struct {
-	Path []string `json:"path,optional"`
+	Path   []string                            `json:"path,optional,optional"`
+	Query  []ApiInfoCreateDataParametersQuery  `json:"query,optional"`
+	Header []ApiInfoCreateDataParametersHeader `json:"header,optional"`
+}
+
+type ApiInfoCreateDataParametersHeader struct {
+	Id      string `json:"id"`
+	Name    string `json:"name"`
+	Type    string `json:"type"`
+	Example string `json:"example,optional"`
+}
+
+type ApiInfoCreateDataParametersQuery struct {
+	Id      string `json:"id"`
+	Name    string `json:"name"`
+	Type    string `json:"type"`
+	Example string `json:"example,optional"`
 }
 
 type ApiInfoCreateDataRequestBody struct {

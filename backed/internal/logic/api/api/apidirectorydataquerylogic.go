@@ -35,45 +35,89 @@ func (l *ApiDirectoryDataQueryLogic) ApiDirectoryDataQuery(req *types.ApiDirecto
 
 	// 遍历 API 详情
 	for _, r := range queryApiApiDetailsResp {
-		apiResponseInfos := l.queryResponses(int64(r.ID))
 
-		// 为响应数据创建空切片
-		var apiDirectoryDataQueryDataDataResponses []types.ApiDirectoryDataQueryDataDataResponse
-
-		// 遍历响应信息
-		for _, apiResponseInfo := range apiResponseInfos {
-			jsonSchemaProperties := l.queryResponseJsonSchemaProperties(apiResponseInfo.ID)
-			var properties []types.ApiDirectoryDataQueryDataDataResponseJsonSchemaProperty
-			if len(jsonSchemaProperties) > 0 {
-				for _, jsonSchemaProperty := range jsonSchemaProperties {
-					addrjsp := &types.ApiDirectoryDataQueryDataDataResponseJsonSchemaProperty{
-						Id:          strconv.FormatInt(jsonSchemaProperty.ID, 10),
-						Name:        *jsonSchemaProperty.Name,
-						Type:        *jsonSchemaProperty.Type,
-						Description: *jsonSchemaProperty.Description,
-						DisPlayName: *jsonSchemaProperty.DisplayName,
-					}
-					properties = append(properties, *addrjsp)
-				}
-			} else {
-				properties = []types.ApiDirectoryDataQueryDataDataResponseJsonSchemaProperty{}
-			}
-			code := int(*apiResponseInfo.ResponseCode)
-			apiDirectoryDataQueryDataDataResponse := types.ApiDirectoryDataQueryDataDataResponse{
-				Id:          strconv.FormatInt(apiResponseInfo.ID, 10),
-				Code:        code,
-				Name:        *apiResponseInfo.ResponseName,
-				ContentType: *apiResponseInfo.ContentType,
-				JsonSchema: types.ApiDirectoryDataQueryDataDataResponseJsonSchema{
-					Type:       *apiResponseInfo.JSONSchemaType,
-					Properties: properties,
-				},
-			}
-			apiDirectoryDataQueryDataDataResponses = append(apiDirectoryDataQueryDataDataResponses, apiDirectoryDataQueryDataDataResponse)
-		}
-
-		// 处理 apiDetail 类型
+		/**
+		  apiDetail
+		*/
 		if *r.Type == "apiDetail" {
+			apiResponseInfos := l.queryResponses(int64(r.ID))
+
+			// 为响应数据创建空切片
+			var apiDirectoryDataQueryDataDataResponses []types.ApiDirectoryDataQueryDataDataResponse
+
+			// 遍历响应信息
+			for _, apiResponseInfo := range apiResponseInfos {
+				jsonSchemaProperties := l.queryResponseJsonSchemaProperties(apiResponseInfo.ID)
+				var properties []types.ApiDirectoryDataQueryDataDataResponseJsonSchemaProperty
+				if len(jsonSchemaProperties) > 0 {
+					for _, jsonSchemaProperty := range jsonSchemaProperties {
+						addrjsp := &types.ApiDirectoryDataQueryDataDataResponseJsonSchemaProperty{
+							Id:          strconv.FormatInt(jsonSchemaProperty.ID, 10),
+							Name:        *jsonSchemaProperty.Name,
+							Type:        *jsonSchemaProperty.Type,
+							Description: *jsonSchemaProperty.Description,
+							DisPlayName: *jsonSchemaProperty.DisplayName,
+						}
+						properties = append(properties, *addrjsp)
+					}
+				} else {
+					properties = []types.ApiDirectoryDataQueryDataDataResponseJsonSchemaProperty{}
+				}
+				code := int(*apiResponseInfo.ResponseCode)
+				apiDirectoryDataQueryDataDataResponse := types.ApiDirectoryDataQueryDataDataResponse{
+					Id:          strconv.FormatInt(apiResponseInfo.ID, 10),
+					Code:        code,
+					Name:        *apiResponseInfo.ResponseName,
+					ContentType: *apiResponseInfo.ContentType,
+					JsonSchema: types.ApiDirectoryDataQueryDataDataResponseJsonSchema{
+						Type:       *apiResponseInfo.JSONSchemaType,
+						Properties: properties,
+					},
+				}
+				apiDirectoryDataQueryDataDataResponses = append(apiDirectoryDataQueryDataDataResponses, apiDirectoryDataQueryDataDataResponse)
+			}
+
+			/**
+			  处理请求头
+			*/
+			headers := l.queryParametersHeaders(int64(r.ID))
+			var apiDirectoryDataQueryDataDataParametersHeaders []types.ApiDirectoryDataQueryDataDataParametersHeader
+			if len(headers) > 0 {
+				for _, header := range headers {
+					h := &types.ApiDirectoryDataQueryDataDataParametersHeader{
+						Id:      strconv.FormatInt(header.ID, 10),
+						Name:    *header.Name,
+						Type:    *header.Type,
+						Example: *header.Example,
+					}
+					apiDirectoryDataQueryDataDataParametersHeaders = append(apiDirectoryDataQueryDataDataParametersHeaders, *h)
+				}
+
+			} else {
+				apiDirectoryDataQueryDataDataParametersHeaders = []types.ApiDirectoryDataQueryDataDataParametersHeader{}
+			}
+			/**
+			  处理请求参数
+			*/
+			querys := l.queryParametersQuery(int64(r.ID))
+			var apiDirectoryDataQueryDataDataParametersQuerys []types.ApiDirectoryDataQueryDataDataParametersQuery
+			if len(querys) > 0 {
+				for _, query := range querys {
+					q := &types.ApiDirectoryDataQueryDataDataParametersQuery{
+						Id:      strconv.FormatInt(query.ID, 10),
+						Name:    *query.Name,
+						Type:    *query.Type,
+						Example: *query.Example,
+					}
+					apiDirectoryDataQueryDataDataParametersQuerys = append(apiDirectoryDataQueryDataDataParametersQuerys, *q)
+				}
+
+			} else {
+				apiDirectoryDataQueryDataDataParametersQuerys = []types.ApiDirectoryDataQueryDataDataParametersQuery{}
+			}
+			/**
+			拼接主数据
+			*/
 			apiDirectoryDataQueryData := types.ApiDirectoryDataQueryData{
 				Id:   strconv.FormatInt(int64(r.ID), 10),
 				Name: *r.Name,
@@ -95,6 +139,10 @@ func (l *ApiDirectoryDataQueryLogic) ApiDirectoryDataQuery(req *types.ApiDirecto
 					ServerId:      getStringOrNil(r.ServerID),
 					Description:   *r.Remark,
 					Responses:     apiDirectoryDataQueryDataDataResponses,
+					Parameters: types.ApiDirectoryDataQueryDataDataParameters{
+						Query:  apiDirectoryDataQueryDataDataParametersQuerys,
+						Header: apiDirectoryDataQueryDataDataParametersHeaders,
+					},
 				},
 			}
 			datas = append(datas, apiDirectoryDataQueryData)
@@ -178,6 +226,26 @@ func (l *ApiDirectoryDataQueryLogic) queryResponseJsonSchemaProperties(responseI
 		log.Printf("Error querying API request body for apiId %d: %v", responseId, err)
 	}
 	return apiAPIResponseProperty
+}
+func (l *ApiDirectoryDataQueryLogic) queryParametersHeaders(apiId int64) []*model.APIParametersHeader {
+	db := l.svcCtx.DB.Debug()
+	var apiParametersHeader []*model.APIParametersHeader
+	err := db.WithContext(l.ctx).Where("api_id=?", apiId).Find(&apiParametersHeader).Error
+	if err != nil {
+		// 错误处理
+		log.Printf("Error querying API request body for apiId %d: %v", apiId, err)
+	}
+	return apiParametersHeader
+}
+func (l *ApiDirectoryDataQueryLogic) queryParametersQuery(apiId int64) []*model.APIParametersQuery {
+	db := l.svcCtx.DB.Debug()
+	var apiParametersQuery []*model.APIParametersQuery
+	err := db.WithContext(l.ctx).Where("api_id=?", apiId).Find(&apiParametersQuery).Error
+	if err != nil {
+		// 错误处理
+		log.Printf("Error querying API request body for apiId %d: %v", apiId, err)
+	}
+	return apiParametersQuery
 }
 
 // getStringOrNil 用于安全获取可选字段的值

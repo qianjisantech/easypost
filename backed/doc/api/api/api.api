@@ -24,31 +24,45 @@ type (
         ResponsibleId string `json:"responsibleId"`
         Tags []string `json:"tags"`
         ServerId string `json:"serverId"`
-        Description string  `json:"description"`
-        Parameters  ApiDirectoryDataQueryDataDataParameters `json:"parameters"`
-        Responses  []ApiDirectoryDataQueryDataDataResponse `json:"responses"`
-
+        Description string `json:"description"`
+        Parameters ApiDirectoryDataQueryDataDataParameters `json:"parameters"`
+        Responses []ApiDirectoryDataQueryDataDataResponse `json:"responses"`
     }
     ApiDirectoryDataQueryDataDataParameters {
-      Path []string  `json:"path"`
+        Path []string `json:"path"`
+        Query []ApiDirectoryDataQueryDataDataParametersQuery `json:"query"`
+        Header []ApiDirectoryDataQueryDataDataParametersHeader `json:"header"`
+    }
+        ApiDirectoryDataQueryDataDataParametersQuery {
+            Id string `json:"id"`
+            Name string `json:"name"`
+            Type string `json:"type"`
+            Example string `json:"example"`
+
+      }
+      ApiDirectoryDataQueryDataDataParametersHeader {
+          Id string `json:"id"`
+          Name string `json:"name"`
+          Type string `json:"type"`
+          Example string `json:"example"`
     }
     ApiDirectoryDataQueryDataDataResponse {
-      Id string  `json:"id"`
-      Code int   `json:"code"`
-      Name string  `json:"name"`
-      ContentType string  `json:"contentType"`
-     JsonSchema ApiDirectoryDataQueryDataDataResponseJsonSchema `json:"jsonSchema"`
+        Id string `json:"id"`
+        Code int `json:"code"`
+        Name string `json:"name"`
+        ContentType string `json:"contentType"`
+        JsonSchema ApiDirectoryDataQueryDataDataResponseJsonSchema `json:"jsonSchema"`
     }
     ApiDirectoryDataQueryDataDataResponseJsonSchema {
-      Type string `json:"type"`
-      Properties []ApiDirectoryDataQueryDataDataResponseJsonSchemaProperty `json:"properties"`
+        Type string `json:"type"`
+        Properties []ApiDirectoryDataQueryDataDataResponseJsonSchemaProperty `json:"properties"`
     }
     ApiDirectoryDataQueryDataDataResponseJsonSchemaProperty {
-       Id string  `json:"id"`
-      Name string `json:"name"`
-      Type string  `json:"type"`
-      Description string  `json:"description"`
-      DisPlayName string  `json:"displayName"`
+        Id string `json:"id"`
+        Name string `json:"name"`
+        Type string `json:"type"`
+        Description string `json:"description"`
+        DisPlayName string `json:"displayName"`
     }
     ApiDirectoryDataQueryRequest {
     }
@@ -91,7 +105,21 @@ type (
         Example string `json:"example"`
     }
     ApiInfoCreateDataParameters {
-        Path []string `json:"path,optional"`
+        Path []string `json:"path,optional,optional"`
+        Query []ApiInfoCreateDataParametersQuery `json:"query,optional"`
+        Header []ApiInfoCreateDataParametersHeader `json:"header,optional"`
+    }
+    ApiInfoCreateDataParametersHeader {
+        Id string `json:"id"`
+        Name string `json:"name"`
+        Type string `json:"type"`
+        Example string `json:"example,optional"`
+    }
+    ApiInfoCreateDataParametersQuery {
+        Id string `json:"id"`
+        Name string `json:"name"`
+        Type string `json:"type"`
+        Example string `json:"example,optional"`
     }
     ApiInfoCreateDataResponse {
         Id string `json:"id"`
@@ -104,12 +132,12 @@ type (
         Type string `json:"type"`
         Properties []ApiInfoCreateDataJsonSchemaProperty `json:"properties,optional"`
     }
-    ApiInfoCreateDataJsonSchemaProperty{
-     Id string  `json:"id,optional"`
-     Type string  `json:"type"`
-     Name string  `json:"name"`
-     DisplayName string `json:"displayName,optional"`
-     Description string `json:"description,optional"`
+    ApiInfoCreateDataJsonSchemaProperty {
+        Id string `json:"id,optional"`
+        Type string `json:"type"`
+        Name string `json:"name"`
+        DisplayName string `json:"displayName,optional"`
+        Description string `json:"description,optional"`
     }
     ApiInfoCreateRequest {
         Id string `json:"id"`

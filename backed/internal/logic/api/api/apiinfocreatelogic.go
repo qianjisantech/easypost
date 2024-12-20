@@ -6,7 +6,6 @@ import (
 	"backed/internal/svc"
 	"backed/internal/types"
 	"context"
-	"fmt"
 	"github.com/zeromicro/go-zero/core/logx"
 
 	"log"
@@ -38,7 +37,9 @@ func (l *ApiInfoCreateLogic) ApiInfoCreate(req *types.ApiInfoCreateRequest) (res
 			db.Rollback()
 		}
 	}()
-
+	/**
+	存api主数据
+	*/
 	// 初始化 createAPIApiInfo
 	tags := strings.Join(req.Data.Tags, ",")
 	createAPIApiInfo := &model.APIApiDetail{
@@ -56,22 +57,101 @@ func (l *ApiInfoCreateLogic) ApiInfoCreate(req *types.ApiInfoCreateRequest) (res
 	if req.Id != "" {
 		id, err := strconv.Atoi(req.Id)
 		if err != nil {
-			return nil, fmt.Errorf("invalid ID format: %w", err)
+			return nil, errorx.NewDefaultError("invalid ID format ")
 		}
 		createAPIApiInfo.ID = int32(id)
 	}
 
 	// 执行数据库操作
-	tx := db.WithContext(l.ctx).Save(createAPIApiInfo)
+	tx := db.Save(createAPIApiInfo)
 	if tx.Error != nil {
 		db.Rollback()
-		return nil, fmt.Errorf("invalid ID format: %w", err)
+		return nil, errorx.NewDefaultError("failed to create ApiInfo ")
+	}
+	apiId := int64(createAPIApiInfo.ID)
+	/**
+	存parameters Query
+	*/
+	if len(req.Data.Parameters.Query) > 0 {
+		for _, q := range req.Data.Parameters.Query {
+			apq := &model.APIParametersQuery{
+				Name:    &q.Name,
+				Type:    &q.Type,
+				Example: &q.Example,
+				APIID:   &apiId,
+			}
+			if q.Id != "" {
+				id, err := strconv.Atoi(q.Id)
+				if err != nil {
+					return nil, errorx.NewDefaultError("invalid ID format q.Id")
+				}
+				apq.ID = int64(id)
+			}
+			querySave := db.Save(apq)
+			if querySave.Error != nil {
+				db.Rollback()
+				return nil, errorx.NewDefaultError("failed to create Parameters.Query")
+			}
+		}
+
+	}
+	/**
+	存parameters Headers
+	*/
+	if len(req.Data.Parameters.Header) > 0 {
+
+		for _, h := range req.Data.Parameters.Header {
+
+			aph := &model.APIParametersHeader{
+				Name:    &h.Name,
+				Type:    &h.Type,
+				APIID:   &apiId,
+				Example: &h.Example,
+			}
+			//if h.Type == "string" {
+			//	if str, ok := h.Example.(string); ok {
+			//		// 如果类型断言成功，创建字符串的指针
+			//		aph.Example = &str
+			//	}
+			//}
+			//if h.Type == "array" {
+			//	if slice, ok := h.Example.([]string); ok {
+			//		str := strings.Join(slice, ",")
+			//		aph.Example = &str
+			//	}
+			//}
+			if h.Id != "" {
+				id, err := strconv.Atoi(h.Id)
+				if err != nil {
+					return nil, errorx.NewDefaultError("invalid ID format h.Id")
+				}
+				aph.ID = int64(id)
+			}
+			headerSave := db.Save(aph)
+			if headerSave.Error != nil {
+				db.Rollback()
+				return nil, errorx.NewDefaultError("failed to create Parameters.Header")
+			}
+		}
+
 	}
 
-	log.Printf("id%s", createAPIApiInfo.ID)
-
-	apiId := int64(createAPIApiInfo.ID)
-	//存response
+	//存requestBody
+	//requestBody := &model.APIRequestBody{
+	//	APIID:      &apiId,
+	//	Type:       &req.Data.RequestBody.Type,
+	//	JSONSchema: &req.Data.RequestBody.JsonSchema,
+	//	CreateBy:   StringPointer("admin"),
+	//}
+	//
+	//createAPIRequestBody := db.Create(requestBody)
+	//if createAPIRequestBody.Error != nil {
+	//	db.Rollback()
+	//	return nil, fmt.Errorf("failed to create APIRequestBody: %w", createAPIRequestBody.Error)
+	//}
+	/**
+	/存response
+	*/
 	for _, response := range req.Data.Responses {
 		code := int32(response.Code)
 		apiResponseInfo := &model.APIResponseInfo{
@@ -86,15 +166,18 @@ func (l *ApiInfoCreateLogic) ApiInfoCreate(req *types.ApiInfoCreateRequest) (res
 		if response.Id != "" {
 			id, err := strconv.Atoi(response.Id)
 			if err != nil {
-				return nil, fmt.Errorf("invalid ID format: %w", err)
+				return nil, errorx.NewDefaultError("invalid ID format:response.Id ")
 			}
 			apiResponseInfo.ID = int64(id)
 		}
 		responseInfo := db.Save(apiResponseInfo)
 		if responseInfo.Error != nil {
 			db.Rollback()
-			return nil, fmt.Errorf("failed to create APIResponseInfo: %w", responseInfo.Error)
+			return nil, errorx.NewDefaultError("failed to create APIResponseInfo")
 		}
+		/**
+		存响应体示例值
+		*/
 		for _, property := range response.JsonSchema.Properties {
 			if property.Name == "" {
 				db.Rollback()
@@ -111,37 +194,24 @@ func (l *ApiInfoCreateLogic) ApiInfoCreate(req *types.ApiInfoCreateRequest) (res
 			if property.Id != "" {
 				id, err := strconv.Atoi(property.Id)
 				if err != nil {
-					return nil, fmt.Errorf("invalid ID format: %w", err)
+					return nil, errorx.NewDefaultError("invalid ID format property.Id ")
 				}
 				apiResponseProperty.ID = int64(id)
 			}
 			apiResponse := db.Save(apiResponseProperty)
 			if apiResponse.Error != nil {
 				db.Rollback()
-				return nil, fmt.Errorf("failed to create APIResponseInfo: %w", apiResponse.Error)
+				return nil, errorx.NewDefaultError("failed to create APIResponseInfo")
 			}
 		}
 
 	}
 
-	//存requestBody
-	requestBody := &model.APIRequestBody{
-		APIID:      &apiId,
-		Type:       &req.Data.RequestBody.Type,
-		JSONSchema: &req.Data.RequestBody.JsonSchema,
-		CreateBy:   StringPointer("admin"),
-	}
-
-	createAPIRequestBody := db.Create(requestBody)
-	if createAPIRequestBody.Error != nil {
-		db.Rollback()
-		return nil, fmt.Errorf("failed to create APIRequestBody: %w", createAPIRequestBody.Error)
-	}
 	// 提交事务
 	if err := db.Commit().Error; err != nil {
 		db.Rollback()
 		log.Printf("Error committing transaction: %v", err)
-		return nil, fmt.Errorf("failed to commit transaction: %w", err)
+		return nil, errorx.NewDefaultError("Error committing transaction")
 	}
 	// 返回成功响应
 	return &types.ApiInfoCreateResp{
