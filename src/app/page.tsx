@@ -8,5 +8,5 @@ export const metadata: Metadata = {
 }
 
 export default function RootPage() {
-  return redirect('/home')
+    return redirect('/main')
 }

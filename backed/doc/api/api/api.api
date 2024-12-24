@@ -80,7 +80,7 @@ type (
         Message string `json:"message"`
         Data []ApiDirectoryDataQueryData `json:"data"`
     }
-    ApiInfoCreateData {
+  ApiDetailSaveData {
         Method string `json:"method"`
         Path string `json:"path,optional"`
         Name string `json:"name"`
@@ -89,76 +89,77 @@ type (
         Tags []string `json:"tags,optional"`
         ServerId string `json:"serverId,optional"`
         Description string `json:"description,optional"`
-        Parameters ApiInfoCreateDataParameters `json:"parameters,optional"`
-        Responses []ApiInfoCreateDataResponse `json:"responses,optional"`
-        RequestBody ApiInfoCreateDataRequestBody `json:"requestBody,optional"`
+        Parameters ApiDetailSaveDataParameters `json:"parameters,optional"`
+        Responses []ApiDetailSaveDataResponse `json:"responses,optional"`
+        RequestBody ApiDetailSaveDataRequestBody `json:"requestBody,optional"`
     }
-    ApiInfoCreateDataRequestBody {
+   ApiDetailSaveDataRequestBody {
         Type string `json:"type"`
-        Parameters []ApiInfoCreateDataRequestBodyParameter `json:"parameters,optional"`
+        Parameters []ApiDetailSaveDataRequestBodyParameter `json:"parameters,optional"`
         JsonSchema string `json:"jsonSchema"`
     }
-    ApiInfoCreateDataRequestBodyParameter {
+   ApiDetailSaveDataRequestBodyParameter {
         Id string `json:"id"`
         Name string `json:"name"`
         Type string `json:"type"`
         Example string `json:"example"`
     }
-    ApiInfoCreateDataParameters {
+   ApiDetailSaveDataParameters {
         Path []string `json:"path,optional,optional"`
-        Query []ApiInfoCreateDataParametersQuery `json:"query,optional"`
-        Header []ApiInfoCreateDataParametersHeader `json:"header,optional"`
+        Query []ApiDetailSaveDataParametersQuery `json:"query,optional"`
+        Header []ApiDetailSaveDataParametersHeader `json:"header,optional"`
     }
-    ApiInfoCreateDataParametersHeader {
+   ApiDetailSaveDataParametersHeader {
         Id string `json:"id"`
         Name string `json:"name"`
         Type string `json:"type"`
         Example string `json:"example,optional"`
     }
-    ApiInfoCreateDataParametersQuery {
+   ApiDetailSaveDataParametersQuery {
         Id string `json:"id"`
         Name string `json:"name"`
         Type string `json:"type"`
         Example string `json:"example,optional"`
     }
-    ApiInfoCreateDataResponse {
+   ApiDetailSaveDataResponse {
         Id string `json:"id"`
         Code int `json:"code"`
         Name string `json:"name"`
         ContentType string `json:"contentType"`
-        JsonSchema ApiInfoCreateDataJsonSchema `json:"jsonSchema"`
+        JsonSchema ApiDetailSaveDataJsonSchema `json:"jsonSchema"`
     }
-    ApiInfoCreateDataJsonSchema {
+   ApiDetailSaveDataJsonSchema {
         Type string `json:"type"`
-        Properties []ApiInfoCreateDataJsonSchemaProperty `json:"properties,optional"`
+        Properties []ApiDetailSaveDataJsonSchemaProperty `json:"properties,optional"`
     }
-    ApiInfoCreateDataJsonSchemaProperty {
+   ApiDetailSaveDataJsonSchemaProperty {
         Id string `json:"id,optional"`
         Type string `json:"type"`
         Name string `json:"name"`
         DisplayName string `json:"displayName,optional"`
         Description string `json:"description,optional"`
     }
-    ApiInfoCreateRequest {
+   ApiDetailSaveRequest {
         Id string `json:"id"`
         Name string `json:"name"`
         Type string `json:"type,optional"`
-        Data ApiInfoCreateData `json:"data"`
+        ParentId string   `json:"parentId,optional"`
+        Data  ApiDetailSaveData  `json:"data,optional"`
     }
-    ApiInfoCreateResp {
+   ApiDetailSaveResp {
         Code string `json:"code"`
         Message string `json:"message"`
     }
 )
 @server(
-    group:  api/api
-    prefix: /api/api
+    group:  api
+    prefix: /api
 )
 service easypost-api {
     @handler ApiDirectoryDataQuery
     post /directory/data/list (ApiDirectoryDataQueryRequest) returns (ApiDirectoryDataQueryResp)
     @handler ApiRecycleGroupQuery
     post /recycle/group/list (ApiRecycleGroupQueryRequest) returns (ApiRecycleGroupQueryResp)
-    @handler ApiInfoCreate
-    post /info/save (ApiInfoCreateRequest) returns (ApiInfoCreateResp)
+    @handler ApiDetailSave
+    post /api/detail/save (ApiDetailSaveRequest) returns (ApiDetailSaveResp)
 }

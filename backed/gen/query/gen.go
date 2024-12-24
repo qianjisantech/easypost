@@ -16,49 +16,69 @@ import (
 )
 
 var (
-	Q                   = new(Query)
-	APIApiDetail        *aPIApiDetail
-	APIRequestBody      *aPIRequestBody
-	APIResponseInfo     *aPIResponseInfo
-	APIResponseProperty *aPIResponseProperty
+	Q                       = new(Query)
+	APIApiDetail            *aPIApiDetail
+	APIApiFolder            *aPIApiFolder
+	APIParametersHeader     *aPIParametersHeader
+	APIParametersQuery      *aPIParametersQuery
+	APIRequestBodyParameter *aPIRequestBodyParameter
+	APIRequestBodyRaw       *aPIRequestBodyRaw
+	APIResponseInfo         *aPIResponseInfo
+	APIResponseProperty     *aPIResponseProperty
 )
 
 func SetDefault(db *gorm.DB, opts ...gen.DOOption) {
 	*Q = *Use(db, opts...)
 	APIApiDetail = &Q.APIApiDetail
-	APIRequestBody = &Q.APIRequestBody
+	APIApiFolder = &Q.APIApiFolder
+	APIParametersHeader = &Q.APIParametersHeader
+	APIParametersQuery = &Q.APIParametersQuery
+	APIRequestBodyParameter = &Q.APIRequestBodyParameter
+	APIRequestBodyRaw = &Q.APIRequestBodyRaw
 	APIResponseInfo = &Q.APIResponseInfo
 	APIResponseProperty = &Q.APIResponseProperty
 }
 
 func Use(db *gorm.DB, opts ...gen.DOOption) *Query {
 	return &Query{
-		db:                  db,
-		APIApiDetail:        newAPIApiDetail(db, opts...),
-		APIRequestBody:      newAPIRequestBody(db, opts...),
-		APIResponseInfo:     newAPIResponseInfo(db, opts...),
-		APIResponseProperty: newAPIResponseProperty(db, opts...),
+		db:                      db,
+		APIApiDetail:            newAPIApiDetail(db, opts...),
+		APIApiFolder:            newAPIApiFolder(db, opts...),
+		APIParametersHeader:     newAPIParametersHeader(db, opts...),
+		APIParametersQuery:      newAPIParametersQuery(db, opts...),
+		APIRequestBodyParameter: newAPIRequestBodyParameter(db, opts...),
+		APIRequestBodyRaw:       newAPIRequestBodyRaw(db, opts...),
+		APIResponseInfo:         newAPIResponseInfo(db, opts...),
+		APIResponseProperty:     newAPIResponseProperty(db, opts...),
 	}
 }
 
 type Query struct {
 	db *gorm.DB
 
-	APIApiDetail        aPIApiDetail
-	APIRequestBody      aPIRequestBody
-	APIResponseInfo     aPIResponseInfo
-	APIResponseProperty aPIResponseProperty
+	APIApiDetail            aPIApiDetail
+	APIApiFolder            aPIApiFolder
+	APIParametersHeader     aPIParametersHeader
+	APIParametersQuery      aPIParametersQuery
+	APIRequestBodyParameter aPIRequestBodyParameter
+	APIRequestBodyRaw       aPIRequestBodyRaw
+	APIResponseInfo         aPIResponseInfo
+	APIResponseProperty     aPIResponseProperty
 }
 
 func (q *Query) Available() bool { return q.db != nil }
 
 func (q *Query) clone(db *gorm.DB) *Query {
 	return &Query{
-		db:                  db,
-		APIApiDetail:        q.APIApiDetail.clone(db),
-		APIRequestBody:      q.APIRequestBody.clone(db),
-		APIResponseInfo:     q.APIResponseInfo.clone(db),
-		APIResponseProperty: q.APIResponseProperty.clone(db),
+		db:                      db,
+		APIApiDetail:            q.APIApiDetail.clone(db),
+		APIApiFolder:            q.APIApiFolder.clone(db),
+		APIParametersHeader:     q.APIParametersHeader.clone(db),
+		APIParametersQuery:      q.APIParametersQuery.clone(db),
+		APIRequestBodyParameter: q.APIRequestBodyParameter.clone(db),
+		APIRequestBodyRaw:       q.APIRequestBodyRaw.clone(db),
+		APIResponseInfo:         q.APIResponseInfo.clone(db),
+		APIResponseProperty:     q.APIResponseProperty.clone(db),
 	}
 }
 
@@ -72,27 +92,39 @@ func (q *Query) WriteDB() *Query {
 
 func (q *Query) ReplaceDB(db *gorm.DB) *Query {
 	return &Query{
-		db:                  db,
-		APIApiDetail:        q.APIApiDetail.replaceDB(db),
-		APIRequestBody:      q.APIRequestBody.replaceDB(db),
-		APIResponseInfo:     q.APIResponseInfo.replaceDB(db),
-		APIResponseProperty: q.APIResponseProperty.replaceDB(db),
+		db:                      db,
+		APIApiDetail:            q.APIApiDetail.replaceDB(db),
+		APIApiFolder:            q.APIApiFolder.replaceDB(db),
+		APIParametersHeader:     q.APIParametersHeader.replaceDB(db),
+		APIParametersQuery:      q.APIParametersQuery.replaceDB(db),
+		APIRequestBodyParameter: q.APIRequestBodyParameter.replaceDB(db),
+		APIRequestBodyRaw:       q.APIRequestBodyRaw.replaceDB(db),
+		APIResponseInfo:         q.APIResponseInfo.replaceDB(db),
+		APIResponseProperty:     q.APIResponseProperty.replaceDB(db),
 	}
 }
 
 type queryCtx struct {
-	APIApiDetail        IAPIApiDetailDo
-	APIRequestBody      IAPIRequestBodyDo
-	APIResponseInfo     IAPIResponseInfoDo
-	APIResponseProperty IAPIResponsePropertyDo
+	APIApiDetail            IAPIApiDetailDo
+	APIApiFolder            IAPIApiFolderDo
+	APIParametersHeader     IAPIParametersHeaderDo
+	APIParametersQuery      IAPIParametersQueryDo
+	APIRequestBodyParameter IAPIRequestBodyParameterDo
+	APIRequestBodyRaw       IAPIRequestBodyRawDo
+	APIResponseInfo         IAPIResponseInfoDo
+	APIResponseProperty     IAPIResponsePropertyDo
 }
 
 func (q *Query) WithContext(ctx context.Context) *queryCtx {
 	return &queryCtx{
-		APIApiDetail:        q.APIApiDetail.WithContext(ctx),
-		APIRequestBody:      q.APIRequestBody.WithContext(ctx),
-		APIResponseInfo:     q.APIResponseInfo.WithContext(ctx),
-		APIResponseProperty: q.APIResponseProperty.WithContext(ctx),
+		APIApiDetail:            q.APIApiDetail.WithContext(ctx),
+		APIApiFolder:            q.APIApiFolder.WithContext(ctx),
+		APIParametersHeader:     q.APIParametersHeader.WithContext(ctx),
+		APIParametersQuery:      q.APIParametersQuery.WithContext(ctx),
+		APIRequestBodyParameter: q.APIRequestBodyParameter.WithContext(ctx),
+		APIRequestBodyRaw:       q.APIRequestBodyRaw.WithContext(ctx),
+		APIResponseInfo:         q.APIResponseInfo.WithContext(ctx),
+		APIResponseProperty:     q.APIResponseProperty.WithContext(ctx),
 	}
 }
 

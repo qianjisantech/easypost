@@ -32,8 +32,11 @@ func newAPIParametersHeader(db *gorm.DB, opts ...gen.DOOption) aPIParametersHead
 	_aPIParametersHeader.Type = field.NewString(tableName, "type")
 	_aPIParametersHeader.Example = field.NewString(tableName, "example")
 	_aPIParametersHeader.CreateBy = field.NewString(tableName, "create_by")
+	_aPIParametersHeader.UpdateBy = field.NewString(tableName, "update_by")
 	_aPIParametersHeader.CreateTime = field.NewTime(tableName, "create_time")
+	_aPIParametersHeader.UpdateTime = field.NewTime(tableName, "update_time")
 	_aPIParametersHeader.APIID = field.NewInt64(tableName, "api_id")
+	_aPIParametersHeader.IsDeleted = field.NewBool(tableName, "is_deleted")
 
 	_aPIParametersHeader.fillFieldMap()
 
@@ -49,8 +52,11 @@ type aPIParametersHeader struct {
 	Type       field.String
 	Example    field.String
 	CreateBy   field.String
+	UpdateBy   field.String
 	CreateTime field.Time
+	UpdateTime field.Time
 	APIID      field.Int64
+	IsDeleted  field.Bool
 
 	fieldMap map[string]field.Expr
 }
@@ -72,8 +78,11 @@ func (a *aPIParametersHeader) updateTableName(table string) *aPIParametersHeader
 	a.Type = field.NewString(table, "type")
 	a.Example = field.NewString(table, "example")
 	a.CreateBy = field.NewString(table, "create_by")
+	a.UpdateBy = field.NewString(table, "update_by")
 	a.CreateTime = field.NewTime(table, "create_time")
+	a.UpdateTime = field.NewTime(table, "update_time")
 	a.APIID = field.NewInt64(table, "api_id")
+	a.IsDeleted = field.NewBool(table, "is_deleted")
 
 	a.fillFieldMap()
 
@@ -102,14 +111,17 @@ func (a *aPIParametersHeader) GetFieldByName(fieldName string) (field.OrderExpr,
 }
 
 func (a *aPIParametersHeader) fillFieldMap() {
-	a.fieldMap = make(map[string]field.Expr, 7)
+	a.fieldMap = make(map[string]field.Expr, 10)
 	a.fieldMap["id"] = a.ID
 	a.fieldMap["name"] = a.Name
 	a.fieldMap["type"] = a.Type
 	a.fieldMap["example"] = a.Example
 	a.fieldMap["create_by"] = a.CreateBy
+	a.fieldMap["update_by"] = a.UpdateBy
 	a.fieldMap["create_time"] = a.CreateTime
+	a.fieldMap["update_time"] = a.UpdateTime
 	a.fieldMap["api_id"] = a.APIID
+	a.fieldMap["is_deleted"] = a.IsDeleted
 }
 
 func (a aPIParametersHeader) clone(db *gorm.DB) aPIParametersHeader {

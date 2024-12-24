@@ -35,6 +35,9 @@ func newAPIResponseInfo(db *gorm.DB, opts ...gen.DOOption) aPIResponseInfo {
 	_aPIResponseInfo.CreateBy = field.NewString(tableName, "create_by")
 	_aPIResponseInfo.CreateTime = field.NewTime(tableName, "create_time")
 	_aPIResponseInfo.JSONSchemaType = field.NewString(tableName, "json_schema_type")
+	_aPIResponseInfo.UpdateBy = field.NewString(tableName, "update_by")
+	_aPIResponseInfo.UpdateTime = field.NewTime(tableName, "update_time")
+	_aPIResponseInfo.IsDeleted = field.NewBool(tableName, "is_deleted")
 
 	_aPIResponseInfo.fillFieldMap()
 
@@ -53,6 +56,9 @@ type aPIResponseInfo struct {
 	CreateBy       field.String
 	CreateTime     field.Time
 	JSONSchemaType field.String
+	UpdateBy       field.String
+	UpdateTime     field.Time
+	IsDeleted      field.Bool
 
 	fieldMap map[string]field.Expr
 }
@@ -77,6 +83,9 @@ func (a *aPIResponseInfo) updateTableName(table string) *aPIResponseInfo {
 	a.CreateBy = field.NewString(table, "create_by")
 	a.CreateTime = field.NewTime(table, "create_time")
 	a.JSONSchemaType = field.NewString(table, "json_schema_type")
+	a.UpdateBy = field.NewString(table, "update_by")
+	a.UpdateTime = field.NewTime(table, "update_time")
+	a.IsDeleted = field.NewBool(table, "is_deleted")
 
 	a.fillFieldMap()
 
@@ -105,7 +114,7 @@ func (a *aPIResponseInfo) GetFieldByName(fieldName string) (field.OrderExpr, boo
 }
 
 func (a *aPIResponseInfo) fillFieldMap() {
-	a.fieldMap = make(map[string]field.Expr, 8)
+	a.fieldMap = make(map[string]field.Expr, 11)
 	a.fieldMap["id"] = a.ID
 	a.fieldMap["response_code"] = a.ResponseCode
 	a.fieldMap["response_name"] = a.ResponseName
@@ -114,6 +123,9 @@ func (a *aPIResponseInfo) fillFieldMap() {
 	a.fieldMap["create_by"] = a.CreateBy
 	a.fieldMap["create_time"] = a.CreateTime
 	a.fieldMap["json_schema_type"] = a.JSONSchemaType
+	a.fieldMap["update_by"] = a.UpdateBy
+	a.fieldMap["update_time"] = a.UpdateTime
+	a.fieldMap["is_deleted"] = a.IsDeleted
 }
 
 func (a aPIResponseInfo) clone(db *gorm.DB) aPIResponseInfo {

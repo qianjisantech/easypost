@@ -1,9 +1,9 @@
 package api
 
 import (
+	"backed/internal/logic/api"
 	"net/http"
 
-	"backed/internal/logic/api/api"
 	"backed/internal/svc"
 	"backed/internal/types"
 	"github.com/zeromicro/go-zero/rest/httpx"

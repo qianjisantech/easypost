@@ -8,6 +8,7 @@ import type { ApiMenuData } from '@/components/ApiMenu/ApiMenu.type'
 import { SelectorCatalog } from '@/components/SelectorCatalog'
 import { ROOT_CATALOG } from '@/configs/static'
 import { useMenuHelpersContext } from '@/contexts/menu-helpers'
+import {apiDetailSave} from "@/api/api";
 
 interface ModalNewCatalogProps extends Omit<ModalProps, 'open' | 'onOk'> {
   formData?: Pick<ApiMenuData, 'parentId' | 'type'>
@@ -56,9 +57,17 @@ export const ModalNewCatalog = create(({ formData, ...props }: ModalNewCatalogPr
       }}
       onOk={() => {
         form.validateFields().then((values) => {
+          apiDetailSave({
+            ...values,
+            id:'',
+            parentId: values.parentId === ROOT_CATALOG ? undefined : values.parentId,
+          }).then(res=>{
+            console.log("res",res)
+          } )
+          console.log("目录",values)
           addMenuItem({
             ...values,
-            id:nanoid(6),
+            id:'',
             parentId: values.parentId === ROOT_CATALOG ? undefined : values.parentId,
           })
           handleHide()

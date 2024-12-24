@@ -119,11 +119,10 @@ func (l *ApiDirectoryDataQueryLogic) ApiDirectoryDataQuery(req *types.ApiDirecto
 			拼接主数据
 			*/
 			apiDirectoryDataQueryData := types.ApiDirectoryDataQueryData{
-				Id:   strconv.FormatInt(int64(r.ID), 10),
 				Name: *r.Name,
 				ParentId: func() string {
 					if r.ParentID != nil {
-						return strconv.FormatInt(*r.ParentID, 10)
+						return *r.ParentID
 					}
 					return ""
 				}(),

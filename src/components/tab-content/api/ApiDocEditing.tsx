@@ -20,7 +20,7 @@ import { BaseFormItems } from './components/BaseFormItems'
 import { GroupTitle } from './components/GroupTitle'
 import { PathInput, type PathInputProps } from './components/PathInput'
 import { ParamsTab } from './params/ParamsTab'
-import { apiInfoSave} from '@/api/api/index'
+import { apiDetailSave} from '@/api/api/index'
 const DEFAULT_NAME = '未命名接口'
 
 const methodOptions: SelectProps['options'] = Object.entries(HTTP_METHOD_CONFIG).map(
@@ -99,7 +99,7 @@ export function ApiDocEditing() {
         },
         { replaceTab: tabData.key }
       )
-     await apiInfoSave(menuItemData).then(r =>
+     await apiDetailSave(menuItemData).then(r =>
            messageApi.success(r.data.message)
       )
       console.log('创建 menuItemData',JSON.stringify(menuItemData))
@@ -116,7 +116,7 @@ export function ApiDocEditing() {
         name: menuName,
         data: { ...values, name: menuName },
       })
-      await apiInfoSave(menuItemData).then(r =>
+      await apiDetailSave(menuItemData).then(r =>
           messageApi.success(r.data.message)
       )
 

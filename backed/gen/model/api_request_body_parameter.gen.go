@@ -18,6 +18,9 @@ type APIRequestBodyParameter struct {
 	CreateBy   *string    `gorm:"column:create_by" json:"create_by"`
 	CreateTime *time.Time `gorm:"column:create_time;default:CURRENT_TIMESTAMP" json:"create_time"`
 	APIID      *int64     `gorm:"column:api_id" json:"api_id"`
+	UpdateBy   *string    `gorm:"column:update_by" json:"update_by"`
+	UpdateTime *time.Time `gorm:"column:update_time;default:CURRENT_TIMESTAMP" json:"update_time"`
+	IsDeleted  *bool      `gorm:"column:is_deleted" json:"is_deleted"`
 }
 
 // TableName APIRequestBodyParameter's table name

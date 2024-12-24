@@ -4,7 +4,7 @@ package handler
 import (
 	"net/http"
 
-	apiapi "backed/internal/handler/api/api"
+	api "backed/internal/handler/api"
 	"backed/internal/svc"
 
 	"github.com/zeromicro/go-zero/rest"
@@ -15,20 +15,20 @@ func RegisterHandlers(server *rest.Server, serverCtx *svc.ServiceContext) {
 		[]rest.Route{
 			{
 				Method:  http.MethodPost,
-				Path:    "/directory/data/list",
-				Handler: apiapi.ApiDirectoryDataQueryHandler(serverCtx),
+				Path:    "/api/detail/save",
+				Handler: api.ApiDetailSaveHandler(serverCtx),
 			},
 			{
 				Method:  http.MethodPost,
-				Path:    "/info/save",
-				Handler: apiapi.ApiInfoCreateHandler(serverCtx),
+				Path:    "/directory/data/list",
+				Handler: api.ApiDirectoryDataQueryHandler(serverCtx),
 			},
 			{
 				Method:  http.MethodPost,
 				Path:    "/recycle/group/list",
-				Handler: apiapi.ApiRecycleGroupQueryHandler(serverCtx),
+				Handler: api.ApiRecycleGroupQueryHandler(serverCtx),
 			},
 		},
-		rest.WithPrefix("/api/api"),
+		rest.WithPrefix("/api"),
 	)
 }

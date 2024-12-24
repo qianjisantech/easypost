@@ -34,6 +34,9 @@ func newAPIParametersQuery(db *gorm.DB, opts ...gen.DOOption) aPIParametersQuery
 	_aPIParametersQuery.CreateBy = field.NewString(tableName, "create_by")
 	_aPIParametersQuery.CreateTime = field.NewTime(tableName, "create_time")
 	_aPIParametersQuery.APIID = field.NewInt64(tableName, "api_id")
+	_aPIParametersQuery.UpdateBy = field.NewString(tableName, "update_by")
+	_aPIParametersQuery.UpdateTime = field.NewTime(tableName, "update_time")
+	_aPIParametersQuery.IsDeleted = field.NewBool(tableName, "is_deleted")
 
 	_aPIParametersQuery.fillFieldMap()
 
@@ -51,6 +54,9 @@ type aPIParametersQuery struct {
 	CreateBy   field.String
 	CreateTime field.Time
 	APIID      field.Int64
+	UpdateBy   field.String
+	UpdateTime field.Time
+	IsDeleted  field.Bool
 
 	fieldMap map[string]field.Expr
 }
@@ -74,6 +80,9 @@ func (a *aPIParametersQuery) updateTableName(table string) *aPIParametersQuery {
 	a.CreateBy = field.NewString(table, "create_by")
 	a.CreateTime = field.NewTime(table, "create_time")
 	a.APIID = field.NewInt64(table, "api_id")
+	a.UpdateBy = field.NewString(table, "update_by")
+	a.UpdateTime = field.NewTime(table, "update_time")
+	a.IsDeleted = field.NewBool(table, "is_deleted")
 
 	a.fillFieldMap()
 
@@ -102,7 +111,7 @@ func (a *aPIParametersQuery) GetFieldByName(fieldName string) (field.OrderExpr, 
 }
 
 func (a *aPIParametersQuery) fillFieldMap() {
-	a.fieldMap = make(map[string]field.Expr, 7)
+	a.fieldMap = make(map[string]field.Expr, 10)
 	a.fieldMap["id"] = a.ID
 	a.fieldMap["name"] = a.Name
 	a.fieldMap["type"] = a.Type
@@ -110,6 +119,9 @@ func (a *aPIParametersQuery) fillFieldMap() {
 	a.fieldMap["create_by"] = a.CreateBy
 	a.fieldMap["create_time"] = a.CreateTime
 	a.fieldMap["api_id"] = a.APIID
+	a.fieldMap["update_by"] = a.UpdateBy
+	a.fieldMap["update_time"] = a.UpdateTime
+	a.fieldMap["is_deleted"] = a.IsDeleted
 }
 
 func (a aPIParametersQuery) clone(db *gorm.DB) aPIParametersQuery {

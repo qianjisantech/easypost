@@ -13,7 +13,7 @@ export const metadata: Metadata = {
   icons: [{ url: '/favicon.svg', type: 'image/svg+xml' }],
   title: getPageTitle(),
   description: '使用 Next.js + Antd 编写的 API网站',
-  authors: [{ name: '', url: 'https://github.com/Codennnn' }],
+  authors: [{ name: '', url: '' }],
   manifest: '/manifest.webmanifest',
 }
 

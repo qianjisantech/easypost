@@ -2,7 +2,7 @@ import request from "@/api";
 
 export function apiRecycleGroupList (body) {
     return request({
-        url: '/api/recycle/group/list',
+        url: '/recycle/group/list',
         method: 'post',
         headers: {
             'Content-Type': 'application/json'
@@ -13,7 +13,7 @@ export function apiRecycleGroupList (body) {
 
 export function apiDirectoryDataList (body) {
     return request({
-        url: '/api/directory/data/list',
+        url: '/directory/data/list',
         method: 'post',
         headers: {
             'Content-Type': 'application/json'
@@ -22,9 +22,9 @@ export function apiDirectoryDataList (body) {
     })
 }
 
-export function apiInfoSave (body) {
+export function apiDetailSave (body) {
     return request({
-        url: '/api/info/save',
+        url: '/api/detail/save',
         method: 'post',
         headers: {
             'Content-Type': 'application/json'

@@ -41,6 +41,7 @@ export function FolderSetting() {
         labelCol={{ span: 6 }}
         onFinish={(values) => {
           if (apiFolder) {
+
             updateMenuItem({ ...values, id: apiFolder.id })
           }
         }}

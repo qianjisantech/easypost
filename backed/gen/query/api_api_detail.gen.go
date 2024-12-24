@@ -33,12 +33,14 @@ func newAPIApiDetail(db *gorm.DB, opts ...gen.DOOption) aPIApiDetail {
 	_aPIApiDetail.Path = field.NewString(tableName, "path")
 	_aPIApiDetail.Status = field.NewString(tableName, "status")
 	_aPIApiDetail.CreateBy = field.NewString(tableName, "create_by")
+	_aPIApiDetail.UpdateBy = field.NewString(tableName, "update_by")
 	_aPIApiDetail.CreateTime = field.NewTime(tableName, "create_time")
+	_aPIApiDetail.UpdateTime = field.NewTime(tableName, "update_time")
 	_aPIApiDetail.IsDeleted = field.NewBool(tableName, "is_deleted")
 	_aPIApiDetail.Manager = field.NewString(tableName, "manager")
 	_aPIApiDetail.Tag = field.NewString(tableName, "tag")
 	_aPIApiDetail.Method = field.NewString(tableName, "method")
-	_aPIApiDetail.ParentID = field.NewInt64(tableName, "parent_id")
+	_aPIApiDetail.ParentID = field.NewString(tableName, "parent_id")
 	_aPIApiDetail.Content = field.NewString(tableName, "content")
 	_aPIApiDetail.Remark = field.NewString(tableName, "remark")
 	_aPIApiDetail.ServerID = field.NewString(tableName, "server_id")
@@ -58,12 +60,14 @@ type aPIApiDetail struct {
 	Path       field.String
 	Status     field.String
 	CreateBy   field.String
+	UpdateBy   field.String
 	CreateTime field.Time
+	UpdateTime field.Time
 	IsDeleted  field.Bool
 	Manager    field.String // 负责人
 	Tag        field.String
 	Method     field.String
-	ParentID   field.Int64
+	ParentID   field.String
 	Content    field.String
 	Remark     field.String
 	ServerID   field.String
@@ -89,12 +93,14 @@ func (a *aPIApiDetail) updateTableName(table string) *aPIApiDetail {
 	a.Path = field.NewString(table, "path")
 	a.Status = field.NewString(table, "status")
 	a.CreateBy = field.NewString(table, "create_by")
+	a.UpdateBy = field.NewString(table, "update_by")
 	a.CreateTime = field.NewTime(table, "create_time")
+	a.UpdateTime = field.NewTime(table, "update_time")
 	a.IsDeleted = field.NewBool(table, "is_deleted")
 	a.Manager = field.NewString(table, "manager")
 	a.Tag = field.NewString(table, "tag")
 	a.Method = field.NewString(table, "method")
-	a.ParentID = field.NewInt64(table, "parent_id")
+	a.ParentID = field.NewString(table, "parent_id")
 	a.Content = field.NewString(table, "content")
 	a.Remark = field.NewString(table, "remark")
 	a.ServerID = field.NewString(table, "server_id")
@@ -126,14 +132,16 @@ func (a *aPIApiDetail) GetFieldByName(fieldName string) (field.OrderExpr, bool) 
 }
 
 func (a *aPIApiDetail) fillFieldMap() {
-	a.fieldMap = make(map[string]field.Expr, 15)
+	a.fieldMap = make(map[string]field.Expr, 17)
 	a.fieldMap["id"] = a.ID
 	a.fieldMap["name"] = a.Name
 	a.fieldMap["type"] = a.Type
 	a.fieldMap["path"] = a.Path
 	a.fieldMap["status"] = a.Status
 	a.fieldMap["create_by"] = a.CreateBy
+	a.fieldMap["update_by"] = a.UpdateBy
 	a.fieldMap["create_time"] = a.CreateTime
+	a.fieldMap["update_time"] = a.UpdateTime
 	a.fieldMap["is_deleted"] = a.IsDeleted
 	a.fieldMap["manager"] = a.Manager
 	a.fieldMap["tag"] = a.Tag

@@ -8,7 +8,7 @@ import { CatalogType } from '@/enums'
 import { getCatalogType, isMenuFolder } from '@/helpers'
 import type { RecycleCatalogType, RecycleData, RecycleDataItem } from '@/types'
 import { moveArrayItem } from '@/utils'
-import {apiRecycleGroupList, apiDirectoryDataList, apiInfoSave} from '@/api/api/index'
+import {apiRecycleGroupList, apiDirectoryDataList, apiDetailSave} from '@/api/api/index'
 
 interface MenuHelpers {
   /** 添加一个新的菜单项到菜单列表中。 */

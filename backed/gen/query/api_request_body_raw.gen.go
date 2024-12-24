@@ -33,6 +33,9 @@ func newAPIRequestBodyRaw(db *gorm.DB, opts ...gen.DOOption) aPIRequestBodyRaw {
 	_aPIRequestBodyRaw.CreateBy = field.NewString(tableName, "create_by")
 	_aPIRequestBodyRaw.CreateTime = field.NewTime(tableName, "create_time")
 	_aPIRequestBodyRaw.APIID = field.NewInt64(tableName, "api_id")
+	_aPIRequestBodyRaw.UpdateBy = field.NewString(tableName, "update_by")
+	_aPIRequestBodyRaw.UpdateTime = field.NewTime(tableName, "update_time")
+	_aPIRequestBodyRaw.IsDeleted = field.NewBool(tableName, "is_deleted")
 
 	_aPIRequestBodyRaw.fillFieldMap()
 
@@ -49,6 +52,9 @@ type aPIRequestBodyRaw struct {
 	CreateBy   field.String
 	CreateTime field.Time
 	APIID      field.Int64
+	UpdateBy   field.String
+	UpdateTime field.Time
+	IsDeleted  field.Bool
 
 	fieldMap map[string]field.Expr
 }
@@ -71,6 +77,9 @@ func (a *aPIRequestBodyRaw) updateTableName(table string) *aPIRequestBodyRaw {
 	a.CreateBy = field.NewString(table, "create_by")
 	a.CreateTime = field.NewTime(table, "create_time")
 	a.APIID = field.NewInt64(table, "api_id")
+	a.UpdateBy = field.NewString(table, "update_by")
+	a.UpdateTime = field.NewTime(table, "update_time")
+	a.IsDeleted = field.NewBool(table, "is_deleted")
 
 	a.fillFieldMap()
 
@@ -99,13 +108,16 @@ func (a *aPIRequestBodyRaw) GetFieldByName(fieldName string) (field.OrderExpr, b
 }
 
 func (a *aPIRequestBodyRaw) fillFieldMap() {
-	a.fieldMap = make(map[string]field.Expr, 6)
+	a.fieldMap = make(map[string]field.Expr, 9)
 	a.fieldMap["id"] = a.ID
 	a.fieldMap["type"] = a.Type
 	a.fieldMap["json_schema"] = a.JSONSchema
 	a.fieldMap["create_by"] = a.CreateBy
 	a.fieldMap["create_time"] = a.CreateTime
 	a.fieldMap["api_id"] = a.APIID
+	a.fieldMap["update_by"] = a.UpdateBy
+	a.fieldMap["update_time"] = a.UpdateTime
+	a.fieldMap["is_deleted"] = a.IsDeleted
 }
 
 func (a aPIRequestBodyRaw) clone(db *gorm.DB) aPIRequestBodyRaw {

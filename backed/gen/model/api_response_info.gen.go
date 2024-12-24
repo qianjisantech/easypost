@@ -20,6 +20,9 @@ type APIResponseInfo struct {
 	CreateBy       *string    `gorm:"column:create_by" json:"create_by"`
 	CreateTime     *time.Time `gorm:"column:create_time;default:now()" json:"create_time"`
 	JSONSchemaType *string    `gorm:"column:json_schema_type" json:"json_schema_type"`
+	UpdateBy       *string    `gorm:"column:update_by" json:"update_by"`
+	UpdateTime     *time.Time `gorm:"column:update_time;default:CURRENT_TIMESTAMP" json:"update_time"`
+	IsDeleted      *bool      `gorm:"column:is_deleted" json:"is_deleted"`
 }
 
 // TableName APIResponseInfo's table name

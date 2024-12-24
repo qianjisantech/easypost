@@ -38,8 +38,12 @@ func main() {
 
 	g.ApplyBasic(
 		g.GenerateModel("api_api_detail"),
+		g.GenerateModel("api_api_folder"),
+		g.GenerateModel("api_parameters_header"),
+		g.GenerateModel("api_parameters_query"),
 		g.GenerateModel("api_response_info"),
-		g.GenerateModel("api_request_body"),
+		g.GenerateModel("api_request_body_raw"),
+		g.GenerateModel("api_request_body_parameter"),
 		g.GenerateModel("api_response_property"),
 	)
 

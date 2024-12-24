@@ -20,6 +20,9 @@ type APIResponseProperty struct {
 	CreateTime  *time.Time `gorm:"column:create_time;default:CURRENT_TIMESTAMP" json:"create_time"`
 	Name        *string    `gorm:"column:name" json:"name"`
 	Description *string    `gorm:"column:description;comment:说明" json:"description"` // 说明
+	UpdateBy    *string    `gorm:"column:update_by" json:"update_by"`
+	UpdateTime  *time.Time `gorm:"column:update_time;default:CURRENT_TIMESTAMP" json:"update_time"`
+	IsDeleted   *bool      `gorm:"column:is_deleted" json:"is_deleted"`
 }
 
 // TableName APIResponseProperty's table name

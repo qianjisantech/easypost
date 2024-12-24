@@ -35,6 +35,9 @@ func newAPIResponseProperty(db *gorm.DB, opts ...gen.DOOption) aPIResponseProper
 	_aPIResponseProperty.CreateTime = field.NewTime(tableName, "create_time")
 	_aPIResponseProperty.Name = field.NewString(tableName, "name")
 	_aPIResponseProperty.Description = field.NewString(tableName, "description")
+	_aPIResponseProperty.UpdateBy = field.NewString(tableName, "update_by")
+	_aPIResponseProperty.UpdateTime = field.NewTime(tableName, "update_time")
+	_aPIResponseProperty.IsDeleted = field.NewBool(tableName, "is_deleted")
 
 	_aPIResponseProperty.fillFieldMap()
 
@@ -53,6 +56,9 @@ type aPIResponseProperty struct {
 	CreateTime  field.Time
 	Name        field.String
 	Description field.String // 说明
+	UpdateBy    field.String
+	UpdateTime  field.Time
+	IsDeleted   field.Bool
 
 	fieldMap map[string]field.Expr
 }
@@ -77,6 +83,9 @@ func (a *aPIResponseProperty) updateTableName(table string) *aPIResponseProperty
 	a.CreateTime = field.NewTime(table, "create_time")
 	a.Name = field.NewString(table, "name")
 	a.Description = field.NewString(table, "description")
+	a.UpdateBy = field.NewString(table, "update_by")
+	a.UpdateTime = field.NewTime(table, "update_time")
+	a.IsDeleted = field.NewBool(table, "is_deleted")
 
 	a.fillFieldMap()
 
@@ -105,7 +114,7 @@ func (a *aPIResponseProperty) GetFieldByName(fieldName string) (field.OrderExpr,
 }
 
 func (a *aPIResponseProperty) fillFieldMap() {
-	a.fieldMap = make(map[string]field.Expr, 8)
+	a.fieldMap = make(map[string]field.Expr, 11)
 	a.fieldMap["id"] = a.ID
 	a.fieldMap["type"] = a.Type
 	a.fieldMap["display_name"] = a.DisplayName
@@ -114,6 +123,9 @@ func (a *aPIResponseProperty) fillFieldMap() {
 	a.fieldMap["create_time"] = a.CreateTime
 	a.fieldMap["name"] = a.Name
 	a.fieldMap["description"] = a.Description
+	a.fieldMap["update_by"] = a.UpdateBy
+	a.fieldMap["update_time"] = a.UpdateTime
+	a.fieldMap["is_deleted"] = a.IsDeleted
 }
 
 func (a aPIResponseProperty) clone(db *gorm.DB) aPIResponseProperty {

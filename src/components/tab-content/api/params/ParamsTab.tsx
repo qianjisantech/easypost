@@ -5,6 +5,8 @@ import type { ApiDetails } from '@/types'
 import { ParamsEditableTable } from '../components/ParamsEditableTable'
 
 import { ParamsBody } from './ParamsBody'
+import {Authorization} from "@/components/tab-content/api/authorization/Authorization";
+import {Scripts} from "@/components/tab-content/api/scripts/Scripts";
 
 function BadgeLabel(props: React.PropsWithChildren<{ count?: number }>) {
   const { token } = theme.useToken()
@@ -80,7 +82,15 @@ export function ParamsTab(props: ParamsTabProps) {
             </div>
           ),
         },
-
+          {
+              key: 'authorization',
+              label: 'Authorization',
+              children: (
+                  <Form.Item noStyle name="authorization">
+                      <Authorization />
+                  </Form.Item>
+              ),
+          },
         {
           key: 'body',
           label: 'Body',
@@ -120,6 +130,15 @@ export function ParamsTab(props: ParamsTabProps) {
             </div>
           ),
         },
+          {
+              key: 'scripts',
+              label: '脚本',
+              children: (
+                  <Form.Item noStyle name="scripts">
+                      <Scripts />
+                  </Form.Item>
+              ),
+          },
       ]}
     />
   )
