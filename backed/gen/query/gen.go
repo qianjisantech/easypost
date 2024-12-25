@@ -25,6 +25,8 @@ var (
 	APIRequestBodyRaw       *aPIRequestBodyRaw
 	APIResponseInfo         *aPIResponseInfo
 	APIResponseProperty     *aPIResponseProperty
+	TeamMemberInfo          *teamMemberInfo
+	TeamProjectDetail       *teamProjectDetail
 )
 
 func SetDefault(db *gorm.DB, opts ...gen.DOOption) {
@@ -37,6 +39,8 @@ func SetDefault(db *gorm.DB, opts ...gen.DOOption) {
 	APIRequestBodyRaw = &Q.APIRequestBodyRaw
 	APIResponseInfo = &Q.APIResponseInfo
 	APIResponseProperty = &Q.APIResponseProperty
+	TeamMemberInfo = &Q.TeamMemberInfo
+	TeamProjectDetail = &Q.TeamProjectDetail
 }
 
 func Use(db *gorm.DB, opts ...gen.DOOption) *Query {
@@ -50,6 +54,8 @@ func Use(db *gorm.DB, opts ...gen.DOOption) *Query {
 		APIRequestBodyRaw:       newAPIRequestBodyRaw(db, opts...),
 		APIResponseInfo:         newAPIResponseInfo(db, opts...),
 		APIResponseProperty:     newAPIResponseProperty(db, opts...),
+		TeamMemberInfo:          newTeamMemberInfo(db, opts...),
+		TeamProjectDetail:       newTeamProjectDetail(db, opts...),
 	}
 }
 
@@ -64,6 +70,8 @@ type Query struct {
 	APIRequestBodyRaw       aPIRequestBodyRaw
 	APIResponseInfo         aPIResponseInfo
 	APIResponseProperty     aPIResponseProperty
+	TeamMemberInfo          teamMemberInfo
+	TeamProjectDetail       teamProjectDetail
 }
 
 func (q *Query) Available() bool { return q.db != nil }
@@ -79,6 +87,8 @@ func (q *Query) clone(db *gorm.DB) *Query {
 		APIRequestBodyRaw:       q.APIRequestBodyRaw.clone(db),
 		APIResponseInfo:         q.APIResponseInfo.clone(db),
 		APIResponseProperty:     q.APIResponseProperty.clone(db),
+		TeamMemberInfo:          q.TeamMemberInfo.clone(db),
+		TeamProjectDetail:       q.TeamProjectDetail.clone(db),
 	}
 }
 
@@ -101,6 +111,8 @@ func (q *Query) ReplaceDB(db *gorm.DB) *Query {
 		APIRequestBodyRaw:       q.APIRequestBodyRaw.replaceDB(db),
 		APIResponseInfo:         q.APIResponseInfo.replaceDB(db),
 		APIResponseProperty:     q.APIResponseProperty.replaceDB(db),
+		TeamMemberInfo:          q.TeamMemberInfo.replaceDB(db),
+		TeamProjectDetail:       q.TeamProjectDetail.replaceDB(db),
 	}
 }
 
@@ -113,6 +125,8 @@ type queryCtx struct {
 	APIRequestBodyRaw       IAPIRequestBodyRawDo
 	APIResponseInfo         IAPIResponseInfoDo
 	APIResponseProperty     IAPIResponsePropertyDo
+	TeamMemberInfo          ITeamMemberInfoDo
+	TeamProjectDetail       ITeamProjectDetailDo
 }
 
 func (q *Query) WithContext(ctx context.Context) *queryCtx {
@@ -125,6 +139,8 @@ func (q *Query) WithContext(ctx context.Context) *queryCtx {
 		APIRequestBodyRaw:       q.APIRequestBodyRaw.WithContext(ctx),
 		APIResponseInfo:         q.APIResponseInfo.WithContext(ctx),
 		APIResponseProperty:     q.APIResponseProperty.WithContext(ctx),
+		TeamMemberInfo:          q.TeamMemberInfo.WithContext(ctx),
+		TeamProjectDetail:       q.TeamProjectDetail.WithContext(ctx),
 	}
 }
 

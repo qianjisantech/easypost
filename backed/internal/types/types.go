@@ -162,3 +162,18 @@ type ApiRecycleGroupQueryResp struct {
 	Message string                      `json:"message"`
 	Data    []ApiDirectoryDataQueryData `json:"data"`
 }
+
+type ProjectQueryPageData struct {
+	Id          string `json:"id"`
+	ProjectName string `json:"projectName"`
+	ProjectIcon string `json:"projectIcon"`
+}
+
+type ProjectQueryPageRequest struct {
+}
+
+type ProjectQueryPageResp struct {
+	Code    string               `json:"code"`
+	Message string               `json:"message"`
+	Data    ProjectQueryPageData `json:"data"`
+}

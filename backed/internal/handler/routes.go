@@ -5,6 +5,7 @@ import (
 	"net/http"
 
 	api "backed/internal/handler/api"
+	project "backed/internal/handler/project"
 	"backed/internal/svc"
 
 	"github.com/zeromicro/go-zero/rest"
@@ -27,6 +28,17 @@ func RegisterHandlers(server *rest.Server, serverCtx *svc.ServiceContext) {
 				Method:  http.MethodPost,
 				Path:    "/recycle/group/list",
 				Handler: api.ApiRecycleGroupQueryHandler(serverCtx),
+			},
+		},
+		rest.WithPrefix("/api"),
+	)
+
+	server.AddRoutes(
+		[]rest.Route{
+			{
+				Method:  http.MethodPost,
+				Path:    "/project/page",
+				Handler: project.ProjectQueryPageHandler(serverCtx),
 			},
 		},
 		rest.WithPrefix("/api"),

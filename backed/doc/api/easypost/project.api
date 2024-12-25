@@ -1,0 +1,32 @@
+syntax = "v1"
+
+info(
+    desc: "api"
+    author: "qianji"
+    email: "2497822530@qq.com"
+)
+type (
+   ProjectQueryPageRequest {
+
+   }
+   ProjectQueryPageResp {
+   Code string  `json:"code"`
+   Message string  `json:"message"`
+   Data ProjectQueryPageData  `json:"data"`
+
+   }
+   ProjectQueryPageData{
+    Id string  `json:"id"`
+    ProjectName  string  `json:"projectName"`
+    ProjectIcon  string   `json:"projectIcon"`
+   }
+)
+
+@server(
+    group:  project
+    prefix: /api
+)
+service easypost-api {
+    @handler ProjectQueryPage
+    post   /project/page (ProjectQueryPageRequest) returns (ProjectQueryPageResp)
+}

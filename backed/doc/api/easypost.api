@@ -1,4 +1,5 @@
-import "api/api.api"
+import "easypost/api.api"
+import "easypost/project.api"
 
 info (
 	title:   "easypost后端"

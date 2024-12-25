@@ -1,13 +1,31 @@
 'use client'
 
-import {useState, useTransition} from 'react';
+import { useState, useTransition } from 'react';
 import { useRouter } from 'next/navigation';
-import { Layout, Row, Col, Card, Button, Typography, Menu, Tabs, Spin } from 'antd';
-import { FileOutlined, AppstoreAddOutlined, DatabaseOutlined, UserOutlined } from '@ant-design/icons';
+import {
+    Layout,
+    Row,
+    Col,
+    Card,
+    Button,
+    Typography,
+    Menu,
+    Tabs,
+    Spin,
+    Modal,
+    Select,
+    Form,
+    Input,
+    Space,
+    Dropdown,
+    FormProps
+} from 'antd';
+import { FileOutlined, AppstoreAddOutlined, DatabaseOutlined, UserOutlined, EllipsisOutlined } from '@ant-design/icons';
 
 const { Header, Content, Footer, Sider } = Layout;
 const { Title } = Typography;
 const { TabPane } = Tabs;
+const { Option } = Select;
 
 export default function MainPage() {
     const [loading, setLoading] = useState(false);  // 用来控制 loading 状态
@@ -27,14 +45,83 @@ export default function MainPage() {
         setLoading(false);  // 设置加载为 false
     };
 
+    const [open, setOpen] = useState(false);
+    const [confirmLoading, setConfirmLoading] = useState(false);
+    const [modalText, setModalText] = useState('Content of the modal');
+    const handleOk = () => {
+        setModalText('The modal will be closed after two seconds');
+        setConfirmLoading(true);
+        setTimeout(() => {
+            setOpen(false);
+            setConfirmLoading(false);
+        }, 2000);
+    };
+
+    const handleCancel = () => {
+        console.log('Clicked cancel button');
+        setOpen(false);
+    };
+
+    const handleCreateProject = () => {
+        setOpen(true);
+    };
+
+    type FieldType = {
+        username?: string;
+        password?: string;
+        remember?: string;
+    };
+
+    const onFinish: FormProps<FieldType>['onFinish'] = (values) => {
+        console.log('Success:', values);
+    };
+
+    const onFinishFailed: FormProps<FieldType>['onFinishFailed'] = (errorInfo) => {
+        console.log('Failed:', errorInfo);
+    };
+
+    // 图标映射表
+    const iconMap = {
+        appstore: <AppstoreAddOutlined />,
+        file: <FileOutlined />,
+        database: <DatabaseOutlined />,
+        user: <UserOutlined />,
+    };
+
     const cardsData = [
-        { title: '客户服务', icon: <AppstoreAddOutlined />, color: '#1890ff', route: '/project' },
-        { title: '网络经营', icon: <FileOutlined />, color: '#52c41a', route: '/project' },
-        { title: '网络营运', icon: <DatabaseOutlined />, color: '#faad14', route: '/project' },
-        { title: '客户渠道', icon: <UserOutlined />, color: '#13c2c2', route: '/project' },
-        { title: '操作中心', icon: <AppstoreAddOutlined />, color: '#2f54eb', route: '/project' },
-        { title: '财务结算', icon: <AppstoreAddOutlined />, color: '#2f54eb', route: '/project' },
+        { title: '中东', icon: 'appstore', color: '#1890ff', route: '/project' },
+        { title: '巴西', icon: 'file', color: '#52c41a', route: '/project' },
+        { title: '墨西哥', icon: 'database', color: '#faad14', route: '/project' },
+        { title: '埃及', icon: 'user', color: '#13c2c2', route: '/project' },
+        { title: '阿联酋', icon: 'appstore', color: '#2f54eb', route: '/project' },
     ];
+
+    // 组织列表
+    const organizations = [
+        { id: '1', name: '新开国家-客户服务' },
+        { id: '2', name: '新开国家-网络经营' },
+        { id: '3', name: '新开国家-网络营运' }
+    ];
+
+    const handleSelectChange = (value) => {
+        console.log(`选择的组织: ${value}`);
+    };
+
+    // 处理下拉菜单点击
+    const handleMenuClick = (e) => {
+        if (e.key === 'copy') {
+            console.log('点击了复制');
+        } else if (e.key === 'edit') {
+            console.log('点击了编辑');
+        }
+    };
+
+    const menu = (
+        <Menu onClick={handleMenuClick}>
+            <Menu.Item key="copy">复制</Menu.Item>
+            <Menu.Item key="edit">编辑</Menu.Item>
+        </Menu>
+    );
 
     return (
         <Layout>
@@ -72,12 +159,6 @@ export default function MainPage() {
                         <Menu.Item key="2" icon={<FileOutlined />}>
                             个人空间
                         </Menu.Item>
-                        <Menu.Item key="3" icon={<DatabaseOutlined />}>
-                            我的收藏
-                        </Menu.Item>
-                        <Menu.Item key="4" icon={<UserOutlined />}>
-                            最近访问
-                        </Menu.Item>
                     </Menu>
                 </div>
             </Sider>
@@ -93,8 +174,27 @@ export default function MainPage() {
                         zIndex: 1,
                         top: 0,
                         left: 200,
+                        display: 'flex',
+                        justifyContent: 'space-between',
+                        padding: '0 20px',
                     }}
-                />
+                >
+                    {/* Select for organizations */}
+                    <Space style={{ position: 'absolute', right: 20, top: 20 }}>
+                        <span>组织：</span>
+                        <Select
+                            defaultValue={organizations[0].id}
+                            style={{ width: 200 }}
+                            onChange={handleSelectChange}
+                        >
+                            {organizations.map((org) => (
+                                <Option key={org.id} value={org.id}>
+                                    {org.name}
+                                </Option>
+                            ))}
+                        </Select>
+                    </Space>
+                </Header>
 
                 {/* Content */}
                 <Content style={{ padding: '30px 20px', marginTop: 20, background: '#fff' }}>
@@ -117,18 +217,18 @@ export default function MainPage() {
                             个人空间
                         </Title>
                     </div>
+
                     <div style={{ marginBottom: 10 }}>
                         <Row justify="end" gutter={16}>
                             <Col>
-                                <Button type="default">导入项目</Button>
-                            </Col>
-                            <Col>
-                                <Button type="primary">新建项目</Button>
+                                <Button type="primary" onClick={handleCreateProject}>
+                                    新建项目
+                                </Button>
                             </Col>
                         </Row>
                     </div>
+
                     <Tabs defaultActiveKey="1">
-                        {/* 第一个 Tab */}
                         <TabPane tab="团队项目" key="1">
                             <Row gutter={8}>
                                 {cardsData.map((card, index) => (
@@ -141,10 +241,36 @@ export default function MainPage() {
                                                 height: '200px',
                                                 width: '200px',
                                             }}
-                                            onClick={() => handleCardClick(card.route)} // 处理点击事件，跳转路由
+
                                         >
-                                            <Card
-                                                title={card.title}
+                                            <Card onClick={() => handleCardClick(card.route)} // 处理点击事件，跳转路由
+                                                title={
+                                                    <div style={{ display: 'flex', alignItems: 'center' }}>
+                                                        {/* 鼠标悬停触发下拉菜单 */}
+                                                        <Dropdown overlay={menu} trigger={['hover']}>
+                                                            <EllipsisOutlined
+                                                                style={{
+                                                                    fontSize: '16px',
+                                                                    cursor: 'pointer',
+                                                                    marginRight: '8px',
+                                                                }}
+                                                            />
+                                                        </Dropdown>
+                                                        <div
+                                                            style={{
+                                                                backgroundColor: '#1890ff',
+                                                                color: '#fff',
+                                                                padding: '2px 8px',
+                                                                fontSize: '12px',
+                                                                borderRadius: '8px',
+                                                                marginRight: '8px',
+                                                            }}
+                                                        >
+                                                            公共
+                                                        </div>
+                                                        {card.title}
+                                                    </div>
+                                                }
                                                 bordered={true}
                                                 hoverable
                                                 style={{
@@ -157,30 +283,13 @@ export default function MainPage() {
                                                 }}
                                             >
                                                 <div style={{ fontSize: '36px', color: card.color }}>
-                                                    {card.icon}
+                                                    {iconMap[card.icon]}
                                                 </div>
                                             </Card>
                                         </div>
                                     </Col>
                                 ))}
                             </Row>
-                        </TabPane>
-
-                        {/* 其他 Tab */}
-                        <TabPane tab="团队资源" key="2">
-                            {/* 你可以根据需要改变卡片或内容 */}
-                        </TabPane>
-
-                        <TabPane tab="动态" key="3">
-                            {/* 你可以根据需要改变卡片或内容 */}
-                        </TabPane>
-
-                        <TabPane tab="成员/权限" key="4">
-                            {/* 你可以根据需要改变卡片或内容 */}
-                        </TabPane>
-
-                        <TabPane tab="团队设置" key="5">
-                            {/* 你可以根据需要改变卡片或内容 */}
                         </TabPane>
                     </Tabs>
                 </Content>

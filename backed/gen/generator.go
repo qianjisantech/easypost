@@ -45,6 +45,8 @@ func main() {
 		g.GenerateModel("api_request_body_raw"),
 		g.GenerateModel("api_request_body_parameter"),
 		g.GenerateModel("api_response_property"),
+		g.GenerateModel("team_member_info"),
+		g.GenerateModel("team_project_detail"),
 	)
 
 	// Execute the generator

@@ -5,49 +5,10 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="739ebd12-30da-4953-9654-ff894db03f2c" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/../src/app/main/InitMainPage.tsx" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../src/components/tab-content/api/authorization/Authorization.tsx" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../src/components/tab-content/api/scripts/Scripts.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../backed/doc/api/api/api.api" beforeDir="false" afterPath="$PROJECT_DIR$/../backed/doc/api/api/api.api" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../backed/gen/generator.go" beforeDir="false" afterPath="$PROJECT_DIR$/../backed/gen/generator.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../backed/gen/model/api_api_detail.gen.go" beforeDir="false" afterPath="$PROJECT_DIR$/../backed/gen/model/api_api_detail.gen.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../backed/gen/model/api_parameters_header.gen.go" beforeDir="false" afterPath="$PROJECT_DIR$/../backed/gen/model/api_parameters_header.gen.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../backed/gen/model/api_parameters_query.gen.go" beforeDir="false" afterPath="$PROJECT_DIR$/../backed/gen/model/api_parameters_query.gen.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../backed/gen/model/api_request_body_parameter.gen.go" beforeDir="false" afterPath="$PROJECT_DIR$/../backed/gen/model/api_request_body_parameter.gen.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../backed/gen/model/api_request_body_raw.gen.go" beforeDir="false" afterPath="$PROJECT_DIR$/../backed/gen/model/api_request_body_raw.gen.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../backed/gen/model/api_response_info.gen.go" beforeDir="false" afterPath="$PROJECT_DIR$/../backed/gen/model/api_response_info.gen.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../backed/gen/model/api_response_property.gen.go" beforeDir="false" afterPath="$PROJECT_DIR$/../backed/gen/model/api_response_property.gen.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../backed/gen/query/api_api_detail.gen.go" beforeDir="false" afterPath="$PROJECT_DIR$/../backed/gen/query/api_api_detail.gen.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../backed/gen/query/api_parameters_header.gen.go" beforeDir="false" afterPath="$PROJECT_DIR$/../backed/gen/query/api_parameters_header.gen.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../backed/gen/query/api_parameters_query.gen.go" beforeDir="false" afterPath="$PROJECT_DIR$/../backed/gen/query/api_parameters_query.gen.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../backed/gen/query/api_request_body_parameter.gen.go" beforeDir="false" afterPath="$PROJECT_DIR$/../backed/gen/query/api_request_body_parameter.gen.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../backed/gen/query/api_request_body_raw.gen.go" beforeDir="false" afterPath="$PROJECT_DIR$/../backed/gen/query/api_request_body_raw.gen.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../backed/gen/query/api_response_info.gen.go" beforeDir="false" afterPath="$PROJECT_DIR$/../backed/gen/query/api_response_info.gen.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../backed/gen/query/api_response_property.gen.go" beforeDir="false" afterPath="$PROJECT_DIR$/../backed/gen/query/api_response_property.gen.go" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../backed/gen/query/gen.go" beforeDir="false" afterPath="$PROJECT_DIR$/../backed/gen/query/gen.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../backed/internal/handler/api/api/apidirectorydataqueryhandler.go" beforeDir="false" afterPath="$PROJECT_DIR$/../backed/internal/handler/api/apidirectorydataqueryhandler.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../backed/internal/handler/api/api/apiinfocreatehandler.go" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../backed/internal/handler/api/api/apirecyclegroupqueryhandler.go" beforeDir="false" afterPath="$PROJECT_DIR$/../backed/internal/handler/api/apirecyclegroupqueryhandler.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../backed/internal/handler/routes.go" beforeDir="false" afterPath="$PROJECT_DIR$/../backed/internal/handler/routes.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../backed/internal/logic/api/api/apidirectorydataquerylogic.go" beforeDir="false" afterPath="$PROJECT_DIR$/../backed/internal/logic/api/apidirectorydataquerylogic.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../backed/internal/logic/api/api/apiinfocreatelogic.go" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../backed/internal/logic/api/api/apirecyclegroupquerylogic.go" beforeDir="false" afterPath="$PROJECT_DIR$/../backed/internal/logic/api/apirecyclegroupquerylogic.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../backed/internal/types/types.go" beforeDir="false" afterPath="$PROJECT_DIR$/../backed/internal/types/types.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../package.json" beforeDir="false" afterPath="$PROJECT_DIR$/../package.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../pnpm-lock.yaml" beforeDir="false" afterPath="$PROJECT_DIR$/../pnpm-lock.yaml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../public/favicon.svg" beforeDir="false" afterPath="$PROJECT_DIR$/../public/favicon.svg" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../src/api/api/index.js" beforeDir="false" afterPath="$PROJECT_DIR$/../src/api/api/index.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../src/app/(main)/components/SideNav/NavMenu.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/../src/app/(main)/components/SideNav/NavMenu.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../src/app/(main)/layout.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/../src/app/(main)/layout.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../src/app/layout.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/../src/app/layout.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../src/app/page.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/../src/app/page.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../src/components/modals/ModalNewCatalog.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/../src/components/modals/ModalNewCatalog.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../src/components/tab-content/api/ApiDocEditing.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/../src/components/tab-content/api/ApiDocEditing.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../src/components/tab-content/api/params/ParamsTab.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/../src/components/tab-content/api/params/ParamsTab.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../src/components/tab-content/folder/FolderSetting.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/../src/components/tab-content/folder/FolderSetting.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../src/contexts/menu-helpers.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/../src/contexts/menu-helpers.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../src/data/remote.ts" beforeDir="false" afterPath="$PROJECT_DIR$/../src/data/remote.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../src/app/(main)/main/page.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/../src/app/(main)/main/page.tsx" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
