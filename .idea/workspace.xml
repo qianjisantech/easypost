@@ -1,0 +1,550 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="AutoImportSettings">
+    <option name="autoReloadType" value="SELECTIVE" />
+  </component>
+  <component name="ChangeListManager">
+    <list default="true" id="fa02d96c-db92-417a-b3c3-32c58eae6f94" name="Changes" comment="修改项目结构">
+      <change afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/front/.env" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/front/.eslintrc.cjs" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/front/.gitignore" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/front/.prettierrc.cjs" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/front/.stylelintrc.cjs" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/front/README.md" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/front/next.config.mjs" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/front/package.json" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/front/pnpm-lock.yaml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/front/postcss.config.cjs" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/front/proxy.api" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/front/public/assets/svg/project1.svg" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/front/public/favicon.svg" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/front/public/manifest.webmanifest" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/front/src/api/api/index.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/front/src/api/index.ts" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/front/src/app/(main)/components/FooterBar/FooterBar.tsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/front/src/app/(main)/components/FooterBar/index.ts" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/front/src/app/(main)/components/PanelLayout.tsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/front/src/app/(main)/components/SideNav/NavMenu.tsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/front/src/app/(main)/components/SideNav/SideNav.tsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/front/src/app/(main)/components/SideNav/index.ts" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/front/src/app/(main)/layout.tsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/front/src/app/(main)/main/page.tsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/front/src/app/(main)/project/page.tsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/front/src/app/(main)/settings/page.tsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/front/src/app/layout.tsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/front/src/app/page.tsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/front/src/app/test/page.tsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/front/src/assets/svg/favicon.svg" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/front/src/assets/svg/project1.svg" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/front/src/components/AntdStyleProvider.tsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/front/src/components/ApiMenu/ApiMenu.tsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/front/src/components/ApiMenu/ApiMenu.type.ts" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/front/src/components/ApiMenu/ApiMenuContext.tsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/front/src/components/ApiMenu/ApiMenuTitle.tsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/front/src/components/ApiMenu/ApiMenuTitleTop.tsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/front/src/components/ApiMenu/AppMenuControls.tsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/front/src/components/ApiMenu/DropdownActions.tsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/front/src/components/ApiMenu/FileAction.tsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/front/src/components/ApiMenu/FolderAction.tsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/front/src/components/ApiMenu/MenuActionButton.tsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/front/src/components/ApiMenu/SwitcherIcon.tsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/front/src/components/ApiMenu/api-menu-data.tsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/front/src/components/ApiMenu/index.ts" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/front/src/components/ApiTab/ApiTab.enum.ts" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/front/src/components/ApiTab/ApiTab.tsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/front/src/components/ApiTab/ApiTab.type.ts" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/front/src/components/ApiTab/ApiTabAction.tsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/front/src/components/ApiTab/ApiTabContent.tsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/front/src/components/ApiTab/ApiTabContentWrapper.tsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/front/src/components/ApiTab/ApiTabLabel.tsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/front/src/components/ApiTab/TabContentContext.tsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/front/src/components/ApiTab/index.ts" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/front/src/components/DataTypeSelect.tsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/front/src/components/DoubleCheckRemoveBtn.tsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/front/src/components/EditableTable.tsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/front/src/components/HeaderNav.tsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/front/src/components/IconText.tsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/front/src/components/InputSearch.tsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/front/src/components/InputUnderline.tsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/front/src/components/JsonSchema/JsonSchema.context.tsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/front/src/components/JsonSchema/JsonSchema.type.ts" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/front/src/components/JsonSchema/JsonSchemaEditor.tsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/front/src/components/JsonSchema/JsonSchemaNode.tsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/front/src/components/JsonSchema/JsonSchemaNodeRow.tsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/front/src/components/JsonSchema/JsonSchemaNodeWrapper.tsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/front/src/components/JsonSchema/constants.ts" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/front/src/components/JsonSchema/index.ts" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/front/src/components/JsonSchema/utils.ts" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/front/src/components/JsonSchemaCard.tsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/front/src/components/JsonViewer.tsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/front/src/components/MarkdownEditor.tsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/front/src/components/MonacoEditor/MonacoEditor.tsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/front/src/components/MonacoEditor/index.ts" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/front/src/components/SelectorCatalog.tsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/front/src/components/SelectorService.tsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/front/src/components/ThemeEditor/ThemeColorPicker.tsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/front/src/components/ThemeEditor/ThemeContext.tsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/front/src/components/ThemeEditor/ThemeEditor.helper.ts" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/front/src/components/ThemeEditor/ThemeEditor.tsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/front/src/components/ThemeEditor/ThemeEditor.type.ts" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/front/src/components/ThemeEditor/ThemePicker.tsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/front/src/components/ThemeEditor/ThemeRadiusPicker.tsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/front/src/components/ThemeEditor/index.tsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/front/src/components/ThemeEditor/theme-data.tsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/front/src/components/UIBtn.tsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/front/src/components/icons/FileIcon.tsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/front/src/components/icons/FolderIcon.tsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/front/src/components/icons/HttpMethodText.tsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/front/src/components/icons/IconLogo.tsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/front/src/components/main/HeaderComponent.tsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/front/src/components/main/LoadingSpinner.tsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/front/src/components/main/ProjectCard.tsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/front/src/components/main/ProjectTabs.tsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/front/src/components/main/Sidebar.tsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/front/src/components/modals/ModalMoveMenu.tsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/front/src/components/modals/ModalNewCatalog.tsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/front/src/components/modals/ModalRename.tsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/front/src/components/modals/ModalSettings.tsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/front/src/components/tab-content/Blank.tsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/front/src/components/tab-content/Doc.tsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/front/src/components/tab-content/Overview.tsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/front/src/components/tab-content/Recycle.tsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/front/src/components/tab-content/Schema.tsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/front/src/components/tab-content/api/Api.tsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/front/src/components/tab-content/api/ApiDoc.tsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/front/src/components/tab-content/api/ApiDocEditing.tsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/front/src/components/tab-content/api/ApiRemoveButton.tsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/front/src/components/tab-content/api/ApiRun.tsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/front/src/components/tab-content/api/ApiSidePanel.tsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/front/src/components/tab-content/api/ModalNewResponse.tsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/front/src/components/tab-content/api/authorization/Authorization.tsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/front/src/components/tab-content/api/components/BaseFormItems.tsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/front/src/components/tab-content/api/components/GroupTitle.tsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/front/src/components/tab-content/api/components/InputDesc.tsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/front/src/components/tab-content/api/components/ParamsEditableCell.tsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/front/src/components/tab-content/api/components/ParamsEditableTable.tsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/front/src/components/tab-content/api/components/PathInput.tsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/front/src/components/tab-content/api/components/RequestBodyRaw.tsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/front/src/components/tab-content/api/components/ResponseTab.tsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/front/src/components/tab-content/api/params/ParamsBody.tsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/front/src/components/tab-content/api/params/ParamsTab.tsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/front/src/components/tab-content/api/response/RunResponse.tsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/front/src/components/tab-content/api/scripts/Scripts.tsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/front/src/components/tab-content/folder/Folder.tsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/front/src/components/tab-content/folder/FolderApiList.tsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/front/src/components/tab-content/folder/FolderSetting.tsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/front/src/configs/static.ts" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/front/src/constants.ts" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/front/src/contexts/global.tsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/front/src/contexts/layout-settings.tsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/front/src/contexts/menu-helpers.tsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/front/src/contexts/menu-tab-settings.tsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/front/src/data/remote.ts" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/front/src/enums.ts" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/front/src/helpers.ts" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/front/src/hooks/useCatalog.ts" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/front/src/hooks/useCssVariable.tsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/front/src/hooks/useHelpers.ts" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/front/src/hooks/useStyle.ts" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/front/src/styles/globals.css" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/front/src/types.ts" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/front/src/utils.ts" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/front/src/utils/request.ts" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/front/tailwind.config.ts" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/front/tsconfig.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.env" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.eslintrc.cjs" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.gitignore" beforeDir="false" afterPath="$PROJECT_DIR$/.gitignore" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/.gitignore" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/easypost.iml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/modules.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.prettierrc.cjs" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.stylelintrc.cjs" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/README.md" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/next.config.mjs" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/package.json" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/pnpm-lock.yaml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/postcss.config.cjs" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/proxy.api" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/public/assets/svg/project1.svg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/public/favicon.svg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/public/manifest.webmanifest" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/api/api/index.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/api/index.ts" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/app/(main)/components/FooterBar/FooterBar.tsx" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/app/(main)/components/FooterBar/index.ts" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/app/(main)/components/PanelLayout.tsx" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/app/(main)/components/SideNav/NavMenu.tsx" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/app/(main)/components/SideNav/SideNav.tsx" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/app/(main)/components/SideNav/index.ts" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/app/(main)/layout.tsx" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/app/(main)/main/page.tsx" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/app/(main)/project/page.tsx" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/app/(main)/settings/page.tsx" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/app/layout.tsx" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/app/page.tsx" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/app/test/page.tsx" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/assets/svg/favicon.svg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/assets/svg/project1.svg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/components/AntdStyleProvider.tsx" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/components/ApiMenu/ApiMenu.tsx" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/components/ApiMenu/ApiMenu.type.ts" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/components/ApiMenu/ApiMenuContext.tsx" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/components/ApiMenu/ApiMenuTitle.tsx" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/components/ApiMenu/ApiMenuTitleTop.tsx" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/components/ApiMenu/AppMenuControls.tsx" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/components/ApiMenu/DropdownActions.tsx" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/components/ApiMenu/FileAction.tsx" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/components/ApiMenu/FolderAction.tsx" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/components/ApiMenu/MenuActionButton.tsx" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/components/ApiMenu/SwitcherIcon.tsx" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/components/ApiMenu/api-menu-data.tsx" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/components/ApiMenu/index.ts" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/components/ApiTab/ApiTab.enum.ts" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/components/ApiTab/ApiTab.tsx" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/components/ApiTab/ApiTab.type.ts" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/components/ApiTab/ApiTabAction.tsx" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/components/ApiTab/ApiTabContent.tsx" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/components/ApiTab/ApiTabContentWrapper.tsx" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/components/ApiTab/ApiTabLabel.tsx" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/components/ApiTab/TabContentContext.tsx" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/components/ApiTab/index.ts" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/components/DataTypeSelect.tsx" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/components/DoubleCheckRemoveBtn.tsx" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/components/EditableTable.tsx" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/components/HeaderNav.tsx" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/components/IconText.tsx" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/components/InputSearch.tsx" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/components/InputUnderline.tsx" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/components/JsonSchema/JsonSchema.context.tsx" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/components/JsonSchema/JsonSchema.type.ts" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/components/JsonSchema/JsonSchemaEditor.tsx" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/components/JsonSchema/JsonSchemaNode.tsx" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/components/JsonSchema/JsonSchemaNodeRow.tsx" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/components/JsonSchema/JsonSchemaNodeWrapper.tsx" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/components/JsonSchema/constants.ts" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/components/JsonSchema/index.ts" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/components/JsonSchema/utils.ts" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/components/JsonSchemaCard.tsx" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/components/JsonViewer.tsx" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/components/MarkdownEditor.tsx" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/components/MonacoEditor/MonacoEditor.tsx" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/components/MonacoEditor/index.ts" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/components/SelectorCatalog.tsx" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/components/SelectorService.tsx" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/components/ThemeEditor/ThemeColorPicker.tsx" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/components/ThemeEditor/ThemeContext.tsx" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/components/ThemeEditor/ThemeEditor.helper.ts" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/components/ThemeEditor/ThemeEditor.tsx" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/components/ThemeEditor/ThemeEditor.type.ts" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/components/ThemeEditor/ThemePicker.tsx" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/components/ThemeEditor/ThemeRadiusPicker.tsx" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/components/ThemeEditor/index.tsx" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/components/ThemeEditor/theme-data.tsx" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/components/UIBtn.tsx" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/components/icons/FileIcon.tsx" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/components/icons/FolderIcon.tsx" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/components/icons/HttpMethodText.tsx" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/components/icons/IconLogo.tsx" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/components/main/HeaderComponent.tsx" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/components/main/LoadingSpinner.tsx" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/components/main/ProjectCard.tsx" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/components/main/ProjectTabs.tsx" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/components/main/Sidebar.tsx" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/components/modals/ModalMoveMenu.tsx" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/components/modals/ModalNewCatalog.tsx" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/components/modals/ModalRename.tsx" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/components/modals/ModalSettings.tsx" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/components/tab-content/Blank.tsx" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/components/tab-content/Doc.tsx" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/components/tab-content/Overview.tsx" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/components/tab-content/Recycle.tsx" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/components/tab-content/Schema.tsx" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/components/tab-content/api/Api.tsx" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/components/tab-content/api/ApiDoc.tsx" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/components/tab-content/api/ApiDocEditing.tsx" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/components/tab-content/api/ApiRemoveButton.tsx" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/components/tab-content/api/ApiRun.tsx" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/components/tab-content/api/ApiSidePanel.tsx" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/components/tab-content/api/ModalNewResponse.tsx" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/components/tab-content/api/authorization/Authorization.tsx" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/components/tab-content/api/components/BaseFormItems.tsx" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/components/tab-content/api/components/GroupTitle.tsx" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/components/tab-content/api/components/InputDesc.tsx" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/components/tab-content/api/components/ParamsEditableCell.tsx" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/components/tab-content/api/components/ParamsEditableTable.tsx" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/components/tab-content/api/components/PathInput.tsx" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/components/tab-content/api/components/RequestBodyRaw.tsx" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/components/tab-content/api/components/ResponseTab.tsx" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/components/tab-content/api/params/ParamsBody.tsx" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/components/tab-content/api/params/ParamsTab.tsx" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/components/tab-content/api/response/RunResponse.tsx" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/components/tab-content/api/scripts/Scripts.tsx" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/components/tab-content/folder/Folder.tsx" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/components/tab-content/folder/FolderApiList.tsx" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/components/tab-content/folder/FolderSetting.tsx" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/configs/static.ts" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/constants.ts" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/contexts/global.tsx" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/contexts/layout-settings.tsx" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/contexts/menu-helpers.tsx" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/contexts/menu-tab-settings.tsx" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/data/remote.ts" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/enums.ts" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/helpers.ts" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/hooks/useCatalog.ts" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/hooks/useCssVariable.tsx" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/hooks/useHelpers.ts" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/hooks/useStyle.ts" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/styles/globals.css" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/types.ts" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/utils.ts" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/utils/request.ts" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/tailwind.config.ts" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/tsconfig.json" beforeDir="false" />
+    </list>
+    <option name="SHOW_DIALOG" value="false" />
+    <option name="HIGHLIGHT_CONFLICTS" value="true" />
+    <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
+    <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="FileTemplateManagerImpl">
+    <option name="RECENT_TEMPLATES">
+      <list>
+        <option value="TypeScript File" />
+        <option value="TypeScript JSX File" />
+      </list>
+    </option>
+  </component>
+  <component name="Git.Settings">
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
+  </component>
+  <component name="ProjectColorInfo">{
+  &quot;customColor&quot;: &quot;&quot;,
+  &quot;associatedIndex&quot;: 2
+}</component>
+  <component name="ProjectId" id="2qHzASSAtFUPtdKjk9plkgYnMRu" />
+  <component name="ProjectViewState">
+    <option name="hideEmptyMiddlePackages" value="true" />
+    <option name="showLibraryContents" value="true" />
+  </component>
+  <component name="PropertiesComponent">{
+  &quot;keyToString&quot;: {
+    &quot;ReactCreateComponentLastSelected&quot;: &quot;functionDeclarationComponent&quot;,
+    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
+    &quot;git-widget-placeholder&quot;: &quot;main&quot;,
+    &quot;last_opened_file_path&quot;: &quot;D:/项目/qianjisan/easypost&quot;,
+    &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
+    &quot;node.js.detected.package.stylelint&quot;: &quot;true&quot;,
+    &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
+    &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
+    &quot;node.js.selected.package.stylelint&quot;: &quot;D:\\项目\\qianjisan\\easypost\\node_modules\\stylelint&quot;,
+    &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
+    &quot;nodejs_package_manager_path&quot;: &quot;pnpm&quot;,
+    &quot;npm.build.executor&quot;: &quot;Run&quot;,
+    &quot;npm.dev.executor&quot;: &quot;Run&quot;,
+    &quot;ts.external.directory.path&quot;: &quot;D:\\项目\\qianjisan\\easypost\\front\\node_modules\\typescript\\lib&quot;,
+    &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
+  }
+}</component>
+  <component name="ReactDesignerToolWindowState">
+    <option name="myId2Visible">
+      <map>
+        <entry key="com.intellij.reactbuddy.reactComponents" value="false" />
+        <entry key="com.intellij.reactbuddy.reactInspector" value="false" />
+        <entry key="com.intellij.reactbuddy.storybook" value="false" />
+      </map>
+    </option>
+  </component>
+  <component name="RecentsManager">
+    <key name="CopyFile.RECENT_KEYS">
+      <recent name="D:\项目\qianjisan\easypost\src\assets\svg" />
+      <recent name="D:\项目\qianjisan\easypost\public" />
+      <recent name="D:\项目\qianjisan\easypost\src" />
+    </key>
+    <key name="MoveFile.RECENT_KEYS">
+      <recent name="D:\项目\qianjisan\easypost\public\assets" />
+      <recent name="D:\项目\qianjisan\easypost\public\svg" />
+      <recent name="D:\项目\qianjisan\easypost\src\components" />
+      <recent name="D:\项目\qianjisan\easypost\src\app\(main)\project" />
+      <recent name="D:\项目\qianjisan\easypost\src\app\(main)" />
+    </key>
+  </component>
+  <component name="RunManager" selected="npm.dev">
+    <configuration name="build" type="js.build_tools.npm" temporary="true" nameIsGenerated="true">
+      <package-json value="$PROJECT_DIR$/package.json" />
+      <command value="run" />
+      <scripts>
+        <script value="build" />
+      </scripts>
+      <node-interpreter value="project" />
+      <envs />
+      <method v="2" />
+    </configuration>
+    <configuration name="dev" type="js.build_tools.npm" temporary="true" nameIsGenerated="true">
+      <package-json value="$PROJECT_DIR$/package.json" />
+      <command value="run" />
+      <scripts>
+        <script value="dev" />
+      </scripts>
+      <node-interpreter value="project" />
+      <envs />
+      <method v="2" />
+    </configuration>
+    <recent_temporary>
+      <list>
+        <item itemvalue="npm.dev" />
+        <item itemvalue="npm.build" />
+      </list>
+    </recent_temporary>
+  </component>
+  <component name="SharedIndexes">
+    <attachedChunks>
+      <set>
+        <option value="bundled-js-predefined-1d06a55b98c1-74d2a5396914-JavaScript-WS-241.14494.235" />
+      </set>
+    </attachedChunks>
+  </component>
+  <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
+  <component name="TaskManager">
+    <task active="true" id="Default" summary="Default task">
+      <changelist id="fa02d96c-db92-417a-b3c3-32c58eae6f94" name="Changes" comment="" />
+      <created>1734334145891</created>
+      <option name="number" value="Default" />
+      <option name="presentableId" value="Default" />
+      <updated>1734334145891</updated>
+      <workItem from="1734334148207" duration="135359000" />
+      <workItem from="1735029036218" duration="34962000" />
+      <workItem from="1735192785036" duration="387000" />
+    </task>
+    <task id="LOCAL-00001" summary="初次提交">
+      <option name="closed" value="true" />
+      <created>1734334207287</created>
+      <option name="number" value="00001" />
+      <option name="presentableId" value="LOCAL-00001" />
+      <option name="project" value="LOCAL" />
+      <updated>1734334207287</updated>
+    </task>
+    <task id="LOCAL-00002" summary="新增后端">
+      <option name="closed" value="true" />
+      <created>1734346428818</created>
+      <option name="number" value="00002" />
+      <option name="presentableId" value="LOCAL-00002" />
+      <option name="project" value="LOCAL" />
+      <updated>1734346428818</updated>
+    </task>
+    <task id="LOCAL-00003" summary="新增后端">
+      <option name="closed" value="true" />
+      <created>1734400254140</created>
+      <option name="number" value="00003" />
+      <option name="presentableId" value="LOCAL-00003" />
+      <option name="project" value="LOCAL" />
+      <updated>1734400254140</updated>
+    </task>
+    <task id="LOCAL-00004" summary="查询加创建">
+      <option name="closed" value="true" />
+      <created>1734427281697</created>
+      <option name="number" value="00004" />
+      <option name="presentableId" value="LOCAL-00004" />
+      <option name="project" value="LOCAL" />
+      <updated>1734427281697</updated>
+    </task>
+    <task id="LOCAL-00005" summary="增加proxy代理请求">
+      <option name="closed" value="true" />
+      <created>1734505235907</created>
+      <option name="number" value="00005" />
+      <option name="presentableId" value="LOCAL-00005" />
+      <option name="project" value="LOCAL" />
+      <updated>1734505235907</updated>
+    </task>
+    <task id="LOCAL-00006" summary="可以新增post请求">
+      <option name="closed" value="true" />
+      <created>1734518091840</created>
+      <option name="number" value="00006" />
+      <option name="presentableId" value="LOCAL-00006" />
+      <option name="project" value="LOCAL" />
+      <updated>1734518091840</updated>
+    </task>
+    <task id="LOCAL-00007" summary="更新接口">
+      <option name="closed" value="true" />
+      <created>1734604728148</created>
+      <option name="number" value="00007" />
+      <option name="presentableId" value="LOCAL-00007" />
+      <option name="project" value="LOCAL" />
+      <updated>1734604728148</updated>
+    </task>
+    <task id="LOCAL-00008" summary="更新接口">
+      <option name="closed" value="true" />
+      <created>1734666755482</created>
+      <option name="number" value="00008" />
+      <option name="presentableId" value="LOCAL-00008" />
+      <option name="project" value="LOCAL" />
+      <updated>1734666755482</updated>
+    </task>
+    <task id="LOCAL-00009" summary="增加项目页面">
+      <option name="closed" value="true" />
+      <created>1735060080859</created>
+      <option name="number" value="00009" />
+      <option name="presentableId" value="LOCAL-00009" />
+      <option name="project" value="LOCAL" />
+      <updated>1735060080859</updated>
+    </task>
+    <task id="LOCAL-00010" summary="项目列表">
+      <option name="closed" value="true" />
+      <created>1735128495845</created>
+      <option name="number" value="00010" />
+      <option name="presentableId" value="LOCAL-00010" />
+      <option name="project" value="LOCAL" />
+      <updated>1735128495845</updated>
+    </task>
+    <task id="LOCAL-00011" summary="修改布局">
+      <option name="closed" value="true" />
+      <created>1735192040102</created>
+      <option name="number" value="00011" />
+      <option name="presentableId" value="LOCAL-00011" />
+      <option name="project" value="LOCAL" />
+      <updated>1735192040102</updated>
+    </task>
+    <option name="localTasksCounter" value="12" />
+    <servers />
+  </component>
+  <component name="TypeScriptGeneratedFilesManager">
+    <option name="version" value="3" />
+  </component>
+  <component name="Vcs.Log.Tabs.Properties">
+    <option name="TAB_STATES">
+      <map>
+        <entry key="MAIN">
+          <value>
+            <State />
+          </value>
+        </entry>
+      </map>
+    </option>
+  </component>
+  <component name="VcsManagerConfiguration">
+    <MESSAGE value="初次提交" />
+    <MESSAGE value="新增后端" />
+    <MESSAGE value="查询加创建" />
+    <MESSAGE value="增加proxy代理请求" />
+    <MESSAGE value="可以新增post请求" />
+    <MESSAGE value="更新接口" />
+    <MESSAGE value="增加项目页面" />
+    <MESSAGE value="项目列表" />
+    <MESSAGE value="修改布局" />
+    <MESSAGE value="修改项目结构" />
+    <option name="LAST_COMMIT_MESSAGE" value="修改项目结构" />
+  </component>
+  <component name="XDebuggerManager">
+    <breakpoint-manager>
+      <breakpoints>
+        <line-breakpoint enabled="true" type="javascript">
+          <url>file://$PROJECT_DIR$/src/components/tab-content/api/ApiRun.tsx</url>
+          <line>233</line>
+          <option name="timeStamp" value="1" />
+        </line-breakpoint>
+      </breakpoints>
+    </breakpoint-manager>
+  </component>
+</project>
