@@ -1,64 +1,66 @@
 import React from 'react';
-import { Card } from 'antd';
+import { Card, Dropdown, Menu } from 'antd';
 import { EllipsisOutlined } from '@ant-design/icons';
-import { Dropdown, Menu } from 'antd';
+import Image from 'next/image';
+const ProjectCard = ({ card, menu, onClick }) => (
+    <Card
+        title={
+            <div style={{ display: 'flex', alignItems: 'center',width:100 }}>
 
-const ProjectCard = ({ card, menu }) => (
-
-    <div
-        style={{
-            display: 'flex',
-            justifyContent: 'center',
-            alignItems: 'center',
-            height: '200px',
-            width: '200px',
-        }}
-        onClick={() => card.onClick(card.route)} // 处理点击事件，跳转路由
-    >
-        <Card
-            title={
-                <div style={{ display: 'flex', alignItems: 'center' }}>
-                    {/* 鼠标悬停触发下拉菜单 */}
-                    <Dropdown overlay={menu} trigger={['hover']}>
-                        <EllipsisOutlined
-                            style={{
-                                fontSize: '16px',
-                                cursor: 'pointer',
-                                marginRight: '8px',
-                            }}
-                        />
-                    </Dropdown>
-                    <div
-                        style={{
-                            backgroundColor: '#1890ff',
-                            color: '#fff',
-                            padding: '2px 8px',
-                            fontSize: '12px',
-                            borderRadius: '8px',
-                            marginRight: '8px',
-                        }}
-                    >
-                        公共
-                    </div>
-                    {card.title}
+                <div
+                    style={{
+                        backgroundColor: '#1890ff',
+                        color: '#fff',
+                        padding: '2px 8px',
+                        fontSize: '12px',
+                        borderRadius: '8px',
+                        marginRight: '8px',
+                    }}
+                >
+                    公开
                 </div>
-            }
-            bordered={true}
-            hoverable
+                {card.title}
+                <Dropdown overlay={menu} trigger={['hover']}>
+                    <EllipsisOutlined
+                        style={{
+
+                            fontSize: '16px',
+                            cursor: 'pointer',
+                            marginLeft: 40,
+                        }}
+                    />
+                </Dropdown>
+            </div>
+        }
+        bordered={true}
+        hoverable
+        onClick={() => onClick(card.route)}
+        style={{
+            width: '100%',
+            height: '100%',
+            backgroundColor: '#fff',
+            borderWidth: 2,
+            borderColor: 'lightgray',
+            boxShadow: '0 2px 8px rgba(0, 0, 0, 0.1)',
+        }}
+    >
+        {/* 正方形框包裹插画 */}
+        <div
             style={{
-                width: '100%',
-                height: '100%',
-                backgroundColor: '#fff',
-                borderWidth: 2,
-                borderColor: 'lightgray',
-                boxShadow: '0 2px 8px rgba(0, 0, 0, 0.1)',
+                width: '120px',  // 固定大小
+                height: '120px', // 固定大小
+                backgroundColor: '#f0f0f0', // 默认背景色
+                borderRadius: '8px', // 圆角
+                display: 'flex',
+                justifyContent: 'center',
+                alignItems: 'center',
+                overflow: 'hidden', // 确保图片不会溢出
             }}
         >
-            <div style={{ fontSize: '36px', color: card.color }}>
-                {card.icon}
-            </div>
-        </Card>
-    </div>
+            {/* 使用 require 引用 SVG 文件 */}
+            <Image src="/assets/svg/project1.svg" alt="Image 2" width={120} height={120} />
+        </div>
+    </Card>
 );
 
 export default ProjectCard;

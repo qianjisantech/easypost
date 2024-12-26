@@ -14,16 +14,12 @@ export default function MainLayout(props: React.PropsWithChildren) {
   const cssVar = useCssVariable()
 
   return (
-    <div className="flex h-full" style={{ backgroundColor: token.colorFillTertiary, ...cssVar }}>
-      {/*<SideNav />*/}
+    <div  style={{ backgroundColor: token.colorFillTertiary, ...cssVar }}>
 
-      <div className="flex h-full flex-1 flex-col overflow-hidden pb-main pr-main">
-        {/*<div className="h-10 overflow-hidden">*/}
-        {/*  /!*<HeaderNav />*!/*/}
-        {/*</div>*/}
+
+      <div >
 
         <div
-          className="relative flex-1 overflow-y-auto border border-solid"
           style={{
             borderColor: token.colorFillSecondary,
             backgroundColor: token.colorBgContainer,

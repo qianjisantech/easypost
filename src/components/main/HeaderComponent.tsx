@@ -3,7 +3,7 @@ import { Space, Select } from 'antd';
 
 const { Option } = Select;
 
-const LayoutHeader = ({ organizations, handleSelectChange }) => (
+const HeaderComponent = ({ organizations, handleSelectChange }) => (
     <div style={{ position: 'absolute', right: 20, top: 20 }}>
         <span>组织：</span>
         <Select
@@ -20,4 +20,4 @@ const LayoutHeader = ({ organizations, handleSelectChange }) => (
     </div>
 );
 
-export default LayoutHeader;
+export default HeaderComponent;

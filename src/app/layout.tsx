@@ -23,12 +23,12 @@ export const viewport: Viewport = {
 
 export default function RootLayout(props: React.PropsWithChildren) {
   return (
-    <html className="h-full" lang="zh-Hans-CN">
-      <body className="m-0 h-full">
+    <html  lang="zh-Hans-CN">
+      <body >
         <AntdRegistry>
-          <App className="h-full">
+          <App >
             <ThemeProviderClient autoSaveId="theme:persistence">
-              <main className="h-full">
+              <main >
                 <GlobalContextProvider>{props.children}</GlobalContextProvider>
               </main>
             </ThemeProviderClient>

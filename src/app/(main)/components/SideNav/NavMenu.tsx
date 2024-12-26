@@ -39,12 +39,13 @@ function NavItem(props: NavItemProps) {
 }
 
 const enum NavPath {
-  AutoTest='/auto-test',
-  Shared='/shared',
-  History='/history',
-  Settings = '/settings',
-  Invite = '/invite',
-  Main ='/main'
+    Api = '/project/api',
+  AutoTest='/project/auto-test',
+  Shared='/project/shared',
+  History='/project/history',
+  Settings = '/project/settings',
+  Invite = '/project/invite',
+
 }
 
 export function NavMenu() {
@@ -52,9 +53,10 @@ export function NavMenu() {
 
   return (
     <Space direction="vertical" size={14}>
-      <Link href={NavPath.Main}>
+      <Link href={NavPath.Api} >
         <NavItem
-          active={pathname === NavPath.Main}
+          active={pathname === NavPath.Api}
+
           icon={
             <svg
               aria-hidden="true"
@@ -118,9 +120,9 @@ export function NavMenu() {
                 name="分享文档"
             />
         </Link>
-        <Link href={NavPath.Settings}>
+        <Link href={NavPath.History}>
             <NavItem
-                active={pathname === NavPath.Settings}
+                active={pathname === NavPath.History}
                 icon={
                     <svg
                         aria-hidden="true"
@@ -139,27 +141,7 @@ export function NavMenu() {
                 name="请求历史"
             />
         </Link>
-        <Link href={NavPath.Settings}>
-            <NavItem
-                active={pathname === NavPath.Settings}
-                icon={
-                    <svg
-                        aria-hidden="true"
-                        className="size-6"
-                        fill="currentColor"
-                        viewBox="0 0 24 24"
-                        xmlns="http://www.w3.org/2000/svg"
-                    >
-                        <path
-                            clipRule="evenodd"
-                            d="M9.6 2.6A2 2 0 0 1 11 2h2a2 2 0 0 1 2 2l.5.3a2 2 0 0 1 2.9 0l1.4 1.3a2 2 0 0 1 0 2.9l.1.5h.1a2 2 0 0 1 2 2v2a2 2 0 0 1-2 2l-.3.5a2 2 0 0 1 0 2.9l-1.3 1.4a2 2 0 0 1-2.9 0l-.5.1v.1a2 2 0 0 1-2 2h-2a2 2 0 0 1-2-2l-.5-.3a2 2 0 0 1-2.9 0l-1.4-1.3a2 2 0 0 1 0-2.9l-.1-.5H4a2 2 0 0 1-2-2v-2a2 2 0 0 1 2-2l.3-.5a2 2 0 0 1 0-2.9l1.3-1.4a2 2 0 0 1 2.9 0l.5-.1V4c0-.5.2-1 .6-1.4ZM8 12a4 4 0 1 1 8 0 4 4 0 0 1-8 0Z"
-                            fillRule="evenodd"
-                        />
-                    </svg>
-                }
-                name="项目设置"
-            />
-        </Link>
+
         <Link href={NavPath.Settings}>
             <NavItem
                 active={pathname === NavPath.Settings}
@@ -182,9 +164,9 @@ export function NavMenu() {
             />
         </Link>
         <Space direction="vertical" size={100}>
-            <Link href={NavPath.Settings}>
+            <Link href={NavPath.Invite}>
                 <NavItem
-                    active={pathname === NavPath.Settings}
+                    active={pathname === NavPath.Invite}
                     icon={
                         <svg
                             aria-hidden="true"

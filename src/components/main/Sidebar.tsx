@@ -3,9 +3,16 @@ import { Menu } from 'antd';
 import { AppstoreAddOutlined, FileOutlined } from '@ant-design/icons';
 
 const Sidebar = () => (
-    <div style={{ height: '100%', display: 'flex', flexDirection: 'column', width: '100%' }}>
+    <div style={{
+        height: '100vh',        // Sidebar占满整个屏幕高度
+        display: 'flex',        // 使用flex布局
+        flexDirection: 'column', // 垂直布局
+        width: 200,             // Sidebar宽度
+        backgroundColor: '#fff', // 可以设置背景色
+        borderRight: '1px solid #ddd', // 右边的边框
+    }}>
         {/* Logo */}
-        <div style={{ textAlign: 'center' }}>
+        <div style={{ textAlign: 'center', padding: '20px' }}>
             <svg
                 t="1735037586493"
                 className="icon"
@@ -23,8 +30,16 @@ const Sidebar = () => (
                 ></path>
             </svg>
         </div>
+
         {/* Menu */}
-        <Menu mode="inline" defaultSelectedKeys={['1']} style={{ height: '100%', borderRight: 0 }}>
+        <Menu
+            mode="inline"
+            defaultSelectedKeys={['1']}
+            style={{
+                flexGrow: 1,           // 让 Menu 填充剩余空间
+                borderRight: 0,        // 去掉右侧的边框
+            }}
+        >
             <Menu.Item key="1" icon={<AppstoreAddOutlined />}>我的团队</Menu.Item>
             <Menu.Item key="2" icon={<FileOutlined />}>个人空间</Menu.Item>
         </Menu>

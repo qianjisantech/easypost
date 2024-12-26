@@ -5,10 +5,17 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="739ebd12-30da-4953-9654-ff894db03f2c" name="Changes" comment="">
-      <change beforePath="$PROJECT_DIR$/../backed/gen/generator.go" beforeDir="false" afterPath="$PROJECT_DIR$/../backed/gen/generator.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../backed/gen/query/gen.go" beforeDir="false" afterPath="$PROJECT_DIR$/../backed/gen/query/gen.go" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../public/assets/svg/project1.svg" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../src/assets/svg/project1.svg" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../src/app/(main)/layout.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/../src/app/(main)/layout.tsx" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../src/app/(main)/main/page.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/../src/app/(main)/main/page.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../src/app/layout.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/../src/app/layout.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../src/components/main/LayoutHeader.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/../src/components/main/HeaderComponent.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../src/components/main/LoadingSpinner.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/../src/components/main/LoadingSpinner.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../src/components/main/ProjectCard.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/../src/components/main/ProjectCard.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../src/components/main/ProjectTabs.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/../src/components/main/ProjectTabs.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../src/components/main/Sidebar.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/../src/components/main/Sidebar.tsx" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
