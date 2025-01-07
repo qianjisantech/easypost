@@ -1,0 +1,45 @@
+syntax = "v1"
+
+info(
+    title: "easypost后端"
+    desc: "qianji"
+    author: "qianji"
+    email: "2497822530@qq.com"
+    version: "0.1"
+)
+type (
+        //获取二维码
+        GetQRCodeResp {
+         Code string    `json:"code"`
+        Message string  `json:"message"`
+        Data  GetQRCodeData `json:"data"`
+        }
+        GetQRCodeData {
+         Url string  `json:"url"`
+        }
+        //邮箱登录
+        AuthEmailLoginReq {
+         Email  string    `json:"email"`
+         Password string  `json:"password"`
+        }
+        AuthEmailLoginResponse {
+        Code string  `json:"code"`
+        Message string  `json:"message"`
+        Data  AuthEmailLoginData `json:"data"`
+        }
+        AuthEmailLoginData {
+            AccessToken string     `json:"accessToken"`
+        }
+
+)
+
+@server(
+    group:  auth
+    prefix: /api
+)
+service easypost-api {
+    @handler GetQRCode
+    post   /auth/getQRCode () returns (GetQRCodeResp)
+    @handler  AuthEmailLogin
+    post  /auth/login (AuthEmailLoginReq) returns (AuthEmailLoginResponse)
+}

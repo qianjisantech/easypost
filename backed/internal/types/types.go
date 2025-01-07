@@ -163,6 +163,31 @@ type ApiRecycleGroupQueryResp struct {
 	Data    []ApiDirectoryDataQueryData `json:"data"`
 }
 
+type AuthEmailLoginData struct {
+	AccessToken string `json:"accessToken"`
+}
+
+type AuthEmailLoginReq struct {
+	Email    string `json:"email"`
+	Password string `json:"password"`
+}
+
+type AuthEmailLoginResponse struct {
+	Code    string             `json:"code"`
+	Message string             `json:"message"`
+	Data    AuthEmailLoginData `json:"data"`
+}
+
+type GetQRCodeData struct {
+	Url string `json:"url"`
+}
+
+type GetQRCodeResp struct {
+	Code    string        `json:"code"`
+	Message string        `json:"message"`
+	Data    GetQRCodeData `json:"data"`
+}
+
 type ProjectQueryPageData struct {
 	Id          string `json:"id"`
 	ProjectName string `json:"projectName"`

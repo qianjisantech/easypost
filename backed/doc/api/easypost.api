@@ -1,5 +1,6 @@
 import "easypost/api.api"
 import "easypost/project.api"
+import "easypost/auth.api"
 
 info (
 	title:   "easypost后端"

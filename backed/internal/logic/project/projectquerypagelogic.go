@@ -34,6 +34,5 @@ func (l *ProjectQueryPageLogic) ProjectQueryPage(req *types.ProjectQueryPageRequ
 	if tx.Error != nil {
 		return nil, tx.Error
 	}
-	&types.
 	return
 }

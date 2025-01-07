@@ -1,10 +1,13 @@
 syntax = "v1"
 
 info(
-    desc: "api"
+    title: "easypost后端"
+    desc: "qianji"
     author: "qianji"
     email: "2497822530@qq.com"
+    version: "0.1"
 )
+
 type (
    ProjectQueryPageRequest {
 

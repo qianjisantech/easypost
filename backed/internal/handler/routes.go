@@ -5,6 +5,7 @@ import (
 	"net/http"
 
 	api "backed/internal/handler/api"
+	auth "backed/internal/handler/auth"
 	project "backed/internal/handler/project"
 	"backed/internal/svc"
 
@@ -28,6 +29,22 @@ func RegisterHandlers(server *rest.Server, serverCtx *svc.ServiceContext) {
 				Method:  http.MethodPost,
 				Path:    "/recycle/group/list",
 				Handler: api.ApiRecycleGroupQueryHandler(serverCtx),
+			},
+		},
+		rest.WithPrefix("/api"),
+	)
+
+	server.AddRoutes(
+		[]rest.Route{
+			{
+				Method:  http.MethodPost,
+				Path:    "/auth/getQRCode",
+				Handler: auth.GetQRCodeHandler(serverCtx),
+			},
+			{
+				Method:  http.MethodPost,
+				Path:    "/auth/login",
+				Handler: auth.AuthEmailLoginHandler(serverCtx),
 			},
 		},
 		rest.WithPrefix("/api"),
