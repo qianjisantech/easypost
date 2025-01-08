@@ -1,5 +1,4 @@
 /** @type {import('next').NextConfig} */
-
 export default {
   reactStrictMode: true, // 启用严格模式，帮助识别潜在的错误
   eslint: {
@@ -8,7 +7,6 @@ export default {
   typescript: {
     ignoreBuildErrors: true, // 在构建时忽略 TypeScript 错误
   },
-  output: 'export', // 配置为静态导出模式，适用于静态站点生成（SSG）
   async rewrites() {
     return [
       {

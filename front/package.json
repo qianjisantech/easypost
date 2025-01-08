@@ -46,6 +46,7 @@
     "react-dom": "18.3.1",
     "react-resizable": "^3.0.5",
     "react-resizable-panels": "^2.1.4",
+    "react-router-dom": "^7.1.1",
     "react-syntax-highlighter": "^15.6.1",
     "react-use-event-hook": "^0.9.6",
     "react18-json-view": "^0.2.8",

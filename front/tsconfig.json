@@ -43,7 +43,9 @@
     "next-env.d.ts",
     "src/**/*",
     ".next/types/**/*.ts",
-    "./tailwind.config.ts"
+    "./tailwind.config.ts",
+    "../../../../home/JetBrains/WebStorm 2024.1/plugins/javascript-impl/jsLanguageServicesImpl/external/lib.es5.d.ts",
+    "../../../../home/JetBrains/WebStorm 2024.1/plugins/javascript-impl/jsLanguageServicesImpl/external/lib.es5.d.ts"
   ],
   "exclude": [
     "node_modules",

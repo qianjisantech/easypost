@@ -38,7 +38,7 @@ function ProjectContent() {
                     layoutName="接口管理"
                     left={
                         <>
-                            <Button type="default" onClick={() => returnToProject('/main')}>
+                            <Button type="default" onClick={() => returnToProject('/main/teams/1')}>
                                 首页
                             </Button>
                             <Flex gap={token.paddingXXS} style={{ padding: token.paddingXS }}>

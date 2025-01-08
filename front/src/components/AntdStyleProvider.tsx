@@ -2,7 +2,7 @@
 
 import { useState } from 'react'
 
-import { useServerInsertedHTML } from 'next/navigation'
+import { useServerInsertedHTML } from 'next/router'
 import { createCache, extractStyle, StyleProvider } from '@ant-design/cssinjs'
 
 /**
