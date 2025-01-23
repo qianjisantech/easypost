@@ -34,7 +34,7 @@ const EmailLogin = () => {
     message.success('登录成功')
 
     // 成功后跳转到首页
-    router.push('/main/project/1')
+    router.push('/main/teams')
     console.log('登录成功')
   }
   // 切换登录方式

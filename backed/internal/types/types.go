@@ -188,17 +188,127 @@ type GetQRCodeResp struct {
 	Data    GetQRCodeData `json:"data"`
 }
 
+type ProjectCopyRequest struct {
+	Id string `json:"id"`
+}
+
+type ProjectCopyResp struct {
+	Code    string `json:"code"`
+	Message string `json:"message"`
+}
+
+type ProjectCreateRequest struct {
+	ProjectName string `json:"projectName"`
+	IsPublic    bool   `json:"isPublic"`
+	TeamId      string `json:"teamId"`
+}
+
+type ProjectCreateResp struct {
+	Code    string `json:"code"`
+	Message string `json:"message"`
+}
+
+type ProjectDeleteRequest struct {
+	Id string `path:"id"`
+}
+
+type ProjectDeleteResp struct {
+	Code    string `json:"code"`
+	Message string `json:"message"`
+}
+
 type ProjectQueryPageData struct {
 	Id          string `json:"id"`
 	ProjectName string `json:"projectName"`
 	ProjectIcon string `json:"projectIcon"`
+	IsPublic    bool   `json:"isPublic"`
 }
 
 type ProjectQueryPageRequest struct {
+	TeamId string `json:"teamId"`
 }
 
 type ProjectQueryPageResp struct {
+	Code    string                  `json:"code"`
+	Message string                  `json:"message"`
+	Data    []*ProjectQueryPageData `json:"data"`
+}
+
+type ProjectUpdateRequest struct {
+	Id          string `json:"id"`
+	ProjectName string `json:"projectName"`
+	IsPublic    bool   `json:"isPublic"`
+}
+
+type ProjectUpdateResp struct {
+	Code    string `json:"code"`
+	Message string `json:"message"`
+}
+
+type TeamCreateRequest struct {
+	TeamName string `json:"teamName"`
+}
+
+type TeamCreateResp struct {
+	Code    string `json:"code"`
+	Message string `json:"message"`
+}
+
+type TeamDeleteRequest struct {
+	Id string `path:"id"`
+}
+
+type TeamDeleteResp struct {
+	Code    string `json:"code"`
+	Message string `json:"message"`
+}
+
+type TeamQueryPageData struct {
+	Id       string `json:"id"`
+	TeamName string `json:"teamName"`
+}
+
+type TeamQueryPageRequest struct {
+}
+
+type TeamQueryPageResp struct {
 	Code    string               `json:"code"`
 	Message string               `json:"message"`
-	Data    ProjectQueryPageData `json:"data"`
+	Data    []*TeamQueryPageData `json:"data"`
+}
+
+type TeamUpdateRequest struct {
+	Id       string `json:"id"`
+	TeamName string `json:"teamName"`
+}
+
+type TeamUpdateResp struct {
+	Code    string `json:"code"`
+	Message string `json:"message"`
+}
+
+type UserQueryPageData struct {
+	Total      int64                      `json:"total"`
+	TotalPages int64                      `json:"totalPages"`
+	Current    int64                      `json:"current"`
+	PageSize   int64                      `json:"pageSize"`
+	Records    []*UserQueryPageDataRecord `json:"records"`
+}
+
+type UserQueryPageDataRecord struct {
+	Id       string `json:"id"`
+	Name     string `json:"name"`
+	Username string `json:"username"`
+	Email    string `json:"email"`
+}
+
+type UserQueryPageRequest struct {
+	Current  int `json:"current"`
+	PageSize int `json:"pageSize"`
+}
+
+type UserQueryPageResp struct {
+	Code    string            `json:"code"`
+	Message string            `json:"message"`
+	Data    UserQueryPageData `json:"data"`
 }

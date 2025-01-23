@@ -1,0 +1,45 @@
+syntax = "v1"
+
+info(
+    title: "easypost后端"
+    desc: "qianji"
+    author: "qianji"
+    email: "2497822530@qq.com"
+    version: "0.1"
+)
+
+type (
+    UserQueryPageRequest {
+     Current int `json:"current"`
+     PageSize  int    `json:"pageSize"`
+    }
+    UserQueryPageResp {
+        Code string  `json:"code"`
+        Message string  `json:"message"`
+        Data UserQueryPageData  `json:"data"`
+
+    }
+    UserQueryPageData{
+      Total int64 `json:"total"`
+      TotalPages int64  `json:"totalPages"`
+      Current int64 `json:"current"`
+      PageSize  int64    `json:"pageSize"`
+      Records  []*UserQueryPageDataRecord `json:"records"`
+    }
+    UserQueryPageDataRecord{
+        Id string  `json:"id"`
+        Name  string  `json:"name"`
+        Username string  `json:"username"`
+        Email string    `json:"email"`
+    }
+
+)
+
+@server(
+    group:  user
+    prefix: /api
+)
+service easypost-api {
+    @handler UserQueryPage
+    post   /user/page (UserQueryPageRequest) returns (UserQueryPageResp)
+}

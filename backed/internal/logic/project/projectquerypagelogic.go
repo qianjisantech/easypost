@@ -3,6 +3,7 @@ package project
 import (
 	"backed/gen/model"
 	"context"
+	"strconv"
 
 	"backed/internal/svc"
 	"backed/internal/types"
@@ -25,14 +26,27 @@ func NewProjectQueryPageLogic(ctx context.Context, svcCtx *svc.ServiceContext) *
 }
 
 func (l *ProjectQueryPageLogic) ProjectQueryPage(req *types.ProjectQueryPageRequest) (resp *types.ProjectQueryPageResp, err error) {
-	// todo: add your logic here and delete this line
 	db := l.svcCtx.DB.Begin().Debug()
 
-	var teamProjectDetail []*model.TeamProjectDetail
+	teamId := req.TeamId
+	var teamProjectDetails []*model.TeamProjectDetail
 
-	tx := db.WithContext(l.ctx).Find(&teamProjectDetail)
+	tx := db.WithContext(l.ctx).Where("team_id=?", teamId).Find(&teamProjectDetails)
 	if tx.Error != nil {
 		return nil, tx.Error
 	}
-	return
+	data := make([]*types.ProjectQueryPageData, len(teamProjectDetails))
+	for i, teamProjectDetail := range teamProjectDetails {
+		data[i] = &types.ProjectQueryPageData{
+			Id:          strconv.FormatInt(teamProjectDetail.ID, 10),
+			ProjectName: *teamProjectDetail.ProjectName,
+			ProjectIcon: *teamProjectDetail.ProjectIcon,
+			IsPublic:    *teamProjectDetail.IsPublic,
+		}
+	}
+	return &types.ProjectQueryPageResp{
+		Code:    "200",
+		Message: "success",
+		Data:    data,
+	}, nil
 }

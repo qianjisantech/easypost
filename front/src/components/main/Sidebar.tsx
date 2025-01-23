@@ -1,12 +1,8 @@
-import React from 'react';
-import { Menu, Modal, Button, message, Input } from "antd";
-import { AppstoreAddOutlined, PlusOutlined } from "@ant-design/icons";
-import { useRouter } from "next/navigation"; // 使用 next/router 中的 useRouter
-
-const handleTeamClick = (teamId) => {
-  const router = useRouter();
-  router.push(`/main/teams/${teamId}`);  // 跳转到 /main/teams/1
-};
+import React, { useEffect, useState } from 'react';
+import { Menu, Modal, Button, message, Input } from 'antd';
+import { AppstoreAddOutlined, PlusOutlined } from '@ant-design/icons';
+import { useRouter,usePathname } from 'next/navigation';
+import { TeamQueryPage } from "@/api/team"; // 使用 next/router 中的 useRouter
 
 // 处理新建团队点击事件
 const handleCreateTeamClick = () => {
@@ -31,7 +27,18 @@ const handleCreateTeamClick = () => {
 
 const Sidebar = () => {
   const router = useRouter();  // 使用 useRouter 获取路由对象
+  const [teams, setTeams] = useState([]);  // 用于存储从 API 获取的团队数据
+  const [loading, setLoading] = useState(true);  // 控制加载状态
+  const pathname = usePathname();
+  const [teamId, setTeamId] = useState<string | null>(null);
 
+  useEffect(() => {
+    if (pathname === '/main/teams' && teams.length > 0) {
+      debugger
+      const firstTeamId = teams[0].id;  // 获取第一个团队的 ID
+      router.push(`/main/teams/${firstTeamId}`);  // 跳转到第一个团队的页面
+    }
+  }, [pathname, teams]);  // 监听路径变化和团队数据
   const sidebarStyle = {
     height: '100vh',
     display: 'flex',
@@ -51,17 +58,29 @@ const Sidebar = () => {
     padding: '20px',
   };
 
-  // 动态生成菜单项的数据
-  const teams = [
-    { id: '1', name: '客户服务' },
-    { id: '2', name: '网络营运' },
-    { id: '3', name: '网络经营' },
-  ];
+  // API 请求函数：获取团队列表
+  const fetchTeams = async () => {
+    try {
+      const response = await TeamQueryPage({ page: 1, pageSize: 100});  // 假设 API 地址是 /api/teams
+      const data = response.data.data;
+      setTeams(data);  // 将获取的数据存储在 state 中
+      setLoading(false);  // 设置为非加载状态
+    } catch (error) {
+      console.error('获取团队数据失败:', error);
+      message.error('获取团队数据失败');
+      setLoading(true);
+    }
+  };
+
+  // 在组件加载时获取团队数据
+  useEffect(() => {
+    fetchTeams();
+  }, []);
+
 
   // 处理 SubMenu 或 MenuItem 的点击事件
   const handleMenuItemClick = (teamId) => {
-    // 构建路径，例如：/main/teams/1234
-    const route = `/main/teams/${teamId}`;
+    const route = `/main/teams/${teamId}`;  // 构建路径，例如：/main/teams/1234
     router.push(route);  // 跳转到对应的页面
   };
 
@@ -109,17 +128,21 @@ const Sidebar = () => {
           </Menu.Item>
 
           {/* 动态渲染团队菜单项 */}
-          {teams.map((team) => (
-            <Menu.Item
-              key={team.id}
-              onClick={() => handleMenuItemClick(team.id)}  // 跳转到团队 ID 对应的页面
-              style={{ marginBottom: 5 }}
-            >
-              {team.name}
-            </Menu.Item>
-          ))}
-        </Menu.SubMenu>
+          {!loading && teams.length > 0 ? (
 
+            teams.map((team) => (
+              <Menu.Item
+                key={team.id}
+                onClick={() => handleMenuItemClick(team.id)}  // 跳转到团队 ID 对应的页面
+                style={{ marginBottom: 5 }}
+              >
+                {team.teamName}
+              </Menu.Item>
+            ))
+          ) : (
+            <Menu.Item disabled>加载中...</Menu.Item>
+          )}
+        </Menu.SubMenu>
       </Menu>
     </div>
   );

@@ -1,0 +1,63 @@
+syntax = "v1"
+
+info(
+    title: "easypost后端"
+    desc: "qianji"
+    author: "qianji"
+    email: "2497822530@qq.com"
+    version: "0.1"
+)
+
+type (
+   TeamQueryPageRequest {
+   }
+   TeamQueryPageResp {
+   Code string  `json:"code"`
+   Message string  `json:"message"`
+   Data []*TeamQueryPageData  `json:"data"`
+
+   }
+   TeamQueryPageData{
+    Id string  `json:"id"`
+    TeamName  string  `json:"teamName"`
+
+   }
+
+   TeamCreateRequest {
+       TeamName  string  `json:"teamName"`
+   }
+   TeamCreateResp {
+       Code string  `json:"code"`
+       Message string  `json:"message"`
+   }
+   TeamUpdateRequest {
+       Id string  `json:"id"`
+       TeamName  string  `json:"teamName"`
+   }
+   TeamUpdateResp {
+       Code string  `json:"code"`
+       Message string  `json:"message"`
+   }
+   TeamDeleteRequest {
+       Id string  `path:"id"`
+   }
+   TeamDeleteResp {
+       Code string  `json:"code"`
+       Message string  `json:"message"`
+   }
+)
+
+@server(
+    group:  team
+    prefix: /api
+)
+service easypost-api {
+    @handler TeamQueryPage   //项目分页查询
+    post   /team/page (TeamQueryPageRequest) returns (TeamQueryPageResp)
+    @handler  TeamCreate   //创建项目
+    post   /team/create (TeamCreateRequest) returns  (TeamCreateResp)
+    @handler  TeamUpdate  //更新项目
+    post   /team/update (TeamUpdateRequest) returns  (TeamUpdateResp)
+    @handler  TeamDelete  //复制项目
+    get   /team/delete/:id  (TeamDeleteRequest) returns  (TeamDeleteResp)
+}

@@ -21,6 +21,7 @@ type TeamProjectDetail struct {
 	UpdateTime  *time.Time `gorm:"column:update_time;default:CURRENT_TIMESTAMP" json:"update_time"`
 	IsPublic    *bool      `gorm:"column:is_public" json:"is_public"`
 	IsDeleted   *bool      `gorm:"column:is_deleted" json:"is_deleted"`
+	TeamID      *int64     `gorm:"column:team_id" json:"team_id"`
 }
 
 // TableName TeamProjectDetail's table name

@@ -1,6 +1,6 @@
 /** @type {import('next').NextConfig} */
 export default {
-  reactStrictMode: true, // 启用严格模式，帮助识别潜在的错误
+  reactStrictMode: false, // 启用严格模式，帮助识别潜在的错误
   eslint: {
     ignoreDuringBuilds: true, // 在构建时忽略 eslint 检查
   },

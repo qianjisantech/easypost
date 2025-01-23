@@ -36,6 +36,7 @@ func newTeamProjectDetail(db *gorm.DB, opts ...gen.DOOption) teamProjectDetail {
 	_teamProjectDetail.UpdateTime = field.NewTime(tableName, "update_time")
 	_teamProjectDetail.IsPublic = field.NewBool(tableName, "is_public")
 	_teamProjectDetail.IsDeleted = field.NewBool(tableName, "is_deleted")
+	_teamProjectDetail.TeamID = field.NewInt64(tableName, "team_id")
 
 	_teamProjectDetail.fillFieldMap()
 
@@ -55,6 +56,7 @@ type teamProjectDetail struct {
 	UpdateTime  field.Time
 	IsPublic    field.Bool
 	IsDeleted   field.Bool
+	TeamID      field.Int64
 
 	fieldMap map[string]field.Expr
 }
@@ -80,6 +82,7 @@ func (t *teamProjectDetail) updateTableName(table string) *teamProjectDetail {
 	t.UpdateTime = field.NewTime(table, "update_time")
 	t.IsPublic = field.NewBool(table, "is_public")
 	t.IsDeleted = field.NewBool(table, "is_deleted")
+	t.TeamID = field.NewInt64(table, "team_id")
 
 	t.fillFieldMap()
 
@@ -108,7 +111,7 @@ func (t *teamProjectDetail) GetFieldByName(fieldName string) (field.OrderExpr, b
 }
 
 func (t *teamProjectDetail) fillFieldMap() {
-	t.fieldMap = make(map[string]field.Expr, 9)
+	t.fieldMap = make(map[string]field.Expr, 10)
 	t.fieldMap["id"] = t.ID
 	t.fieldMap["project_name"] = t.ProjectName
 	t.fieldMap["project_icon"] = t.ProjectIcon
@@ -118,6 +121,7 @@ func (t *teamProjectDetail) fillFieldMap() {
 	t.fieldMap["update_time"] = t.UpdateTime
 	t.fieldMap["is_public"] = t.IsPublic
 	t.fieldMap["is_deleted"] = t.IsDeleted
+	t.fieldMap["team_id"] = t.TeamID
 }
 
 func (t teamProjectDetail) clone(db *gorm.DB) teamProjectDetail {

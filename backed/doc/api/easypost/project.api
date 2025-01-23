@@ -10,18 +10,53 @@ info(
 
 type (
    ProjectQueryPageRequest {
-
+    teamId string  `json:"teamId"`
    }
    ProjectQueryPageResp {
    Code string  `json:"code"`
    Message string  `json:"message"`
-   Data ProjectQueryPageData  `json:"data"`
+   Data []*ProjectQueryPageData  `json:"data"`
 
    }
    ProjectQueryPageData{
     Id string  `json:"id"`
     ProjectName  string  `json:"projectName"`
     ProjectIcon  string   `json:"projectIcon"`
+    IsPublic    bool       `json:"isPublic"`
+
+   }
+
+   ProjectCreateRequest {
+       ProjectName  string  `json:"projectName"`
+       IsPublic    bool       `json:"isPublic"`
+       TeamId      string     `json:"teamId"`
+   }
+   ProjectCreateResp {
+       Code string  `json:"code"`
+       Message string  `json:"message"`
+   }
+   ProjectUpdateRequest {
+       Id string  `json:"id"`
+       ProjectName  string  `json:"projectName"`
+       IsPublic    bool       `json:"isPublic"`
+   }
+   ProjectUpdateResp {
+       Code string  `json:"code"`
+       Message string  `json:"message"`
+   }
+   ProjectCopyRequest {
+       Id string  `json:"id"`
+   }
+   ProjectCopyResp {
+       Code string  `json:"code"`
+       Message string  `json:"message"`
+   }
+   ProjectDeleteRequest {
+       Id string  `path:"id"`
+   }
+   ProjectDeleteResp {
+       Code string  `json:"code"`
+       Message string  `json:"message"`
    }
 )
 
@@ -30,6 +65,14 @@ type (
     prefix: /api
 )
 service easypost-api {
-    @handler ProjectQueryPage
+    @handler ProjectQueryPage   //项目分页查询
     post   /project/page (ProjectQueryPageRequest) returns (ProjectQueryPageResp)
+    @handler  ProjectCreate   //创建项目
+    post   /project/create (ProjectCreateRequest) returns  (ProjectCreateResp)
+    @handler  ProjectUpdate  //更新项目
+    post   /project/update (ProjectUpdateRequest) returns  (ProjectUpdateResp)
+    @handler  ProjectCopy  //复制项目
+    post   /project/copy (ProjectCopyRequest) returns  (ProjectCopyResp)
+    @handler  ProjectDelete  //复制项目
+    get   /project/delete/:id  (ProjectDeleteRequest) returns  (ProjectDeleteResp)
 }

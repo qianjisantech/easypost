@@ -2,9 +2,7 @@ import { useState, useEffect } from 'react';
 import { JsonSchemaEditorProps } from '@/components/JsonSchema';
 import { Segmented, Tabs, TabsProps } from 'antd';
 import { Prism as SyntaxHighlighter } from 'react-syntax-highlighter';
-import { docco } from 'react-syntax-highlighter/dist/esm/styles/prism';
-import {solarizedlight} from "react-syntax-highlighter/dist/cjs/styles/prism";
-import {github, monokai} from "react-syntax-highlighter/dist/cjs/styles/hljs";
+import { docco } from "react-syntax-highlighter/dist/cjs/styles/hljs";
 
 interface JsonSchemaCardProps extends Pick<JsonSchemaEditorProps, 'value' | 'onChange'> {
     editorProps?: JsonSchemaEditorProps;

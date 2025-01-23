@@ -8,17 +8,7 @@ import React, { useEffect, useState } from 'react';
 const { Sider, Content } = Layout;
 
 export default function MainLayout({ children }: { children: React.ReactNode }) {
-  const pathname = usePathname();
-  const [teamId, setTeamId] = useState<string | null>(null);
 
-  useEffect(() => {
-    if (pathname) {
-      const match = pathname.match(/\/main\/teams\/([^/]+)/);
-      if (match) {
-        setTeamId(match[1]); // 提取 teamId
-      }
-    }
-  }, [pathname]);
 
   return (
     <Layout style={{ minHeight: '100vh' }}>
