@@ -29,14 +29,14 @@ func (l *ProjectQueryPageLogic) ProjectQueryPage(req *types.ProjectQueryPageRequ
 	db := l.svcCtx.DB.Begin().Debug()
 
 	teamId := req.TeamId
-	var teamProjectDetails []*model.TeamProjectDetail
+	var projects []*model.SysProject
 
-	tx := db.WithContext(l.ctx).Where("team_id=?", teamId).Find(&teamProjectDetails)
+	tx := db.WithContext(l.ctx).Where("team_id=?", teamId).Find(&projects)
 	if tx.Error != nil {
 		return nil, tx.Error
 	}
-	data := make([]*types.ProjectQueryPageData, len(teamProjectDetails))
-	for i, teamProjectDetail := range teamProjectDetails {
+	data := make([]*types.ProjectQueryPageData, len(projects))
+	for i, teamProjectDetail := range projects {
 		data[i] = &types.ProjectQueryPageData{
 			Id:          strconv.FormatInt(teamProjectDetail.ID, 10),
 			ProjectName: *teamProjectDetail.ProjectName,
@@ -45,7 +45,7 @@ func (l *ProjectQueryPageLogic) ProjectQueryPage(req *types.ProjectQueryPageRequ
 		}
 	}
 	return &types.ProjectQueryPageResp{
-		Code:    "200",
+		Success: true,
 		Message: "success",
 		Data:    data,
 	}, nil

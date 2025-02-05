@@ -54,21 +54,21 @@ export function MenuHelpersContextProvider(props: React.PropsWithChildren) {
   const [recyleRawData, setRecyleRawData] = useState<RecycleData | undefined>()
 
   // 2. 使用 useEffect 来触发 API 请求并更新数据
-  useEffect(() => {
-    async function fetchData() {
-      try {
-        const directoryDataListResponse = await apiDirectoryDataList({})
-        const recycleDataResponse = await apiRecycleGroupList({})
-        setRecyleRawData(recycleDataResponse.data)
-        console.log('directoryDataListResponse.data',directoryDataListResponse.data.data)
-        setMenuRawList(directoryDataListResponse.data.data)
-      } catch (error) {
-        console.error('Failed to fetch data:', error)
-      }
-    }
-
-    fetchData()
-  }, [])
+  // useEffect(() => {
+  //   async function fetchData() {
+  //     try {
+  //       const directoryDataListResponse = await apiDirectoryDataList({})
+  //       const recycleDataResponse = await apiRecycleGroupList({})
+  //       setRecyleRawData(recycleDataResponse.data)
+  //       console.log('directoryDataListResponse.data',directoryDataListResponse.data.data)
+  //       setMenuRawList(directoryDataListResponse.data.data)
+  //     } catch (error) {
+  //       console.error('Failed to fetch data:', error)
+  //     }
+  //   }
+  //
+  //   fetchData()
+  // }, [])
 
   // 3. 使用状态来管理其他的功能
   const [menuSearchWord, setMenuSearchWord] = useState<string>('')

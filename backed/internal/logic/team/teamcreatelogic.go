@@ -49,7 +49,7 @@ func (l *TeamCreateLogic) TeamCreate(req *types.TeamCreateRequest) (resp *types.
 	}
 	// 返回成功响应
 	return &types.TeamCreateResp{
-		Code:    "200",
+		Success: true,
 		Message: "创建成功",
 	}, nil
 

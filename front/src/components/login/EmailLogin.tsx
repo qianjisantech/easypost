@@ -1,7 +1,7 @@
 import React, { useState } from 'react'
 import { Button, Col, Row, Input,message  } from 'antd'
 import { useRouter } from "next/navigation";
-import {login} from "@/api/auth";
+import { Login, login } from "@/api/auth";
 
 const EmailLogin = () => {
   const [email, setEmail] = useState('2497822530@qq.com')
@@ -19,24 +19,33 @@ const EmailLogin = () => {
 // 登录处理
   const handleEmailLogin = async () => {
     if (isCodeLogin) {
-      console.log('Email:', email)
-      console.log('Verification Code:', code)
+      console.log('Email:', email);
+      console.log('Verification Code:', code);
       // 在此处进行邮箱验证码登录的逻辑
     } else {
-      console.log('Email:', email)
-      console.log('Password:', password)
-      const res = await login({email,password})
-      console.log("res",res)
-      // 在此处进行邮箱密码登录的逻辑
+      console.log('Email:', email);
+      console.log('Password:', password);
+      try {
+        const response = await Login({ email, password });
+        console.log('res', response);
+
+        if (response.data.success) {
+          const token = response.data.data.accessToken;
+          // 将 token 存入 localStorage
+          if (token){
+            localStorage.setItem('accessToken', token);
+          }
+          router.push('/main/teams/1')
+          console.log('Token saved to localStorage');
+        } else {
+          console.error('Login failed:', response.data.message);
+        }
+      } catch (error) {
+        console.error('Error during login:', error);
+      }
     }
+  };
 
-    // 显示登录成功的弹窗
-    message.success('登录成功')
-
-    // 成功后跳转到首页
-    router.push('/main/teams')
-    console.log('登录成功')
-  }
   // 切换登录方式
   const handleSwitchLoginMethod = () => {
     setIsCodeLogin(!isCodeLogin)  // 切换登录方式
@@ -80,7 +89,7 @@ const EmailLogin = () => {
           type="password"
           placeholder="请输入密码"
           value={password}
-          onChange={(e) => setPassword(e.target.value)}
+          onChange={(e) => { setPassword(e.target.value); }}
           style={{ marginTop: 10 }}
         />
       )}

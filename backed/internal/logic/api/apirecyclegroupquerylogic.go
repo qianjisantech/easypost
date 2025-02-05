@@ -27,7 +27,7 @@ func (l *ApiRecycleGroupQueryLogic) ApiRecycleGroupQuery(req *types.ApiRecycleGr
 	// todo: add your logic here and delete this line
 
 	return &types.ApiRecycleGroupQueryResp{
-		Code:    "200",
+		Success: true,
 		Message: "查询成功",
 	}, nil
 }

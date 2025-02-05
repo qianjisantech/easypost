@@ -240,7 +240,7 @@ func (l *ApiDetailSaveLogic) ApiDetailSave(req *types.ApiDetailSaveRequest) (res
 	}
 	// 返回成功响应
 	return &types.ApiDetailSaveResp{
-		Code:    "200",
+		Success: true,
 		Message: "保存成功",
 	}, nil
 	return

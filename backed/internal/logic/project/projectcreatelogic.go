@@ -48,7 +48,7 @@ func (l *ProjectCreateLogic) ProjectCreate(req *types.ProjectCreateRequest) (*ty
 	icon := GetRandomString(icons)
 	teamId, _ := strconv.ParseInt(req.TeamId, 10, 64)
 	// 创建项目数据模型
-	m := &model.TeamProjectDetail{
+	m := &model.SysProject{
 		TeamID:      &teamId,
 		ProjectName: &req.ProjectName,
 		IsPublic:    &req.IsPublic,
@@ -69,7 +69,7 @@ func (l *ProjectCreateLogic) ProjectCreate(req *types.ProjectCreateRequest) (*ty
 	}
 	// 返回成功响应
 	return &types.ProjectCreateResp{
-		Code:    "200",
+		Success: true,
 		Message: "创建成功",
 	}, nil
 }

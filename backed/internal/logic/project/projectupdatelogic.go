@@ -42,7 +42,7 @@ func (l *ProjectUpdateLogic) ProjectUpdate(req *types.ProjectUpdateRequest) (*ty
 	icon := GetRandomString(icons)
 
 	// Prepare project data model
-	m := &model.TeamProjectDetail{
+	m := &model.SysProject{
 		ID:          id,
 		ProjectName: &req.ProjectName,
 		IsPublic:    &req.IsPublic,
@@ -68,7 +68,7 @@ func (l *ProjectUpdateLogic) ProjectUpdate(req *types.ProjectUpdateRequest) (*ty
 
 	// Return success response
 	return &types.ProjectUpdateResp{
-		Code:    "200",
+		Success: true,
 		Message: "更新成功",
 	}, nil
 }

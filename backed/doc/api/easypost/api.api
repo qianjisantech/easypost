@@ -34,18 +34,17 @@ type (
         Query []ApiDirectoryDataQueryDataDataParametersQuery `json:"query"`
         Header []ApiDirectoryDataQueryDataDataParametersHeader `json:"header"`
     }
-        ApiDirectoryDataQueryDataDataParametersQuery {
-            Id string `json:"id"`
-            Name string `json:"name"`
-            Type string `json:"type"`
-            Example string `json:"example"`
-
-      }
-      ApiDirectoryDataQueryDataDataParametersHeader {
-          Id string `json:"id"`
-          Name string `json:"name"`
-          Type string `json:"type"`
-          Example string `json:"example"`
+    ApiDirectoryDataQueryDataDataParametersQuery {
+        Id string `json:"id"`
+        Name string `json:"name"`
+        Type string `json:"type"`
+        Example string `json:"example"`
+    }
+    ApiDirectoryDataQueryDataDataParametersHeader {
+        Id string `json:"id"`
+        Name string `json:"name"`
+        Type string `json:"type"`
+        Example string `json:"example"`
     }
     ApiDirectoryDataQueryDataDataResponse {
         Id string `json:"id"`
@@ -69,7 +68,7 @@ type (
     }
 
     ApiDirectoryDataQueryResp {
-        Code string `json:"code"`
+        Success bool `json:"success"`
         Message string `json:"message"`
         Data []ApiDirectoryDataQueryData `json:"data"`
     }
@@ -77,11 +76,11 @@ type (
 
     }
     ApiRecycleGroupQueryResp {
-        Code string `json:"code"`
+        Success bool `json:"success"`
         Message string `json:"message"`
         Data []ApiDirectoryDataQueryData `json:"data"`
     }
-  ApiDetailSaveData {
+    ApiDetailSaveData {
         Method string `json:"method"`
         Path string `json:"path,optional"`
         Name string `json:"name"`
@@ -94,66 +93,66 @@ type (
         Responses []ApiDetailSaveDataResponse `json:"responses,optional"`
         RequestBody ApiDetailSaveDataRequestBody `json:"requestBody,optional"`
     }
-   ApiDetailSaveDataRequestBody {
+    ApiDetailSaveDataRequestBody {
         Type string `json:"type"`
         Parameters []ApiDetailSaveDataRequestBodyParameter `json:"parameters,optional"`
         JsonSchema string `json:"jsonSchema"`
     }
-   ApiDetailSaveDataRequestBodyParameter {
+    ApiDetailSaveDataRequestBodyParameter {
         Id string `json:"id"`
         Name string `json:"name"`
         Type string `json:"type"`
         Example string `json:"example"`
     }
-   ApiDetailSaveDataParameters {
+    ApiDetailSaveDataParameters {
         Path []string `json:"path,optional,optional"`
         Query []ApiDetailSaveDataParametersQuery `json:"query,optional"`
         Header []ApiDetailSaveDataParametersHeader `json:"header,optional"`
     }
-   ApiDetailSaveDataParametersHeader {
+    ApiDetailSaveDataParametersHeader {
         Id string `json:"id"`
         Name string `json:"name"`
         Type string `json:"type"`
         Example string `json:"example,optional"`
     }
-   ApiDetailSaveDataParametersQuery {
+    ApiDetailSaveDataParametersQuery {
         Id string `json:"id"`
         Name string `json:"name"`
         Type string `json:"type"`
         Example string `json:"example,optional"`
     }
-   ApiDetailSaveDataResponse {
+    ApiDetailSaveDataResponse {
         Id string `json:"id"`
         Code int `json:"code"`
         Name string `json:"name"`
         ContentType string `json:"contentType"`
         JsonSchema ApiDetailSaveDataJsonSchema `json:"jsonSchema"`
     }
-   ApiDetailSaveDataJsonSchema {
+    ApiDetailSaveDataJsonSchema {
         Type string `json:"type"`
         Properties []ApiDetailSaveDataJsonSchemaProperty `json:"properties,optional"`
     }
-   ApiDetailSaveDataJsonSchemaProperty {
+    ApiDetailSaveDataJsonSchemaProperty {
         Id string `json:"id,optional"`
         Type string `json:"type"`
         Name string `json:"name"`
         DisplayName string `json:"displayName,optional"`
         Description string `json:"description,optional"`
     }
-   ApiDetailSaveRequest {
+    ApiDetailSaveRequest {
         Id string `json:"id"`
         Name string `json:"name"`
         Type string `json:"type,optional"`
-        ParentId string   `json:"parentId,optional"`
-        Data  ApiDetailSaveData  `json:"data,optional"`
+        ParentId string `json:"parentId,optional"`
+        Data ApiDetailSaveData `json:"data,optional"`
     }
-   ApiDetailSaveResp {
-        Code string `json:"code"`
+    ApiDetailSaveResp {
+        Success bool `json:"success"`
         Message string `json:"message"`
     }
 )
 @server(
-    group:  api
+    group: api
     prefix: /api
 )
 service easypost-api {

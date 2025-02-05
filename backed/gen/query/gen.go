@@ -25,10 +25,10 @@ var (
 	APIRequestBodyRaw       *aPIRequestBodyRaw
 	APIResponseInfo         *aPIResponseInfo
 	APIResponseProperty     *aPIResponseProperty
+	SysOrganizeTeam         *sysOrganizeTeam
+	SysProject              *sysProject
 	SysTeam                 *sysTeam
 	SysUser                 *sysUser
-	TeamMemberInfo          *teamMemberInfo
-	TeamProjectDetail       *teamProjectDetail
 )
 
 func SetDefault(db *gorm.DB, opts ...gen.DOOption) {
@@ -41,10 +41,10 @@ func SetDefault(db *gorm.DB, opts ...gen.DOOption) {
 	APIRequestBodyRaw = &Q.APIRequestBodyRaw
 	APIResponseInfo = &Q.APIResponseInfo
 	APIResponseProperty = &Q.APIResponseProperty
+	SysOrganizeTeam = &Q.SysOrganizeTeam
+	SysProject = &Q.SysProject
 	SysTeam = &Q.SysTeam
 	SysUser = &Q.SysUser
-	TeamMemberInfo = &Q.TeamMemberInfo
-	TeamProjectDetail = &Q.TeamProjectDetail
 }
 
 func Use(db *gorm.DB, opts ...gen.DOOption) *Query {
@@ -58,10 +58,10 @@ func Use(db *gorm.DB, opts ...gen.DOOption) *Query {
 		APIRequestBodyRaw:       newAPIRequestBodyRaw(db, opts...),
 		APIResponseInfo:         newAPIResponseInfo(db, opts...),
 		APIResponseProperty:     newAPIResponseProperty(db, opts...),
+		SysOrganizeTeam:         newSysOrganizeTeam(db, opts...),
+		SysProject:              newSysProject(db, opts...),
 		SysTeam:                 newSysTeam(db, opts...),
 		SysUser:                 newSysUser(db, opts...),
-		TeamMemberInfo:          newTeamMemberInfo(db, opts...),
-		TeamProjectDetail:       newTeamProjectDetail(db, opts...),
 	}
 }
 
@@ -76,10 +76,10 @@ type Query struct {
 	APIRequestBodyRaw       aPIRequestBodyRaw
 	APIResponseInfo         aPIResponseInfo
 	APIResponseProperty     aPIResponseProperty
+	SysOrganizeTeam         sysOrganizeTeam
+	SysProject              sysProject
 	SysTeam                 sysTeam
 	SysUser                 sysUser
-	TeamMemberInfo          teamMemberInfo
-	TeamProjectDetail       teamProjectDetail
 }
 
 func (q *Query) Available() bool { return q.db != nil }
@@ -95,10 +95,10 @@ func (q *Query) clone(db *gorm.DB) *Query {
 		APIRequestBodyRaw:       q.APIRequestBodyRaw.clone(db),
 		APIResponseInfo:         q.APIResponseInfo.clone(db),
 		APIResponseProperty:     q.APIResponseProperty.clone(db),
+		SysOrganizeTeam:         q.SysOrganizeTeam.clone(db),
+		SysProject:              q.SysProject.clone(db),
 		SysTeam:                 q.SysTeam.clone(db),
 		SysUser:                 q.SysUser.clone(db),
-		TeamMemberInfo:          q.TeamMemberInfo.clone(db),
-		TeamProjectDetail:       q.TeamProjectDetail.clone(db),
 	}
 }
 
@@ -121,10 +121,10 @@ func (q *Query) ReplaceDB(db *gorm.DB) *Query {
 		APIRequestBodyRaw:       q.APIRequestBodyRaw.replaceDB(db),
 		APIResponseInfo:         q.APIResponseInfo.replaceDB(db),
 		APIResponseProperty:     q.APIResponseProperty.replaceDB(db),
+		SysOrganizeTeam:         q.SysOrganizeTeam.replaceDB(db),
+		SysProject:              q.SysProject.replaceDB(db),
 		SysTeam:                 q.SysTeam.replaceDB(db),
 		SysUser:                 q.SysUser.replaceDB(db),
-		TeamMemberInfo:          q.TeamMemberInfo.replaceDB(db),
-		TeamProjectDetail:       q.TeamProjectDetail.replaceDB(db),
 	}
 }
 
@@ -137,10 +137,10 @@ type queryCtx struct {
 	APIRequestBodyRaw       IAPIRequestBodyRawDo
 	APIResponseInfo         IAPIResponseInfoDo
 	APIResponseProperty     IAPIResponsePropertyDo
+	SysOrganizeTeam         ISysOrganizeTeamDo
+	SysProject              ISysProjectDo
 	SysTeam                 ISysTeamDo
 	SysUser                 ISysUserDo
-	TeamMemberInfo          ITeamMemberInfoDo
-	TeamProjectDetail       ITeamProjectDetailDo
 }
 
 func (q *Query) WithContext(ctx context.Context) *queryCtx {
@@ -153,10 +153,10 @@ func (q *Query) WithContext(ctx context.Context) *queryCtx {
 		APIRequestBodyRaw:       q.APIRequestBodyRaw.WithContext(ctx),
 		APIResponseInfo:         q.APIResponseInfo.WithContext(ctx),
 		APIResponseProperty:     q.APIResponseProperty.WithContext(ctx),
+		SysOrganizeTeam:         q.SysOrganizeTeam.WithContext(ctx),
+		SysProject:              q.SysProject.WithContext(ctx),
 		SysTeam:                 q.SysTeam.WithContext(ctx),
 		SysUser:                 q.SysUser.WithContext(ctx),
-		TeamMemberInfo:          q.TeamMemberInfo.WithContext(ctx),
-		TeamProjectDetail:       q.TeamProjectDetail.WithContext(ctx),
 	}
 }
 

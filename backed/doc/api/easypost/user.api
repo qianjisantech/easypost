@@ -14,7 +14,7 @@ type (
      PageSize  int    `json:"pageSize"`
     }
     UserQueryPageResp {
-        Code string  `json:"code"`
+        Success bool `json:"success"`
         Message string  `json:"message"`
         Data UserQueryPageData  `json:"data"`
 

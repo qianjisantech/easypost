@@ -35,7 +35,7 @@ func main() {
 			return http.StatusOK, e.Data()
 		default:
 			return http.StatusOK, &errorx.CodeErrorResponse{
-				Code:    errorx.DefaultCode,
+				Success: false,
 				Message: e.Error(),
 			}
 		}

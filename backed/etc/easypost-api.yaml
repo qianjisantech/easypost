@@ -3,4 +3,4 @@ Host: 0.0.0.0
 Port: 8888
 
 Mysql:
-  Datasource: root:123456@tcp(localhost:3306)/easypost?charset=utf8mb4&parseTime=true&loc=Asia%2FShanghai
+  Datasource: root:Sy122812@tcp(rm-uf6vr2e018e95e4hz6o.mysql.rds.aliyuncs.com:3306)/easypost?charset=utf8mb4&parseTime=true&loc=Asia%2FShanghai

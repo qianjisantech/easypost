@@ -38,3 +38,10 @@ export function TeamDelete(id) {
     method: 'get',
   })
 }
+
+export function TeamDetail(id) {
+  return request({
+    url: `/team/detail/${id}`,
+    method: 'get',
+  })
+}

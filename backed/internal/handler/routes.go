@@ -96,6 +96,11 @@ func RegisterHandlers(server *rest.Server, serverCtx *svc.ServiceContext) {
 				Handler: team.TeamDeleteHandler(serverCtx),
 			},
 			{
+				Method:  http.MethodGet,
+				Path:    "/team/detail/:id",
+				Handler: team.TeamDetailHandler(serverCtx),
+			},
+			{
 				Method:  http.MethodPost,
 				Path:    "/team/page",
 				Handler: team.TeamQueryPageHandler(serverCtx),

@@ -28,7 +28,7 @@ func main() {
 	})
 
 	//var dsn = "root:123456@tcp(127.0.0.1:3306)/gozero?charset=utf8mb4&parseTime=true&loc=Asia%2FShanghai"
-	var dsn = "root:123456@tcp(localhost:3306)/easypost?charset=utf8mb4&parseTime=true&loc=Asia%2FShanghai"
+	var dsn = "root:Sy122812@tcp(rm-uf6vr2e018e95e4hz6o.mysql.rds.aliyuncs.com:3306)/easypost?charset=utf8mb4&parseTime=true&loc=Asia%2FShanghai"
 	// Initialize a *gorm.DB instance
 	db, _ := gorm.Open(mysql.Open(dsn))
 
@@ -45,10 +45,10 @@ func main() {
 		g.GenerateModel("api_request_body_raw"),
 		g.GenerateModel("api_request_body_parameter"),
 		g.GenerateModel("api_response_property"),
-		g.GenerateModel("team_member_info"),
-		g.GenerateModel("team_project_detail"),
+		g.GenerateModel("sys_project"),
 		g.GenerateModel("sys_user"),
 		g.GenerateModel("sys_team"),
+		g.GenerateModel("sys_organize_team"),
 	)
 
 	// Execute the generator

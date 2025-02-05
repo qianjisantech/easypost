@@ -5,7 +5,7 @@ import request from "@/api";
  * @param body
  * @returns {Promise<axios.AxiosResponse<any>>}
  */
-export function login(body) {
+export function Login(body) {
   return request({
     url: '/auth/login',
     method: 'post',

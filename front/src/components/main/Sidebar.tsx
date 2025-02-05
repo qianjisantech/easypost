@@ -2,28 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { Menu, Modal, Button, message, Input } from 'antd';
 import { AppstoreAddOutlined, PlusOutlined } from '@ant-design/icons';
 import { useRouter,usePathname } from 'next/navigation';
-import { TeamQueryPage } from "@/api/team"; // 使用 next/router 中的 useRouter
-
-// 处理新建团队点击事件
-const handleCreateTeamClick = () => {
-  Modal.confirm({
-    title: '新建团队',
-    content: (
-      <div style={{ margin: 20 }}>
-        <Input placeholder="请输入团队名称" />
-      </div>
-    ),
-    icon: null,
-    okText: '新建',
-    cancelText: '取消',
-    onOk() {
-      message.success('团队创建成功');
-    },
-    onCancel() {
-      console.log('取消');
-    },
-  });
-};
+import { TeamCreate, TeamQueryPage } from "@/api/team"; // 使用 next/router 中的 useRouter
 
 const Sidebar = () => {
   const router = useRouter();  // 使用 useRouter 获取路由对象
@@ -57,14 +36,49 @@ const Sidebar = () => {
     textAlign: 'center',
     padding: '20px',
   };
+// 处理新建团队点击事件
+  const handleCreateTeamClick = () => {
+    // 使用 React.createRef 创建 ref
+    const inputRef = React.createRef();
 
+    Modal.confirm({
+      title: '新建团队',
+      content: (
+        <div style={{ margin: 20 }}>
+          <Input placeholder="请输入团队名称" ref={inputRef} />
+        </div>
+      ),
+      icon: null,
+      okText: '新建',
+      cancelText: '取消',
+      async onOk() {
+        // 获取输入框的值
+        const teamName = inputRef.current?.input?.value;
+        console.log('获取输入框的值teamName：',teamName)
+        if (!teamName) {
+          message.error('团队名称不能为空');
+        }
+        // 发起接口调用
+        const response = await TeamCreate( JSON.stringify({ teamName: teamName }));
+        if (response.data.success){
+          message.success(response.data.message);
+          fetchTeamsData()
+        }
+      },
+      onCancel() {
+        console.log('取消');
+      },
+    });
+  };
   // API 请求函数：获取团队列表
-  const fetchTeams = async () => {
+  const fetchTeamsData = async () => {
     try {
       const response = await TeamQueryPage({ page: 1, pageSize: 100});  // 假设 API 地址是 /api/teams
-      const data = response.data.data;
-      setTeams(data);  // 将获取的数据存储在 state 中
-      setLoading(false);  // 设置为非加载状态
+     if (response.data.success){
+       const data = response.data.data;
+       setTeams(data);  // 将获取的数据存储在 state 中
+       setLoading(false);  // 设置为非加载状态
+     }
     } catch (error) {
       console.error('获取团队数据失败:', error);
       message.error('获取团队数据失败');
@@ -74,7 +88,7 @@ const Sidebar = () => {
 
   // 在组件加载时获取团队数据
   useEffect(() => {
-    fetchTeams();
+    fetchTeamsData();
   }, []);
 
 

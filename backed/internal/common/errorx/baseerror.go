@@ -1,23 +1,21 @@
 package errorx
 
-const DefaultCode = "500"
-
 type CodeError struct {
-	Code    string `json:"code"`
+	Success bool   `json:"success"`
 	Message string `json:"message"`
 }
 
 type CodeErrorResponse struct {
-	Code    string `json:"code"`
+	Success bool   `json:"success"`
 	Message string `json:"message"`
 }
 
-func NewCodeError(code, msg string) error {
-	return &CodeError{Code: code, Message: msg}
+func NewCodeError(msg string) error {
+	return &CodeError{Success: false, Message: msg}
 }
 
 func NewDefaultError(msg string) error {
-	return NewCodeError(DefaultCode, msg)
+	return NewCodeError(msg)
 }
 
 func (e *CodeError) Error() string {
@@ -26,7 +24,7 @@ func (e *CodeError) Error() string {
 
 func (e *CodeError) Data() *CodeErrorResponse {
 	return &CodeErrorResponse{
-		Code:    e.Code,
+		Success: e.Success,
 		Message: e.Message,
 	}
 }

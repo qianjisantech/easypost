@@ -29,7 +29,7 @@ func NewProjectCopyLogic(ctx context.Context, svcCtx *svc.ServiceContext) *Proje
 func (l *ProjectCopyLogic) ProjectCopy(req *types.ProjectCopyRequest) (resp *types.ProjectCopyResp, err error) {
 	// 从数据库开始事务
 	db := l.svcCtx.DB.Begin().Debug()
-	var project model.TeamProjectDetail
+	var project model.SysProject
 	err = db.First(&project, req.Id).Error
 	if err != nil {
 		db.Rollback()
@@ -39,7 +39,7 @@ func (l *ProjectCopyLogic) ProjectCopy(req *types.ProjectCopyRequest) (resp *typ
 	icon := GetRandomString(icons)
 	CopyProjectName := *project.ProjectName + "copy"
 	// 创建项目数据模型
-	m := &model.TeamProjectDetail{
+	m := &model.SysProject{
 		ProjectName: &CopyProjectName,
 		IsPublic:    project.IsPublic,
 		ProjectIcon: &icon,
@@ -58,7 +58,7 @@ func (l *ProjectCopyLogic) ProjectCopy(req *types.ProjectCopyRequest) (resp *typ
 	}
 	// 返回成功响应
 	return &types.ProjectCopyResp{
-		Code:    "200",
+		Success: true,
 		Message: "复制成功",
 	}, nil
 }

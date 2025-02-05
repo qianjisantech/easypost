@@ -67,8 +67,9 @@ func (l *UserQueryPageLogic) UserQueryPage(req *types.UserQueryPageRequest) (res
 	}
 
 	// 构建返回的响应
-	resp = &types.UserQueryPageResp{
-		Code:    "200",
+
+	return &types.UserQueryPageResp{
+		Success: true,
 		Message: "success",
 		Data: types.UserQueryPageData{
 			Current:    int64(req.Current),
@@ -77,7 +78,5 @@ func (l *UserQueryPageLogic) UserQueryPage(req *types.UserQueryPageRequest) (res
 			Total:      total,
 			Records:    records, // 直接填充转换后的记录
 		},
-	}
-
-	return resp, nil
+	}, nil
 }

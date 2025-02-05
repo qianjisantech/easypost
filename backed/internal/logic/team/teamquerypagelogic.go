@@ -41,7 +41,7 @@ func (l *TeamQueryPageLogic) TeamQueryPage(req *types.TeamQueryPageRequest) (res
 		}
 	}
 	return &types.TeamQueryPageResp{
-		Code:    "200",
+		Success: true,
 		Message: "success",
 		Data:    data,
 	}, nil

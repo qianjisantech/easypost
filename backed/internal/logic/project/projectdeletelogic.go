@@ -37,7 +37,7 @@ func (l *ProjectDeleteLogic) ProjectDelete(req *types.ProjectDeleteRequest) (res
 
 	// 删除项目逻辑
 	// 这里假设你使用 GORM 作为 ORM 库
-	var project model.TeamProjectDetail
+	var project model.SysProject
 	if err := db.Delete(&project, id).Error; err != nil {
 		return nil, errorx.NewDefaultError(err.Error())
 	}
@@ -47,7 +47,7 @@ func (l *ProjectDeleteLogic) ProjectDelete(req *types.ProjectDeleteRequest) (res
 		return nil, errorx.NewDefaultError("Error committing transaction")
 	}
 	return &types.ProjectDeleteResp{
-		Code:    "200",
+		Success: true,
 		Message: "删除成功",
 	}, nil
 }

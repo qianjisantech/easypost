@@ -12,25 +12,24 @@ import (
 	"github.com/zeromicro/go-zero/core/logx"
 )
 
-type TeamUpdateLogic struct {
+type TeamDetailLogic struct {
 	logx.Logger
 	ctx    context.Context
 	svcCtx *svc.ServiceContext
 }
 
-func NewTeamUpdateLogic(ctx context.Context, svcCtx *svc.ServiceContext) *TeamUpdateLogic {
-	return &TeamUpdateLogic{
+func NewTeamDetailLogic(ctx context.Context, svcCtx *svc.ServiceContext) *TeamDetailLogic {
+	return &TeamDetailLogic{
 		Logger: logx.WithContext(ctx),
 		ctx:    ctx,
 		svcCtx: svcCtx,
 	}
 }
 
-func (l *TeamUpdateLogic) TeamUpdate(req *types.TeamUpdateRequest) (resp *types.TeamUpdateResp, err error) {
-	// Initialize DB transaction with Debug for debugging purposes
+func (l *TeamDetailLogic) TeamDetail(req *types.TeamDetailRequest) (resp *types.TeamDetailResp, err error) {
+
 	db := l.svcCtx.DB.Begin().Debug()
 
-	// Parse the ID from string to int64
 	id, err := strconv.ParseInt(req.Id, 10, 64)
 	if err != nil {
 		// Handle invalid ID format
@@ -39,16 +38,10 @@ func (l *TeamUpdateLogic) TeamUpdate(req *types.TeamUpdateRequest) (resp *types.
 		return nil, errorx.NewDefaultError("Invalid project ID format")
 	}
 	// Prepare project data model
-	m := &model.SysTeam{
-		ID:   id,
-		Name: &req.TeamName,
-	}
-
-	// Update the project details in the database
-	tx := db.Model(m).Updates(m) // Use Updates() to update the fields
+	var team model.SysTeam
+	tx := db.First(&team, id)
 	if tx.Error != nil {
-		// Rollback if there is an error in the update query
-		logx.Errorf("Error updating project: %v", tx.Error)
+		logx.Errorf("Error query team: %v", tx.Error)
 		db.Rollback()
 		return nil, errorx.NewDefaultError(tx.Error.Error())
 	}
@@ -62,8 +55,13 @@ func (l *TeamUpdateLogic) TeamUpdate(req *types.TeamUpdateRequest) (resp *types.
 	}
 
 	// Return success response
-	return &types.TeamUpdateResp{
+	return &types.TeamDetailResp{
 		Success: true,
-		Message: "更新成功",
+		Message: "success",
+		Data: types.TeamDetailData{
+			TeamId:    strconv.FormatInt(team.ID, 10),
+			TeamName:  *team.Name,
+			IsManager: false,
+		},
 	}, nil
 }

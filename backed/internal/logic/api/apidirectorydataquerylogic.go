@@ -175,7 +175,7 @@ func (l *ApiDirectoryDataQueryLogic) ApiDirectoryDataQuery(req *types.ApiDirecto
 
 	// 返回成功响应
 	return &types.ApiDirectoryDataQueryResp{
-		Code:    "200",
+		Success: true,
 		Message: "查询成功",
 		Data:    datas,
 	}, nil

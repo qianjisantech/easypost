@@ -8,10 +8,10 @@ import (
 	"time"
 )
 
-const TableNameTeamProjectDetail = "team_project_detail"
+const TableNameSysProject = "sys_project"
 
-// TeamProjectDetail mapped from table <team_project_detail>
-type TeamProjectDetail struct {
+// SysProject mapped from table <sys_project>
+type SysProject struct {
 	ID          int64      `gorm:"column:id;primaryKey;autoIncrement:true" json:"id"`
 	ProjectName *string    `gorm:"column:project_name" json:"project_name"`
 	ProjectIcon *string    `gorm:"column:project_icon" json:"project_icon"`
@@ -24,7 +24,7 @@ type TeamProjectDetail struct {
 	TeamID      *int64     `gorm:"column:team_id" json:"team_id"`
 }
 
-// TableName TeamProjectDetail's table name
-func (*TeamProjectDetail) TableName() string {
-	return TableNameTeamProjectDetail
+// TableName SysProject's table name
+func (*SysProject) TableName() string {
+	return TableNameSysProject
 }

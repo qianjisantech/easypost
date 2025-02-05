@@ -1,6 +1,6 @@
 import axios, { AxiosInstance, AxiosError, AxiosResponse } from 'axios';
 import { message } from 'antd';
-
+import { redirect } from 'next/navigation'
 const request: AxiosInstance = axios.create({
     baseURL: '/api/', // API的基础URL
     timeout: 10000,   // 请求超时
@@ -45,6 +45,8 @@ request.interceptors.request.use(
         const token = localStorage.getItem('access_token');
         if (token) {
             config.headers['Authorization'] = `Bearer ${token}`; // 添加 Authorization header
+        }else {
+
         }
         return config;
     },
@@ -55,12 +57,13 @@ request.interceptors.request.use(
 request.interceptors.response.use(
     (response: AxiosResponse) => {
         // 判断响应中的业务逻辑，如果有错误则显示消息
-        if (response.data.code !== '200') {
+        if (response.data.success===false) {
             showMessage('error', response.data.message || 'Request failed');
         } else {
-            // showMessage('success', 'Request successful');
+           // showMessage('success', response.data.message||"请求成功");
+          return response;
         }
-        return response;
+
     },
     errorHandler
 );

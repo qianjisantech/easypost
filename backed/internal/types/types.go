@@ -78,7 +78,7 @@ type ApiDetailSaveRequest struct {
 }
 
 type ApiDetailSaveResp struct {
-	Code    string `json:"code"`
+	Success bool   `json:"success"`
 	Message string `json:"message"`
 }
 
@@ -149,7 +149,7 @@ type ApiDirectoryDataQueryRequest struct {
 }
 
 type ApiDirectoryDataQueryResp struct {
-	Code    string                      `json:"code"`
+	Success bool                        `json:"success"`
 	Message string                      `json:"message"`
 	Data    []ApiDirectoryDataQueryData `json:"data"`
 }
@@ -158,13 +158,17 @@ type ApiRecycleGroupQueryRequest struct {
 }
 
 type ApiRecycleGroupQueryResp struct {
-	Code    string                      `json:"code"`
+	Success bool                        `json:"success"`
 	Message string                      `json:"message"`
 	Data    []ApiDirectoryDataQueryData `json:"data"`
 }
 
 type AuthEmailLoginData struct {
 	AccessToken string `json:"accessToken"`
+	UserId      string `json:"userId"`
+	Username    string `json:"username"`
+	Name        string `json:"name"`
+	TeamList    []Team `json:"teamList"`
 }
 
 type AuthEmailLoginReq struct {
@@ -173,7 +177,7 @@ type AuthEmailLoginReq struct {
 }
 
 type AuthEmailLoginResponse struct {
-	Code    string             `json:"code"`
+	Success bool               `json:"success"`
 	Message string             `json:"message"`
 	Data    AuthEmailLoginData `json:"data"`
 }
@@ -183,17 +187,18 @@ type GetQRCodeData struct {
 }
 
 type GetQRCodeResp struct {
-	Code    string        `json:"code"`
+	Success bool          `json:"success"`
 	Message string        `json:"message"`
 	Data    GetQRCodeData `json:"data"`
 }
 
 type ProjectCopyRequest struct {
-	Id string `json:"id"`
+	Id     string `json:"id"`
+	TeamId string `json:"teamId"`
 }
 
 type ProjectCopyResp struct {
-	Code    string `json:"code"`
+	Success bool   `json:"success"`
 	Message string `json:"message"`
 }
 
@@ -204,7 +209,7 @@ type ProjectCreateRequest struct {
 }
 
 type ProjectCreateResp struct {
-	Code    string `json:"code"`
+	Success bool   `json:"success"`
 	Message string `json:"message"`
 }
 
@@ -213,7 +218,7 @@ type ProjectDeleteRequest struct {
 }
 
 type ProjectDeleteResp struct {
-	Code    string `json:"code"`
+	Success bool   `json:"success"`
 	Message string `json:"message"`
 }
 
@@ -229,7 +234,7 @@ type ProjectQueryPageRequest struct {
 }
 
 type ProjectQueryPageResp struct {
-	Code    string                  `json:"code"`
+	Success bool                    `json:"success"`
 	Message string                  `json:"message"`
 	Data    []*ProjectQueryPageData `json:"data"`
 }
@@ -241,8 +246,13 @@ type ProjectUpdateRequest struct {
 }
 
 type ProjectUpdateResp struct {
-	Code    string `json:"code"`
+	Success bool   `json:"success"`
 	Message string `json:"message"`
+}
+
+type Team struct {
+	TeamId   string `json:"teamId"`
+	TeamName string `json:"teamName"`
 }
 
 type TeamCreateRequest struct {
@@ -250,7 +260,7 @@ type TeamCreateRequest struct {
 }
 
 type TeamCreateResp struct {
-	Code    string `json:"code"`
+	Success bool   `json:"success"`
 	Message string `json:"message"`
 }
 
@@ -259,8 +269,24 @@ type TeamDeleteRequest struct {
 }
 
 type TeamDeleteResp struct {
-	Code    string `json:"code"`
+	Success bool   `json:"success"`
 	Message string `json:"message"`
+}
+
+type TeamDetailData struct {
+	TeamId    string `json:"teamId"`
+	TeamName  string `json:"teamName"`
+	IsManager bool   `json:"isManager"`
+}
+
+type TeamDetailRequest struct {
+	Id string `path:"id"`
+}
+
+type TeamDetailResp struct {
+	Success bool           `json:"success"`
+	Message string         `json:"message"`
+	Data    TeamDetailData `json:"data"`
 }
 
 type TeamQueryPageData struct {
@@ -272,7 +298,7 @@ type TeamQueryPageRequest struct {
 }
 
 type TeamQueryPageResp struct {
-	Code    string               `json:"code"`
+	Success bool                 `json:"success"`
 	Message string               `json:"message"`
 	Data    []*TeamQueryPageData `json:"data"`
 }
@@ -283,7 +309,7 @@ type TeamUpdateRequest struct {
 }
 
 type TeamUpdateResp struct {
-	Code    string `json:"code"`
+	Success bool   `json:"success"`
 	Message string `json:"message"`
 }
 
@@ -308,7 +334,7 @@ type UserQueryPageRequest struct {
 }
 
 type UserQueryPageResp struct {
-	Code    string            `json:"code"`
+	Success bool              `json:"success"`
 	Message string            `json:"message"`
 	Data    UserQueryPageData `json:"data"`
 }
