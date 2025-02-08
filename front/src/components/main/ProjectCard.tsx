@@ -12,7 +12,7 @@ import {
 import { Popover, Modal, Input, Form, message, Button, Tooltip, Radio } from "antd";
 import { ProjectCopy, ProjectDelete, ProjectUpdate } from "@/api/project";
 
-const ProjectCard = ({ card,fetchCardsData  }) => {
+const ProjectCard = ({ card,fetchCardsData,teamId  }) => {
   const router = useRouter();
   const [isHovered, setIsHovered] = useState(false);
   const [hoveredItem, setHoveredItem] = useState('');
@@ -52,7 +52,7 @@ const ProjectCard = ({ card,fetchCardsData  }) => {
         return
       case "复制项目":
         console.log("复制项目");
-        await ProjectCopy({id:card.id})
+        await ProjectCopy({id:card.id,teamId:teamId})
         fetchCardsData();
         return;
       case "删除项目":

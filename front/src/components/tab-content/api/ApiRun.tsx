@@ -22,7 +22,7 @@ import { ParamsTab } from './params/ParamsTab';
 import { request } from "@/utils/request";
 import { RunResponse } from "@/components/tab-content/api/response/RunResponse";
 import { AxiosRequestConfig } from "axios";
-import {apiDetailSave} from "@/api/api";
+import {ApiDetailSave} from "@/api/api";
 
 const DEFAULT_NAME = '未命名接口';
 
@@ -84,7 +84,7 @@ export function ApiRun() {
         if (isCreating) {
             const menuItemId = '';
             try {
-                await apiDetailSave({
+                await ApiDetailSave({
                     id: menuItemId,
                     name: menuName,
                     type: MenuItemType.ApiDetail,

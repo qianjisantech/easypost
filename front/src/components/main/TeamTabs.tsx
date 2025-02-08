@@ -159,7 +159,7 @@ const TeamTabs = ({ teamId }) => {
                 <Row gutter={[16, 16]} justify="start">
                   {cardsData.map((card) => (
                     <Col key={card.id} span={4.5}>
-                      <ProjectCard card={card} fetchCardsData={fetchCardsData} />
+                      <ProjectCard card={card} fetchCardsData={fetchCardsData} teamId={initialFormValues.teamId} />
                     </Col>
                   ))}
                 </Row>
@@ -186,7 +186,7 @@ const TeamTabs = ({ teamId }) => {
           {membersLoading ? <Spin tip="加载成员和角色数据..." /> : <MembersAndRoles />}
         </TabPane>
         <TabPane key="3" tab="团队设置">
-          {settingsLoading ? <Spin tip="加载团队设置..." /> : <TeamSettings />}
+          {settingsLoading ? <Spin tip="加载团队设置..." /> : <TeamSettings teamId={teamId} />}
         </TabPane>
       </Tabs>
 

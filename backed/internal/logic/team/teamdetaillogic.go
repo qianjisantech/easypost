@@ -61,7 +61,7 @@ func (l *TeamDetailLogic) TeamDetail(req *types.TeamDetailRequest) (resp *types.
 		Data: types.TeamDetailData{
 			TeamId:    strconv.FormatInt(team.ID, 10),
 			TeamName:  *team.Name,
-			IsManager: false,
+			IsManager: true,
 		},
 	}, nil
 }

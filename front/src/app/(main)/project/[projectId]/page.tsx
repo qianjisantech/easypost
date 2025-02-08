@@ -15,7 +15,7 @@ import { MenuItemType } from '@/enums'
 import { getCatalogType } from '@/helpers'
 import { useHelpers } from '@/hooks/useHelpers'
 
-import { PanelLayout } from '../components/PanelLayout'
+import { PanelLayout } from '../../components/PanelLayout'
 import { useRouter } from 'next/navigation'
 import { SideNav } from '@/app/(main)/components/SideNav'
 

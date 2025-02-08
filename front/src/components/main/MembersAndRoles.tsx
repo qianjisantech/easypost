@@ -217,7 +217,7 @@ const MembersAndRoles = ({
                     fontWeight: "bold",
                   }}
                 >
-                  20
+                  **
                 </Text>
                 <Text
                   style={{
@@ -247,7 +247,7 @@ const MembersAndRoles = ({
                     fontWeight: "bold",
                   }}
                 >
-                  5
+                  **
                 </Text>
                 <Text
                   style={{
@@ -277,7 +277,7 @@ const MembersAndRoles = ({
                     fontWeight: "bold",
                   }}
                 >
-                  3
+                  **
                 </Text>
                 <Text
                   style={{
@@ -322,24 +322,24 @@ const MembersAndRoles = ({
         </TabPane>
 
         {/* 角色 Tab */}
-        <TabPane key="2" tab="角色/权限">
-          <Table
-            bordered
-            columns={roleColumns}
-            dataSource={rolesData}
-            rowKey="id"
-            pagination={{
-              current: pagination.current,
-              pageSize: pagination.pageSize,
-              total: pagination.total,
-              showSizeChanger: true,
-              showQuickJumper: true,
-              pageSizeOptions: ['10', '20', '50'],
-              showTotal: (total) => `共 ${total} 条`,
-            }}
-            onChange={handleTableChange}
-          />
-        </TabPane>
+        {/*<TabPane key="2" tab="角色/权限">*/}
+        {/*  <Table*/}
+        {/*    bordered*/}
+        {/*    columns={roleColumns}*/}
+        {/*    dataSource={rolesData}*/}
+        {/*    rowKey="id"*/}
+        {/*    pagination={{*/}
+        {/*      current: pagination.current,*/}
+        {/*      pageSize: pagination.pageSize,*/}
+        {/*      total: pagination.total,*/}
+        {/*      showSizeChanger: true,*/}
+        {/*      showQuickJumper: true,*/}
+        {/*      pageSizeOptions: ['10', '20', '50'],*/}
+        {/*      showTotal: (total) => `共 ${total} 条`,*/}
+        {/*    }}*/}
+        {/*    onChange={handleTableChange}*/}
+        {/*  />*/}
+        {/*</TabPane>*/}
       </Tabs>
 
       {/* 编辑弹窗 */}

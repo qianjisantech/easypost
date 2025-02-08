@@ -82,6 +82,8 @@ func (l *AuthEmailLoginLogic) QueryUserByEmailAndPassword(email string, password
 	return user, nil
 }
 
+var secretKey = "easypost"
+
 // generateJWT 生成 JWT Token
 func generateJWT(userID int64, email string) (string, error) {
 	claims := jwt.MapClaims{
@@ -91,7 +93,7 @@ func generateJWT(userID int64, email string) (string, error) {
 	}
 
 	token := jwt.NewWithClaims(jwt.SigningMethodHS256, claims)
-	signedToken, err := token.SignedString([]byte("your-secret-key"))
+	signedToken, err := token.SignedString([]byte(secretKey))
 	if err != nil {
 		return "", err
 	}

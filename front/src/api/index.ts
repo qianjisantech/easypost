@@ -42,7 +42,7 @@ const errorHandler = (error: AxiosError) => {
 // 请求拦截器
 request.interceptors.request.use(
     (config) => {
-        const token = localStorage.getItem('access_token');
+        const token = localStorage.getItem('accessToken');
         if (token) {
             config.headers['Authorization'] = `Bearer ${token}`; // 添加 Authorization header
         }else {

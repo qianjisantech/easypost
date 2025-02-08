@@ -168,7 +168,6 @@ type AuthEmailLoginData struct {
 	UserId      string `json:"userId"`
 	Username    string `json:"username"`
 	Name        string `json:"name"`
-	TeamList    []Team `json:"teamList"`
 }
 
 type AuthEmailLoginReq struct {
@@ -248,11 +247,6 @@ type ProjectUpdateRequest struct {
 type ProjectUpdateResp struct {
 	Success bool   `json:"success"`
 	Message string `json:"message"`
-}
-
-type Team struct {
-	TeamId   string `json:"teamId"`
-	TeamName string `json:"teamName"`
 }
 
 type TeamCreateRequest struct {

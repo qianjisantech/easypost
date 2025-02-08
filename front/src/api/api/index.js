@@ -1,6 +1,6 @@
 import request from "@/api";
 
-export function apiRecycleGroupList (body) {
+export function ApiRecycleGroupList (body) {
     return request({
         url: '/recycle/group/list',
         method: 'post',
@@ -11,7 +11,7 @@ export function apiRecycleGroupList (body) {
     })
 }
 
-export function apiDirectoryDataList (body) {
+export function ApiDirectoryDataList (body) {
     return request({
         url: '/directory/data/list',
         method: 'post',
@@ -22,7 +22,7 @@ export function apiDirectoryDataList (body) {
     })
 }
 
-export function apiDetailSave (body) {
+export function ApiDetailSave (body) {
     return request({
         url: '/api/detail/save',
         method: 'post',

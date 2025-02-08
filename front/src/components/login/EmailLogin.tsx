@@ -1,27 +1,31 @@
-import React, { useState } from 'react'
-import { Button, Col, Row, Input,message  } from 'antd'
-import { useRouter } from "next/navigation";
-import { Login, login } from "@/api/auth";
+import React, { useState, useTransition } from 'react';
+import { Button, Col, Row, Input, Spin } from 'antd';
+import { useRouter } from 'next/navigation';
+import { Login } from '@/api/auth';
+import { useGlobalContext } from "@/contexts/global";
 
 const EmailLogin = () => {
-  const [email, setEmail] = useState('2497822530@qq.com')
-  const [password, setPassword] = useState('123456')  // 用于保存密码
-  const [code, setCode] = useState('')          // 用于保存验证码
-  const [isCodeLogin, setIsCodeLogin] = useState(false) // 控制是否是验证码登录
-  const router = useRouter()
+  const [email, setEmail] = useState('2497822530@qq.com');
+  const [password, setPassword] = useState('123456');  // 保存密码
+  const [code, setCode] = useState('');                // 保存验证码
+  const [isCodeLogin, setIsCodeLogin] = useState(false); // 控制是否是验证码登录
+  const router = useRouter();
+  const { messageApi } = useGlobalContext();
+  // 使用 useTransition 管理页面跳转的 loading 状态
+  const [isPending, startTransition] = useTransition();
+
   // 发送验证码
   const handleSendCode = () => {
-    console.log('发送验证码到:', email)
-    // 在此处调用API发送验证码
-  }
+    console.log('发送验证码到:', email);
+    // 调用API发送验证码
+  };
 
   // 登录处理
-// 登录处理
   const handleEmailLogin = async () => {
     if (isCodeLogin) {
       console.log('Email:', email);
       console.log('Verification Code:', code);
-      // 在此处进行邮箱验证码登录的逻辑
+      // 处理邮箱验证码登录逻辑
     } else {
       console.log('Email:', email);
       console.log('Password:', password);
@@ -31,11 +35,13 @@ const EmailLogin = () => {
 
         if (response.data.success) {
           const token = response.data.data.accessToken;
-          // 将 token 存入 localStorage
-          if (token){
+          if (token) {
             localStorage.setItem('accessToken', token);
           }
-          router.push('/main/teams/1')
+          // 使用 startTransition 包裹路由跳转，isPending 状态会在过渡期间为 true
+          startTransition(() => {
+            router.push('/main/teams/1');
+          });
           console.log('Token saved to localStorage');
         } else {
           console.error('Login failed:', response.data.message);
@@ -48,11 +54,31 @@ const EmailLogin = () => {
 
   // 切换登录方式
   const handleSwitchLoginMethod = () => {
-    setIsCodeLogin(!isCodeLogin)  // 切换登录方式
-  }
+    setIsCodeLogin(!isCodeLogin);
+  };
 
   return (
     <>
+      {/* 当 isPending 为 true 时，使用 Ant Design 的 Spin 组件显示全屏 loading */}
+      {isPending && (
+        <div
+          style={{
+            position: 'fixed',
+            top: 0,
+            left: 0,
+            width: '100vw',
+            height: '100vh',
+            backgroundColor: 'rgba(255, 255, 255, 0.7)', // 半透明背景
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            zIndex: 1000,
+          }}
+        >
+          <Spin size="large" tip="Loading..." />
+        </div>
+      )}
+
       <Input
         placeholder="请输入邮箱"
         value={email}
@@ -89,7 +115,7 @@ const EmailLogin = () => {
           type="password"
           placeholder="请输入密码"
           value={password}
-          onChange={(e) => { setPassword(e.target.value); }}
+          onChange={(e) => setPassword(e.target.value)}
           style={{ marginTop: 10 }}
         />
       )}
@@ -110,16 +136,14 @@ const EmailLogin = () => {
           <Button
             type="link"
             onClick={handleSwitchLoginMethod}
-            style={{
-              color: "#D6A5D6",
-            }}
+            style={{ color: '#D6A5D6' }}
           >
             {isCodeLogin ? '邮箱密码登录' : '验证码登录/注册'}
           </Button>
         </Col>
       </Row>
     </>
-  )
-}
+  );
+};
 
-export default EmailLogin
+export default EmailLogin;

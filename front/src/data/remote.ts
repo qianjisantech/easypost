@@ -20,7 +20,7 @@ const RESPONSE_ID_1 = nanoid(6)
 const RESPONSE_ID_2 = nanoid(6)
 
 const defaultResponse = (): ApiDetailsResponse => {
-  const id = nanoid(6)
+  const id = ''
 
   return {
     id,
@@ -35,7 +35,7 @@ const defaultResponse = (): ApiDetailsResponse => {
 }
 
 export const creator: Creator = {
-  id: nanoid(6),
+  id: '1',
   name: '张三',
   username: '李四',
 }
