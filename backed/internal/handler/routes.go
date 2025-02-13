@@ -121,6 +121,11 @@ func RegisterHandlers(server *rest.Server, serverCtx *svc.ServiceContext) {
 				Path:    "/user/page",
 				Handler: user.UserQueryPageHandler(serverCtx),
 			},
+			{
+				Method:  http.MethodGet,
+				Path:    "/user/profile",
+				Handler: user.UserProfileHandler(serverCtx),
+			},
 		},
 		rest.WithPrefix("/api"),
 	)

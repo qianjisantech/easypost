@@ -14,7 +14,7 @@ const TableNameSysTeam = "sys_team"
 type SysTeam struct {
 	ID         int64      `gorm:"column:id;primaryKey;autoIncrement:true;comment:主键id" json:"id"`               // 主键id
 	Name       *string    `gorm:"column:name;comment:团队名称" json:"name"`                                         // 团队名称
-	ManagerID  *string    `gorm:"column:manager_id;comment:负责人" json:"manager_id"`                              // 负责人
+	ManagerID  *int64     `gorm:"column:manager_id;comment:负责人" json:"manager_id"`                              // 负责人
 	CreateBy   *string    `gorm:"column:create_by;comment:创建人" json:"create_by"`                                // 创建人
 	CreateTime *time.Time `gorm:"column:create_time;default:CURRENT_TIMESTAMP;comment:创建时间" json:"create_time"` // 创建时间
 	UpdateBy   *string    `gorm:"column:update_by;comment:更新人" json:"update_by"`                                // 更新人

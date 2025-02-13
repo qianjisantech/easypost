@@ -90,7 +90,7 @@ const TeamsContent = ({
     <div style={{ backgroundColor: '#fff', width: '100%', marginTop: 0 }}>
       <Content
         style={{
-          padding: '0 20px',  // 适当的内边距调整
+          padding: '60px 20px',  // 适当的内边距调整
           minHeight: 'calc(100vh - 64px)',  // 确保 Content 占据剩余空间
           backgroundColor: '#fff',
           width: '100%',  // 使 Content 撑满父容器宽度

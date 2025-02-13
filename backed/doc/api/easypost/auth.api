@@ -29,10 +29,6 @@ type (
     }
     AuthEmailLoginData {
         AccessToken string `json:"accessToken"`
-        UserId string `json:"userId"`
-        Username string `json:"username"`
-        Name string     `json:"name"`
-
     }
 
 )

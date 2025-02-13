@@ -21,11 +21,11 @@ func main() {
 
 	var c config.Config
 	conf.MustLoad(*configFile, &c)
-
+	ctx := svc.NewServiceContext(c)
 	server := rest.MustNewServer(c.RestConf)
 	defer server.Stop()
-
-	ctx := svc.NewServiceContext(c)
+	server.Use(ctx.Log)
+	server.Use(ctx.Auth)
 	handler.RegisterHandlers(server, ctx)
 	// 自定义错误
 	httpx.SetErrorHandler(func(err error) (int, interface{}) {

@@ -29,7 +29,7 @@ func newSysTeam(db *gorm.DB, opts ...gen.DOOption) sysTeam {
 	_sysTeam.ALL = field.NewAsterisk(tableName)
 	_sysTeam.ID = field.NewInt64(tableName, "id")
 	_sysTeam.Name = field.NewString(tableName, "name")
-	_sysTeam.ManagerID = field.NewString(tableName, "manager_id")
+	_sysTeam.ManagerID = field.NewInt64(tableName, "manager_id")
 	_sysTeam.CreateBy = field.NewString(tableName, "create_by")
 	_sysTeam.CreateTime = field.NewTime(tableName, "create_time")
 	_sysTeam.UpdateBy = field.NewString(tableName, "update_by")
@@ -47,7 +47,7 @@ type sysTeam struct {
 	ALL        field.Asterisk
 	ID         field.Int64  // 主键id
 	Name       field.String // 团队名称
-	ManagerID  field.String // 负责人
+	ManagerID  field.Int64  // 负责人
 	CreateBy   field.String // 创建人
 	CreateTime field.Time   // 创建时间
 	UpdateBy   field.String // 更新人
@@ -71,7 +71,7 @@ func (s *sysTeam) updateTableName(table string) *sysTeam {
 	s.ALL = field.NewAsterisk(table)
 	s.ID = field.NewInt64(table, "id")
 	s.Name = field.NewString(table, "name")
-	s.ManagerID = field.NewString(table, "manager_id")
+	s.ManagerID = field.NewInt64(table, "manager_id")
 	s.CreateBy = field.NewString(table, "create_by")
 	s.CreateTime = field.NewTime(table, "create_time")
 	s.UpdateBy = field.NewString(table, "update_by")

@@ -45,8 +45,6 @@ request.interceptors.request.use(
         const token = localStorage.getItem('accessToken');
         if (token) {
             config.headers['Authorization'] = `Bearer ${token}`; // 添加 Authorization header
-        }else {
-
         }
         return config;
     },

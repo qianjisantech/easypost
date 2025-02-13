@@ -7,7 +7,6 @@ import (
 	"errors"
 	"github.com/golang-jwt/jwt/v4"
 	"gorm.io/gorm"
-	"strconv"
 	"time"
 
 	"backed/internal/svc"
@@ -52,13 +51,14 @@ func (l *AuthEmailLoginLogic) AuthEmailLogin(req *types.AuthEmailLoginReq) (resp
 		Message: "登录成功",
 		Data: types.AuthEmailLoginData{
 			AccessToken: token,
-			UserId:      strconv.FormatInt(user.ID, 10),
-			Username:    *user.Username,
-			Name:        *user.Name,
 		},
 	}, nil
 
 }
+
+// UserId:      strconv.FormatInt(user.ID, 10),
+// Username:    *user.Username,
+// Name:        *user.Name,
 func (l *AuthEmailLoginLogic) QueryUserByEmailAndPassword(email string, password string) (*model.SysUser, error) {
 	db := l.svcCtx.DB.Debug()
 	var user *model.SysUser

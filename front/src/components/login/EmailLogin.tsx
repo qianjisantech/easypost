@@ -1,65 +1,67 @@
-import React, { useState, useTransition } from 'react';
-import { Button, Col, Row, Input, Spin } from 'antd';
-import { useRouter } from 'next/navigation';
-import { Login } from '@/api/auth';
-import { useGlobalContext } from "@/contexts/global";
+import React, { useEffect, useState, useTransition } from 'react'
+
+
+import { Button, Col, Input, message, Row, Spin } from 'antd'
+
+import { Login } from '@/api/auth'
+
+import { useGlobalContext } from '@/contexts/global'
 
 const EmailLogin = () => {
-  const [email, setEmail] = useState('2497822530@qq.com');
-  const [password, setPassword] = useState('123456');  // 保存密码
-  const [code, setCode] = useState('');                // 保存验证码
-  const [isCodeLogin, setIsCodeLogin] = useState(false); // 控制是否是验证码登录
-  const router = useRouter();
-  const { messageApi } = useGlobalContext();
-  // 使用 useTransition 管理页面跳转的 loading 状态
-  const [isPending, startTransition] = useTransition();
+  const [email, setEmail] = useState('2497822530@qq.com')
+  const [password, setPassword] = useState('123456') // 保存密码
+  const [code, setCode] = useState('') // 保存验证码
+  const [isCodeLogin, setIsCodeLogin] = useState(false) // 是否是验证码登录
+
+  const [isPending, startTransition] = useTransition()
+  const [loading, setLoading] = useState(false) // 登录按钮加载状态
+
+  const { messageApi, isLogin, setIsLogin } = useGlobalContext()
 
   // 发送验证码
   const handleSendCode = () => {
-    console.log('发送验证码到:', email);
-    // 调用API发送验证码
-  };
+    console.log('发送验证码到:', email)
+    messageApi.info('验证码已发送，请检查邮箱。')
+    // 这里可以调用 API 发送验证码
+  }
 
-  // 登录处理
+  // 处理登录
   const handleEmailLogin = async () => {
-    if (isCodeLogin) {
-      console.log('Email:', email);
-      console.log('Verification Code:', code);
-      // 处理邮箱验证码登录逻辑
-    } else {
-      console.log('Email:', email);
-      console.log('Password:', password);
-      try {
-        const response = await Login({ email, password });
-        console.log('res', response);
+    if (loading) {
+      return
+    } // 防止重复点击
+    setLoading(true)
 
-        if (response.data.success) {
-          const token = response.data.data.accessToken;
-          if (token) {
-            localStorage.setItem('accessToken', token);
-          }
-          // 使用 startTransition 包裹路由跳转，isPending 状态会在过渡期间为 true
-          startTransition(() => {
-            router.push('/main/teams/1');
-          });
-          console.log('Token saved to localStorage');
-        } else {
-          console.error('Login failed:', response.data.message);
-        }
-      } catch (error) {
-        console.error('Error during login:', error);
+    try {
+      let response
+      if (isCodeLogin) {
+        console.log('验证码登录:', email, code)
+        // 这里可以调用验证码登录 API
+      } else {
+        console.log('密码登录:', email, password)
+        response = await Login({ email, password })
       }
-    }
-  };
 
-  // 切换登录方式
-  const handleSwitchLoginMethod = () => {
-    setIsCodeLogin(!isCodeLogin);
-  };
+      if (response?.data?.success) {
+        const token = response?.data?.data.accessToken
+        localStorage.setItem('accessToken', token)
+        setIsLogin(true)
+        messageApi.success(response?.data?.message)
+
+      } else {
+        messageApi.error(response?.data?.message || '登录失败，请检查账号或密码')
+      }
+    } catch (error) {
+      console.error('登录错误:', error)
+      messageApi.error('登录失败，请稍后重试')
+    } finally {
+      setLoading(false)
+    }
+  }
 
   return (
     <>
-      {/* 当 isPending 为 true 时，使用 Ant Design 的 Spin 组件显示全屏 loading */}
+      {/* 过渡加载动画 */}
       {isPending && (
         <div
           style={{
@@ -81,69 +83,67 @@ const EmailLogin = () => {
 
       <Input
         placeholder="请输入邮箱"
-        value={email}
-        onChange={(e) => setEmail(e.target.value)}
         style={{ marginBottom: 10, marginTop: 30 }}
+        value={email}
+        onChange={(e) => {
+          setEmail(e.target.value)
+        }}
       />
 
-      {/* 如果是验证码登录，显示验证码输入框 */}
       {isCodeLogin ? (
-        <>
-          <Row gutter={10} style={{ marginTop: 10 }}>
-            <Col span={16}>
-              <Input
-                placeholder="请输入验证码"
-                value={code}
-                onChange={(e) => setCode(e.target.value)}
-              />
-            </Col>
-            <Col span={8}>
-              <Button
-                block
-                onClick={handleSendCode}
-                type="primary"
-                style={{ height: '100%' }}
-              >
-                发送验证码
-              </Button>
-            </Col>
-          </Row>
-        </>
+        <Row gutter={10} style={{ marginTop: 10 }}>
+          <Col span={16}>
+            <Input
+              placeholder="请输入验证码"
+              value={code}
+              onChange={(e) => {
+                setCode(e.target.value)
+              }}
+            />
+          </Col>
+          <Col span={8}>
+            <Button block type="primary" onClick={handleSendCode}>
+              发送验证码
+            </Button>
+          </Col>
+        </Row>
       ) : (
-        // 如果是密码登录，显示密码输入框
         <Input
-          type="password"
           placeholder="请输入密码"
-          value={password}
-          onChange={(e) => setPassword(e.target.value)}
           style={{ marginTop: 10 }}
+          type="password"
+          value={password}
+          onChange={(e) => {
+            setPassword(e.target.value)
+          }}
         />
       )}
 
-      {/* 登录按钮 */}
       <Button
-        type="primary"
         block
-        onClick={handleEmailLogin}
+        loading={loading}
         style={{ marginTop: 40 }}
+        type="primary"
+        onClick={handleEmailLogin}
       >
         登录
       </Button>
 
-      {/* 切换登录方式按钮 */}
       <Row justify="start" style={{ marginTop: 5 }}>
         <Col>
           <Button
-            type="link"
-            onClick={handleSwitchLoginMethod}
             style={{ color: '#D6A5D6' }}
+            type="link"
+            onClick={() => {
+              setIsCodeLogin(!isCodeLogin)
+            }}
           >
             {isCodeLogin ? '邮箱密码登录' : '验证码登录/注册'}
           </Button>
         </Col>
       </Row>
     </>
-  );
-};
+  )
+}
 
-export default EmailLogin;
+export default EmailLogin

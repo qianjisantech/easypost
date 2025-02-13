@@ -1,15 +1,16 @@
 import { createContext, useContext, useEffect, useMemo, useState } from 'react'
+
 import { usePathname } from 'next/navigation'
 import { current, produce } from 'immer'
 import { nanoid } from 'nanoid'
 
+import { ApiDetailSave, ApiDirectoryDataList, ApiRecycleGroupList } from '@/api/api/index'
 import type { ApiMenuData } from '@/components/ApiMenu'
-import { creator } from '@/data/remote'  // 假设这两个是从远程获取的 API
+import { creator } from '@/data/remote' // 假设这两个是从远程获取的 API
 import { CatalogType } from '@/enums'
 import { getCatalogType, isMenuFolder } from '@/helpers'
 import type { RecycleCatalogType, RecycleData, RecycleDataItem } from '@/types'
 import { moveArrayItem } from '@/utils'
-import { ApiRecycleGroupList, ApiDirectoryDataList, ApiDetailSave } from '@/api/api/index'
 
 interface MenuHelpers {
   /** 添加一个新的菜单项到菜单列表中。 */
@@ -42,7 +43,9 @@ interface MenuHelpersContextData extends MenuHelpers {
   setMenuSearchWord?: React.Dispatch<React.SetStateAction<MenuHelpersContextData['menuSearchWord']>>
 
   apiDetailDisplay: 'name' | 'path'
-  setApiDetailDisplay: React.Dispatch<React.SetStateAction<MenuHelpersContextData['apiDetailDisplay']>>
+  setApiDetailDisplay: React.Dispatch<
+    React.SetStateAction<MenuHelpersContextData['apiDetailDisplay']>
+  >
 }
 
 const MenuHelpersContext = createContext({} as MenuHelpersContextData)
@@ -97,25 +100,25 @@ export function MenuHelpersContextProvider(props: React.PropsWithChildren) {
             setRecyleRawData((d) =>
               d
                 ? produce(d, (draft) => {
-                  let catalogType = getCatalogType(item.type)
+                    let catalogType = getCatalogType(item.type)
 
-                  if (catalogType === CatalogType.Markdown) {
-                    catalogType = CatalogType.Http
-                  }
+                    if (catalogType === CatalogType.Markdown) {
+                      catalogType = CatalogType.Http
+                    }
 
-                  if (
-                    catalogType === CatalogType.Http ||
-                    catalogType === CatalogType.Schema ||
-                    catalogType === CatalogType.Request
-                  ) {
-                    const list = draft[catalogType].list
+                    if (
+                      catalogType === CatalogType.Http ||
+                      catalogType === CatalogType.Schema ||
+                      catalogType === CatalogType.Request
+                    ) {
+                      const list = draft[catalogType].list
 
-                    draft[catalogType].list = [
-                      { id: nanoid(6), expiredAt: '30天', creator, deletedItem: item },
-                      ...(list || []),
-                    ]
-                  }
-                })
+                      draft[catalogType].list = [
+                        { id: nanoid(6), expiredAt: '30天', creator, deletedItem: item },
+                        ...(list || []),
+                      ]
+                    }
+                  })
                 : d
             )
           }

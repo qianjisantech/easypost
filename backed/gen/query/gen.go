@@ -29,6 +29,7 @@ var (
 	SysProject              *sysProject
 	SysTeam                 *sysTeam
 	SysUser                 *sysUser
+	SysUserTeam             *sysUserTeam
 )
 
 func SetDefault(db *gorm.DB, opts ...gen.DOOption) {
@@ -45,6 +46,7 @@ func SetDefault(db *gorm.DB, opts ...gen.DOOption) {
 	SysProject = &Q.SysProject
 	SysTeam = &Q.SysTeam
 	SysUser = &Q.SysUser
+	SysUserTeam = &Q.SysUserTeam
 }
 
 func Use(db *gorm.DB, opts ...gen.DOOption) *Query {
@@ -62,6 +64,7 @@ func Use(db *gorm.DB, opts ...gen.DOOption) *Query {
 		SysProject:              newSysProject(db, opts...),
 		SysTeam:                 newSysTeam(db, opts...),
 		SysUser:                 newSysUser(db, opts...),
+		SysUserTeam:             newSysUserTeam(db, opts...),
 	}
 }
 
@@ -80,6 +83,7 @@ type Query struct {
 	SysProject              sysProject
 	SysTeam                 sysTeam
 	SysUser                 sysUser
+	SysUserTeam             sysUserTeam
 }
 
 func (q *Query) Available() bool { return q.db != nil }
@@ -99,6 +103,7 @@ func (q *Query) clone(db *gorm.DB) *Query {
 		SysProject:              q.SysProject.clone(db),
 		SysTeam:                 q.SysTeam.clone(db),
 		SysUser:                 q.SysUser.clone(db),
+		SysUserTeam:             q.SysUserTeam.clone(db),
 	}
 }
 
@@ -125,6 +130,7 @@ func (q *Query) ReplaceDB(db *gorm.DB) *Query {
 		SysProject:              q.SysProject.replaceDB(db),
 		SysTeam:                 q.SysTeam.replaceDB(db),
 		SysUser:                 q.SysUser.replaceDB(db),
+		SysUserTeam:             q.SysUserTeam.replaceDB(db),
 	}
 }
 
@@ -141,6 +147,7 @@ type queryCtx struct {
 	SysProject              ISysProjectDo
 	SysTeam                 ISysTeamDo
 	SysUser                 ISysUserDo
+	SysUserTeam             ISysUserTeamDo
 }
 
 func (q *Query) WithContext(ctx context.Context) *queryCtx {
@@ -157,6 +164,7 @@ func (q *Query) WithContext(ctx context.Context) *queryCtx {
 		SysProject:              q.SysProject.WithContext(ctx),
 		SysTeam:                 q.SysTeam.WithContext(ctx),
 		SysUser:                 q.SysUser.WithContext(ctx),
+		SysUserTeam:             q.SysUserTeam.WithContext(ctx),
 	}
 }
 

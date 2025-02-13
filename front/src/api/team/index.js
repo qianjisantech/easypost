@@ -1,12 +1,13 @@
-import request from "@/api";
+import request from '@/api'
+
 export function TeamQueryPage(body) {
   return request({
     url: '/team/page',
     method: 'post',
     headers: {
-      'Content-Type': 'application/json'
+      'Content-Type': 'application/json',
     },
-    data: body
+    data: body,
   })
 }
 
@@ -15,9 +16,9 @@ export function TeamCreate(body) {
     url: '/team/create',
     method: 'post',
     headers: {
-      'Content-Type': 'application/json'
+      'Content-Type': 'application/json',
     },
-    data: body
+    data: body,
   })
 }
 
@@ -26,9 +27,9 @@ export function TeamUpdate(body) {
     url: '/team/update',
     method: 'post',
     headers: {
-      'Content-Type': 'application/json'
+      'Content-Type': 'application/json',
     },
-    data: body
+    data: body,
   })
 }
 

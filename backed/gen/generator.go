@@ -49,6 +49,7 @@ func main() {
 		g.GenerateModel("sys_user"),
 		g.GenerateModel("sys_team"),
 		g.GenerateModel("sys_organize_team"),
+		g.GenerateModel("sys_user_team"),
 	)
 
 	// Execute the generator

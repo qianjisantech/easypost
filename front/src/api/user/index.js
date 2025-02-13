@@ -9,3 +9,10 @@ export function UserQueryPage(body) {
     data: body
   })
 }
+
+export function UserProfile() {
+  return request({
+    url: '/user/profile',
+    method: 'get',
+  })
+}
