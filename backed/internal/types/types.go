@@ -165,9 +165,6 @@ type ApiRecycleGroupQueryResp struct {
 
 type AuthEmailLoginData struct {
 	AccessToken string `json:"accessToken"`
-	UserId      string `json:"userId"`
-	Username    string `json:"username"`
-	Name        string `json:"name"`
 }
 
 type AuthEmailLoginReq struct {
@@ -249,6 +246,11 @@ type ProjectUpdateResp struct {
 	Message string `json:"message"`
 }
 
+type Team struct {
+	Id       string `json:"id"`
+	TeamName string `json:"teamName"`
+}
+
 type TeamCreateRequest struct {
 	TeamName string `json:"teamName"`
 }
@@ -305,6 +307,22 @@ type TeamUpdateRequest struct {
 type TeamUpdateResp struct {
 	Success bool   `json:"success"`
 	Message string `json:"message"`
+}
+
+type UserProfileData struct {
+	UserId   string  `json:"userId"`
+	Username string  `json:"username"`
+	Name     string  `json:"name"`
+	TeamList []*Team `json:"teamList"`
+}
+
+type UserProfileRequest struct {
+}
+
+type UserProfileResp struct {
+	Success bool            `json:"success"`
+	Message string          `json:"message"`
+	Data    UserProfileData `json:"data"`
 }
 
 type UserQueryPageData struct {

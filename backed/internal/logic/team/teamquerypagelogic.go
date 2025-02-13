@@ -26,10 +26,11 @@ func NewTeamQueryPageLogic(ctx context.Context, svcCtx *svc.ServiceContext) *Tea
 }
 
 func (l *TeamQueryPageLogic) TeamQueryPage(req *types.TeamQueryPageRequest) (resp *types.TeamQueryPageResp, err error) {
+	userId := l.ctx.Value("userId")
 	db := l.svcCtx.DB.Begin().Debug()
 	var sysTeams []*model.SysTeam
-
-	tx := db.WithContext(l.ctx).Find(&sysTeams)
+	sql := "select a.id,a.name,a.manager_id from sys_team a  left join sys_user_team b on a.id= b.team_id where a.is_deleted=0 and b.user_id=?"
+	tx := db.WithContext(l.ctx).Raw(sql, userId).Scan(&sysTeams)
 	if tx.Error != nil {
 		return nil, tx.Error
 	}

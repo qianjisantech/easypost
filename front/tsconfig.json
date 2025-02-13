@@ -3,7 +3,7 @@
   "compilerOptions": {
     "noEmitOnError": false,  // 禁止类型错误时不输出
     "skipLibCheck": true,    // 跳过库文件类型检查
-    "strict": false,          // 关闭严格模式
+    "strict": true,          // 关闭严格模式
     "baseUrl": "./",
     "target": "ES2020",
     "module": "ESNext",

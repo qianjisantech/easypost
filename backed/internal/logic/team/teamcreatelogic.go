@@ -26,18 +26,23 @@ func NewTeamCreateLogic(ctx context.Context, svcCtx *svc.ServiceContext) *TeamCr
 }
 
 func (l *TeamCreateLogic) TeamCreate(req *types.TeamCreateRequest) (resp *types.TeamCreateResp, err error) {
+	userId := l.ctx.Value("userId").(int64)
 	// 从数据库开始事务
 	db := l.svcCtx.DB.Begin().Debug()
-	var str = "1"
 	// 创建项目数据模型
-	m := &model.SysTeam{
+	st := &model.SysTeam{
 		Name:      &req.TeamName,
 		IsDeleted: new(bool),
-		ManagerID: &str,
+		ManagerID: &userId,
 	}
-	*m.IsDeleted = false
+	*st.IsDeleted = false
 	// 执行数据库操作
-	tx := db.Create(m)
+	tx := db.Create(st)
+	sut := &model.SysUserTeam{
+		UserID: userId,
+		TeamID: st.ID,
+	}
+	tx = db.Create(sut)
 	if tx.Error != nil {
 		db.Rollback()
 		return nil, errorx.NewDefaultError(tx.Error.Error())

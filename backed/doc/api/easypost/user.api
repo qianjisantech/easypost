@@ -32,7 +32,24 @@ type (
         Username string  `json:"username"`
         Email string    `json:"email"`
     }
+    UserProfileRequest {
 
+    }
+    UserProfileResp {
+        Success bool `json:"success"`
+        Message string  `json:"message"`
+        Data UserProfileData  `json:"data"`
+    }
+    UserProfileData {
+        UserId string `json:"userId"`
+        Username string `json:"username"`
+        Name string     `json:"name"`
+        TeamList []*Team   `json:"teamList"`
+    }
+    Team {
+     Id string `json:"id"`
+     TeamName string  `json:"teamName"`
+    }
 )
 
 @server(
@@ -42,4 +59,7 @@ type (
 service easypost-api {
     @handler UserQueryPage
     post   /user/page (UserQueryPageRequest) returns (UserQueryPageResp)
+    @handler UserProfile
+    get    /user/profile(UserProfileRequest) returns (UserProfileResp)
+
 }
