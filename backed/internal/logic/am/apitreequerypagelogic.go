@@ -1,0 +1,132 @@
+package am
+
+import (
+	"backed/gen/model"
+	"backed/internal/common/errorx"
+	"backed/internal/utils/ep"
+	"context"
+	"log"
+	"strconv"
+
+	"backed/internal/svc"
+	"backed/internal/types"
+
+	"github.com/zeromicro/go-zero/core/logx"
+)
+
+type ApiTreeQueryPageLogic struct {
+	logx.Logger
+	ctx    context.Context
+	svcCtx *svc.ServiceContext
+}
+
+func NewApiTreeQueryPageLogic(ctx context.Context, svcCtx *svc.ServiceContext) *ApiTreeQueryPageLogic {
+	return &ApiTreeQueryPageLogic{
+		Logger: logx.WithContext(ctx),
+		ctx:    ctx,
+		svcCtx: svcCtx,
+	}
+}
+
+func (l *ApiTreeQueryPageLogic) ApiTreeQueryPage(req *types.ApiTreeQueryPageRequest) (resp *types.ApiTreeQueryPageResp, err error) {
+	// 获取 API 详情
+	queryAmFoldersResp, err := l.QueryAmFolders()
+	queryAmAPIsResp, err := l.QueryAmAPI()
+	queryAmDocsResp, err := l.QueryAmDocs()
+	if err != nil {
+		return nil, errorx.NewCodeError(err.Error())
+	}
+
+	// 预先分配内存，避免频繁扩展
+	datas := make([]types.ApiTreeQueryPageData, 0, len(queryAmFoldersResp)+len(queryAmAPIsResp)+len(queryAmDocsResp))
+
+	// 组装文件夹
+	for _, qafr := range queryAmFoldersResp {
+		if qafr.Name == nil || qafr.Type == nil || qafr.ParentID == nil {
+			return nil, errorx.NewDefaultError("报错")
+		}
+		datas = append(datas, types.ApiTreeQueryPageData{
+			Id:       strconv.FormatInt(qafr.ID, 10),
+			Name:     *qafr.Name,
+			Type:     *qafr.Type,
+			ParentId: strconv.FormatInt(*qafr.ParentID, 10),
+		})
+	}
+
+	// 组装接口
+	for _, qaar := range queryAmAPIsResp {
+		if qaar.Name == nil || qaar.Type == nil || qaar.ParentID == nil {
+			return nil, errorx.NewDefaultError("报错")
+		}
+		datas = append(datas, types.ApiTreeQueryPageData{
+			Id:       strconv.FormatInt(int64(qaar.ID), 10),
+			Name:     *qaar.Name,
+			Type:     *qaar.Type,
+			Method:   ep.StringIfNotNil(qaar.Method, ""),
+			ParentId: strconv.FormatInt(*qaar.ParentID, 10),
+		})
+	}
+
+	// 组装文档
+	for _, qadr := range queryAmDocsResp {
+		if qadr.Name == nil || qadr.Type == nil || qadr.ParentID == nil {
+			return nil, errorx.NewDefaultError("报错")
+		}
+		datas = append(datas, types.ApiTreeQueryPageData{
+			Id:       strconv.FormatInt(qadr.ID, 10),
+			Name:     *qadr.Name,
+			Type:     *qadr.Type,
+			ParentId: strconv.FormatInt(*qadr.ParentID, 10),
+		})
+	}
+
+	// 返回成功响应
+	return &types.ApiTreeQueryPageResp{
+		Success: true,
+		Message: "查询成功",
+		Data:    datas,
+	}, nil
+}
+
+// QueryAmAPI 获取 API 详情
+func (l *ApiTreeQueryPageLogic) QueryAmAPI() ([]*model.AmAPI, error) {
+	db := l.svcCtx.DB.Debug()
+	var amAPIs []*model.AmAPI
+	err := db.WithContext(l.ctx).
+		Select("id", "name", "type", "parent_id", "method").
+		Find(&amAPIs).Error
+	if err != nil {
+		log.Printf("Error QueryAmAPIs: %v", err)
+		return []*model.AmAPI{}, err // 返回空切片，而不是 nil
+	}
+	return amAPIs, nil
+}
+
+// QueryAmFolders 获取文件夹详情
+func (l *ApiTreeQueryPageLogic) QueryAmFolders() ([]*model.AmFolder, error) {
+	db := l.svcCtx.DB.Debug()
+	var amFolders []*model.AmFolder
+	err := db.WithContext(l.ctx).
+		Select("id", "name", "type", "parent_id").
+		Find(&amFolders).Error
+	if err != nil {
+		log.Printf("Error QueryAmFolders: %v", err)
+		return []*model.AmFolder{}, err // 返回空切片，而不是 nil
+
+	}
+	return amFolders, nil
+}
+
+// QueryAmDocs 获取文档详情
+func (l *ApiTreeQueryPageLogic) QueryAmDocs() ([]*model.AmDoc, error) {
+	db := l.svcCtx.DB.Debug()
+	var amDocs []*model.AmDoc
+	err := db.WithContext(l.ctx).
+		Select("id", "name", "type", "parent_id").
+		Find(&amDocs).Error
+	if err != nil {
+		log.Printf("Error QueryAmDocs: %v", err)
+		return []*model.AmDoc{}, err // 返回空切片，而不是 nil
+	}
+	return amDocs, nil
+}
