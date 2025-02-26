@@ -1,21 +1,29 @@
 import React, { useEffect, useState } from 'react'
 
+import { useRouter } from 'next/navigation' // 假设 TeamDetail 用于获取团队详情
 import { Button, Form, Input, message, Modal, Table } from 'antd'
 
-import { TeamDelete, TeamDetail, TeamUpdate } from '@/api/team' // 假设 TeamDetail 用于获取团队详情
+import { TeamDelete, TeamDetail, TeamSettingsDetail, TeamUpdate } from '@/api/team'
+import { useGlobalContext } from '@/contexts/global'
+import { ROUTES } from '@/utils/routes'
 
 const TeamSettings = ({ teamId }) => {
   const [visible, setVisible] = useState(false)
   const [disbandVisible, setDisbandVisible] = useState(false) // 控制解散团队弹窗
   const [formData, setFormData] = useState({ key: '', label: '', teamName: '' })
   const [form] = Form.useForm()
-  const [teamInfo, setTeamInfo] = useState(null)
-
+  const [teamSettingsDetail, setTeamSettingsDetail] = useState(null)
+  const { messageApi, fetchTeams } = useGlobalContext()
+  const router = useRouter()
+  const [teams, setTeams] = useState([])
+  const handleTeamJumpTo = (teamId) => {
+    router.push(ROUTES.TEAMS(teamId))
+  }
   const fetchTeamInfo = async () => {
     try {
-      const response = await TeamDetail(teamId)
+      const response = await TeamSettingsDetail(teamId)
       if (response.data.success) {
-        setTeamInfo(response.data.data)
+        setTeamSettingsDetail(response.data.data)
       }
     } catch (error) {
       message.error('获取团队信息异常')
@@ -34,11 +42,12 @@ const TeamSettings = ({ teamId }) => {
     }
   }, [visible, formData, form])
 
-  const normalDataSource = teamInfo
+  // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
+  const normalDataSource = teamSettingsDetail
     ? [
-        { key: '1', label: '团队名称', value: teamInfo.teamName },
-        { key: '2', label: '团队ID', value: teamInfo.teamId },
-        { key: '3', label: '我的团队内昵称', value: teamInfo.teamName },
+        { key: '1', label: '团队名称', value: teamSettingsDetail.teamName },
+        { key: '2', label: '团队ID', value: teamSettingsDetail.teamId },
+        { key: '3', label: '我的团队内昵称', value: teamSettingsDetail.memeberName },
       ]
     : []
 
@@ -76,11 +85,15 @@ const TeamSettings = ({ teamId }) => {
     },
   ]
 
-  const dangerDataSource = [
-    { key: '1', label: '移交', value: '将团队的所有者权限移交给其他成员' },
-    { key: '2', label: '解散团队', value: '务必谨慎，解散后无法找回' },
-    { key: '3', label: '退出团队', value: '退出当前所在团队' },
-  ]
+  // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
+  const dangerDataSource = teamSettingsDetail
+    ? teamSettingsDetail.permission === 0
+      ? [
+          { key: '1', label: '移交', value: '将团队的所有者权限移交给其他成员' },
+          { key: '2', label: '解散团队', value: '务必谨慎，解散后无法找回' },
+        ]
+      : [{ key: '3', label: '退出团队', value: '退出当前所在团队' }]
+    : []
 
   const dangerColumns = [
     {
@@ -129,7 +142,7 @@ const TeamSettings = ({ teamId }) => {
       const response = await TeamUpdate(submitData)
       if (response.data.success) {
         message.success(response.data.message)
-        fetchTeamInfo()
+        await fetchTeamInfo()
       } else {
         message.error(response.data.message || '更新失败')
       }
@@ -141,15 +154,18 @@ const TeamSettings = ({ teamId }) => {
 
   // 处理解散团队
   const handleDisbandTeam = async () => {
-    try {
-      // 这里假设有一个 API 调用来解散团队
-      const response = await TeamDelete(teamId)
-      if (response.data.success) {
-        message.success(response.data.message)
-      }
+    const response = await TeamDelete(teamId)
+    if (response.data.success) {
+      message.success(response.data.message)
       setDisbandVisible(false)
-    } catch (error) {
-      message.error('解散团队失败')
+      const teamList = await fetchTeams()
+      setTeams(teamList)
+      console.log('最新团队数据:', teamList)
+      if (teamList.length > 0) {
+        handleTeamJumpTo(teamList[0].id)
+      } else {
+        router.push(ROUTES.MAIN)
+      }
     }
   }
 

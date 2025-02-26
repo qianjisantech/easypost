@@ -20,7 +20,9 @@ type AuthMiddleware struct {
 func NewAuthMiddleware() *AuthMiddleware {
 	return &AuthMiddleware{
 		whitelist: map[string]bool{
-			"/api/auth/login": true, // 这里添加不需要 JWT 认证的路径
+			"/api/auth/email/login":    true, // 这里添加不需要 JWT 认证的路径
+			"/api/auth/email/sendCode": true,
+			"/api/auth/email/register": true,
 		},
 	}
 }

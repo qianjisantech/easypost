@@ -82,62 +82,71 @@ type ApiDetailSaveResp struct {
 	Message string `json:"message"`
 }
 
-type ApiDirectoryDataQueryData struct {
-	Id       string                        `json:"id"`
-	ParentId string                        `json:"parentId"`
-	Name     string                        `json:"name"`
-	Type     string                        `json:"type"`
-	Data     ApiDirectoryDataQueryDataData `json:"data"`
+type ApiRecycleGroupQueryRequest struct {
 }
 
-type ApiDirectoryDataQueryDataData struct {
-	Id            string                                  `json:"id"`
-	Path          string                                  `json:"path"`
-	Name          string                                  `json:"name"`
-	Method        string                                  `json:"method"`
-	Status        string                                  `json:"status"`
-	ResponsibleId string                                  `json:"responsibleId"`
-	Tags          []string                                `json:"tags"`
-	ServerId      string                                  `json:"serverId"`
-	Description   string                                  `json:"description"`
-	Parameters    ApiDirectoryDataQueryDataDataParameters `json:"parameters"`
-	Responses     []ApiDirectoryDataQueryDataDataResponse `json:"responses"`
+type ApiRecycleGroupQueryResp struct {
+	Success bool                   `json:"success"`
+	Message string                 `json:"message"`
+	Data    []ApiTreeQueryPageData `json:"data"`
 }
 
-type ApiDirectoryDataQueryDataDataParameters struct {
-	Path   []string                                        `json:"path"`
-	Query  []ApiDirectoryDataQueryDataDataParametersQuery  `json:"query"`
-	Header []ApiDirectoryDataQueryDataDataParametersHeader `json:"header"`
+type ApiTreeQueryPageData struct {
+	Id       string `json:"id"`
+	ParentId string `json:"parentId"`
+	Name     string `json:"name"`
+	Type     string `json:"type"`
+	Method   string `json:"method"`
 }
 
-type ApiDirectoryDataQueryDataDataParametersHeader struct {
+type ApiTreeQueryPageDataData struct {
+	Id            string                             `json:"id"`
+	Path          string                             `json:"path"`
+	Name          string                             `json:"name"`
+	Method        string                             `json:"method"`
+	Status        string                             `json:"status"`
+	ResponsibleId string                             `json:"responsibleId"`
+	Tags          []string                           `json:"tags"`
+	ServerId      string                             `json:"serverId"`
+	Description   string                             `json:"description"`
+	Parameters    ApiTreeQueryPageDataDataParameters `json:"parameters"`
+	Responses     []ApiTreeQueryPageDataDataResponse `json:"responses"`
+}
+
+type ApiTreeQueryPageDataDataParameters struct {
+	Path   []string                                   `json:"path"`
+	Query  []ApiTreeQueryPageDataDataParametersQuery  `json:"query"`
+	Header []ApiTreeQueryPageDataDataParametersHeader `json:"header"`
+}
+
+type ApiTreeQueryPageDataDataParametersHeader struct {
 	Id      string `json:"id"`
 	Name    string `json:"name"`
 	Type    string `json:"type"`
 	Example string `json:"example"`
 }
 
-type ApiDirectoryDataQueryDataDataParametersQuery struct {
+type ApiTreeQueryPageDataDataParametersQuery struct {
 	Id      string `json:"id"`
 	Name    string `json:"name"`
 	Type    string `json:"type"`
 	Example string `json:"example"`
 }
 
-type ApiDirectoryDataQueryDataDataResponse struct {
-	Id          string                                          `json:"id"`
-	Code        int                                             `json:"code"`
-	Name        string                                          `json:"name"`
-	ContentType string                                          `json:"contentType"`
-	JsonSchema  ApiDirectoryDataQueryDataDataResponseJsonSchema `json:"jsonSchema"`
+type ApiTreeQueryPageDataDataResponse struct {
+	Id          string                                     `json:"id"`
+	Code        int                                        `json:"code"`
+	Name        string                                     `json:"name"`
+	ContentType string                                     `json:"contentType"`
+	JsonSchema  ApiTreeQueryPageDataDataResponseJsonSchema `json:"jsonSchema"`
 }
 
-type ApiDirectoryDataQueryDataDataResponseJsonSchema struct {
-	Type       string                                                    `json:"type"`
-	Properties []ApiDirectoryDataQueryDataDataResponseJsonSchemaProperty `json:"properties"`
+type ApiTreeQueryPageDataDataResponseJsonSchema struct {
+	Type       string                                               `json:"type"`
+	Properties []ApiTreeQueryPageDataDataResponseJsonSchemaProperty `json:"properties"`
 }
 
-type ApiDirectoryDataQueryDataDataResponseJsonSchemaProperty struct {
+type ApiTreeQueryPageDataDataResponseJsonSchemaProperty struct {
 	Id          string `json:"id"`
 	Name        string `json:"name"`
 	Type        string `json:"type"`
@@ -145,22 +154,30 @@ type ApiDirectoryDataQueryDataDataResponseJsonSchemaProperty struct {
 	DisPlayName string `json:"displayName"`
 }
 
-type ApiDirectoryDataQueryRequest struct {
+type ApiTreeQueryPageRequest struct {
+	ProjectId string `json:"projectId"`
 }
 
-type ApiDirectoryDataQueryResp struct {
-	Success bool                        `json:"success"`
-	Message string                      `json:"message"`
-	Data    []ApiDirectoryDataQueryData `json:"data"`
+type ApiTreeQueryPageResp struct {
+	Success bool                   `json:"success"`
+	Message string                 `json:"message"`
+	Data    []ApiTreeQueryPageData `json:"data"`
 }
 
-type ApiRecycleGroupQueryRequest struct {
+type AuthEmailCodeRegisterData struct {
+	AccessToken     string `json:"accessToken"`
+	NeedSetPassword bool   `json:"needSetPassword"`
 }
 
-type ApiRecycleGroupQueryResp struct {
-	Success bool                        `json:"success"`
-	Message string                      `json:"message"`
-	Data    []ApiDirectoryDataQueryData `json:"data"`
+type AuthEmailCodeRegisterReq struct {
+	Email string `json:"email"`
+	Code  string `json:"code"`
+}
+
+type AuthEmailCodeRegisterResp struct {
+	Success bool                      `json:"success"`
+	Message string                    `json:"message"`
+	Data    AuthEmailCodeRegisterData `json:"data"`
 }
 
 type AuthEmailLoginData struct {
@@ -172,10 +189,19 @@ type AuthEmailLoginReq struct {
 	Password string `json:"password"`
 }
 
-type AuthEmailLoginResponse struct {
+type AuthEmailLoginResp struct {
 	Success bool               `json:"success"`
 	Message string             `json:"message"`
 	Data    AuthEmailLoginData `json:"data"`
+}
+
+type AuthEmailSendCodeReq struct {
+	Email string `json:"email"`
+}
+
+type AuthEmailSendCodeResp struct {
+	Success bool   `json:"success"`
+	Message string `json:"message"`
 }
 
 type GetQRCodeData struct {
@@ -251,13 +277,19 @@ type Team struct {
 	TeamName string `json:"teamName"`
 }
 
+type TeamCreateData struct {
+	Id       string `json:"id"`
+	TeamName string `json:"teamName"`
+}
+
 type TeamCreateRequest struct {
 	TeamName string `json:"teamName"`
 }
 
 type TeamCreateResp struct {
-	Success bool   `json:"success"`
-	Message string `json:"message"`
+	Success bool           `json:"success"`
+	Message string         `json:"message"`
+	Data    TeamCreateData `json:"data"`
 }
 
 type TeamDeleteRequest struct {
@@ -270,9 +302,9 @@ type TeamDeleteResp struct {
 }
 
 type TeamDetailData struct {
-	TeamId    string `json:"teamId"`
-	TeamName  string `json:"teamName"`
-	IsManager bool   `json:"isManager"`
+	TeamId         string `json:"teamId"`
+	TeamName       string `json:"teamName"`
+	TeamPermission int    `json:"teamPermission"`
 }
 
 type TeamDetailRequest struct {
@@ -283,6 +315,44 @@ type TeamDetailResp struct {
 	Success bool           `json:"success"`
 	Message string         `json:"message"`
 	Data    TeamDetailData `json:"data"`
+}
+
+type TeamMemberInviteRequest struct {
+	UserIds []string `json:"userIds"`
+	TeamId  string   `json:"teamId"`
+}
+
+type TeamMemberInviteResp struct {
+	Success bool   `json:"success"`
+	Message string `json:"message"`
+}
+
+type TeamMemberQueryPageData struct {
+	Total      int64                        `json:"total"`
+	TotalPages int64                        `json:"totalPages"`
+	Current    int64                        `json:"current"`
+	PageSize   int64                        `json:"pageSize"`
+	Records    []*TeamMemberQueryPageRecord `json:"records"`
+}
+
+type TeamMemberQueryPageRecord struct {
+	Id         string `json:"id"`
+	Name       string `json:"name"`
+	Username   string `json:"username"`
+	Email      string `json:"email"`
+	Permission int    `json:"permission"`
+}
+
+type TeamMemberQueryPageRequest struct {
+	Current  int    `json:"current"`
+	PageSize int    `json:"pageSize"`
+	TeamId   string `json:"teamId"`
+}
+
+type TeamMemberQueryPageResp struct {
+	Success bool                    `json:"success"`
+	Message string                  `json:"message"`
+	Data    TeamMemberQueryPageData `json:"data"`
 }
 
 type TeamQueryPageData struct {
@@ -299,6 +369,24 @@ type TeamQueryPageResp struct {
 	Data    []*TeamQueryPageData `json:"data"`
 }
 
+type TeamSettingsDetailData struct {
+	TeamId      string `json:"teamId"`
+	TeamName    string `json:"teamName"`
+	MemberId    string `json:"memberId"`
+	MemeberName string `json:"memeberName"`
+	Permission  int    `json:"permission"`
+}
+
+type TeamSettingsDetailRequest struct {
+	Id string `path:"id"`
+}
+
+type TeamSettingsDetailResp struct {
+	Success bool                   `json:"success"`
+	Message string                 `json:"message"`
+	Data    TeamSettingsDetailData `json:"data"`
+}
+
 type TeamUpdateRequest struct {
 	Id       string `json:"id"`
 	TeamName string `json:"teamName"`
@@ -307,6 +395,42 @@ type TeamUpdateRequest struct {
 type TeamUpdateResp struct {
 	Success bool   `json:"success"`
 	Message string `json:"message"`
+}
+
+type TeamUserSearchData struct {
+	Total      int64                       `json:"total"`
+	TotalPages int64                       `json:"totalPages"`
+	Current    int64                       `json:"current"`
+	PageSize   int64                       `json:"pageSize"`
+	Records    []*TeamUserSearchDataRecord `json:"records"`
+}
+
+type TeamUserSearchDataRecord struct {
+	Id       string `json:"id"`
+	Name     string `json:"name"`
+	Username string `json:"username"`
+	Email    string `json:"email"`
+}
+
+type TeamUserSearchRequest struct {
+	Current  int    `json:"current"`
+	PageSize int    `json:"pageSize"`
+	TeamId   string `json:"teamId"`
+	Keyword  string `json:"keyword"`
+}
+
+type TeamUserSearchResp struct {
+	Success bool               `json:"success"`
+	Message string             `json:"message"`
+	Data    TeamUserSearchData `json:"data"`
+}
+
+type UserActionsRequest struct {
+	Type          string `json:"type"`
+	LastClickMenu string `json:"lastClickMenu,optional"`
+}
+
+type UserActionsResp struct {
 }
 
 type UserProfileData struct {
@@ -349,4 +473,13 @@ type UserQueryPageResp struct {
 	Success bool              `json:"success"`
 	Message string            `json:"message"`
 	Data    UserQueryPageData `json:"data"`
+}
+
+type UserSetPasswordRequest struct {
+	Password string `json:"password"`
+}
+
+type UserSetPasswordResp struct {
+	Success bool   `json:"success"`
+	Message string `json:"message"`
 }

@@ -17,7 +17,7 @@ const ApiMenuContext = createContext({} as ApiMenuContextData)
 
 export function ApiMenuContextProvider(props: React.PropsWithChildren) {
   const { children } = props
-
+  console.log('children',children)
   const [expandedMenuKeys, setExpandedMenuKeys] = useState<string[]>(initialExpandedKeys)
 
   const expandHelpers = useMemo<ExpandedMenuKeysHelpers>(() => {

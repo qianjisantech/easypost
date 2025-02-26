@@ -27,7 +27,7 @@ export default function TeamPage() {
   }, [pathname])
   if (teamId) {
     return (
-      <Layout style={{ minHeight: '100vh' }}>
+      <Layout style={{ height: '100%' }}>
         <Sider>
           <Sidebar ></Sidebar>
         </Sider>

@@ -1,5 +1,5 @@
 export function getPageTitle(title?: string): string {
-  const mainTitle = 'Easy Post'
+  const mainTitle = 'EasyPost'
 
   return title ? `${title} - ${mainTitle}` : mainTitle
 }

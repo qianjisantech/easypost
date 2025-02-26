@@ -1,7 +1,7 @@
-package api
+package am
 
 import (
-	"backed/internal/logic/api"
+	"backed/internal/logic/am"
 	"net/http"
 
 	"backed/internal/svc"
@@ -17,7 +17,7 @@ func ApiDetailSaveHandler(svcCtx *svc.ServiceContext) http.HandlerFunc {
 			return
 		}
 
-		l := api.NewApiDetailSaveLogic(r.Context(), svcCtx)
+		l := am.NewApiDetailSaveLogic(r.Context(), svcCtx)
 		resp, err := l.ApiDetailSave(&req)
 		if err != nil {
 			httpx.ErrorCtx(r.Context(), w, err)

@@ -4,7 +4,7 @@ package handler
 import (
 	"net/http"
 
-	api "backed/internal/handler/api"
+	am "backed/internal/handler/am"
 	auth "backed/internal/handler/auth"
 	project "backed/internal/handler/project"
 	team "backed/internal/handler/team"
@@ -19,18 +19,13 @@ func RegisterHandlers(server *rest.Server, serverCtx *svc.ServiceContext) {
 		[]rest.Route{
 			{
 				Method:  http.MethodPost,
-				Path:    "/api/detail/save",
-				Handler: api.ApiDetailSaveHandler(serverCtx),
+				Path:    "/am/api/detail/save",
+				Handler: am.ApiDetailSaveHandler(serverCtx),
 			},
 			{
 				Method:  http.MethodPost,
-				Path:    "/directory/data/list",
-				Handler: api.ApiDirectoryDataQueryHandler(serverCtx),
-			},
-			{
-				Method:  http.MethodPost,
-				Path:    "/recycle/group/list",
-				Handler: api.ApiRecycleGroupQueryHandler(serverCtx),
+				Path:    "/am/api/tree/page",
+				Handler: am.ApiTreeQueryPageHandler(serverCtx),
 			},
 		},
 		rest.WithPrefix("/api"),
@@ -40,13 +35,23 @@ func RegisterHandlers(server *rest.Server, serverCtx *svc.ServiceContext) {
 		[]rest.Route{
 			{
 				Method:  http.MethodPost,
-				Path:    "/auth/getQRCode",
-				Handler: auth.GetQRCodeHandler(serverCtx),
+				Path:    "/auth/email/login",
+				Handler: auth.AuthEmailLoginHandler(serverCtx),
 			},
 			{
 				Method:  http.MethodPost,
-				Path:    "/auth/login",
-				Handler: auth.AuthEmailLoginHandler(serverCtx),
+				Path:    "/auth/email/register",
+				Handler: auth.AuthEmailCodeRegisterHandler(serverCtx),
+			},
+			{
+				Method:  http.MethodPost,
+				Path:    "/auth/email/sendCode",
+				Handler: auth.SendEmailCodeHandler(serverCtx),
+			},
+			{
+				Method:  http.MethodPost,
+				Path:    "/auth/getQRCode",
+				Handler: auth.GetQRCodeHandler(serverCtx),
 			},
 		},
 		rest.WithPrefix("/api"),
@@ -102,13 +107,33 @@ func RegisterHandlers(server *rest.Server, serverCtx *svc.ServiceContext) {
 			},
 			{
 				Method:  http.MethodPost,
+				Path:    "/team/member/invite",
+				Handler: team.TeamMemberInviteHandler(serverCtx),
+			},
+			{
+				Method:  http.MethodPost,
+				Path:    "/team/member/page",
+				Handler: team.TeamMemberQueryPageHandler(serverCtx),
+			},
+			{
+				Method:  http.MethodPost,
 				Path:    "/team/page",
 				Handler: team.TeamQueryPageHandler(serverCtx),
+			},
+			{
+				Method:  http.MethodGet,
+				Path:    "/team/settings/detail/:id",
+				Handler: team.TeamSettingsDetailHandler(serverCtx),
 			},
 			{
 				Method:  http.MethodPost,
 				Path:    "/team/update",
 				Handler: team.TeamUpdateHandler(serverCtx),
+			},
+			{
+				Method:  http.MethodPost,
+				Path:    "/team/user/search",
+				Handler: team.TeamUserSearchHandler(serverCtx),
 			},
 		},
 		rest.WithPrefix("/api"),
@@ -118,6 +143,11 @@ func RegisterHandlers(server *rest.Server, serverCtx *svc.ServiceContext) {
 		[]rest.Route{
 			{
 				Method:  http.MethodPost,
+				Path:    "/user/actions",
+				Handler: user.UserActionsHandler(serverCtx),
+			},
+			{
+				Method:  http.MethodPost,
 				Path:    "/user/page",
 				Handler: user.UserQueryPageHandler(serverCtx),
 			},
@@ -125,6 +155,11 @@ func RegisterHandlers(server *rest.Server, serverCtx *svc.ServiceContext) {
 				Method:  http.MethodGet,
 				Path:    "/user/profile",
 				Handler: user.UserProfileHandler(serverCtx),
+			},
+			{
+				Method:  http.MethodPost,
+				Path:    "/user/setPassword",
+				Handler: user.UserSetPasswordHandler(serverCtx),
 			},
 		},
 		rest.WithPrefix("/api"),

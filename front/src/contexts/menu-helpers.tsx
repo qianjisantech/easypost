@@ -1,16 +1,14 @@
 import { createContext, useContext, useEffect, useMemo, useState } from 'react'
 
-import { usePathname } from 'next/navigation'
 import { current, produce } from 'immer'
 import { nanoid } from 'nanoid'
-
-import { ApiDetailSave, ApiDirectoryDataList, ApiRecycleGroupList } from '@/api/api/index'
 import type { ApiMenuData } from '@/components/ApiMenu'
-import { creator } from '@/data/remote' // 假设这两个是从远程获取的 API
+import { apiDirectoryData, creator, recycleGroupData } from "@/data/remote"; // 假设这两个是从远程获取的 API
 import { CatalogType } from '@/enums'
 import { getCatalogType, isMenuFolder } from '@/helpers'
 import type { RecycleCatalogType, RecycleData, RecycleDataItem } from '@/types'
 import { moveArrayItem } from '@/utils'
+import { ApiTreeQueryPage } from '@/api/am'
 
 interface MenuHelpers {
   /** 添加一个新的菜单项到菜单列表中。 */
@@ -52,34 +50,20 @@ const MenuHelpersContext = createContext({} as MenuHelpersContextData)
 
 export function MenuHelpersContextProvider(props: React.PropsWithChildren) {
   const { children } = props
-
-  // 当前路由信息
-  const pathname = usePathname()
-
-  // 1. 使用 useState 来保存异步请求的数据
   const [menuRawList, setMenuRawList] = useState<ApiMenuData[] | undefined>()
   const [recyleRawData, setRecyleRawData] = useState<RecycleData | undefined>()
-
-  // 2. 使用 useEffect 来触发 API 请求并更新数据，
-  // 只有当路由为 `/project` 开头时才触发 fetchData 方法
-  useEffect(() => {
-    async function fetchData() {
-      if (!pathname.startsWith('/project')) {
-        return
-      }
-      try {
-        const directoryDataListResponse = await ApiDirectoryDataList({})
-        const recycleDataResponse = await ApiRecycleGroupList({})
-        setRecyleRawData(recycleDataResponse.data)
-        console.log('directoryDataListResponse.data', directoryDataListResponse.data.data)
-        setMenuRawList(directoryDataListResponse.data.data)
-      } catch (error) {
-        console.error('Failed to fetch data:', error)
-      }
+  const loadingMenuTree =async ()=>{
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-call
+    const response=await ApiTreeQueryPage({"projectId":"1"})
+    if (response.data.success){
+      setMenuRawList(response.data?.data)
     }
+  }
 
-    fetchData()
-  }, [location])
+  useEffect(() => {
+    loadingMenuTree()
+    setRecyleRawData(recycleGroupData)
+  }, [])
 
   // 3. 使用状态来管理其他的功能
   const [menuSearchWord, setMenuSearchWord] = useState<string>('')

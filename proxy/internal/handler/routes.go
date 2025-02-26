@@ -15,7 +15,7 @@ func RegisterHandlers(server *rest.Server, serverCtx *svc.ServiceContext) {
 			{
 				Method:  http.MethodPost,
 				Path:    "/api/v1/request",
-				Handler: ApiProxyHandler(serverCtx),
+				Handler: ApiV1RequestHandler(serverCtx),
 			},
 		},
 	)

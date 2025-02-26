@@ -27,17 +27,15 @@ func NewTeamDetailLogic(ctx context.Context, svcCtx *svc.ServiceContext) *TeamDe
 }
 
 func (l *TeamDetailLogic) TeamDetail(req *types.TeamDetailRequest) (resp *types.TeamDetailResp, err error) {
-
+	userId := l.ctx.Value("userId").(int64)
 	db := l.svcCtx.DB.Begin().Debug()
 
 	id, err := strconv.ParseInt(req.Id, 10, 64)
 	if err != nil {
-		// Handle invalid ID format
 		logx.Errorf("Invalid project ID: %v", err)
 		db.Rollback() // Rollback the transaction on error
 		return nil, errorx.NewDefaultError("Invalid project ID format")
 	}
-	// Prepare project data model
 	var team model.SysTeam
 	tx := db.First(&team, id)
 	if tx.Error != nil {
@@ -45,23 +43,26 @@ func (l *TeamDetailLogic) TeamDetail(req *types.TeamDetailRequest) (resp *types.
 		db.Rollback()
 		return nil, errorx.NewDefaultError(tx.Error.Error())
 	}
+	var sysTeamUser model.SysTeamMember
+	tx = db.Where("user_id=?", userId).First(&sysTeamUser)
 
-	// Commit the transaction after successful update
 	if err := db.Commit().Error; err != nil {
-		// Rollback in case of commit failure
 		logx.Errorf("Error committing transaction: %v", err)
 		db.Rollback()
 		return nil, errorx.NewDefaultError("Error committing transaction")
 	}
+	permission := 0
+	if sysTeamUser.Permission != nil {
+		permission = int(*sysTeamUser.Permission) // 先解引用，再转换类型
+	}
 
-	// Return success response
 	return &types.TeamDetailResp{
 		Success: true,
 		Message: "success",
 		Data: types.TeamDetailData{
-			TeamId:    strconv.FormatInt(team.ID, 10),
-			TeamName:  *team.Name,
-			IsManager: true,
+			TeamId:         strconv.FormatInt(team.ID, 10),
+			TeamName:       *team.Name,
+			TeamPermission: permission,
 		},
 	}, nil
 }

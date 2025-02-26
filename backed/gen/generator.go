@@ -37,8 +37,9 @@ func main() {
 	g.UseDB(db)
 
 	g.ApplyBasic(
-		g.GenerateModel("api_api_detail"),
-		g.GenerateModel("api_api_folder"),
+		g.GenerateModel("am_api"),
+		g.GenerateModel("am_folder"),
+		g.GenerateModel("am_doc"),
 		g.GenerateModel("api_parameters_header"),
 		g.GenerateModel("api_parameters_query"),
 		g.GenerateModel("api_response_info"),
@@ -49,7 +50,7 @@ func main() {
 		g.GenerateModel("sys_user"),
 		g.GenerateModel("sys_team"),
 		g.GenerateModel("sys_organize_team"),
-		g.GenerateModel("sys_user_team"),
+		g.GenerateModel("sys_team_member"),
 	)
 
 	// Execute the generator

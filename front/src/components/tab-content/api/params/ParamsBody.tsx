@@ -1,14 +1,14 @@
-import {Flex, Tag} from 'antd'
+import { Flex, Tag } from 'antd'
+import TextArea from 'antd/es/input/TextArea'
 
-import {SchemaType} from '@/components/JsonSchema'
-import {JsonSchemaCard} from '@/components/JsonSchemaCard'
-import {BodyType} from '@/enums'
-import {useStyles} from '@/hooks/useStyle'
-import type {ApiDetails} from '@/types'
+import { SchemaType } from '@/components/JsonSchema'
+import { JsonSchemaCard } from '@/components/JsonSchemaCard'
+import { RequestBodyRaw } from '@/components/tab-content/api/components/RequestBodyRaw'
+import { BodyType } from '@/enums'
+import { useStyles } from '@/hooks/useStyle'
+import type { ApiDetails } from '@/types'
 
-import {ParamsEditableTable} from '../components/ParamsEditableTable'
-import TextArea from "antd/es/input/TextArea";
-import {RequestBodyRaw} from "@/components/tab-content/api/components/RequestBodyRaw";
+import { ParamsEditableTable } from '../components/ParamsEditableTable'
 
 const types = [
   { name: 'none', type: BodyType.None },
@@ -47,14 +47,14 @@ function BodyComp(props: BodyCompProps) {
         )
 
       case BodyType.FormData:
-          return (
-              <ParamsEditableTable
-                  value={value.parameters}
-                  onChange={(values) => {
-                      onChange?.({ ...value, parameters: values })
-                  }}
-              />
-          )
+        return (
+          <ParamsEditableTable
+            value={value.parameters}
+            onChange={(values) => {
+              onChange?.({ ...value, parameters: values })
+            }}
+          />
+        )
       case BodyType.UrlEncoded:
         return (
           <ParamsEditableTable
@@ -65,25 +65,25 @@ function BodyComp(props: BodyCompProps) {
           />
         )
 
-      case BodyType.Json:
-        return (
-            <JsonSchemaCard
-                defaultValue={{ type: SchemaType.String, properties: [] }}
-                value={value.jsonSchema}
-                onChange={(values) => {
-                  onChange?.({ ...value, jsonSchema: values })
-                }}
-            />
-        )
+      // case BodyType.Json:
+      //   return (
+      //     <JsonSchemaCard
+      //       defaultValue={{ type: SchemaType.String, properties: [] }}
+      //       value={value.jsonSchema}
+      //       onChange={(values) => {
+      //         onChange?.({ ...value, jsonSchema: values })
+      //       }}
+      //     />
+      //   )
       case BodyType.Raw:
         return (
-            <RequestBodyRaw
-                value={value.jsonSchema}
-                onChange={(values) => {
-                    onChange?.({ ...value, jsonSchema: values })
-                }}
-            />
-      )
+          <RequestBodyRaw
+            value={value.jsonSchema}
+            onChange={(values) => {
+              onChange?.({ ...value, jsonSchema: values })
+            }}
+          />
+        )
     }
   }
 

@@ -10,56 +10,73 @@ info(
 
 type (
     UserQueryPageRequest {
-     Current int `json:"current"`
-     PageSize  int    `json:"pageSize"`
+        Current int `json:"current"`
+        PageSize int `json:"pageSize"`
     }
     UserQueryPageResp {
         Success bool `json:"success"`
-        Message string  `json:"message"`
-        Data UserQueryPageData  `json:"data"`
-
+        Message string `json:"message"`
+        Data UserQueryPageData `json:"data"`
     }
-    UserQueryPageData{
-      Total int64 `json:"total"`
-      TotalPages int64  `json:"totalPages"`
-      Current int64 `json:"current"`
-      PageSize  int64    `json:"pageSize"`
-      Records  []*UserQueryPageDataRecord `json:"records"`
+    UserQueryPageData {
+        Total int64 `json:"total"`
+        TotalPages int64 `json:"totalPages"`
+        Current int64 `json:"current"`
+        PageSize int64 `json:"pageSize"`
+        Records []*UserQueryPageDataRecord `json:"records"`
     }
-    UserQueryPageDataRecord{
-        Id string  `json:"id"`
-        Name  string  `json:"name"`
-        Username string  `json:"username"`
-        Email string    `json:"email"`
+    UserQueryPageDataRecord {
+        Id string `json:"id"`
+        Name string `json:"name"`
+        Username string `json:"username"`
+        Email string `json:"email"`
     }
     UserProfileRequest {
 
     }
     UserProfileResp {
         Success bool `json:"success"`
-        Message string  `json:"message"`
-        Data UserProfileData  `json:"data"`
+        Message string `json:"message"`
+        Data UserProfileData `json:"data"`
     }
     UserProfileData {
         UserId string `json:"userId"`
         Username string `json:"username"`
-        Name string     `json:"name"`
-        TeamList []*Team   `json:"teamList"`
+        Name string `json:"name"`
+        TeamList []*Team `json:"teamList"`
     }
     Team {
-     Id string `json:"id"`
-     TeamName string  `json:"teamName"`
+        Id string `json:"id"`
+        TeamName string `json:"teamName"`
+    }
+    UserActionsRequest {
+        Type string `json:"type"`
+        LastClickMenu string `json:"lastClickMenu,optional"`
+    }
+    UserActionsResp {
+
+    }
+
+    UserSetPasswordRequest {
+     Password string  `json:"password"`
+    }
+    UserSetPasswordResp {
+        Success bool `json:"success"`
+        Message string `json:"message"`
     }
 )
 
 @server(
-    group:  user
+    group: user
     prefix: /api
 )
 service easypost-api {
     @handler UserQueryPage
-    post   /user/page (UserQueryPageRequest) returns (UserQueryPageResp)
+    post /user/page (UserQueryPageRequest) returns (UserQueryPageResp)
     @handler UserProfile
-    get    /user/profile(UserProfileRequest) returns (UserProfileResp)
-
+    get /user/profile (UserProfileRequest) returns (UserProfileResp)
+    @handler UserActions
+    post /user/actions (UserActionsRequest) returns (UserActionsResp)
+    @handler UserSetPassword
+    post /user/setPassword (UserSetPasswordRequest) returns (UserSetPasswordResp)
 }

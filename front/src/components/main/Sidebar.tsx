@@ -10,7 +10,7 @@ import { ROUTES } from '@/utils/routes'
 import { useGlobalContext } from "@/contexts/global";
 
 const sidebarStyle = {
-  height: '100vh',
+  height: '100%',
   display: 'flex',
   flexDirection: 'column',
   width: 200,
@@ -20,41 +20,25 @@ const sidebarStyle = {
 
 const logoStyle = {
   textAlign: 'center',
-  padding: '20px',
+  padding: '40px',
 }
+// eslint-disable-next-line react/display-name
 const Sidebar = forwardRef((props, ref) => {
   const router = useRouter()
-  const [teams, setTeams] = useState([])
   const [teamName, setTeamName] = useState('')
   const [modalVisible, setModalVisible] = useState(false)
-  const { messageApi } = useGlobalContext()
-  // API 请求函数：获取团队列表
-  const fetchUserProfile = async () => {
-    try {
-      const response = await UserProfile()
-      if (response.data.success) {
-        setTeams(response.data.data.teamList)
-      }
-    } catch (error) {
-      messageApi.error('获取团队列表失败')
-    }
-  }
-  // 预加载目标路由
-
+  const { messageApi ,teams,fetchTeams } = useGlobalContext()
+  const [defaultOpenKeys, setDefaultOpenKeys] = useState([])
   useEffect(() => {
-    const fetchUserProfile = async () => {
-      const response = await UserProfile()
-      if (response.data.success) {
-        setTeams(response.data.data.teamList)
-      }
+    const fetchData = async () => {
+      await fetchTeams() // 确保数据加载完成
     }
+    fetchData()
+  }, []) // 仅在组件挂载时执行
 
-    fetchUserProfile()
-  }, [])
 
   useImperativeHandle(ref, () => ({
-    fetchUserProfile,
-    handleMenuItemClick,
+    handleMenuItemClick
   }))
 
   const handleCreateTeamClick = () => {
@@ -74,12 +58,10 @@ const Sidebar = forwardRef((props, ref) => {
         setModalVisible(false)
 
         // 重新加载团队列表
-        await fetchUserProfile()
-        console.log('teams.length',teams.length)
-        // 跳转到新创建的团队
-        if (teams.length > 0) {
-          handleMenuItemClick(teams[0].id) // 跳转到新创建的团队
-        }
+        await fetchTeams().then(()=>{
+          handleMenuItemClick(response.data.data.id)
+        })
+
       }
     } catch (error) {
       messageApi.error('创建团队失败')
@@ -88,7 +70,8 @@ const Sidebar = forwardRef((props, ref) => {
 
 
   const handleMenuItemClick = (teamId) => {
-    router.replace(ROUTES.TEAMS(teamId))
+    setDefaultOpenKeys(teamId)
+    router.push(ROUTES.TEAMS(teamId))
   }
 
   return (
@@ -114,7 +97,7 @@ const Sidebar = forwardRef((props, ref) => {
       </div>
 
       {/* Main Menu */}
-      <Menu defaultSelectedKeys={['1']} mode="inline" style={{ flexGrow: 1, borderRight: 0 }}>
+      <Menu defaultOpenKeys={['1']} mode="inline" style={{ flexGrow: 1, borderRight: 0 }}>
         <Menu.SubMenu key="1" icon={<AppstoreAddOutlined />} title="我的组织">
           <Menu.Item
             icon={<PlusOutlined />}

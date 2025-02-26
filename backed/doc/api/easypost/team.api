@@ -27,6 +27,11 @@ type (
     TeamCreateResp {
         Success bool `json:"success"`
         Message string `json:"message"`
+        Data TeamCreateData `json:"data"`
+    }
+    TeamCreateData {
+        Id string `json:"id"`
+        TeamName string `json:"teamName"`
     }
     TeamUpdateRequest {
         Id string `json:"id"`
@@ -49,12 +54,83 @@ type (
     TeamDetailResp {
         Success bool `json:"success"`
         Message string `json:"message"`
-        Data  TeamDetailData `json:"data"`
+        Data TeamDetailData `json:"data"`
     }
     TeamDetailData {
-       TeamId string  `json:"teamId"`
-       TeamName string  `json:"teamName"`
-       IsManager  bool  `json:"isManager"`
+        TeamId string `json:"teamId"`
+        TeamName string `json:"teamName"`
+        TeamPermission int `json:"teamPermission"`
+    }
+    TeamMemberQueryPageRequest {
+        Current int `json:"current"`
+        PageSize int `json:"pageSize"`
+        TeamId string `json:"teamId"`
+    }
+    TeamMemberQueryPageResp {
+        Success bool `json:"success"`
+        Message string `json:"message"`
+        Data TeamMemberQueryPageData `json:"data"`
+    }
+    TeamMemberQueryPageData {
+        Total int64 `json:"total"`
+        TotalPages int64 `json:"totalPages"`
+        Current int64 `json:"current"`
+        PageSize int64 `json:"pageSize"`
+        Records []*TeamMemberQueryPageRecord `json:"records"`
+    }
+    TeamMemberQueryPageRecord {
+        Id string `json:"id"`
+        Name string `json:"name"`
+        Username string `json:"username"`
+        Email string `json:"email"`
+        Permission int  `json:"permission"`
+    }
+    TeamMemberInviteRequest {
+        UserIds []string`json:"userIds"`
+        TeamId string `json:"teamId"`
+    }
+    TeamMemberInviteResp {
+        Success bool `json:"success"`
+        Message string `json:"message"`
+    }
+    TeamSettingsDetailRequest {
+        Id string `path:"id"`
+    }
+    TeamSettingsDetailResp {
+        Success bool `json:"success"`
+        Message string `json:"message"`
+        Data TeamSettingsDetailData `json:"data"`
+    }
+    TeamSettingsDetailData {
+        TeamId string `json:"teamId"`
+        TeamName string `json:"teamName"`
+        MemberId string  `json:"memberId"`
+        MemeberName string `json:"memeberName"`
+        Permission int  `json:"permission"`
+    }
+    TeamUserSearchRequest {
+        Current int `json:"current"`
+        PageSize int `json:"pageSize"`
+        TeamId string   `json:"teamId"`
+        Keyword string `json:"keyword"`
+    }
+    TeamUserSearchResp {
+        Success bool `json:"success"`
+        Message string `json:"message"`
+        Data TeamUserSearchData `json:"data"`
+    }
+    TeamUserSearchData {
+        Total int64 `json:"total"`
+        TotalPages int64 `json:"totalPages"`
+        Current int64 `json:"current"`
+        PageSize int64 `json:"pageSize"`
+        Records []*TeamUserSearchDataRecord `json:"records"`
+    }
+    TeamUserSearchDataRecord {
+        Id string `json:"id"`
+        Name string `json:"name"`
+        Username string `json:"username"`
+        Email string `json:"email"`
     }
 )
 
@@ -73,4 +149,12 @@ service easypost-api {
     get /team/delete/:id (TeamDeleteRequest) returns (TeamDeleteResp)
     @handler TeamDetail //项目详情
     get /team/detail/:id (TeamDetailRequest) returns (TeamDetailResp)
+    @handler TeamMemberQueryPage //项目成员查询
+    post /team/member/page (TeamMemberQueryPageRequest) returns (TeamMemberQueryPageResp)
+    @handler TeamMemberInvite //项目成员邀请
+    post /team/member/invite (TeamMemberInviteRequest) returns (TeamMemberInviteResp)
+    @handler TeamSettingsDetail
+    get /team/settings/detail/:id (TeamSettingsDetailRequest) returns (TeamSettingsDetailResp)
+    @handler TeamUserSearch
+    post /team/user/search (TeamUserSearchRequest) returns (TeamUserSearchResp)
 }

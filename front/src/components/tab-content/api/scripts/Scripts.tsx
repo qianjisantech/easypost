@@ -26,7 +26,7 @@ export function Scripts(props: JsonSchemaCardProps) {
         <MonacoEditor
             language="javascript" // 设置 JavaScript 语言
             value={body} // 初始值
-            theme="vs" // 设置主题
+            theme="vs-dark" // 设置主题
             onChange={(newValue) => {
                 setBodyStr(newValue || ''); // 更新值
                 onChange(newValue || ''); // 触发 onChange 事件

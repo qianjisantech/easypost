@@ -108,6 +108,7 @@ export function useMenuData(): MenuState {
   const menusWithRender: CatalogDataNode[] | undefined = useMemo(
     () =>
       menus?.map<CatalogDataNode>((item) => {
+
         const catalog = item.customData.catalog
         const isHttp =
           catalog.type === MenuItemType.ApiDetail || catalog.type === MenuItemType.HttpRequest
@@ -119,7 +120,7 @@ export function useMenuData(): MenuState {
               if (isHttp) {
                 return (
                   <span className="mr-1 inline-block w-[29px] whitespace-nowrap text-left text-xs/none font-semibold">
-                    <HttpMethodText method={catalog.data?.method} />
+                    <HttpMethodText method={catalog.method} />
                   </span>
                 )
               }

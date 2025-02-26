@@ -7,11 +7,11 @@ import { PageTabStatus } from '@/components/ApiTab/ApiTab.enum'
 import { ApiTabContentWrapper } from '@/components/ApiTab/ApiTabContentWrapper'
 import { useTabContentContext } from '@/components/ApiTab/TabContentContext'
 import { IconText } from '@/components/IconText'
+import { ApiRun } from '@/components/tab-content/api/ApiRun'
 
 import { ApiDoc } from './ApiDoc'
 import { ApiDocEditing } from './ApiDocEditing'
 import { ApiSidePanel } from './ApiSidePanel'
-import {ApiRun} from "@/components/tab-content/api/ApiRun";
 
 export function Api() {
   const { token } = theme.useToken()
@@ -44,19 +44,16 @@ export function Api() {
         key: 'run',
         label: '运行',
         children: (
-            <ApiTabContentWrapper>
-              <ApiRun></ApiRun>
-            </ApiTabContentWrapper>
+          <ApiTabContentWrapper>
+            <ApiRun></ApiRun>
+          </ApiTabContentWrapper>
         ),
       },
-      {
-        key: 'advancedMock',
-        label: '高级Mock',
-        children: (
-            <ApiTabContentWrapper>
-            </ApiTabContentWrapper>
-        ),
-      },
+      // {
+      //   key: 'advancedMock',
+      //   label: '高级Mock',
+      //   children: <ApiTabContentWrapper></ApiTabContentWrapper>,
+      // },
     ]
   }, [])
 

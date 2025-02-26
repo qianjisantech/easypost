@@ -3,6 +3,7 @@ package auth
 import (
 	"backed/gen/model"
 	"backed/internal/common/errorx"
+	"backed/internal/utils/md5"
 	"context"
 	"errors"
 	"github.com/golang-jwt/jwt/v4"
@@ -29,10 +30,16 @@ func NewAuthEmailLoginLogic(ctx context.Context, svcCtx *svc.ServiceContext) *Au
 	}
 }
 
-func (l *AuthEmailLoginLogic) AuthEmailLogin(req *types.AuthEmailLoginReq) (resp *types.AuthEmailLoginResponse, err error) {
+func (l *AuthEmailLoginLogic) AuthEmailLogin(req *types.AuthEmailLoginReq) (resp *types.AuthEmailLoginResp, err error) {
 	// 从数据库查找用户
-
-	user, err := l.QueryUserByEmailAndPassword(req.Email, req.Password)
+	if req.Email == "" {
+		return nil, errorx.NewDefaultError("邮箱不能为空")
+	}
+	if req.Password == "" {
+		return nil, errorx.NewDefaultError("密码不能为空")
+	}
+	password := md5.Md5Hash(req.Password)
+	user, err := l.QueryUserByEmailAndPassword(req.Email, password)
 	if err != nil {
 		logx.Infof("【QueryUserByEmailAndPassword】%s", err)
 		return nil, errorx.NewDefaultError("用户名或者密码错误")
@@ -41,12 +48,12 @@ func (l *AuthEmailLoginLogic) AuthEmailLogin(req *types.AuthEmailLoginReq) (resp
 		return nil, errorx.NewDefaultError("用户不存在")
 	}
 	// 生成 JWT token
-	token, err := generateJWT(user.ID, *user.Email)
+	token, err := GenerateJWT(user.ID, *user.Username)
 	if err != nil {
 		return nil, errorx.NewDefaultError(err.Error())
 	}
 
-	return &types.AuthEmailLoginResponse{
+	return &types.AuthEmailLoginResp{
 		Success: true,
 		Message: "登录成功",
 		Data: types.AuthEmailLoginData{
@@ -56,9 +63,6 @@ func (l *AuthEmailLoginLogic) AuthEmailLogin(req *types.AuthEmailLoginReq) (resp
 
 }
 
-// UserId:      strconv.FormatInt(user.ID, 10),
-// Username:    *user.Username,
-// Name:        *user.Name,
 func (l *AuthEmailLoginLogic) QueryUserByEmailAndPassword(email string, password string) (*model.SysUser, error) {
 	db := l.svcCtx.DB.Debug()
 	var user *model.SysUser
@@ -85,7 +89,7 @@ func (l *AuthEmailLoginLogic) QueryUserByEmailAndPassword(email string, password
 var secretKey = "easypost"
 
 // generateJWT 生成 JWT Token
-func generateJWT(userID int64, email string) (string, error) {
+func GenerateJWT(userID int64, email string) (string, error) {
 	claims := jwt.MapClaims{
 		"user_id": userID,
 		"email":   email,

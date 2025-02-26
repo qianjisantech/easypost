@@ -1,12 +1,21 @@
 package middleware
 
 import (
-	"github.com/go-resty/resty/v2"
+	"context"
 	"github.com/zeromicro/go-zero/core/logx"
 	"io/ioutil"
-	"log"
 	"net/http"
 	"strings"
+)
+
+type contextKey string
+
+const (
+	URL      contextKey = "url"
+	METHOD   contextKey = "method"
+	HEADERS  contextKey = "headers"
+	ApiH0Key contextKey = "Api-H0"
+	Body     contextKey = "body"
 )
 
 type ProxyMiddleware struct {
@@ -19,32 +28,33 @@ func NewProxyMiddleware() *ProxyMiddleware {
 // Handle Handler 是中间件的核心处理函数
 func (m *ProxyMiddleware) Handle(next http.HandlerFunc) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
-		apiu := r.Header.Get("Api-U")   //请求路径
-		apio0 := r.Header.Get("Api-O0") //请求方式
+		url := r.Header.Get("Api-U")    //请求路径
+		apio0 := r.Header.Get("Api-O0") //请求方式 相关信息
 		apiH0 := r.Header.Get("Api-H0") //请求头
 		body, err := ioutil.ReadAll(r.Body)
 		if err != nil {
 			logx.WithContext(r.Context()).Errorf("Failed to read request body: %v", err)
-		}
-		//分解请求头
-		resp, respHeaders := m.handleRequestHeaders(apiu, apio0, apiH0, body) //发送请求
-
-		for k, v := range respHeaders {
-			if len(v) > 1 {
-				w.Header().Set(k, strings.Join(v, ","))
-			} else {
-				w.Header().Set(k, v[0])
-			}
-		}
-		_, err = w.Write(resp)
-		if err != nil {
+			http.Error(w, "Failed to read request body", http.StatusInternalServerError)
 			return
 		}
-		// 也可以打印请求头，用于调试
-		log.Printf("respHeaders: %v", respHeaders)
+		apio0map := m.getRequestHeaders(apio0)
 
-		// 调用下一个中间件或最终处理函数
-		return
+		method := apio0map[string(METHOD)] //请求头
+
+		headers := m.getRequestHeaders(apiH0)
+		httpHeaders := http.Header{}
+		for k, v := range headers {
+			httpHeaders.Set(k, v)
+		}
+		// 创建新的 context，存入请求头数据
+		ctx := context.WithValue(r.Context(), URL, url) //存请求路径
+		ctx = context.WithValue(ctx, METHOD, method)    //存请求方式
+		ctx = context.WithValue(ctx, HEADERS, httpHeaders)
+		ctx = context.WithValue(ctx, Body, string(body))
+		w.Header().Set("Api-H0", "application/json;charset=UTF-8")
+		w.Header().Set("Api-O0", "")
+		// 调用下一个中间件或 handler，并传递新的 context
+		next(w, r.WithContext(ctx))
 	}
 }
 
@@ -69,38 +79,4 @@ func (m *ProxyMiddleware) getRequestHeaders(apio0 string) map[string]string {
 	}
 
 	return result
-}
-
-func (m *ProxyMiddleware) handleRequestHeaders(apiU string, apio0 string, apiH0 string, body interface{}) ([]byte, http.Header) {
-	apio0Handle := m.getRequestHeaders(apio0)
-	apiH0Handle := m.getRequestHeaders(apiH0)
-	proxyClient := resty.New().R().SetHeaders(apiH0Handle)
-	method := apio0Handle["method"]
-	switch method {
-	case "GET":
-		response, _ := proxyClient.Get(apiU)
-		return response.Body(), response.Header()
-	case "POST":
-		response, _ := proxyClient.SetBody(body).Post(apiU)
-		log.Printf("response.Body() %s", response.Body())
-		return response.Body(), response.Header()
-	case "PUT":
-		response, _ := proxyClient.SetBody(body).Put(apiU)
-		return response.Body(), response.Header()
-	case "DELETE":
-		response, _ := proxyClient.Delete(apiU)
-		return response.Body(), response.Header()
-	case "PATCH":
-		response, _ := proxyClient.Patch(apiU)
-		return response.Body(), response.Header()
-	case "HEAD":
-		response, _ := proxyClient.Head(apiU)
-		return response.Body(), response.Header()
-	case "OPTIONS":
-		response, _ := proxyClient.Options(apiU)
-		return response.Body(), response.Header()
-	default:
-		return nil, nil
-	}
-
 }

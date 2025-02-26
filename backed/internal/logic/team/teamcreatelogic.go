@@ -7,6 +7,7 @@ import (
 	"backed/internal/types"
 	"context"
 	"log"
+	"strconv"
 
 	"github.com/zeromicro/go-zero/core/logx"
 )
@@ -29,20 +30,34 @@ func (l *TeamCreateLogic) TeamCreate(req *types.TeamCreateRequest) (resp *types.
 	userId := l.ctx.Value("userId").(int64)
 	// 从数据库开始事务
 	db := l.svcCtx.DB.Begin().Debug()
-	// 创建项目数据模型
+
 	st := &model.SysTeam{
 		Name:      &req.TeamName,
 		IsDeleted: new(bool),
 		ManagerID: &userId,
 	}
 	*st.IsDeleted = false
+
 	// 执行数据库操作
 	tx := db.Create(st)
-	sut := &model.SysUserTeam{
-		UserID: userId,
-		TeamID: st.ID,
+
+	var sysUser *model.SysUser
+	state := int32(2)
+	permission := int32(0)
+	tx = db.Where("id=?", userId).First(&sysUser)
+	if sysUser != nil {
+		sysTeamMember := &model.SysTeamMember{
+			UserID:     &sysUser.ID,
+			Username:   sysUser.Username,
+			Name:       sysUser.Name,
+			IsDeleted:  sysUser.IsDeleted,
+			Email:      sysUser.Email,
+			TeamID:     &st.ID,
+			State:      &state,
+			Permission: &permission, //1为团队所有者
+		}
+		tx = db.Create(sysTeamMember)
 	}
-	tx = db.Create(sut)
 	if tx.Error != nil {
 		db.Rollback()
 		return nil, errorx.NewDefaultError(tx.Error.Error())
@@ -56,6 +71,10 @@ func (l *TeamCreateLogic) TeamCreate(req *types.TeamCreateRequest) (resp *types.
 	return &types.TeamCreateResp{
 		Success: true,
 		Message: "创建成功",
+		Data: types.TeamCreateData{
+			Id:       strconv.FormatInt(st.ID, 10),
+			TeamName: *st.Name,
+		},
 	}, nil
 
 }

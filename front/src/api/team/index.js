@@ -46,3 +46,41 @@ export function TeamDetail(id) {
     method: 'get',
   })
 }
+export function TeamMemberUserPage(body) {
+  return request({
+    url: '/team/member/page',
+    method: 'post',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    data: body,
+  })
+}
+
+export function TeamInviteMember(body) {
+  return request({
+    url: '/team/member/invite',
+    method: 'post',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    data: body,
+  })
+}
+export function TeamUserSearch(body) {
+  return request({
+    url: '/team/user/search',
+    method: 'post',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    data: body,
+  })
+}
+
+export function TeamSettingsDetail(id) {
+  return request({
+    url: `/team/settings/detail/${id}`,
+    method: 'get',
+  })
+}

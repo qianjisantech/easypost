@@ -3,6 +3,7 @@ import { useEffect, useRef } from 'react'
 import { Button, Form, type FormProps, Select, type SelectProps, Space } from 'antd'
 import { nanoid } from 'nanoid'
 
+import { ApiDetailSave } from 'src/api/am'
 import { PageTabStatus } from '@/components/ApiTab/ApiTab.enum'
 import { useTabContentContext } from '@/components/ApiTab/TabContentContext'
 import { InputUnderline } from '@/components/InputUnderline'
@@ -20,7 +21,7 @@ import { BaseFormItems } from './components/BaseFormItems'
 import { GroupTitle } from './components/GroupTitle'
 import { PathInput, type PathInputProps } from './components/PathInput'
 import { ParamsTab } from './params/ParamsTab'
-import { ApiDetailSave} from '@/api/api/index'
+
 const DEFAULT_NAME = '未命名接口'
 
 const methodOptions: SelectProps['options'] = Object.entries(HTTP_METHOD_CONFIG).map(
@@ -76,14 +77,13 @@ export function ApiDocEditing() {
     const menuName = values.name || DEFAULT_NAME
 
     if (isCreating) {
-
       const menuItemData = {
         id: '',
         name: menuName,
         type: MenuItemType.ApiDetail,
         data: { ...values, name: menuName },
       }
-      console.log('menuItemData',JSON.stringify(menuItemData))
+      console.log('menuItemData', JSON.stringify(menuItemData))
       addMenuItem({
         id: '',
         name: menuName,
@@ -99,10 +99,8 @@ export function ApiDocEditing() {
         },
         { replaceTab: tabData.key }
       )
-     await ApiDetailSave(menuItemData).then(r =>
-           messageApi.success(r.data.message)
-      )
-      console.log('创建 menuItemData',JSON.stringify(menuItemData))
+      await ApiDetailSave(menuItemData).then((r) => messageApi.success(r.data.message))
+      console.log('创建 menuItemData', JSON.stringify(menuItemData))
     } else {
       const menuItemData = {
         id: tabData.key,
@@ -110,16 +108,13 @@ export function ApiDocEditing() {
         name: menuName,
         data: { ...values, name: menuName },
       }
-      console.log('更新 menuItemData',JSON.stringify(menuItemData))
+      console.log('更新 menuItemData', JSON.stringify(menuItemData))
       updateMenuItem({
         id: tabData.key,
         name: menuName,
         data: { ...values, name: menuName },
       })
-      await apiDetailSave(menuItemData).then(r =>
-          messageApi.success(r.data.message)
-      )
-
+      await ApiDetailSave(menuItemData).then((r) => messageApi.success(r.data.message))
     }
   }
 

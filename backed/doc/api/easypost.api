@@ -1,4 +1,4 @@
-import "easypost/api.api"
+import "easypost/am.api"
 import "easypost/team.api"
 import "easypost/project.api"
 import "easypost/auth.api"

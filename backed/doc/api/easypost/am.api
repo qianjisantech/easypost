@@ -9,14 +9,24 @@ info(
 )
 
 type (
-    ApiDirectoryDataQueryData {
+    ApiTreeQueryPageRequest {
+     ProjectId string `json:"projectId"`
+    }
+
+    ApiTreeQueryPageResp {
+        Success bool `json:"success"`
+        Message string `json:"message"`
+        Data [] ApiTreeQueryPageData `json:"data"`
+    }
+    ApiTreeQueryPageData {
         Id string `json:"id"`
         ParentId string `json:"parentId"`
         Name string `json:"name"`
         Type string `json:"type"`
-        Data ApiDirectoryDataQueryDataData `json:"data"`
+        Method string `json:"method"`
+
     }
-    ApiDirectoryDataQueryDataData {
+    ApiTreeQueryPageDataData {
         Id string `json:"id"`
         Path string `json:"path"`
         Name string `json:"name"`
@@ -26,59 +36,52 @@ type (
         Tags []string `json:"tags"`
         ServerId string `json:"serverId"`
         Description string `json:"description"`
-        Parameters ApiDirectoryDataQueryDataDataParameters `json:"parameters"`
-        Responses []ApiDirectoryDataQueryDataDataResponse `json:"responses"`
+        Parameters  ApiTreeQueryPageDataDataParameters `json:"parameters"`
+        Responses [] ApiTreeQueryPageDataDataResponse `json:"responses"`
     }
-    ApiDirectoryDataQueryDataDataParameters {
+     ApiTreeQueryPageDataDataParameters {
         Path []string `json:"path"`
-        Query []ApiDirectoryDataQueryDataDataParametersQuery `json:"query"`
-        Header []ApiDirectoryDataQueryDataDataParametersHeader `json:"header"`
+        Query [] ApiTreeQueryPageDataDataParametersQuery `json:"query"`
+        Header [] ApiTreeQueryPageDataDataParametersHeader `json:"header"`
     }
-    ApiDirectoryDataQueryDataDataParametersQuery {
+     ApiTreeQueryPageDataDataParametersQuery {
         Id string `json:"id"`
         Name string `json:"name"`
         Type string `json:"type"`
         Example string `json:"example"`
     }
-    ApiDirectoryDataQueryDataDataParametersHeader {
+     ApiTreeQueryPageDataDataParametersHeader {
         Id string `json:"id"`
         Name string `json:"name"`
         Type string `json:"type"`
         Example string `json:"example"`
     }
-    ApiDirectoryDataQueryDataDataResponse {
+     ApiTreeQueryPageDataDataResponse {
         Id string `json:"id"`
         Code int `json:"code"`
         Name string `json:"name"`
         ContentType string `json:"contentType"`
-        JsonSchema ApiDirectoryDataQueryDataDataResponseJsonSchema `json:"jsonSchema"`
+        JsonSchema  ApiTreeQueryPageDataDataResponseJsonSchema `json:"jsonSchema"`
     }
-    ApiDirectoryDataQueryDataDataResponseJsonSchema {
+     ApiTreeQueryPageDataDataResponseJsonSchema {
         Type string `json:"type"`
-        Properties []ApiDirectoryDataQueryDataDataResponseJsonSchemaProperty `json:"properties"`
+        Properties [] ApiTreeQueryPageDataDataResponseJsonSchemaProperty `json:"properties"`
     }
-    ApiDirectoryDataQueryDataDataResponseJsonSchemaProperty {
+     ApiTreeQueryPageDataDataResponseJsonSchemaProperty {
         Id string `json:"id"`
         Name string `json:"name"`
         Type string `json:"type"`
         Description string `json:"description"`
         DisPlayName string `json:"displayName"`
     }
-    ApiDirectoryDataQueryRequest {
-    }
 
-    ApiDirectoryDataQueryResp {
-        Success bool `json:"success"`
-        Message string `json:"message"`
-        Data []ApiDirectoryDataQueryData `json:"data"`
-    }
     ApiRecycleGroupQueryRequest {
 
     }
     ApiRecycleGroupQueryResp {
         Success bool `json:"success"`
         Message string `json:"message"`
-        Data []ApiDirectoryDataQueryData `json:"data"`
+        Data [] ApiTreeQueryPageData `json:"data"`
     }
     ApiDetailSaveData {
         Method string `json:"method"`
@@ -152,14 +155,12 @@ type (
     }
 )
 @server(
-    group: api
+    group: am
     prefix: /api
 )
 service easypost-api {
-    @handler ApiDirectoryDataQuery
-    post /directory/data/list (ApiDirectoryDataQueryRequest) returns (ApiDirectoryDataQueryResp)
-    @handler ApiRecycleGroupQuery
-    post /recycle/group/list (ApiRecycleGroupQueryRequest) returns (ApiRecycleGroupQueryResp)
+    @handler ApiTreeQueryPage
+    post /am/api/tree/page (ApiTreeQueryPageRequest) returns (ApiTreeQueryPageResp)
     @handler ApiDetailSave
-    post /api/detail/save (ApiDetailSaveRequest) returns (ApiDetailSaveResp)
+    post /am/api/detail/save (ApiDetailSaveRequest) returns (ApiDetailSaveResp)
 }

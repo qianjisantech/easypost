@@ -9,15 +9,24 @@ import { message, Modal } from 'antd'
 import { UserProfile } from '@/api/user'
 import { MenuHelpersContextProvider } from '@/contexts/menu-helpers'
 import { ROUTES } from "@/utils/routes";
+import { TeamQueryPage } from "@/api/team";
 
 type ModalHookApi = ReturnType<typeof Modal.useModal>[0]
 type MessageApi = ReturnType<typeof message.useMessage>[0]
 
+interface Team{
+  id:string
+  teamName:string
+}
 interface GlobalContextData {
   modal: ModalHookApi
   messageApi: MessageApi
   isLogin: boolean
   setIsLogin: React.Dispatch<React.SetStateAction<boolean>>
+  teams: Team[]
+  fetchTeams: () => Promise<Team[]>
+  needSetPassword: boolean
+  setNeedSetPassword: React.Dispatch<React.SetStateAction<boolean>>
 }
 
 const GlobalContext = createContext({} as GlobalContextData)
@@ -29,7 +38,24 @@ export function GlobalContextProvider(props: React.PropsWithChildren) {
   const [messageApi, messageContextHolder] = message.useMessage({ duration: 1 })
   const [isLogin, setIsLogin] = useState(false)
   const pathname = usePathname()
-
+  const [teams, setTeams] = useState<Team[]>([]) // 存储菜单数据
+  const [needSetPassword, setNeedSetPassword]=useState(false)
+  // 获取菜单数据
+  const fetchTeams = async () => {
+    try {
+      const response = await TeamQueryPage({})
+      if (response.data.success) {
+        setTeams(response.data.data)
+        return response.data.data
+      } else {
+        messageApi.error('团队加载失败')
+        return []
+      }
+    } catch (error) {
+      messageApi.error('获取团队失败')
+      return  []
+    }
+  }
   // 使用 useEffect 监听 isLogin 变化
   useEffect(() => {
 
@@ -70,6 +96,10 @@ export function GlobalContextProvider(props: React.PropsWithChildren) {
             messageApi,
             isLogin,
             setIsLogin, // 正确地传递 setIsLogin
+            fetchTeams,
+            teams,
+            needSetPassword,
+            setNeedSetPassword,
           }}
         >
           {children}

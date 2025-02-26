@@ -183,7 +183,7 @@ const TeamTabs = ({ teamId }) => {
           </div>
         </TabPane>
         <TabPane key="2" tab="成员/权限">
-          {membersLoading ? <Spin tip="加载成员和角色数据..." /> : <MembersAndRoles />}
+          {membersLoading ? <Spin tip="加载成员和角色数据..." /> : <MembersAndRoles teamId={teamId} />}
         </TabPane>
         <TabPane key="3" tab="团队设置">
           {settingsLoading ? <Spin tip="加载团队设置..." /> : <TeamSettings teamId={teamId} />}

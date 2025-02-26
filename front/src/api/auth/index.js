@@ -1,17 +1,50 @@
-import request from "@/api";
+import request from '@/api'
 
 /**
  * 登录
  * @param body
  * @returns {Promise<axios.AxiosResponse<any>>}
  */
-export function Login(body) {
+export function LoginByEmail(body) {
   return request({
-    url: '/auth/login',
+    url: '/auth/email/login',
     method: 'post',
     headers: {
-      'Content-Type': 'application/json'
+      'Content-Type': 'application/json',
     },
-    data: body
+    data: body,
+  })
+}
+
+/**
+ *
+ * @param body
+ * @returns {Promise<axios.AxiosResponse<any>>}
+ * @constructor
+ */
+export function RegisterByEmail(body) {
+  return request({
+    url: '/auth/email/register',
+    method: 'post',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    data: body,
+  })
+}
+/**
+ *
+ * @param body
+ * @returns {Promise<axios.AxiosResponse<any>>}
+ * @constructor
+ */
+export function EmailSendCode(body) {
+  return request({
+    url: '/auth/email/sendCode',
+    method: 'post',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    data: body,
   })
 }

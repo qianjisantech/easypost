@@ -7,4 +7,10 @@ type Config struct {
 	Mysql struct {
 		Datasource string
 	}
+	Email struct {
+		Host     string
+		Port     string
+		Username string
+		Password string
+	}
 }
