@@ -1,10 +1,12 @@
-import { useMemo } from 'react'
+import { useEffect, useMemo, useState } from 'react'
 
 import { Viewer } from '@bytemd/react'
 import { Button, Card, Select, type SelectProps, Space, Tabs, theme, Tooltip } from 'antd'
 import dayjs from 'dayjs'
 import { Code2Icon, ZapIcon } from 'lucide-react'
 
+import { ApiDetail } from '@/api/am'
+import type { ApiMenuData } from '@/components/ApiMenu'
 import { useTabContentContext } from '@/components/ApiTab/TabContentContext'
 import { IconText } from '@/components/IconText'
 import { ApiRemoveButton } from '@/components/tab-content/api/ApiRemoveButton'
@@ -130,22 +132,28 @@ export function ApiDoc() {
   const { token } = theme.useToken()
 
   const { messageApi } = useGlobalContext()
-  const { menuRawList } = useMenuHelpersContext()
   const { tabData } = useTabContentContext()
+  const [apiDetails, setApiDetails] = useState<ApiDetails | null>(null)
+  // 加载 API 详情
+  const loadingApiDetails = async () => {
 
-  const { docValue, methodConfig } = useMemo(() => {
-    const apiDetails = menuRawList?.find(({ id }) => id === tabData.key)?.data as
-      | ApiDetails
-      | undefined
-
-    let methodConfig
-
-    if (apiDetails) {
-      methodConfig = HTTP_METHOD_CONFIG[apiDetails.method]
+    if (tabData.key){
+      const response = await ApiDetail(tabData.key)
+      if (response.data.success) {
+        setApiDetails(response.data.data) // 注意: 修正 `res` 为 `response`
+      }
     }
+  }
+
+  useEffect(() => {
+    loadingApiDetails()
+  }, [tabData.key])
+  // 计算 `docValue` 和 `methodConfig`
+  const { docValue, methodConfig } = useMemo(() => {
+    const methodConfig = apiDetails ? HTTP_METHOD_CONFIG[apiDetails.method] : undefined
 
     return { docValue: apiDetails, methodConfig }
-  }, [menuRawList, tabData.key])
+  }, [apiDetails]) //
 
   const { styles } = useStyles(({ token }) => {
     return {

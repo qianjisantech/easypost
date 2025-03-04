@@ -19,13 +19,58 @@ func RegisterHandlers(server *rest.Server, serverCtx *svc.ServiceContext) {
 		[]rest.Route{
 			{
 				Method:  http.MethodPost,
+				Path:    "/am/api/copy",
+				Handler: am.ApiCopyHandler(serverCtx),
+			},
+			{
+				Method:  http.MethodGet,
+				Path:    "/am/api/delete/:id",
+				Handler: am.ApiDeleteHandler(serverCtx),
+			},
+			{
+				Method:  http.MethodGet,
+				Path:    "/am/api/detail/:id",
+				Handler: am.ApiDetailHandler(serverCtx),
+			},
+			{
+				Method:  http.MethodPost,
 				Path:    "/am/api/detail/save",
 				Handler: am.ApiDetailSaveHandler(serverCtx),
 			},
 			{
 				Method:  http.MethodPost,
+				Path:    "/am/api/move",
+				Handler: am.ApiMoveHandler(serverCtx),
+			},
+			{
+				Method:  http.MethodPost,
+				Path:    "/am/api/rename",
+				Handler: am.ApiRenameHandler(serverCtx),
+			},
+			{
+				Method:  http.MethodPost,
 				Path:    "/am/api/tree/page",
 				Handler: am.ApiTreeQueryPageHandler(serverCtx),
+			},
+			{
+				Method:  http.MethodGet,
+				Path:    "/am/doc/detail/:id",
+				Handler: am.DocDetailHandler(serverCtx),
+			},
+			{
+				Method:  http.MethodPost,
+				Path:    "/am/doc/save",
+				Handler: am.DocSaveHandler(serverCtx),
+			},
+			{
+				Method:  http.MethodGet,
+				Path:    "/am/folder/detail/:id",
+				Handler: am.FolderDetailHandler(serverCtx),
+			},
+			{
+				Method:  http.MethodPost,
+				Path:    "/am/folder/detail/save",
+				Handler: am.FolderDetailSaveHandler(serverCtx),
 			},
 		},
 		rest.WithPrefix("/api"),

@@ -59,7 +59,7 @@ func (l *ApiV1RequestLogic) ApiV1Request() (resp any, err error) {
 	attacker := vegeta.NewAttacker()
 
 	// 运行攻击并收集结果
-	var apiresp []map[string]any
+	var apiresp interface{}
 
 	for res := range attacker.Attack(targeter, rate, duration, "Load Test") {
 		var jsonData map[string]any
@@ -68,7 +68,7 @@ func (l *ApiV1RequestLogic) ApiV1Request() (resp any, err error) {
 			continue
 		}
 		log.Printf("返回信息: %s", res)
-		apiresp = append(apiresp, jsonData)
+		apiresp = jsonData
 	}
 
 	return apiresp, nil

@@ -19,6 +19,7 @@ export default {
         destination: `${process.env.PROXY_BASE_URL}/api/:path*`, // 转发请求到环境变量中的 API 基础路径
         basePath: false, // 禁用基础路径，确保路径不被修改
       },
-    ];
+    ]
   },
-};
+}
+

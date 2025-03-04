@@ -56,10 +56,10 @@ func (l *ApiTreeQueryPageLogic) ApiTreeQueryPage(req *types.ApiTreeQueryPageRequ
 	// 组装接口
 	for _, qaar := range queryAmAPIsResp {
 		if qaar.Name == nil || qaar.Type == nil || qaar.ParentID == nil {
-			return nil, errorx.NewDefaultError("报错")
+			return nil, errorx.NewDefaultError(" 组装接口报错")
 		}
 		datas = append(datas, types.ApiTreeQueryPageData{
-			Id:       strconv.FormatInt(int64(qaar.ID), 10),
+			Id:       strconv.FormatInt(qaar.ID, 10),
 			Name:     *qaar.Name,
 			Type:     *qaar.Type,
 			Method:   ep.StringIfNotNil(qaar.Method, ""),
@@ -70,7 +70,7 @@ func (l *ApiTreeQueryPageLogic) ApiTreeQueryPage(req *types.ApiTreeQueryPageRequ
 	// 组装文档
 	for _, qadr := range queryAmDocsResp {
 		if qadr.Name == nil || qadr.Type == nil || qadr.ParentID == nil {
-			return nil, errorx.NewDefaultError("报错")
+			return nil, errorx.NewDefaultError("组装文档报错")
 		}
 		datas = append(datas, types.ApiTreeQueryPageData{
 			Id:       strconv.FormatInt(qadr.ID, 10),

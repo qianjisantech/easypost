@@ -12,7 +12,7 @@ const TableNameAmDoc = "am_doc"
 
 // AmDoc mapped from table <am_doc>
 type AmDoc struct {
-	ID         int64      `gorm:"column:id;primaryKey" json:"id"`
+	ID         int64      `gorm:"column:id;primaryKey;autoIncrement:true" json:"id"`
 	Name       *string    `gorm:"column:name" json:"name"`
 	Type       *string    `gorm:"column:type" json:"type"`
 	CreateBy   *string    `gorm:"column:create_by" json:"create_by"`
@@ -23,6 +23,7 @@ type AmDoc struct {
 	Remark     *string    `gorm:"column:remark" json:"remark"`
 	ParentID   *int64     `gorm:"column:parent_id;comment:父级目录id" json:"parent_id"` // 父级目录id
 	ProjectID  *int32     `gorm:"column:project_id" json:"project_id"`
+	Content    *string    `gorm:"column:content" json:"content"`
 }
 
 // TableName AmDoc's table name

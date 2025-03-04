@@ -42,8 +42,17 @@ func (l *TeamMemberInviteLogic) TeamMemberInvite(req *types.TeamMemberInviteRequ
 	}
 
 	var sysUsers []*model.SysUser
-	db := l.svcCtx.DB.Debug().Begin()
-	tx := db.Where("id IN ?", userIds).Find(&sysUsers)
+	tx := l.svcCtx.DB.Debug().Begin() // ✅ 正确开启事务
+	if tx.Error != nil {
+		return nil, errorx.NewDefaultError(tx.Error.Error())
+	}
+
+	// 使用事务查询
+	if err := tx.Where("id IN ?", userIds).Find(&sysUsers).Error; err != nil {
+		tx.Rollback()
+		return nil, errorx.NewDefaultError("查询用户失败")
+	}
+
 	var teamMembers []model.SysTeamMember
 	state := int32(2)
 	permission := int32(2)
@@ -56,25 +65,26 @@ func (l *TeamMemberInviteLogic) TeamMemberInvite(req *types.TeamMemberInviteRequ
 			Email:      sysUser.Email,
 			TeamID:     &teamId,
 			State:      &state,
-			Permission: &permission, //2为团队成员
+			Permission: &permission,
 		})
 	}
 
 	if len(teamMembers) > 0 {
-		tx = db.Create(&teamMembers)
-		if tx.Error != nil {
-			return nil, errorx.NewDefaultError(tx.Error.Error())
+		for _, member := range teamMembers {
+			if err := tx.Create(&member).Error; err != nil {
+				tx.Rollback()
+				return nil, errorx.NewDefaultError("添加团队成员失败：" + err.Error())
+			}
 		}
+
 	}
-	if tx.Error != nil {
-		db.Rollback()
-		return nil, errorx.NewDefaultError(tx.Error.Error())
-	}
-	if err := db.Commit().Error; err != nil {
-		db.Rollback()
+
+	if err := tx.Commit().Error; err != nil {
+		tx.Rollback()
 		log.Printf("Error committing transaction: %v", err)
-		return nil, errorx.NewDefaultError("Error committing transaction")
+		return nil, errorx.NewDefaultError("提交事务失败")
 	}
+
 	return &types.TeamMemberInviteResp{
 		Success: true,
 		Message: "成员邀请成功",

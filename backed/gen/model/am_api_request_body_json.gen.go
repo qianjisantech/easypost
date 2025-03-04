@@ -8,22 +8,22 @@ import (
 	"time"
 )
 
-const TableNameAPIRequestBodyRaw = "api_request_body_raw"
+const TableNameAmAPIRequestBodyJSON = "am_api_request_body_json"
 
-// APIRequestBodyRaw mapped from table <api_request_body_raw>
-type APIRequestBodyRaw struct {
+// AmAPIRequestBodyJSON mapped from table <am_api_request_body_json>
+type AmAPIRequestBodyJSON struct {
 	ID         int64      `gorm:"column:id;primaryKey;autoIncrement:true" json:"id"`
 	Type       *string    `gorm:"column:type" json:"type"`
 	JSONSchema *string    `gorm:"column:json_schema" json:"json_schema"`
-	CreateBy   *string    `gorm:"column:create_by" json:"create_by"`
+	IsDeleted  *int32     `gorm:"column:is_deleted" json:"is_deleted"`
+	CreateBy   *int64     `gorm:"column:create_by" json:"create_by"`
 	CreateTime *time.Time `gorm:"column:create_time;default:CURRENT_TIMESTAMP" json:"create_time"`
-	APIID      *int64     `gorm:"column:api_id" json:"api_id"`
-	UpdateBy   *string    `gorm:"column:update_by" json:"update_by"`
+	UpdateBy   *int64     `gorm:"column:update_by" json:"update_by"`
 	UpdateTime *time.Time `gorm:"column:update_time;default:CURRENT_TIMESTAMP" json:"update_time"`
-	IsDeleted  *bool      `gorm:"column:is_deleted" json:"is_deleted"`
+	APIID      *int64     `gorm:"column:api_id" json:"api_id"`
 }
 
-// TableName APIRequestBodyRaw's table name
-func (*APIRequestBodyRaw) TableName() string {
-	return TableNameAPIRequestBodyRaw
+// TableName AmAPIRequestBodyJSON's table name
+func (*AmAPIRequestBodyJSON) TableName() string {
+	return TableNameAmAPIRequestBodyJSON
 }

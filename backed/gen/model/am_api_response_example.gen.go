@@ -8,23 +8,23 @@ import (
 	"time"
 )
 
-const TableNameAPIParametersHeader = "api_parameters_header"
+const TableNameAmAPIResponseExample = "am_api_response_example"
 
-// APIParametersHeader mapped from table <api_parameters_header>
-type APIParametersHeader struct {
+// AmAPIResponseExample mapped from table <am_api_response_example>
+type AmAPIResponseExample struct {
 	ID         int64      `gorm:"column:id;primaryKey;autoIncrement:true" json:"id"`
+	RespnseID  *int64     `gorm:"column:respnse_id" json:"respnse_id"`
 	Name       *string    `gorm:"column:name" json:"name"`
-	Type       *string    `gorm:"column:type" json:"type"`
-	Example    *string    `gorm:"column:example" json:"example"`
-	CreateBy   *string    `gorm:"column:create_by" json:"create_by"`
-	UpdateBy   *string    `gorm:"column:update_by" json:"update_by"`
-	CreateTime *time.Time `gorm:"column:create_time;default:CURRENT_TIMESTAMP" json:"create_time"`
-	UpdateTime *time.Time `gorm:"column:update_time;default:CURRENT_TIMESTAMP" json:"update_time"`
 	APIID      *int64     `gorm:"column:api_id" json:"api_id"`
+	CreateBy   *string    `gorm:"column:create_by" json:"create_by"`
+	CreateTime *time.Time `gorm:"column:create_time;default:now()" json:"create_time"`
+	UpdateBy   *string    `gorm:"column:update_by" json:"update_by"`
+	UpdateTime *time.Time `gorm:"column:update_time;default:CURRENT_TIMESTAMP" json:"update_time"`
 	IsDeleted  *bool      `gorm:"column:is_deleted" json:"is_deleted"`
+	Data       *string    `gorm:"column:data" json:"data"`
 }
 
-// TableName APIParametersHeader's table name
-func (*APIParametersHeader) TableName() string {
-	return TableNameAPIParametersHeader
+// TableName AmAPIResponseExample's table name
+func (*AmAPIResponseExample) TableName() string {
+	return TableNameAmAPIResponseExample
 }

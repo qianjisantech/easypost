@@ -1,5 +1,5 @@
 import { redirect } from 'next/navigation'
-import { message } from 'antd'
+import { message, Spin } from 'antd'
 import axios, { type AxiosError, type AxiosInstance, type AxiosResponse } from 'axios'
 
 import { ROUTES } from '@/utils/routes'
@@ -19,6 +19,7 @@ const errorHandler = (error: AxiosError) => {
   if (!error.response) {
     // 网络错误或请求超时
     showMessage('error', 'Network or timeout error')
+    hideLoading()
     return Promise.reject(error)
   }
 
@@ -42,6 +43,7 @@ const errorHandler = (error: AxiosError) => {
     showMessage('error', `Request failed with status: ${status}`)
   }
 
+  hideLoading()
   return Promise.reject(error)
 }
 
@@ -51,18 +53,34 @@ request.interceptors.request.use((config) => {
   if (token) {
     config.headers['Authorization'] = `Bearer ${token}` // 添加 Authorization header
   }
+
+  // 显示全局 loading
+  showLoading()
+
   return config
 }, errorHandler)
 
 // 响应拦截器
 request.interceptors.response.use((response: AxiosResponse) => {
+  hideLoading()
   // 判断响应中的业务逻辑，如果有错误则显示消息
   if (response.data.success === false) {
     showMessage('error', response.data.message || 'Request failed')
   } else {
-    // showMessage('success', response.data.message||"请求成功");
+    // 请求成功后可以选择显示成功提示
+    // showMessage('success', response.data.message || "请求成功")
     return response
   }
 }, errorHandler)
+
+// 显示全局loading
+const showLoading = () => {
+  message.loading({ content: '', key: 'global_loading', duration: 0 }) // duration: 0 表示持续显示，直到手动隐藏
+}
+
+// 隐藏全局loading
+const hideLoading = () => {
+  message.destroy('global_loading') // 隐藏 loading
+}
 
 export default request

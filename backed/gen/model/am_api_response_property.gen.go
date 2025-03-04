@@ -8,10 +8,10 @@ import (
 	"time"
 )
 
-const TableNameAPIResponseProperty = "api_response_property"
+const TableNameAmAPIResponseProperty = "am_api_response_property"
 
-// APIResponseProperty mapped from table <api_response_property>
-type APIResponseProperty struct {
+// AmAPIResponseProperty mapped from table <am_api_response_property>
+type AmAPIResponseProperty struct {
 	ID          int64      `gorm:"column:id;primaryKey;autoIncrement:true" json:"id"`
 	Type        *string    `gorm:"column:type" json:"type"`
 	DisplayName *string    `gorm:"column:display_name;comment:中文名" json:"display_name"` // 中文名
@@ -25,7 +25,7 @@ type APIResponseProperty struct {
 	IsDeleted   *bool      `gorm:"column:is_deleted" json:"is_deleted"`
 }
 
-// TableName APIResponseProperty's table name
-func (*APIResponseProperty) TableName() string {
-	return TableNameAPIResponseProperty
+// TableName AmAPIResponseProperty's table name
+func (*AmAPIResponseProperty) TableName() string {
+	return TableNameAmAPIResponseProperty
 }

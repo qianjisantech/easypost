@@ -70,7 +70,7 @@ export function Schema() {
               id: menuItemId,
               name: menuName,
               type: MenuItemType.ApiSchema,
-              data: values,
+              data: values
             })
 
             addTabItem(
@@ -85,10 +85,9 @@ export function Schema() {
             updateMenuItem({
               id: tabData.key,
               name: menuName,
-              data: values,
+              data: values
             })
 
-            messageApi.success('保存成功')
           }
         }}
         onValuesChange={(changedValues: ApiSchemaForm) => {

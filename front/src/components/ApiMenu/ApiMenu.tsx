@@ -13,7 +13,7 @@ import { useStyles } from '@/hooks/useStyle'
 import { PageTabStatus } from '../ApiTab/ApiTab.enum'
 
 import type { CatalogDataNode } from './ApiMenu.type'
-import { ApiMenuContextProvider, useApiMenuContext } from './ApiMenuContext'
+import { useApiMenuContext } from './ApiMenuContext'
 import { SwitcherIcon } from './SwitcherIcon'
 
 import { css } from '@emotion/css'
@@ -128,69 +128,67 @@ export function ApiMenu() {
   }
 
   return (
-
-      <ConfigProvider
-        theme={{
-          components: {
-            Tree: {
-              motionDurationMid: '0',
-              motionDurationSlow: '0',
-              colorBgTextHover: 'transparent',
-              colorBgContainer: 'transparent',
-              colorTextLightSolid: 'currentColor',
-            },
+    <ConfigProvider
+      theme={{
+        components: {
+          Tree: {
+            motionDurationMid: '0',
+            motionDurationSlow: '0',
+            colorBgTextHover: 'transparent',
+            colorBgContainer: 'transparent',
+            colorTextLightSolid: 'currentColor',
           },
-        }}
-      >
-        {!!menuTree && (
-          <Tree.DirectoryTree
-            blockNode
-            showIcon
-            allowDrop={({ dragNode, dropNode }) => {
-              if (dropNode.className?.includes('top-folder')) {
-                return false
-              }
+        },
+      }}
+    >
+      {!!menuTree && (
+        <Tree.DirectoryTree
+          blockNode
+          showIcon
+          allowDrop={({ dragNode, dropNode }) => {
+            if (dropNode.className?.includes('top-folder')) {
+              return false
+            }
 
-              return isMenuSameGroup(
-                (dragNode as CatalogDataNode).customData.catalog,
-                (dropNode as CatalogDataNode).customData.catalog
+            return isMenuSameGroup(
+              (dragNode as CatalogDataNode).customData.catalog,
+              (dropNode as CatalogDataNode).customData.catalog
+            )
+          }}
+          draggable={{
+            icon: false,
+            nodeDraggable: (node) => {
+              return !node.className?.includes('top-folder')
+            },
+          }}
+          expandedKeys={expandedMenuKeys}
+          rootClassName={styles.menuTree}
+          selectedKeys={selectedKeys}
+          switcherIcon={(node) => {
+            const nodeData = node.data as CatalogDataNode | undefined
+            const hasChildren = nodeData?.children?.length
+
+            if (hasChildren) {
+              return (
+                <SwitcherIcon
+                  onClick={() => {
+                    const menuId = nodeData.key
+
+                    if (typeof menuId === 'string') {
+                      switchExpandedKeys(menuId)
+                    }
+                  }}
+                />
               )
-            }}
-            draggable={{
-              icon: false,
-              nodeDraggable: (node) => {
-                return !node.className?.includes('top-folder')
-              },
-            }}
-            expandedKeys={expandedMenuKeys}
-            rootClassName={styles.menuTree}
-            selectedKeys={selectedKeys}
-            switcherIcon={(node) => {
-              const nodeData = node.data as CatalogDataNode | undefined
-              const hasChildren = nodeData?.children?.length
+            }
 
-              if (hasChildren) {
-                return (
-                  <SwitcherIcon
-                    onClick={() => {
-                      const menuId = nodeData.key
-
-                      if (typeof menuId === 'string') {
-                        switchExpandedKeys(menuId)
-                      }
-                    }}
-                  />
-                )
-              }
-
-              return null
-            }}
-            treeData={menuTree}
-            onDrop={handleDrop}
-            onSelect={handleMenuSelect}
-          />
-        )}
-      </ConfigProvider>
-
+            return null
+          }}
+          treeData={menuTree}
+          onDrop={handleDrop}
+          onSelect={handleMenuSelect}
+        />
+      )}
+    </ConfigProvider>
   )
 }

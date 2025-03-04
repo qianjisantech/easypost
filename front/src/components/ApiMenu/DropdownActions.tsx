@@ -1,5 +1,5 @@
 import { show } from '@ebay/nice-modal-react'
-import { Dropdown, type DropDownProps, type MenuProps, theme } from 'antd'
+import { Dropdown, type DropDownProps, type MenuProps, message, theme } from "antd";
 import { CopyIcon, FolderInputIcon, FolderPlusIcon, PencilIcon, TrashIcon } from 'lucide-react'
 import { nanoid } from 'nanoid'
 
@@ -14,6 +14,7 @@ import { useMenuHelpersContext } from '@/contexts/menu-helpers'
 import { MenuItemType } from '@/enums'
 import { getCatalogType, getCreateType } from '@/helpers'
 import { useHelpers } from '@/hooks/useHelpers'
+import { ApiCopy, ApiDelete } from "@/api/am";
 
 interface DropdownActionsProps extends DropDownProps {
   catalog: ApiMenuData
@@ -35,6 +36,51 @@ export function DropdownActions(props: React.PropsWithChildren<DropdownActionsPr
   const { tipTitle } = API_MENU_CONFIG[getCatalogType(catalog.type)]
   const createType = getCreateType(catalog.type)
 
+   const deleteApi=async (id:string)=>{
+
+   const response=   await ApiDelete(id)
+     if (response.data.success){
+       message.success(response.data.message)
+       removeMenuItem({ id: id })
+     }
+  }
+  // 停止事件传播的函数
+  const stopEventPropagation = (ev: React.MouseEvent) => {
+    ev.stopPropagation();
+  };
+  // 删除确认的函数
+  const confirmDelete = (catalog: CatalogType) => {
+    const content = `${catalog.type === MenuItemType.ApiDetailFolder
+      ? '该目录及该目录下的接口和用例都'
+      : catalog.type === MenuItemType.ApiSchemaFolder
+        ? '该目录及该目录下的数据模型都'
+        : ''
+    }将移至回收站，30 天后自动彻底删除。`;
+
+    modal.confirm({
+      title: <span className="font-normal">删除目录“{catalog.name}”？</span>,
+      content,
+      okText: '删除',
+      okButtonProps: { danger: true },
+      maskClosable: true,
+      onOk: () => {
+        console.log("删除");
+      }
+    });
+  };
+  function handleActionClick(action: string, catalog: ApiMenuData) {
+    console.log('点击了操作:', action, catalog)
+
+  }
+  const apiCopy=async (values)=> {
+    //    const response=   await ApiCopy(values)
+    //   if (response.data.success){
+    //     message.success(response.data.message)
+    //   }
+    // }
+    message.success("该功能待开发，有点麻烦")
+  }
+
   const commonActionMenuItems: MenuProps['items'] = [
     {
       key: 'rename',
@@ -42,7 +88,7 @@ export function DropdownActions(props: React.PropsWithChildren<DropdownActionsPr
       icon: <PencilIcon size={14} />,
       onClick: (ev) => {
         ev.domEvent.stopPropagation()
-
+        handleActionClick('rename', catalog)
         void show(ModalRename, {
           formData: { id: catalog.id, name: catalog.name },
         })
@@ -53,9 +99,9 @@ export function DropdownActions(props: React.PropsWithChildren<DropdownActionsPr
       label: '复制',
       icon: <CopyIcon size={14} />,
       onClick: (ev) => {
-        ev.domEvent.stopPropagation()
 
-        addMenuItem({ ...catalog, id: nanoid(6) })
+        ev.domEvent.stopPropagation()
+        apiCopy(catalog)
       },
     },
     {
@@ -64,7 +110,7 @@ export function DropdownActions(props: React.PropsWithChildren<DropdownActionsPr
       icon: <FolderInputIcon size={14} />,
       onClick: (ev) => {
         ev.domEvent.stopPropagation()
-
+        handleActionClick('move', catalog)
         void show(ModalMoveMenu, {
           menuItemType: catalog.type,
           formData: { id: catalog.id },
@@ -79,8 +125,8 @@ export function DropdownActions(props: React.PropsWithChildren<DropdownActionsPr
       label: tipTitle,
       icon: <FileIcon size={14} style={{ color: token.colorPrimary }} type={createType} />,
       onClick: (ev) => {
-        ev.domEvent.stopPropagation()
-        createTabItem(createType)
+        stopEventPropagation(ev);
+        createTabItem(createType);
       },
     },
 
@@ -95,11 +141,10 @@ export function DropdownActions(props: React.PropsWithChildren<DropdownActionsPr
       label: '添加子目录',
       icon: <FolderPlusIcon size={14} />,
       onClick: (ev) => {
-        ev.domEvent.stopPropagation()
-
+        stopEventPropagation(ev);
         void show(ModalNewCatalog, {
           formData: { parentId: catalog.id, type: catalog.type },
-        })
+        });
       },
     },
 
@@ -110,27 +155,11 @@ export function DropdownActions(props: React.PropsWithChildren<DropdownActionsPr
       label: '删除',
       icon: <TrashIcon size={14} />,
       onClick: (ev) => {
-        ev.domEvent.stopPropagation()
-
-        modal.confirm({
-          title: <span className="font-normal">删除目录“{catalog.name}”？</span>,
-          content: `${
-            catalog.type === MenuItemType.ApiDetailFolder
-              ? '该目录及该目录下的接口和用例都'
-              : catalog.type === MenuItemType.ApiSchemaFolder
-                ? '该目录及该目录下的数据模型都'
-                : ''
-          }将移至回收站，30 天后自动彻底删除。`,
-          okText: '删除',
-          okButtonProps: { danger: true },
-          maskClosable: true,
-          onOk: () => {
-            removeMenuItem({ id: catalog.id })
-          },
-        })
+        stopEventPropagation(ev);
+        confirmDelete(catalog);
       },
-    },
-  ]
+    }
+  ];
 
   const fileActionMenu: MenuProps['items'] = [
     ...commonActionMenuItems,

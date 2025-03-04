@@ -4,6 +4,8 @@ import (
 	"backed/gen/query"
 	"backed/internal/config"
 	"backed/internal/middleware"
+	"fmt"
+	"github.com/bwmarrin/snowflake"
 	"github.com/zeromicro/go-zero/core/logx"
 	"github.com/zeromicro/go-zero/rest"
 	"gorm.io/driver/mysql"
@@ -30,6 +32,8 @@ func NewServiceContext(c config.Config) *ServiceContext {
 
 	logx.Debug("mysql已连接")
 	query.SetDefault(DB)
+	addSnowflakeIDCallback(DB)
+	settingLogConfig()
 	return &ServiceContext{
 		Config: c,
 		DB:     DB,
@@ -58,4 +62,39 @@ func settingLogConfig() logger.Interface {
 		},
 	)
 	return newLogger
+}
+
+// 生成雪花ID的函数
+func generateSnowflakeID() (int64, error) {
+	// 初始化一个雪花节点
+	node, err := snowflake.NewNode(1) // 1 是机器ID，通常是根据集群环境配置
+	if err != nil {
+		return 0, fmt.Errorf("failed to create snowflake node: %w", err)
+	}
+	// 返回生成的雪花ID
+	return node.Generate().Int64(), nil
+}
+
+func addSnowflakeIDCallback(db *gorm.DB) {
+	db.Callback().Create().Before("gorm:create").Register("generate_snowflake_id", func(tx *gorm.DB) {
+		if tx.Statement.Schema == nil {
+			return
+		}
+		ctx := tx.Statement.Context // 获取 GORM 的 Context
+		for _, field := range tx.Statement.Schema.Fields {
+			if field.Name == "ID" {
+				// field.ValueOf 需要两个参数 (context.Context, reflect.Value)
+				val, _ := field.ValueOf(ctx, tx.Statement.ReflectValue)
+				if id, ok := val.(int64); !ok || id == 0 {
+					newID, err := generateSnowflakeID()
+					if err == nil {
+						// field.Set 也需要两个参数
+						if setErr := field.Set(ctx, tx.Statement.ReflectValue, newID); setErr != nil {
+							logx.Errorf("failed to set snowflake ID: %v", setErr)
+						}
+					}
+				}
+			}
+		}
+	})
 }

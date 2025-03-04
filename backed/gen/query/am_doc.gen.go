@@ -38,6 +38,7 @@ func newAmDoc(db *gorm.DB, opts ...gen.DOOption) amDoc {
 	_amDoc.Remark = field.NewString(tableName, "remark")
 	_amDoc.ParentID = field.NewInt64(tableName, "parent_id")
 	_amDoc.ProjectID = field.NewInt32(tableName, "project_id")
+	_amDoc.Content = field.NewString(tableName, "content")
 
 	_amDoc.fillFieldMap()
 
@@ -59,6 +60,7 @@ type amDoc struct {
 	Remark     field.String
 	ParentID   field.Int64 // 父级目录id
 	ProjectID  field.Int32
+	Content    field.String
 
 	fieldMap map[string]field.Expr
 }
@@ -86,6 +88,7 @@ func (a *amDoc) updateTableName(table string) *amDoc {
 	a.Remark = field.NewString(table, "remark")
 	a.ParentID = field.NewInt64(table, "parent_id")
 	a.ProjectID = field.NewInt32(table, "project_id")
+	a.Content = field.NewString(table, "content")
 
 	a.fillFieldMap()
 
@@ -110,7 +113,7 @@ func (a *amDoc) GetFieldByName(fieldName string) (field.OrderExpr, bool) {
 }
 
 func (a *amDoc) fillFieldMap() {
-	a.fieldMap = make(map[string]field.Expr, 11)
+	a.fieldMap = make(map[string]field.Expr, 12)
 	a.fieldMap["id"] = a.ID
 	a.fieldMap["name"] = a.Name
 	a.fieldMap["type"] = a.Type
@@ -122,6 +125,7 @@ func (a *amDoc) fillFieldMap() {
 	a.fieldMap["remark"] = a.Remark
 	a.fieldMap["parent_id"] = a.ParentID
 	a.fieldMap["project_id"] = a.ProjectID
+	a.fieldMap["content"] = a.Content
 }
 
 func (a amDoc) clone(db *gorm.DB) amDoc {

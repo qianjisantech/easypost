@@ -19,7 +19,6 @@ export function Api() {
   const { tabData } = useTabContentContext()
 
   const [panelOpen, setPanelOpen] = useState(false)
-
   const apiTabItems = useMemo<TabsProps['items']>(() => {
     return [
       {
@@ -45,7 +44,7 @@ export function Api() {
         label: '运行',
         children: (
           <ApiTabContentWrapper>
-            <ApiRun></ApiRun>
+            <ApiRun/>
           </ApiTabContentWrapper>
         ),
       },

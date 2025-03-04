@@ -12,6 +12,6 @@ info (
 service proxy-api {
 	// 定义API接口，post 请求到 /api/v1/request，并返回字节数组
 	@handler ApiV1Request
-	post /api/v1/request  returns (any)
+	post /api/v1/request   returns (any)
 }
 

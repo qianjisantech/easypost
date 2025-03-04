@@ -27,7 +27,7 @@ func newAmAPI(db *gorm.DB, opts ...gen.DOOption) amAPI {
 
 	tableName := _amAPI.amAPIDo.TableName()
 	_amAPI.ALL = field.NewAsterisk(tableName)
-	_amAPI.ID = field.NewInt32(tableName, "id")
+	_amAPI.ID = field.NewInt64(tableName, "id")
 	_amAPI.Name = field.NewString(tableName, "name")
 	_amAPI.Type = field.NewString(tableName, "type")
 	_amAPI.Path = field.NewString(tableName, "path")
@@ -45,34 +45,37 @@ func newAmAPI(db *gorm.DB, opts ...gen.DOOption) amAPI {
 	_amAPI.Remark = field.NewString(tableName, "remark")
 	_amAPI.ServerID = field.NewString(tableName, "server_id")
 	_amAPI.ProjectID = field.NewInt64(tableName, "project_id")
+	_amAPI.ResponsibleID = field.NewInt64(tableName, "responsible_id")
 
 	_amAPI.fillFieldMap()
 
 	return _amAPI
 }
 
+// amAPI 负责人id
 type amAPI struct {
 	amAPIDo amAPIDo
 
-	ALL        field.Asterisk
-	ID         field.Int32
-	Name       field.String
-	Type       field.String
-	Path       field.String
-	Status     field.String
-	CreateBy   field.String
-	UpdateBy   field.String
-	CreateTime field.Time
-	UpdateTime field.Time
-	IsDeleted  field.Bool
-	Manager    field.String // 负责人
-	Tag        field.String
-	Method     field.String
-	ParentID   field.Int64
-	Content    field.String
-	Remark     field.String
-	ServerID   field.String
-	ProjectID  field.Int64
+	ALL           field.Asterisk
+	ID            field.Int64
+	Name          field.String
+	Type          field.String
+	Path          field.String
+	Status        field.String
+	CreateBy      field.String
+	UpdateBy      field.String
+	CreateTime    field.Time
+	UpdateTime    field.Time
+	IsDeleted     field.Bool
+	Manager       field.String // 负责人
+	Tag           field.String
+	Method        field.String
+	ParentID      field.Int64
+	Content       field.String
+	Remark        field.String // 备注
+	ServerID      field.String
+	ProjectID     field.Int64
+	ResponsibleID field.Int64 // 负责人id
 
 	fieldMap map[string]field.Expr
 }
@@ -89,7 +92,7 @@ func (a amAPI) As(alias string) *amAPI {
 
 func (a *amAPI) updateTableName(table string) *amAPI {
 	a.ALL = field.NewAsterisk(table)
-	a.ID = field.NewInt32(table, "id")
+	a.ID = field.NewInt64(table, "id")
 	a.Name = field.NewString(table, "name")
 	a.Type = field.NewString(table, "type")
 	a.Path = field.NewString(table, "path")
@@ -107,6 +110,7 @@ func (a *amAPI) updateTableName(table string) *amAPI {
 	a.Remark = field.NewString(table, "remark")
 	a.ServerID = field.NewString(table, "server_id")
 	a.ProjectID = field.NewInt64(table, "project_id")
+	a.ResponsibleID = field.NewInt64(table, "responsible_id")
 
 	a.fillFieldMap()
 
@@ -131,7 +135,7 @@ func (a *amAPI) GetFieldByName(fieldName string) (field.OrderExpr, bool) {
 }
 
 func (a *amAPI) fillFieldMap() {
-	a.fieldMap = make(map[string]field.Expr, 18)
+	a.fieldMap = make(map[string]field.Expr, 19)
 	a.fieldMap["id"] = a.ID
 	a.fieldMap["name"] = a.Name
 	a.fieldMap["type"] = a.Type
@@ -150,6 +154,7 @@ func (a *amAPI) fillFieldMap() {
 	a.fieldMap["remark"] = a.Remark
 	a.fieldMap["server_id"] = a.ServerID
 	a.fieldMap["project_id"] = a.ProjectID
+	a.fieldMap["responsible_id"] = a.ResponsibleID
 }
 
 func (a amAPI) clone(db *gorm.DB) amAPI {

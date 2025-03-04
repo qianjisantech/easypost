@@ -3,6 +3,8 @@ import { JsonSchemaEditorProps } from '@/components/JsonSchema';
 import { Segmented, Tabs, TabsProps } from 'antd';
 import { Prism as SyntaxHighlighter } from 'react-syntax-highlighter';
 import { docco } from "react-syntax-highlighter/dist/cjs/styles/hljs";
+import { JsonSchemaCard } from "@/components/JsonSchemaCard";
+import { JsonViewer } from "@/components/JsonViewer";
 
 interface JsonSchemaCardProps extends Pick<JsonSchemaEditorProps, 'value' | 'onChange'> {
     editorProps?: JsonSchemaEditorProps;
@@ -40,33 +42,34 @@ export function RunResponse(props: JsonSchemaCardProps) {
         switch (alignValue) {
             case 'pretty':
                 return (
-                    <div
-                        style={{
-                            width: '50%', // 固定宽度为 100%（或根据需要设置为固定值）
-                            height: '400px', // 设置固定高度，例如 400px
-                            border: '2px solid #ffffff', // 实线边框，设置颜色为黑色，厚度为 2px
-                            borderRadius: '4px', // 圆角
-                            backgroundColor: '#ffffff', // 背景色
-                            padding: '8px 12px', // 内边距
-                            fontFamily: 'Arial, sans-serif', // 字体
-                            fontSize: '14px', // 字号
-                            color: '#333', // 字体颜色
-                            whiteSpace: 'pre-wrap', // 保持换行
-                            wordBreak: 'break-word', // 长单词换行
-                            overflowWrap: 'break-word', // 自动换行
-                            overflow: 'auto', // 当内容溢出时，添加滚动条
-                        }}
-                    >
-                        {isJson(body) ? (
-                            <SyntaxHighlighter language="json" style={docco}>
-                                {body}
-                            </SyntaxHighlighter>
-                        ) : (
-                            <SyntaxHighlighter language="html" style={docco}>
-                                {body}
-                            </SyntaxHighlighter>
-                        )}
-                    </div>
+                  <JsonViewer value={body} />
+                    // <div
+                    //     style={{
+                    //         width: '50%', // 固定宽度为 100%（或根据需要设置为固定值）
+                    //         height: '400px', // 设置固定高度，例如 400px
+                    //         border: '2px solid #ffffff', // 实线边框，设置颜色为黑色，厚度为 2px
+                    //         borderRadius: '4px', // 圆角
+                    //         backgroundColor: '#ffffff', // 背景色
+                    //         padding: '8px 12px', // 内边距
+                    //         fontFamily: 'Arial, sans-serif', // 字体
+                    //         fontSize: '14px', // 字号
+                    //         color: '#333', // 字体颜色
+                    //         whiteSpace: 'pre-wrap', // 保持换行
+                    //         wordBreak: 'break-word', // 长单词换行
+                    //         overflowWrap: 'break-word', // 自动换行
+                    //         overflow: 'auto', // 当内容溢出时，添加滚动条
+                    //     }}
+                    // >
+                    //     {isJson(body) ? (
+                    //         <SyntaxHighlighter language="json" style={docco}>
+                    //             {body}
+                    //         </SyntaxHighlighter>
+                    //     ) : (
+                    //         <SyntaxHighlighter language="html" style={docco}>
+                    //             {body}
+                    //         </SyntaxHighlighter>
+                    //     )}
+                    // </div>
                 );
             case 'raw':
                 return <pre>{body}</pre>; // 原始内容显示

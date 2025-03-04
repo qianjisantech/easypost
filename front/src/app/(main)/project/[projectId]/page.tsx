@@ -1,19 +1,21 @@
 'use client'
-import type React from 'react';
-import { useState } from 'react'
+import  React, { ReactNode,useEffect, useState } from 'react'
 
-import { useRouter } from 'next/navigation'
+import { usePathname, useRouter } from 'next/navigation'
 import { HomeOutlined } from '@ant-design/icons'
-import { Button, ConfigProvider, Dropdown, Flex, Space, theme,Tooltip } from 'antd'
+import { Button, ConfigProvider, Dropdown, Flex, Space, theme, Tooltip } from 'antd'
 import { FilterIcon, PlusIcon } from 'lucide-react'
 
+import { ApiTreeQueryPage } from '@/api/am'
 import { ApiMenu } from '@/components/ApiMenu'
+import { ApiMenuContextProvider } from '@/components/ApiMenu/ApiMenuContext'
 import { ApiTab } from '@/components/ApiTab'
 import { FileIcon } from '@/components/icons/FileIcon'
 import { IconLogo } from '@/components/icons/IconLogo'
 import { IconText } from '@/components/IconText'
 import { InputSearch } from '@/components/InputSearch'
 import { API_MENU_CONFIG } from '@/configs/static'
+import { useMenuHelpersContext } from '@/contexts/menu-helpers'
 import { MenuTabProvider } from '@/contexts/menu-tab-settings'
 import { MenuItemType } from '@/enums'
 import { getCatalogType } from '@/helpers'
@@ -23,118 +25,120 @@ import { useStyles } from '@/hooks/useStyle'
 import { PanelLayout } from '../../components/PanelLayout'
 
 import { css } from '@emotion/css'
-import { ApiMenuContextProvider } from "@/components/ApiMenu/ApiMenuContext";
+import GosmoMenu from "@/app/(main)/gosmo/menu/page";
+
+interface NavItemProps {
+  active?: boolean
+  name: string
+  icon: ReactNode
+  onClick: () => void
+}
+
+function NavItem({ active, name, icon, onClick }: NavItemProps) {
+  const { styles } = useStyles(({ token }) => ({
+    item: css({
+      color: active ? token.colorPrimary : token.colorTextSecondary,
+      cursor: 'pointer',
+      '&:hover': {
+        backgroundColor: token.colorFillTertiary,
+      },
+    }),
+  }))
+
+  return (
+    <div
+      className={`flex flex-col items-center gap-1 rounded-md p-2 ${styles.item}`}
+      onClick={onClick}
+    >
+      {icon}
+      <span className="text-xs">{name}</span>
+    </div>
+  )
+}
 
 function ProjectContent() {
   const router = useRouter()
   const { createTabItem } = useHelpers()
   const { token } = theme.useToken()
-
-  // 记录当前选中的菜单项
+  const { setMenuRawList } = useMenuHelpersContext()
+  const pathname = usePathname()
   const [selectedMenu, setSelectedMenu] = useState<string>('接口管理')
 
-  interface NavItemProps {
-    active?: boolean
-    name: string
-    icon: React.ReactNode
-    onClick: () => void
+
+  useEffect(() => {
+    if (pathname) {
+      const match = pathname.match(/project\/([^/]+)/)
+      if (match) {
+        const projectId = match[1]
+        if (projectId) {
+          loadingMenuTree(projectId)
+        }
+      }
+    }
+  }, [pathname])
+
+  const loadingMenuTree = async (projectId: string) => {
+    const response = await ApiTreeQueryPage({ projectId })
+    if (response.data.success && setMenuRawList) {
+      setMenuRawList(response.data?.data)
+    }
   }
 
-  const returnToProject = () => {
-    router.back()
-  }
-
-  function NavItem({ active, name, icon, onClick }: NavItemProps) {
-    const { styles } = useStyles(({ token }) => ({
-      item: css({
-        color: active ? token.colorPrimary : token.colorTextSecondary,
-        cursor: 'pointer',
-        '&:hover': {
-          backgroundColor: token.colorFillTertiary,
-        },
-      }),
-    }))
-
-    return (
-      <div
-        className={`flex flex-col items-center gap-1 rounded-md p-2 ${styles.item}`}
-        onClick={onClick}
-      >
-        {icon}
-        <span className="text-xs">{name}</span>
-      </div>
-    )
-  }
 
   return (
     <Flex direction="row" style={{ height: '80%', marginTop: '2%' }}>
-      {/* 左侧导航栏 */}
+      {/* Left Sidebar */}
       <div className="flex h-full shrink-0 basis-[80px] flex-col items-center overflow-y-auto overflow-x-hidden px-1 pt-layoutHeader">
         <div
           className="mb-5 mt-2 size-10 rounded-xl p-[6px]"
           style={{ color: token.colorText, border: `1px solid ${token.colorBorder}` }}
         >
-          <IconLogo />
+          <div style={{width: '100%', height: '100%', display: 'flex', justifyContent: 'center', alignItems: 'center'}}>
+            <svg
+              t="1735037586493"
+              className="icon"
+              viewBox="0 0 1028 1024"
+              version="1.1"
+              xmlns="http://www.w3.org/2000/svg"
+              p-id="7534"
+              width="64"
+              height="64"
+            >
+              <path
+                d="M585.473374 295.885775l-240.51966 65.974206 48.843004 180.976182 240.583927-65.974205 49.067938 180.815514-240.583927 63.854395 46.81859 180.976182-240.583927 63.841341-59.672012-216.962752a178.104246 178.104246 0 0 0 36.250667-159.735902c-17.062918-57.48693-59.639878-102.184705-110.700097-121.336304L55.330969 244.793423l483.288669-127.795149z m304.433301-8.483258L811.147331 0 0.001004 215.005617l78.75834 289.555465c46.81859 8.579659 89.427684 44.697775 102.184705 95.790128 14.90997 51.124486-4.273763 102.184705-40.456146 136.246273l76.606395 287.402517 811.180469-217.126432-76.7038-287.402516c-48.939404-8.579659-89.363417-44.697775-104.273386-95.790128-12.753005-51.124486 4.273763-104.333637 42.57696-136.246274z"
+                fill="#FF7300"
+                p-id="7535"
+              ></path>
+            </svg>
+          </div>
         </div>
 
-        {/* 导航菜单 */}
+        {/* Navigation Menu */}
         <Space direction="vertical" size={14}>
-          {/* 接口管理 */}
+          {/* API Management */}
           <NavItem
-            icon={
-              <svg
-                aria-hidden="true"
-                className="size-6"
-                fill="currentColor"
-                viewBox="0 0 24 24"
-                xmlns="http://www.w3.org/2000/svg"
-              >
-                <path
-                  clipRule="evenodd"
-                  d="M20 10H4v8a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-8ZM9 13v-1h6v1c0 .6-.4 1-1 1h-4a1 1 0 0 1-1-1Z"
-                  fillRule="evenodd"
-                />
-                <path d="M2 6c0-1.1.9-2 2-2h16a2 2 0 1 1 0 4H4a2 2 0 0 1-2-2Z" />
-              </svg>
-            }
+            active={selectedMenu === "接口管理"}
+            icon={<HomeOutlined />}
             name="接口管理"
-            active={selectedMenu === '接口管理'}
-            onClick={() => setSelectedMenu('接口管理')}
+            onClick={() => setSelectedMenu("接口管理")}
           />
 
-          {/* 自动化测试 */}
+          {/* Traffic Recording */}
           <NavItem
-            icon={
-              <svg
-                aria-hidden="true"
-                className="size-6"
-                fill="currentColor"
-                viewBox="0 0 24 24"
-                xmlns="http://www.w3.org/2000/svg"
-              >
-                <path
-                  clipRule="evenodd"
-                  d="M12 2a10 10 0 1 0 0 20 10 10 0 0 0 0-20ZM10 16l-4-4 1.4-1.4 2.6 2.6 6.6-6.6L18 8l-8 8Z"
-                  fillRule="evenodd"
-                />
-              </svg>
-            }
-            name="流量录制"
-            active={selectedMenu === '流量录制'}
-            onClick={() => setSelectedMenu('流量录制')}
+            active={selectedMenu === "Gosmo"}
+            icon={<FilterIcon />}
+            name="Gosmo"
+            onClick={() => setSelectedMenu("Gosmo")}
           />
         </Space>
       </div>
 
-      {/* 右侧内容区域 */}
+      {/* Right Content Area */}
       <PanelLayout
         layoutName={selectedMenu}
         left={
-          selectedMenu === '接口管理' ? (
+          selectedMenu === "接口管理" ? (
             <>
-              <Button type="default" onClick={returnToProject}>
-                <HomeOutlined />
-              </Button>
 
               <Flex gap={token.paddingXXS} style={{ padding: token.paddingXS }}>
                 <InputSearch />
@@ -163,20 +167,12 @@ function ProjectContent() {
                           MenuItemType.HttpRequest,
                           MenuItemType.Doc,
                           MenuItemType.ApiSchema,
-                        ].map((t) => {
-                          const { newLabel } = API_MENU_CONFIG[getCatalogType(t)]
-
-                          return {
-                            key: t,
-                            label: t === MenuItemType.Doc ? '新建 Markdown' : newLabel,
-                            icon: (
-                              <FileIcon size={16} style={{ color: token.colorPrimary }} type={t} />
-                            ),
-                            onClick: () => {
-                              createTabItem(t)
-                            },
-                          }
-                        }),
+                        ].map((t) => ({
+                          key: t,
+                          label: t === MenuItemType.Doc ? '新建 Markdown' : API_MENU_CONFIG[getCatalogType(t)].newLabel,
+                          icon: <FileIcon size={16} style={{ color: token.colorPrimary }} type={t} />,
+                          onClick: () => createTabItem(t),
+                        })),
                       ],
                     }}
                   >
@@ -194,8 +190,8 @@ function ProjectContent() {
               </div>
             </>
           ) : (
-            <div className="flex justify-center items-center h-full w-full">
-              <h1 className="text-xl font-semibold text-gray-500">流量录制功能待开放</h1>
+            <div className="flex size-full items-center justify-center">
+              <GosmoMenu></GosmoMenu>
             </div>
           )
         }

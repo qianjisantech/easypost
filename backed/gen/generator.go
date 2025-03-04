@@ -2,23 +2,11 @@
 package main
 
 import (
-	"fmt"
-	"github.com/bwmarrin/snowflake"
 	"gorm.io/driver/mysql"
 	"gorm.io/gen"
 	"gorm.io/gorm"
 )
 
-// 生成雪花ID的函数
-func generateSnowflakeID() (int64, error) {
-	// 初始化一个雪花节点
-	node, err := snowflake.NewNode(1) // 1 是机器ID，通常是根据集群环境配置
-	if err != nil {
-		return 0, fmt.Errorf("failed to create snowflake node: %w", err)
-	}
-	// 返回生成的雪花ID
-	return node.Generate().Int64(), nil
-}
 func main() {
 	// Initialize the generator with configuration
 	g := gen.NewGenerator(gen.Config{
@@ -40,12 +28,11 @@ func main() {
 		g.GenerateModel("am_api"),
 		g.GenerateModel("am_folder"),
 		g.GenerateModel("am_doc"),
-		g.GenerateModel("api_parameters_header"),
-		g.GenerateModel("api_parameters_query"),
-		g.GenerateModel("api_response_info"),
-		g.GenerateModel("api_request_body_raw"),
-		g.GenerateModel("api_request_body_parameter"),
-		g.GenerateModel("api_response_property"),
+		g.GenerateModel("am_api_request_body_json"),
+		g.GenerateModel("am_api_parameter"),
+		g.GenerateModel("am_api_response"),
+		g.GenerateModel("am_api_response_example"),
+		g.GenerateModel("am_api_response_property"),
 		g.GenerateModel("sys_project"),
 		g.GenerateModel("sys_user"),
 		g.GenerateModel("sys_team"),

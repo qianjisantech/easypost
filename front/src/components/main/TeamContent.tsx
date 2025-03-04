@@ -19,7 +19,7 @@ const TeamsContent = ({ loading, teamId }) => {
 
   // 模拟根据 teamId 获取团队详情
   const fetchTeamDetail = async (teamId) => {
-    console.log('打印teamId', teamId)
+
     setIsLoadingDetail(true)
     const response = await TeamDetail(teamId)
     if (response.data.success) {

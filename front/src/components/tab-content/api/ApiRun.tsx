@@ -5,7 +5,7 @@ import { Button, Form, type FormProps, Select, type SelectProps, Space } from 'a
 import type { AxiosRequestConfig } from 'axios'
 import { nanoid } from 'nanoid'
 
-import { ApiDetailSave } from 'src/api/am'
+import { ApiDetail, ApiDetailSave } from "src/api/am";
 import { PageTabStatus } from '@/components/ApiTab/ApiTab.enum'
 import { useTabContentContext } from '@/components/ApiTab/TabContentContext'
 import { InputUnderline } from '@/components/InputUnderline'
@@ -50,7 +50,7 @@ export function ApiRun() {
   const { messageApi } = useGlobalContext()
   const msgKey = useRef<string>()
 
-  const { menuRawList, addMenuItem, updateMenuItem } = useMenuHelpersContext()
+  const { addMenuItem, updateMenuItem } = useMenuHelpersContext()
   const { addTabItem } = useMenuTabHelpers()
   const { tabData } = useTabContentContext()
   const [loading, setLoading] = useState(false)
@@ -58,27 +58,32 @@ export function ApiRun() {
   const isCreating = tabData.data?.tabStatus === PageTabStatus.Create
 
   const [requestConfig, setRequestConfig] = useState<AxiosRequestConfig>({})
-
-  useEffect(() => {
-    if (isCreating) {
-      form.setFieldsValue(initialCreateApiDetailsData)
-    } else {
-      if (menuRawList) {
-        const menuData = menuRawList.find(({ id }) => id === tabData.key)
-
-        if (
-          menuData &&
-          (menuData.type === MenuItemType.ApiDetail || menuData.type === MenuItemType.HttpRequest)
-        ) {
-          const apiDetails = menuData.data
-
-          if (apiDetails) {
-            form.setFieldsValue(apiDetails)
-          }
-        }
+  const loadingApiDetails = async () => {
+    try {
+      const response = await ApiDetail(tabData.key)
+      if (response.data.success) {
+        form.setFieldsValue({
+          name: response.data.data.id, // 确保字段匹配 Form.Item 的 `name`
+          path: response.data.data.path,
+          method: response.data.data.method,
+          status:response.data.data.status,
+          responsibleId:response.data.data.responsibleId
+        })
+        console.log("Form values after setFieldsValue:", form.getFieldsValue())
       }
+    } catch (error) {
+      console.error("加载 API 详情失败:", error)
     }
-  }, [form, menuRawList, isCreating, tabData.key])
+  }
+  useEffect(() => {
+    if (!isCreating) {
+      loadingApiDetails()
+    } else {
+      form.setFieldsValue(initialCreateApiDetailsData)
+    }
+    console.log('form',form)
+  }, [tabData.key, isCreating])
+
 
   const handleFinish: FormProps<ApiDetails>['onFinish'] = async (values) => {
     const menuName = values.name || DEFAULT_NAME
@@ -102,7 +107,7 @@ export function ApiRun() {
         id: menuItemId,
         name: menuName,
         type: MenuItemType.ApiDetail,
-        data: { ...values, name: menuName },
+        data: { ...values, name: menuName }
       })
 
       addTabItem(
@@ -117,10 +122,9 @@ export function ApiRun() {
       updateMenuItem({
         id: tabData.key,
         name: menuName,
-        data: { ...values, name: menuName },
+        data: { ...values, name: menuName }
       })
 
-      messageApi.success('保存成功')
     }
   }
 

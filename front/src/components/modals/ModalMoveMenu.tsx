@@ -39,12 +39,14 @@ export const ModalMoveMenu = create(({ menuItemType, formData, ...props }: Modal
       {...props}
       open={modal.visible}
       onCancel={(...parmas) => {
+
         props.onCancel?.(...parmas)
         handleHide()
       }}
       onOk={() => {
         form.validateFields().then((values) => {
           updateMenuItem(values)
+          console.log('接口移动到', values)
           handleHide()
         })
       }}

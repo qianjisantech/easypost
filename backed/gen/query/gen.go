@@ -16,32 +16,30 @@ import (
 )
 
 var (
-	Q                       = new(Query)
-	APIParametersHeader     *aPIParametersHeader
-	APIParametersQuery      *aPIParametersQuery
-	APIRequestBodyParameter *aPIRequestBodyParameter
-	APIRequestBodyRaw       *aPIRequestBodyRaw
-	APIResponseInfo         *aPIResponseInfo
-	APIResponseProperty     *aPIResponseProperty
-	AmAPI                   *amAPI
-	AmDoc                   *amDoc
-	AmFolder                *amFolder
-	SysOrganizeTeam         *sysOrganizeTeam
-	SysProject              *sysProject
-	SysTeam                 *sysTeam
-	SysTeamMember           *sysTeamMember
-	SysUser                 *sysUser
+	Q                     = new(Query)
+	AmAPI                 *amAPI
+	AmAPIParameter        *amAPIParameter
+	AmAPIRequestBodyJSON  *amAPIRequestBodyJSON
+	AmAPIResponse         *amAPIResponse
+	AmAPIResponseExample  *amAPIResponseExample
+	AmAPIResponseProperty *amAPIResponseProperty
+	AmDoc                 *amDoc
+	AmFolder              *amFolder
+	SysOrganizeTeam       *sysOrganizeTeam
+	SysProject            *sysProject
+	SysTeam               *sysTeam
+	SysTeamMember         *sysTeamMember
+	SysUser               *sysUser
 )
 
 func SetDefault(db *gorm.DB, opts ...gen.DOOption) {
 	*Q = *Use(db, opts...)
-	APIParametersHeader = &Q.APIParametersHeader
-	APIParametersQuery = &Q.APIParametersQuery
-	APIRequestBodyParameter = &Q.APIRequestBodyParameter
-	APIRequestBodyRaw = &Q.APIRequestBodyRaw
-	APIResponseInfo = &Q.APIResponseInfo
-	APIResponseProperty = &Q.APIResponseProperty
 	AmAPI = &Q.AmAPI
+	AmAPIParameter = &Q.AmAPIParameter
+	AmAPIRequestBodyJSON = &Q.AmAPIRequestBodyJSON
+	AmAPIResponse = &Q.AmAPIResponse
+	AmAPIResponseExample = &Q.AmAPIResponseExample
+	AmAPIResponseProperty = &Q.AmAPIResponseProperty
 	AmDoc = &Q.AmDoc
 	AmFolder = &Q.AmFolder
 	SysOrganizeTeam = &Q.SysOrganizeTeam
@@ -53,62 +51,59 @@ func SetDefault(db *gorm.DB, opts ...gen.DOOption) {
 
 func Use(db *gorm.DB, opts ...gen.DOOption) *Query {
 	return &Query{
-		db:                      db,
-		APIParametersHeader:     newAPIParametersHeader(db, opts...),
-		APIParametersQuery:      newAPIParametersQuery(db, opts...),
-		APIRequestBodyParameter: newAPIRequestBodyParameter(db, opts...),
-		APIRequestBodyRaw:       newAPIRequestBodyRaw(db, opts...),
-		APIResponseInfo:         newAPIResponseInfo(db, opts...),
-		APIResponseProperty:     newAPIResponseProperty(db, opts...),
-		AmAPI:                   newAmAPI(db, opts...),
-		AmDoc:                   newAmDoc(db, opts...),
-		AmFolder:                newAmFolder(db, opts...),
-		SysOrganizeTeam:         newSysOrganizeTeam(db, opts...),
-		SysProject:              newSysProject(db, opts...),
-		SysTeam:                 newSysTeam(db, opts...),
-		SysTeamMember:           newSysTeamMember(db, opts...),
-		SysUser:                 newSysUser(db, opts...),
+		db:                    db,
+		AmAPI:                 newAmAPI(db, opts...),
+		AmAPIParameter:        newAmAPIParameter(db, opts...),
+		AmAPIRequestBodyJSON:  newAmAPIRequestBodyJSON(db, opts...),
+		AmAPIResponse:         newAmAPIResponse(db, opts...),
+		AmAPIResponseExample:  newAmAPIResponseExample(db, opts...),
+		AmAPIResponseProperty: newAmAPIResponseProperty(db, opts...),
+		AmDoc:                 newAmDoc(db, opts...),
+		AmFolder:              newAmFolder(db, opts...),
+		SysOrganizeTeam:       newSysOrganizeTeam(db, opts...),
+		SysProject:            newSysProject(db, opts...),
+		SysTeam:               newSysTeam(db, opts...),
+		SysTeamMember:         newSysTeamMember(db, opts...),
+		SysUser:               newSysUser(db, opts...),
 	}
 }
 
 type Query struct {
 	db *gorm.DB
 
-	APIParametersHeader     aPIParametersHeader
-	APIParametersQuery      aPIParametersQuery
-	APIRequestBodyParameter aPIRequestBodyParameter
-	APIRequestBodyRaw       aPIRequestBodyRaw
-	APIResponseInfo         aPIResponseInfo
-	APIResponseProperty     aPIResponseProperty
-	AmAPI                   amAPI
-	AmDoc                   amDoc
-	AmFolder                amFolder
-	SysOrganizeTeam         sysOrganizeTeam
-	SysProject              sysProject
-	SysTeam                 sysTeam
-	SysTeamMember           sysTeamMember
-	SysUser                 sysUser
+	AmAPI                 amAPI
+	AmAPIParameter        amAPIParameter
+	AmAPIRequestBodyJSON  amAPIRequestBodyJSON
+	AmAPIResponse         amAPIResponse
+	AmAPIResponseExample  amAPIResponseExample
+	AmAPIResponseProperty amAPIResponseProperty
+	AmDoc                 amDoc
+	AmFolder              amFolder
+	SysOrganizeTeam       sysOrganizeTeam
+	SysProject            sysProject
+	SysTeam               sysTeam
+	SysTeamMember         sysTeamMember
+	SysUser               sysUser
 }
 
 func (q *Query) Available() bool { return q.db != nil }
 
 func (q *Query) clone(db *gorm.DB) *Query {
 	return &Query{
-		db:                      db,
-		APIParametersHeader:     q.APIParametersHeader.clone(db),
-		APIParametersQuery:      q.APIParametersQuery.clone(db),
-		APIRequestBodyParameter: q.APIRequestBodyParameter.clone(db),
-		APIRequestBodyRaw:       q.APIRequestBodyRaw.clone(db),
-		APIResponseInfo:         q.APIResponseInfo.clone(db),
-		APIResponseProperty:     q.APIResponseProperty.clone(db),
-		AmAPI:                   q.AmAPI.clone(db),
-		AmDoc:                   q.AmDoc.clone(db),
-		AmFolder:                q.AmFolder.clone(db),
-		SysOrganizeTeam:         q.SysOrganizeTeam.clone(db),
-		SysProject:              q.SysProject.clone(db),
-		SysTeam:                 q.SysTeam.clone(db),
-		SysTeamMember:           q.SysTeamMember.clone(db),
-		SysUser:                 q.SysUser.clone(db),
+		db:                    db,
+		AmAPI:                 q.AmAPI.clone(db),
+		AmAPIParameter:        q.AmAPIParameter.clone(db),
+		AmAPIRequestBodyJSON:  q.AmAPIRequestBodyJSON.clone(db),
+		AmAPIResponse:         q.AmAPIResponse.clone(db),
+		AmAPIResponseExample:  q.AmAPIResponseExample.clone(db),
+		AmAPIResponseProperty: q.AmAPIResponseProperty.clone(db),
+		AmDoc:                 q.AmDoc.clone(db),
+		AmFolder:              q.AmFolder.clone(db),
+		SysOrganizeTeam:       q.SysOrganizeTeam.clone(db),
+		SysProject:            q.SysProject.clone(db),
+		SysTeam:               q.SysTeam.clone(db),
+		SysTeamMember:         q.SysTeamMember.clone(db),
+		SysUser:               q.SysUser.clone(db),
 	}
 }
 
@@ -122,57 +117,54 @@ func (q *Query) WriteDB() *Query {
 
 func (q *Query) ReplaceDB(db *gorm.DB) *Query {
 	return &Query{
-		db:                      db,
-		APIParametersHeader:     q.APIParametersHeader.replaceDB(db),
-		APIParametersQuery:      q.APIParametersQuery.replaceDB(db),
-		APIRequestBodyParameter: q.APIRequestBodyParameter.replaceDB(db),
-		APIRequestBodyRaw:       q.APIRequestBodyRaw.replaceDB(db),
-		APIResponseInfo:         q.APIResponseInfo.replaceDB(db),
-		APIResponseProperty:     q.APIResponseProperty.replaceDB(db),
-		AmAPI:                   q.AmAPI.replaceDB(db),
-		AmDoc:                   q.AmDoc.replaceDB(db),
-		AmFolder:                q.AmFolder.replaceDB(db),
-		SysOrganizeTeam:         q.SysOrganizeTeam.replaceDB(db),
-		SysProject:              q.SysProject.replaceDB(db),
-		SysTeam:                 q.SysTeam.replaceDB(db),
-		SysTeamMember:           q.SysTeamMember.replaceDB(db),
-		SysUser:                 q.SysUser.replaceDB(db),
+		db:                    db,
+		AmAPI:                 q.AmAPI.replaceDB(db),
+		AmAPIParameter:        q.AmAPIParameter.replaceDB(db),
+		AmAPIRequestBodyJSON:  q.AmAPIRequestBodyJSON.replaceDB(db),
+		AmAPIResponse:         q.AmAPIResponse.replaceDB(db),
+		AmAPIResponseExample:  q.AmAPIResponseExample.replaceDB(db),
+		AmAPIResponseProperty: q.AmAPIResponseProperty.replaceDB(db),
+		AmDoc:                 q.AmDoc.replaceDB(db),
+		AmFolder:              q.AmFolder.replaceDB(db),
+		SysOrganizeTeam:       q.SysOrganizeTeam.replaceDB(db),
+		SysProject:            q.SysProject.replaceDB(db),
+		SysTeam:               q.SysTeam.replaceDB(db),
+		SysTeamMember:         q.SysTeamMember.replaceDB(db),
+		SysUser:               q.SysUser.replaceDB(db),
 	}
 }
 
 type queryCtx struct {
-	APIParametersHeader     IAPIParametersHeaderDo
-	APIParametersQuery      IAPIParametersQueryDo
-	APIRequestBodyParameter IAPIRequestBodyParameterDo
-	APIRequestBodyRaw       IAPIRequestBodyRawDo
-	APIResponseInfo         IAPIResponseInfoDo
-	APIResponseProperty     IAPIResponsePropertyDo
-	AmAPI                   IAmAPIDo
-	AmDoc                   IAmDocDo
-	AmFolder                IAmFolderDo
-	SysOrganizeTeam         ISysOrganizeTeamDo
-	SysProject              ISysProjectDo
-	SysTeam                 ISysTeamDo
-	SysTeamMember           ISysTeamMemberDo
-	SysUser                 ISysUserDo
+	AmAPI                 IAmAPIDo
+	AmAPIParameter        IAmAPIParameterDo
+	AmAPIRequestBodyJSON  IAmAPIRequestBodyJSONDo
+	AmAPIResponse         IAmAPIResponseDo
+	AmAPIResponseExample  IAmAPIResponseExampleDo
+	AmAPIResponseProperty IAmAPIResponsePropertyDo
+	AmDoc                 IAmDocDo
+	AmFolder              IAmFolderDo
+	SysOrganizeTeam       ISysOrganizeTeamDo
+	SysProject            ISysProjectDo
+	SysTeam               ISysTeamDo
+	SysTeamMember         ISysTeamMemberDo
+	SysUser               ISysUserDo
 }
 
 func (q *Query) WithContext(ctx context.Context) *queryCtx {
 	return &queryCtx{
-		APIParametersHeader:     q.APIParametersHeader.WithContext(ctx),
-		APIParametersQuery:      q.APIParametersQuery.WithContext(ctx),
-		APIRequestBodyParameter: q.APIRequestBodyParameter.WithContext(ctx),
-		APIRequestBodyRaw:       q.APIRequestBodyRaw.WithContext(ctx),
-		APIResponseInfo:         q.APIResponseInfo.WithContext(ctx),
-		APIResponseProperty:     q.APIResponseProperty.WithContext(ctx),
-		AmAPI:                   q.AmAPI.WithContext(ctx),
-		AmDoc:                   q.AmDoc.WithContext(ctx),
-		AmFolder:                q.AmFolder.WithContext(ctx),
-		SysOrganizeTeam:         q.SysOrganizeTeam.WithContext(ctx),
-		SysProject:              q.SysProject.WithContext(ctx),
-		SysTeam:                 q.SysTeam.WithContext(ctx),
-		SysTeamMember:           q.SysTeamMember.WithContext(ctx),
-		SysUser:                 q.SysUser.WithContext(ctx),
+		AmAPI:                 q.AmAPI.WithContext(ctx),
+		AmAPIParameter:        q.AmAPIParameter.WithContext(ctx),
+		AmAPIRequestBodyJSON:  q.AmAPIRequestBodyJSON.WithContext(ctx),
+		AmAPIResponse:         q.AmAPIResponse.WithContext(ctx),
+		AmAPIResponseExample:  q.AmAPIResponseExample.WithContext(ctx),
+		AmAPIResponseProperty: q.AmAPIResponseProperty.WithContext(ctx),
+		AmDoc:                 q.AmDoc.WithContext(ctx),
+		AmFolder:              q.AmFolder.WithContext(ctx),
+		SysOrganizeTeam:       q.SysOrganizeTeam.WithContext(ctx),
+		SysProject:            q.SysProject.WithContext(ctx),
+		SysTeam:               q.SysTeam.WithContext(ctx),
+		SysTeamMember:         q.SysTeamMember.WithContext(ctx),
+		SysUser:               q.SysUser.WithContext(ctx),
 	}
 }
 

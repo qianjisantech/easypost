@@ -4,19 +4,24 @@ import { current, produce } from 'immer'
 import { nanoid } from 'nanoid'
 import type { ApiMenuData } from '@/components/ApiMenu'
 import { apiDirectoryData, creator, recycleGroupData } from "@/data/remote"; // 假设这两个是从远程获取的 API
-import { CatalogType } from '@/enums'
+import { ApiStatus, BodyType, CatalogType, HttpMethod } from "@/enums";
 import { getCatalogType, isMenuFolder } from '@/helpers'
-import type { RecycleCatalogType, RecycleData, RecycleDataItem } from '@/types'
+import type { ApiDetailsResponse, Parameter, RecycleCatalogType, RecycleData, RecycleDataItem } from "@/types";
 import { moveArrayItem } from '@/utils'
-import { ApiTreeQueryPage } from '@/api/am'
+
 
 interface MenuHelpers {
   /** 添加一个新的菜单项到菜单列表中。 */
-  addMenuItem: (menuData: ApiMenuData) => void
+  addMenuItem: (menuData: {
+    data: { name: string; id: string | undefined; content: string | undefined };
+    name: string;
+    id: string | undefined;
+    type: MenuItemType
+  }) => void
   /** 从菜单列表中移除一个菜单项。 */
   removeMenuItem: (menuData: Pick<ApiMenuData, 'id'>) => void
   /** 更新一个菜单项的信息。 */
-  updateMenuItem: (menuData: Partial<ApiMenuData> & Pick<ApiMenuData, 'id'>) => void
+  updateMenuItem: (menuData: { data: ApiDoc; name: string | undefined; id: any }) => void
   /** 从回收站中恢复菜单项。 */
   restoreMenuItem: (
     menuData: Partial<ApiMenuData> & {
@@ -41,9 +46,9 @@ interface MenuHelpersContextData extends MenuHelpers {
   setMenuSearchWord?: React.Dispatch<React.SetStateAction<MenuHelpersContextData['menuSearchWord']>>
 
   apiDetailDisplay: 'name' | 'path'
-  setApiDetailDisplay: React.Dispatch<
-    React.SetStateAction<MenuHelpersContextData['apiDetailDisplay']>
-  >
+  setApiDetailDisplay: React.Dispatch<React.SetStateAction<MenuHelpersContextData['apiDetailDisplay']>>
+
+  setMenuRawList?: React.Dispatch<React.SetStateAction<ApiMenuData[] | undefined>> // 暴露 setMenuRawList
 }
 
 const MenuHelpersContext = createContext({} as MenuHelpersContextData)
@@ -52,18 +57,6 @@ export function MenuHelpersContextProvider(props: React.PropsWithChildren) {
   const { children } = props
   const [menuRawList, setMenuRawList] = useState<ApiMenuData[] | undefined>()
   const [recyleRawData, setRecyleRawData] = useState<RecycleData | undefined>()
-  const loadingMenuTree =async ()=>{
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-call
-    const response=await ApiTreeQueryPage({"projectId":"1"})
-    if (response.data.success){
-      setMenuRawList(response.data?.data)
-    }
-  }
-
-  useEffect(() => {
-    loadingMenuTree()
-    setRecyleRawData(recycleGroupData)
-  }, [])
 
   // 3. 使用状态来管理其他的功能
   const [menuSearchWord, setMenuSearchWord] = useState<string>('')
@@ -84,25 +77,25 @@ export function MenuHelpersContextProvider(props: React.PropsWithChildren) {
             setRecyleRawData((d) =>
               d
                 ? produce(d, (draft) => {
-                    let catalogType = getCatalogType(item.type)
+                  let catalogType = getCatalogType(item.type)
 
-                    if (catalogType === CatalogType.Markdown) {
-                      catalogType = CatalogType.Http
-                    }
+                  if (catalogType === CatalogType.Markdown) {
+                    catalogType = CatalogType.Http
+                  }
 
-                    if (
-                      catalogType === CatalogType.Http ||
-                      catalogType === CatalogType.Schema ||
-                      catalogType === CatalogType.Request
-                    ) {
-                      const list = draft[catalogType].list
+                  if (
+                    catalogType === CatalogType.Http ||
+                    catalogType === CatalogType.Schema ||
+                    catalogType === CatalogType.Request
+                  ) {
+                    const list = draft[catalogType].list
 
-                      draft[catalogType].list = [
-                        { id: nanoid(6), expiredAt: '30天', creator, deletedItem: item },
-                        ...(list || []),
-                      ]
-                    }
-                  })
+                    draft[catalogType].list = [
+                      { id: nanoid(6), expiredAt: '30天', creator, deletedItem: item },
+                      ...(list || []),
+                    ]
+                  }
+                })
                 : d
             )
           }
@@ -206,6 +199,7 @@ export function MenuHelpersContextProvider(props: React.PropsWithChildren) {
     <MenuHelpersContext.Provider
       value={{
         menuRawList,
+        setMenuRawList,
         recyleRawData,
         menuSearchWord,
         setMenuSearchWord,

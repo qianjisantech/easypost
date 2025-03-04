@@ -10,7 +10,7 @@ info(
 
 type (
     ApiTreeQueryPageRequest {
-     ProjectId string `json:"projectId"`
+        ProjectId string `json:"projectId"`
     }
 
     ApiTreeQueryPageResp {
@@ -24,57 +24,7 @@ type (
         Name string `json:"name"`
         Type string `json:"type"`
         Method string `json:"method"`
-
     }
-    ApiTreeQueryPageDataData {
-        Id string `json:"id"`
-        Path string `json:"path"`
-        Name string `json:"name"`
-        Method string `json:"method"`
-        Status string `json:"status"`
-        ResponsibleId string `json:"responsibleId"`
-        Tags []string `json:"tags"`
-        ServerId string `json:"serverId"`
-        Description string `json:"description"`
-        Parameters  ApiTreeQueryPageDataDataParameters `json:"parameters"`
-        Responses [] ApiTreeQueryPageDataDataResponse `json:"responses"`
-    }
-     ApiTreeQueryPageDataDataParameters {
-        Path []string `json:"path"`
-        Query [] ApiTreeQueryPageDataDataParametersQuery `json:"query"`
-        Header [] ApiTreeQueryPageDataDataParametersHeader `json:"header"`
-    }
-     ApiTreeQueryPageDataDataParametersQuery {
-        Id string `json:"id"`
-        Name string `json:"name"`
-        Type string `json:"type"`
-        Example string `json:"example"`
-    }
-     ApiTreeQueryPageDataDataParametersHeader {
-        Id string `json:"id"`
-        Name string `json:"name"`
-        Type string `json:"type"`
-        Example string `json:"example"`
-    }
-     ApiTreeQueryPageDataDataResponse {
-        Id string `json:"id"`
-        Code int `json:"code"`
-        Name string `json:"name"`
-        ContentType string `json:"contentType"`
-        JsonSchema  ApiTreeQueryPageDataDataResponseJsonSchema `json:"jsonSchema"`
-    }
-     ApiTreeQueryPageDataDataResponseJsonSchema {
-        Type string `json:"type"`
-        Properties [] ApiTreeQueryPageDataDataResponseJsonSchemaProperty `json:"properties"`
-    }
-     ApiTreeQueryPageDataDataResponseJsonSchemaProperty {
-        Id string `json:"id"`
-        Name string `json:"name"`
-        Type string `json:"type"`
-        Description string `json:"description"`
-        DisPlayName string `json:"displayName"`
-    }
-
     ApiRecycleGroupQueryRequest {
 
     }
@@ -98,7 +48,7 @@ type (
     }
     ApiDetailSaveDataRequestBody {
         Type string `json:"type"`
-        Parameters []ApiDetailSaveDataRequestBodyParameter `json:"parameters,optional"`
+        Id   string `json:"id"`
         JsonSchema string `json:"jsonSchema"`
     }
     ApiDetailSaveDataRequestBodyParameter {
@@ -108,21 +58,38 @@ type (
         Example string `json:"example"`
     }
     ApiDetailSaveDataParameters {
-        Path []string `json:"path,optional,optional"`
+        Path []ApiDetailSaveDataParametersPath `json:"path,optional"`
         Query []ApiDetailSaveDataParametersQuery `json:"query,optional"`
         Header []ApiDetailSaveDataParametersHeader `json:"header,optional"`
+        Cookie []ApiDetailSaveDataParametersCookie  `json:"cookie,optional"`
+    }
+    ApiDetailSaveDataParametersPath {
+        Id string `json:"id"`
+        Name string `json:"name"`
+        Type string `json:"type"`
+        Example string `json:"example,optional"`
+        Description string  `json:"description"`
+    }
+    ApiDetailSaveDataParametersCookie {
+        Id string `json:"id"`
+        Name string `json:"name"`
+        Type string `json:"type"`
+        Example string `json:"example,optional"`
+        Description string  `json:"description"`
     }
     ApiDetailSaveDataParametersHeader {
         Id string `json:"id"`
         Name string `json:"name"`
         Type string `json:"type"`
         Example string `json:"example,optional"`
+        Description string  `json:"description"`
     }
     ApiDetailSaveDataParametersQuery {
         Id string `json:"id"`
         Name string `json:"name"`
         Type string `json:"type"`
         Example string `json:"example,optional"`
+        Description string  `json:"description"`
     }
     ApiDetailSaveDataResponse {
         Id string `json:"id"`
@@ -152,6 +119,170 @@ type (
     ApiDetailSaveResp {
         Success bool `json:"success"`
         Message string `json:"message"`
+        Data  ApiDetailSaveRespData  `json:"data"`
+    }
+    ApiDetailSaveRespData {
+     Id string   `json:"id"`
+    }
+    ApiDetailRequest {
+        Id int `path:"id"`
+    }
+    ApiDetailResp {
+        Success bool `json:"success"`
+        Message string `json:"message"`
+        Data ApiDetailData `json:"data"`
+    }
+    ApiDetailData {
+        Id string `json:"id"`
+        Path string `json:"path"`
+        Name string `json:"name"`
+        Method string `json:"method"`
+        Status string `json:"status"`
+        ResponsibleId string `json:"responsibleId"`
+        Tags []string `json:"tags"`
+        ServerId string `json:"serverId"`
+        Description string `json:"description"`
+        Parameters ApiDetailDataParameters `json:"parameters"`
+        Responses [] ApiDetailDataResponse `json:"responses"`
+        ResponseExamples []ApiDetailDataResponseExample `json:"responseExamples"`
+        RequestBody ApiDetailDataRequestBody `json:"requestBody"`
+    }
+    ApiDetailDataRequestBody {
+        Id string `json:"id"`
+        JsonSchema string `json:"jsonSchema"`
+        Type string `json:"type"`
+    }
+    ApiDetailDataParameters {
+        Path []ApiDetailDataParametersPath `json:"path"`
+        Query [] ApiDetailDataParametersQuery `json:"query"`
+        Header [] ApiDetailDataParametersHeader `json:"header"`
+        Cookie [] ApiDetailDataParametersCookie `json:"cookie"`
+    }
+    ApiDetailDataParametersCookie {
+        Id string `json:"id"`
+        Name string `json:"name"`
+        Type string `json:"type"`
+        Example string `json:"example"`
+        Description string `json:"description"`
+    }
+    ApiDetailDataParametersQuery {
+        Id string `json:"id"`
+        Name string `json:"name"`
+        Type string `json:"type"`
+        Required bool `json:"required"`
+        Enabled bool `json:"enabled"`
+        Description string `json:"description"`
+        Example string `json:"example"`
+    }
+    ApiDetailDataParametersPath {
+        Id string `json:"id"`
+        Name string `json:"name"`
+        Type string `json:"type"`
+        Required bool `json:"required"`
+        Enabled bool `json:"enabled"`
+        Description string `json:"description"`
+        Example string `json:"example"`
+    }
+    ApiDetailDataParametersHeader {
+        Id string `json:"id"`
+        Name string `json:"name"`
+        Type string `json:"type"`
+        Example string `json:"example"`
+        Description string `json:"description"`
+    }
+    ApiDetailDataResponseExample {
+        Id string `json:"id"`
+        ResponseId string `json:"responseId"`
+        Name string `json:"name"`
+        Data interface{} `json:"data"`
+    }
+    ApiDetailDataResponse {
+        Id string `json:"id"`
+        Code int `json:"code"`
+        Name string `json:"name"`
+        ContentType string `json:"contentType"`
+        JsonSchema ApiDetailDataResponseJsonSchema `json:"jsonSchema"`
+    }
+    ApiDetailDataResponseJsonSchema {
+        Type string `json:"type"`
+        Properties []  ApiDetailDataResponseJsonSchemaProperty `json:"properties"`
+    }
+    ApiDetailDataResponseJsonSchemaProperty {
+        Id string `json:"id"`
+        Name string `json:"name"`
+        Type string `json:"type"`
+        Description string `json:"description"`
+        DisPlayName string `json:"displayName"`
+    }
+    DocDetailRequest {
+        Id int `path:"id"`
+    }
+    DocDetailResp {
+        Success bool `json:"success"`
+        Message string `json:"message"`
+        Data DocDetailData `json:"data"`
+    }
+    DocDetailData {
+        Id string `json:"id"`
+        Name string `json:"name"`
+        Content string `json:"content"`
+    }
+    DocSaveRequest {
+        Id string `json:"id"`
+        Name string `json:"name"`
+        Content string `json:"content"`
+    }
+    DocSaveResp {
+        Success bool `json:"success"`
+        Message string `json:"message"`
+        Data DocSaveData `json:"data"`
+    }
+    DocSaveData {
+        Id string `json:"id"`
+    }
+    ApiDeleteRequest {
+        Id string `path:"id"`
+    }
+    ApiDeleteResp {
+        Success bool `json:"success"`
+        Message string `json:"message"`
+    }
+    ApiCopyRequest {
+        Id string `json:"id"`
+    }
+    ApiCopyResp {
+        Success bool `json:"success"`
+        Message string `json:"message"`
+    }
+    ApiRenameRequest {
+        Id string `json:"id"`
+        Name string `json:"name"`
+    }
+    ApiRenameResp {
+        Success bool `json:"success"`
+        Message string `json:"message"`
+    }
+    ApiMoveRequest {
+        Id string `json:"id"`
+        ParentId string `json:"parentId"`
+    }
+    ApiMoveResp {
+        Success bool `json:"success"`
+        Message string `json:"message"`
+    }
+
+    FolderDetailSaveRequest{
+
+    }
+    FolderDetailSaveResp{
+        Success bool `json:"success"`
+        Message string `json:"message"`
+    }
+    FolderDetailRequest {
+
+    }
+    FolderDetailResp {
+
     }
 )
 @server(
@@ -159,8 +290,26 @@ type (
     prefix: /api
 )
 service easypost-api {
-    @handler ApiTreeQueryPage
+    @handler ApiTreeQueryPage  //接口树
     post /am/api/tree/page (ApiTreeQueryPageRequest) returns (ApiTreeQueryPageResp)
-    @handler ApiDetailSave
+    @handler ApiDetailSave    //接口保存
     post /am/api/detail/save (ApiDetailSaveRequest) returns (ApiDetailSaveResp)
+    @handler ApiDetail  //接口详情
+    get /am/api/detail/:id (ApiDetailRequest) returns (ApiDetailResp)
+    @handler ApiDelete  //接口删除
+    get /am/api/delete/:id (ApiDeleteRequest) returns (ApiDeleteResp)
+    @handler ApiCopy   //接口复制
+    post /am/api/copy (ApiCopyRequest) returns (ApiCopyResp)
+    @handler ApiRename   //接口重命名
+    post /am/api/rename (ApiRenameRequest) returns (ApiRenameResp)
+    @handler ApiMove  //接口移动
+    post /am/api/move (ApiMoveRequest) returns (ApiMoveResp)
+    @handler DocDetail //文档详情
+    get /am/doc/detail/:id (DocDetailRequest) returns (DocDetailResp)
+    @handler DocSave  //文档保存
+    post /am/doc/save (DocSaveRequest) returns (DocSaveResp)
+    @handler FolderDetailSave    //文件夹保存
+    post /am/folder/detail/save (FolderDetailSaveRequest) returns (FolderDetailSaveResp)
+    @handler FolderDetail  //文件夹详情
+    get /am/folder/detail/:id (FolderDetailRequest) returns (FolderDetailResp)
 }

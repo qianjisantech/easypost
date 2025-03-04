@@ -4,6 +4,7 @@ import { useRouter } from 'next/navigation'
 import {
   AppstoreOutlined,
   BellOutlined,
+  HomeOutlined,
   LoadingOutlined,
   MailOutlined,
   ReloadOutlined,
@@ -49,6 +50,9 @@ const HeaderPage = () => {
     setModalState({ ...modalState, visible: false })
     localStorage.removeItem('accessToken')
     router.push(ROUTES.LOGIN)
+  }
+  const returnToProject = () => {
+    router.back()
   }
 
   // 处理菜单点击事件
@@ -103,13 +107,23 @@ const HeaderPage = () => {
         <h2 style={{ marginTop: 10 }}>EasyPost</h2>
         <p>
           当前版本：<strong>0.0.1</strong>
-        </p><p>© 2025 EasyPost Inc. All rights reserved.</p>
+        </p>
+        <p>© 2025 EasyPost Inc. All rights reserved.</p>
       </div>
     ),
   }
 
   return (
     <div style={headerStyle}>
+      <Button
+        ghost
+        size={'small'}
+        style={{ color: '#666', borderColor: '#f0f0f0', left: 100 }} // 设置文本和边框颜色为白色
+        type="default"
+        onClick={returnToProject}
+      >
+        <HomeOutlined /> Home
+      </Button>
       <Space size="middle" style={{ position: 'absolute', right: 10 }}>
         <Tooltip title="刷新">
           {loading ? (
