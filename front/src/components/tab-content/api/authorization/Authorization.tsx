@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { JsonSchemaEditorProps } from '@/components/JsonSchema';
-import {Segmented, Select, SelectProps, Space, Tabs, TabsProps} from 'antd';
+import { RadioChangeEvent, Segmented, Select, SelectProps, Space, Tabs, TabsProps } from "antd";
 import { Prism as SyntaxHighlighter } from 'react-syntax-highlighter';
 
 interface JsonSchemaCardProps extends Pick<JsonSchemaEditorProps, 'value' | 'onChange'> {
@@ -36,14 +36,38 @@ export function Authorization(props: JsonSchemaCardProps) {
     const handleSizeChange = (e: RadioChangeEvent) => {
         setSize(e.target.value);
     };
-    const options: SelectProps['options'] = [];
+    const options: SelectProps['options'] = [
+        {
+            label:'No Auth',
+            value: 'No Auth',
+        },
+        {
+            label:'Basic Auth',
+            value: 'Basic Auth',
+        },
+        {
+            label:'Bearer Token',
+            value: 'Bearer Token',
+        },
+        {
+            label:'Api Key',
+            value: 'Api Key',
+        },
+        {
+            label:'OAuth 2.0',
+            value: 'OAuth 2.0',
+        },
+        {
+            label:'Digest Auth',
+            value: 'Digest Auth',
+        },
+        {
+            label:'Hawk Authorization',
+            value: 'Hawk Authorization',
+        },
+    ];
 
-    for (let i = 10; i < 36; i++) {
-        options.push({
-            value: i.toString(36) + i,
-            label: i.toString(36) + i,
-        });
-    }
+
 
     const handleChange = (value: string | string[]) => {
         console.log(`Selected: ${value}`);
@@ -57,7 +81,7 @@ export function Authorization(props: JsonSchemaCardProps) {
                 <div  style={{ width: 200,marginTop:30,marginLeft:30 }}>类型</div>
                 <Select
                 size='large'
-                defaultValue="a1"
+                defaultValue="No Auth"
                 onChange={handleChange}
                 style={{ width: 200,marginTop:10,marginLeft:30 }}
                 options={options}

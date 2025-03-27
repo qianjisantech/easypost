@@ -48,7 +48,7 @@ const EmailLogin = (p: { password: string; email: string }) => {
     }
     setLoading(true)
     try {
-      // eslint-disable-next-line @typescript-eslint/no-unsafe-call
+
       const response = await RegisterByEmail({ email, code })
       if (response?.data?.success) {
         const token = response.data?.data.accessToken

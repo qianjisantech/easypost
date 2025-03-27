@@ -1,0 +1,255 @@
+syntax = "v1"
+
+info(
+    title: "easypost后端"
+    desc: "qianji"
+    author: "qianji"
+    email: "2497822530@qq.com"
+    version: "0.1"
+)
+
+type (
+    ApiTreeQueryPageRequest {
+        ProjectId string `json:"projectId"`
+    }
+
+    ApiTreeQueryPageResp {
+        Success bool `json:"success"`
+        Message string `json:"message"`
+        Data [] ApiTreeQueryPageData `json:"data"`
+    }
+    ApiTreeQueryPageData {
+        Id string `json:"id"`
+        ParentId string `json:"parentId"`
+        Name string `json:"name"`
+        Type string `json:"type"`
+        Method string `json:"method"`
+    }
+    ApiRecycleGroupQueryRequest {
+
+    }
+    ApiRecycleGroupQueryResp {
+        Success bool `json:"success"`
+        Message string `json:"message"`
+        Data [] ApiTreeQueryPageData `json:"data"`
+    }
+    ApiDetailCreateOrUpdateRequest {
+        Id string `form:"id,optional"`
+        Name string `form:"name,optional"`
+        Type string `form:"type,optional"`
+        ParentId string `form:"parentId,optional"`
+        Method  string  `form:"method,optional"`
+        Path string `form:"path,optional"`
+        Status string `form:"status,optional"`
+        Responsible string `form:"responsible,optional"`
+        Tags []string `form:"tags,optional"`
+        ServerId string `form:"serverId,optional"`
+        Description string `form:"description,optional"`
+        Parameters string `form:"parameters,optional"`
+        Responses string `form:"responses,optional"`
+        RequestBody string `form:"requestBody,optional"`
+        ResponseExamples string `form:"responseExamples,optional"`
+    }
+    ApiDetailCreateOrUpdateParameters  {
+    Path   []ApiDetailCreateOrUpdateParameter `json:"path"`
+    Header []ApiDetailCreateOrUpdateParameter `json:"header"`
+    Query  []ApiDetailCreateOrUpdateParameter `json:"query"`
+    Cookie []ApiDetailCreateOrUpdateParameter `json:"cookie"`
+}
+    ApiDetailCreateOrUpdateParameter {
+    Id string `json:"id,optional"`
+    Name string `json:"name,optional"`
+    Type string  `json:"type,optional"`
+    Example string  `json:"example,optional"`
+    Description string  `json:"description,optional"`
+    }
+
+     ApiDetailCreateOrUpdateResp {
+        Success bool `json:"success"`
+        Message string `json:"message"`
+        Data ApiDetailCreateOrUpdateRespData `json:"data"`
+    }
+    ApiDetailCreateOrUpdateRespData {
+        Id string `json:"id"`
+        Path string `json:"path"`
+        Name string `json:"name"`
+        Method string `json:"method"`
+        Status string `json:"status"`
+        Responsible string `json:"responsible"`
+        Tags []string `json:"tags"`
+        ServerId string `json:"serverId"`
+        Description string `json:"description"`
+        Parameters interface{} `json:"parameters"`
+        Responses interface{} `json:"responses"`
+        ResponseExamples interface{} `json:"responseExamples"`
+        RequestBody interface{} `json:"requestBody"`
+    }
+    ApiDocDetailRequest {
+        Id int `path:"id"`
+    }
+    ApiDocDetailResp {
+        Success bool `json:"success"`
+        Message string `json:"message"`
+        Data ApiDocDetailData `json:"data"`
+    }
+    ApiDocDetailData {
+        Id string `json:"id"`
+        ParentId string  `json:"parentId"`
+        Name string `json:"name"`
+        Type string  `json:"type"`
+        Data ApiDocDetailDataData `json:"data"`
+    }
+    ApiDocDetailDataData {
+        Id string `json:"id"`
+        Name string `json:"name"`
+        Path string `json:"path"`
+        Method string `json:"method"`
+        Status string `json:"status"`
+        Responsible interface{} `json:"responsible"`
+        Tags []string `json:"tags"`
+        ServerId string `json:"serverId"`
+        Description string `json:"description"`
+        Parameters interface{} `json:"parameters"`
+        Responses interface{} `json:"responses"`
+        ResponseExamples interface{} `json:"responseExamples"`
+        RequestBody interface{} `json:"requestBody"`
+        CreatBy  string `json:"createBy"`
+        CreateTime string `json:"createTime"`
+        UpdateBy string  `json:"updateBy"`
+        UpdateTime string  `json:"updateTime"`
+    }
+    ApiDetailRequest {
+        Id int `path:"id"`
+    }
+    ApiDetailResp {
+        Success bool `json:"success"`
+        Message string `json:"message"`
+        Data ApiDetailData `json:"data"`
+    }
+    ApiDetailData {
+        Id string `json:"id"`
+        ParentId string  `json:"parentId"`
+        Name string `json:"name"`
+        Type string  `json:"type"`
+        Data ApiDetailDataData `json:"data"`
+    }
+    ApiDetailDataData {
+        Id string `json:"id"`
+        Name string `json:"name"`
+        Path string `json:"path"`
+        Method string `json:"method"`
+        Status string `json:"status"`
+        Responsible interface{} `json:"responsible"`
+        Tags []string `json:"tags"`
+        ServerId string `json:"serverId"`
+        Description string `json:"description"`
+        Parameters interface{} `json:"parameters"`
+        Responses interface{} `json:"responses"`
+        ResponseExamples interface{} `json:"responseExamples"`
+        RequestBody interface{} `json:"requestBody"`
+    }
+
+    ApiDeleteRequest {
+        Id string `path:"id"`
+    }
+    ApiDeleteResp {
+        Success bool `json:"success"`
+        Message string `json:"message"`
+    }
+    ApiCopyRequest {
+        Id string `json:"id"`
+    }
+    ApiCopyResp {
+        Success bool `json:"success"`
+        Message string `json:"message"`
+    }
+    ApiRenameRequest {
+        Id string `json:"id"`
+        Name string `json:"name"`
+    }
+    ApiRenameResp {
+        Success bool `json:"success"`
+        Message string `json:"message"`
+    }
+    ApiMoveRequest {
+        Id string `json:"id"`
+        ParentId string `json:"parentId"`
+    }
+    ApiMoveResp {
+        Success bool `json:"success"`
+        Message string `json:"message"`
+    }
+    ResponsibleSearchRequest {
+     TeamId string `json:"teamId"`
+     Content string `json:"content"`
+    }
+    ResponsibleSearchResp {
+        Success bool `json:"success"`
+        Message string `json:"message"`
+        Data []ResponsibleSearchRespData `json:"data"`
+    }
+    ResponsibleSearchRespData {
+      Id string  `json:"id"`
+      Name string  `json:"name"`
+      Username string  `json:"username"`
+    }
+    ApiRunDetailRequest {
+        Id int `path:"id"`
+    }
+    ApiRunDetailResp {
+        Success bool `json:"success"`
+        Message string `json:"message"`
+        Data ApiRunDetailData `json:"data"`
+    }
+    ApiRunDetailData {
+        Id string `json:"id"`
+        ParentId string  `json:"parentId"`
+        Name string `json:"name"`
+        Type string  `json:"type"`
+        Data ApiRunDetailDataData `json:"data"`
+    }
+    ApiRunDetailDataData {
+        Id string `json:"id"`
+        Name string `json:"name"`
+        Path string `json:"path"`
+        Method string `json:"method"`
+        Status string `json:"status"`
+        Tags []string `json:"tags"`
+        ServerId string `json:"serverId"`
+        Description string `json:"description"`
+        Parameters interface{} `json:"parameters"`
+        Responses interface{} `json:"responses"`
+        ResponseExamples interface{} `json:"responseExamples"`
+        RequestBody interface{} `json:"requestBody"`
+    }
+)
+@server(
+    group: api
+    prefix: /api
+)
+service easypost-api {
+    @handler ApiTreeQueryPage  //接口树
+    post /am/api/tree/page (ApiTreeQueryPageRequest) returns (ApiTreeQueryPageResp)
+    @handler ApiDetailCreate    //接口新增
+    post /am/api/detail/create (ApiDetailCreateOrUpdateRequest) returns (ApiDetailCreateOrUpdateResp)
+    @handler ApiDetailUpdate   //接口新增
+    post /am/api/detail/update (ApiDetailCreateOrUpdateRequest) returns (ApiDetailCreateOrUpdateResp)
+    @handler ApiDetail  //接口详情
+    get /am/api/detail/:id (ApiDetailRequest) returns (ApiDetailResp)
+    @handler ApiDocDetail  //接口文档详情
+    get /am/api/doc/detail/:id (ApiDocDetailRequest) returns( ApiDocDetailResp)
+    @handler ApiRunDetail  //接口文档详情
+    get /am/api/run/detail/:id (ApiRunDetailRequest) returns( ApiRunDetailResp)
+
+    @handler ApiDelete  //接口删除
+    get /am/api/delete/:id (ApiDeleteRequest) returns (ApiDeleteResp)
+    @handler ApiCopy   //接口复制
+    post /am/api/copy (ApiCopyRequest) returns (ApiCopyResp)
+    @handler ApiRename   //接口重命名
+    post /am/api/rename (ApiRenameRequest) returns (ApiRenameResp)
+    @handler ApiMove  //接口移动
+    post /am/api/move (ApiMoveRequest) returns (ApiMoveResp)
+
+    @handler  ResponsibleSearch   //查询负责人
+    post /am/responsible/search (ResponsibleSearchRequest) returns (ResponsibleSearchResp)
+}

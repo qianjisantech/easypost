@@ -29,7 +29,6 @@ func newAmFolder(db *gorm.DB, opts ...gen.DOOption) amFolder {
 	_amFolder.ALL = field.NewAsterisk(tableName)
 	_amFolder.ID = field.NewInt64(tableName, "id")
 	_amFolder.Name = field.NewString(tableName, "name")
-	_amFolder.Type = field.NewString(tableName, "type")
 	_amFolder.CreateBy = field.NewString(tableName, "create_by")
 	_amFolder.CreateTime = field.NewTime(tableName, "create_time")
 	_amFolder.IsDeleted = field.NewBool(tableName, "is_deleted")
@@ -50,7 +49,6 @@ type amFolder struct {
 	ALL        field.Asterisk
 	ID         field.Int64
 	Name       field.String
-	Type       field.String
 	CreateBy   field.String
 	CreateTime field.Time
 	IsDeleted  field.Bool
@@ -77,7 +75,6 @@ func (a *amFolder) updateTableName(table string) *amFolder {
 	a.ALL = field.NewAsterisk(table)
 	a.ID = field.NewInt64(table, "id")
 	a.Name = field.NewString(table, "name")
-	a.Type = field.NewString(table, "type")
 	a.CreateBy = field.NewString(table, "create_by")
 	a.CreateTime = field.NewTime(table, "create_time")
 	a.IsDeleted = field.NewBool(table, "is_deleted")
@@ -110,10 +107,9 @@ func (a *amFolder) GetFieldByName(fieldName string) (field.OrderExpr, bool) {
 }
 
 func (a *amFolder) fillFieldMap() {
-	a.fieldMap = make(map[string]field.Expr, 11)
+	a.fieldMap = make(map[string]field.Expr, 10)
 	a.fieldMap["id"] = a.ID
 	a.fieldMap["name"] = a.Name
-	a.fieldMap["type"] = a.Type
 	a.fieldMap["create_by"] = a.CreateBy
 	a.fieldMap["create_time"] = a.CreateTime
 	a.fieldMap["is_deleted"] = a.IsDeleted

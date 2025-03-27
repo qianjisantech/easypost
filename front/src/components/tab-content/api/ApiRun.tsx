@@ -5,7 +5,7 @@ import { Button, Form, type FormProps, Select, type SelectProps, Space } from 'a
 import type { AxiosRequestConfig } from 'axios'
 import { nanoid } from 'nanoid'
 
-import { ApiDetail, ApiDetailSave } from "src/api/am";
+import { ApiDetail, ApiDetailSave, ApiRunDetail } from "src/api/api";
 import { PageTabStatus } from '@/components/ApiTab/ApiTab.enum'
 import { useTabContentContext } from '@/components/ApiTab/TabContentContext'
 import { InputUnderline } from '@/components/InputUnderline'
@@ -25,6 +25,7 @@ import { BaseFormItems } from './components/BaseFormItems'
 import { GroupTitle } from './components/GroupTitle'
 import { PathInput, type PathInputProps } from './components/PathInput'
 import { ParamsTab } from './params/ParamsTab'
+import { ParamsRunTab } from "@/components/tab-content/api/params/ParamsRunTab";
 
 const DEFAULT_NAME = '未命名接口'
 
@@ -58,31 +59,37 @@ export function ApiRun() {
   const isCreating = tabData.data?.tabStatus === PageTabStatus.Create
 
   const [requestConfig, setRequestConfig] = useState<AxiosRequestConfig>({})
-  const loadingApiDetails = async () => {
+  const loadingApiDetails = async (id: string) => {
     try {
-      const response = await ApiDetail(tabData.key)
-      if (response.data.success) {
-        form.setFieldsValue({
-          name: response.data.data.id, // 确保字段匹配 Form.Item 的 `name`
-          path: response.data.data.path,
-          method: response.data.data.method,
-          status:response.data.data.status,
-          responsibleId:response.data.data.responsibleId
-        })
-        console.log("Form values after setFieldsValue:", form.getFieldsValue())
+      if (id) {
+        const response = await ApiRunDetail(id)
+        if (response.data.success) {
+          const menuData = response.data.data
+          if (
+            menuData &&
+            (menuData.type === MenuItemType.ApiDetail || menuData.type === MenuItemType.HttpRequest)
+          ) {
+            const apiDetails = menuData.data
+
+            if (apiDetails) {
+              form.setFieldsValue(apiDetails)
+            }
+          }
+        }
+        console.log('tabData',tabData)
       }
     } catch (error) {
-      console.error("加载 API 详情失败:", error)
+      console.error('加载 API 详情失败:', error)
     }
+
   }
   useEffect(() => {
-    if (!isCreating) {
-      loadingApiDetails()
-    } else {
+    if (isCreating) {
       form.setFieldsValue(initialCreateApiDetailsData)
+    } else {
+      loadingApiDetails(tabData.key)
     }
-    console.log('form',form)
-  }, [tabData.key, isCreating])
+  }, [form,isCreating, tabData.key])
 
 
   const handleFinish: FormProps<ApiDetails>['onFinish'] = async (values) => {
@@ -110,14 +117,11 @@ export function ApiRun() {
         data: { ...values, name: menuName }
       })
 
-      addTabItem(
-        {
-          key: menuItemId,
-          label: menuName,
-          contentType: MenuItemType.ApiDetail,
-        },
-        { replaceTab: tabData.key }
-      )
+      addTabItem({
+        key: menuItemId,
+        label: menuName,
+        contentType: MenuItemType.ApiDetail
+      }, { replaceTab: tabData.key })
     } else {
       updateMenuItem({
         id: tabData.key,
@@ -331,7 +335,7 @@ export function ApiRun() {
 
       <div className="flex-1 overflow-y-auto p-tabContent">
         <Form.Item noStyle name="parameters">
-          <ParamsTab />
+          <ParamsRunTab />
         </Form.Item>
 
         <GroupTitle className="mb-3 mt-8">返回响应</GroupTitle>

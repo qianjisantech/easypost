@@ -1,10 +1,10 @@
-import { useEffect,  useRef  } from "react";
+import { useEffect, useRef, useState } from "react";
 
-import { Button, Form, type FormProps, Select, type SelectProps, Space } from 'antd'
+import { Button, Form, type FormProps, message, Select, type SelectProps, Space } from 'antd'
 import { nanoid } from 'nanoid'
-
 // eslint-disable-next-line import/no-unresolved
-import { ApiDetail, ApiDetailSave } from "src/api/am";
+import { ApiDetail, ApiDetailCreate, ApiDetailUpdate, ApiTreeQueryPage } from "src/api/api";
+
 import { PageTabStatus } from '@/components/ApiTab/ApiTab.enum'
 import { useTabContentContext } from '@/components/ApiTab/TabContentContext'
 import { InputUnderline } from '@/components/InputUnderline'
@@ -13,7 +13,7 @@ import { ResponseTab } from '@/components/tab-content/api/components/ResponseTab
 import { HTTP_METHOD_CONFIG } from '@/configs/static'
 import { useGlobalContext } from '@/contexts/global'
 import { useMenuHelpersContext } from '@/contexts/menu-helpers'
-import { useMenuTabHelpers } from '@/contexts/menu-tab-settings'
+import { useMenuTabContext, useMenuTabHelpers, } from "@/contexts/menu-tab-settings";
 import { initialCreateApiDetailsData } from '@/data/remote'
 import { MenuItemType, ParamType } from '@/enums'
 import type { ApiDetails } from '@/types'
@@ -22,6 +22,8 @@ import { BaseFormItems } from './components/BaseFormItems'
 import { GroupTitle } from './components/GroupTitle'
 import { PathInput, type PathInputProps } from './components/PathInput'
 import { ParamsTab } from './params/ParamsTab'
+import type { ApiTabItem } from "@/components/ApiTab";
+
 
 const DEFAULT_NAME = '未命名接口'
 
@@ -43,83 +45,133 @@ const methodOptions: SelectProps['options'] = Object.entries(HTTP_METHOD_CONFIG)
  */
 export function ApiDocEditing() {
   const [form] = Form.useForm<ApiDetails>()
-
   const { messageApi } = useGlobalContext()
   const msgKey = useRef<string>()
-
-  const { addMenuItem, updateMenuItem } = useMenuHelpersContext()
-  const { addTabItem } = useMenuTabHelpers()
-  const { tabData } = useTabContentContext()
-
-
+  const { setTabItemEditStatus } = useMenuTabHelpers()
+  const { tabData} = useTabContentContext()
+  const  [loading,setLoading]=useState(false)
+  const { setMenuRawList } = useMenuHelpersContext()
   const isCreating = tabData.data?.tabStatus === PageTabStatus.Create
-  const loadingApiDetails = async () => {
+  const loadingApiDetails = async (id: string) => {
     try {
-      const response = await ApiDetail(tabData.key)
-      if (response.data.success) {
-        form.setFieldsValue({
-          id: response.data.data.id,
-          name: response.data.data.name, // 确保字段匹配 Form.Item 的 `name`
-          path: response.data.data.path,
-          method: response.data.data.method,
-          status:response.data.data.status,
-          responsibleId:response.data.data.responsibleId,
-          description:response.data.data.description,
-          parameters:response.data.data.parameters,
-          responses:response.data.data.responses,
-          responseExamples:response.data.data.responseExamples,
-          requestBody:response.data.data.requestBody,
-        })
+      if (id) {
+        const response = await ApiDetail(id)
+        if (response.data.success) {
+          message.success(response.data.message)
+          const menuData = response.data.data
+          const apiDetails = menuData.data
+          form.setFieldsValue(apiDetails)
+          console.log('menuData',apiDetails)
+          }
 
-      }
+        }
+
     } catch (error) {
-      console.error("加载 API 详情失败:", error)
+      console.error('加载 API 详情失败:', error)
+    }
+
+  }
+  const loadingMenuTree = async (projectId: string) => {
+    const response = await ApiTreeQueryPage({ projectId })
+    if (response.data.success && setMenuRawList) {
+      setMenuRawList(response.data?.data)
     }
   }
 
   useEffect(() => {
-    if (!isCreating) {
-      loadingApiDetails()
-    } else {
+    if (isCreating) {
       form.setFieldsValue(initialCreateApiDetailsData)
+    } else {
+      loadingApiDetails(tabData.key)
     }
-    console.log('form',form)
-  }, [tabData.key, isCreating])
+  }, [form,isCreating, tabData.key])
 
 
+  const createApiForm = async (values) => {
+    setLoading(true)
+
+    const formData = new FormData()
+    // 添加普通字段
+    formData.append('id', '')
+    formData.append('method', values.data.method || 'GET')
+    formData.append('path', values.data.path || '')
+    formData.append('name', values.data.name || '')
+    formData.append('status', values.data.status)
+    formData.append('responsible', values.data.responsible || '')
+    formData.append('tags', values.data.tags || [])
+    formData.append('description', values.data.description || '')
+    formData.append('serverId', values.data.serverId || '')
+    formData.append('parameters', JSON.stringify(values.data.parameters))
+    formData.append('responses', JSON.stringify(values.data.responses|| []))
+    formData.append('requestBody', JSON.stringify(values.data.requestBody || {"type":"none","parameters":[],"jsonSchema":""}))
+    formData.append('responseExamples', JSON.stringify(values.data.responseExamples || []))
+
+    const response = await ApiDetailCreate(formData)
+    console.log('response.data.data.id', response.data.data.id)
+    if (response.data.success) {
+      message.success(response.data.message)
+      loadingMenuTree("22")
+      loadingApiDetails(response.data.data.id)
+
+    }
+    setLoading(false)
+  }
+  const updateApiForm = async (values) => {
+    setLoading(true)
+
+    const formData = new FormData()
+    // 添加普通字段
+    formData.append('id', values.id)
+    formData.append('method', values.data.method || 'GET')
+    formData.append('path', values.data.path || '')
+    formData.append('name', values.data.name || '')
+    formData.append('status', values.data.status)
+    formData.append('responsible', values.data.responsible || '')
+    formData.append('tags', values.data.tags || [])
+    formData.append('description', values.data.description || '')
+    formData.append('serverId', values.data.serverId || '')
+    formData.append('parameters', JSON.stringify(values.data.parameters))
+    formData.append('responses', JSON.stringify(values.data.responses|| []))
+    formData.append('requestBody', JSON.stringify(values.data.requestBody || {"type":"none","parameters":[],"jsonSchema":""}))
+    formData.append('responseExamples', JSON.stringify(values.data.responseExamples || []))
+
+    const response = await ApiDetailUpdate(formData)
+    console.log('response.data.data.id', response.data.data.id)
+    if (response.data.success) {
+      message.success(response.data.message)
+      loadingMenuTree("22")
+      loadingApiDetails(response.data.data.id)
+    }
+    setLoading(false)
+
+  }
   const handleFinish: FormProps<ApiDetails>['onFinish'] = async (values) => {
     const menuName = values.name || DEFAULT_NAME
 
+    console.log('handleFinishValues', JSON.stringify(values))
     if (isCreating) {
+      const menuItemId = values.id
       const menuItemData = {
-        id: '',
+        id: menuItemId,
         name: menuName,
         type: MenuItemType.ApiDetail,
         data: { ...values, name: menuName },
       }
-      console.log('menuItemData', JSON.stringify(menuItemData))
-      addMenuItem(menuItemData)
+      console.log('创建menuItemData',JSON.stringify(menuItemData))
+      createApiForm(menuItemData)
 
-      addTabItem(
-        {
-          key: '',
-          label: menuName,
-          contentType: MenuItemType.ApiDetail,
-        },
-        { replaceTab: tabData.key }
-      )
-      await ApiDetailSave(menuItemData).then((r) => messageApi.success(r.data.message))
-      console.log('创建 menuItemData', JSON.stringify(menuItemData))
+
+
     } else {
       const menuItemData = {
         id: tabData.key,
         type: MenuItemType.ApiDetail,
-        name: menuName,
         data: { ...values, name: menuName },
       }
       console.log('更新 menuItemData', JSON.stringify(menuItemData))
-      updateMenuItem(menuItemData)
-      await ApiDetailSave(menuItemData).then((r) => messageApi.success(r.data.message))
+
+      updateApiForm(menuItemData)
+
     }
   }
 
@@ -218,10 +270,11 @@ export function ApiDocEditing() {
     <Form<ApiDetails>
       className="flex h-full flex-col"
       form={form}
+
       onFinish={(values) => {
-        console.log("提交的表单数据:", values)
-        // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
-        handleFinish(values);
+        console.log('提交的表单数据:', values)
+
+        handleFinish(values)
       }}
     >
       <div className="flex items-center px-tabContent py-3">
@@ -243,7 +296,7 @@ export function ApiDocEditing() {
         </Space.Compact>
 
         <Space className="ml-auto pl-2">
-          <Button htmlType="submit" type="primary">
+          <Button loading={loading} htmlType="submit" type="primary">
             保存
           </Button>
 

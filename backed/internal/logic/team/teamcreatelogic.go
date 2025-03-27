@@ -33,10 +33,8 @@ func (l *TeamCreateLogic) TeamCreate(req *types.TeamCreateRequest) (resp *types.
 
 	st := &model.SysTeam{
 		Name:      &req.TeamName,
-		IsDeleted: new(bool),
 		ManagerID: &userId,
 	}
-	*st.IsDeleted = false
 
 	// 执行数据库操作
 	tx := db.Create(st)
@@ -50,7 +48,6 @@ func (l *TeamCreateLogic) TeamCreate(req *types.TeamCreateRequest) (resp *types.
 			UserID:     &sysUser.ID,
 			Username:   sysUser.Username,
 			Name:       sysUser.Name,
-			IsDeleted:  sysUser.IsDeleted,
 			Email:      sysUser.Email,
 			TeamID:     &st.ID,
 			State:      &state,

@@ -26,7 +26,7 @@ import {
 } from 'antd'
 import TabPane from 'antd/es/tabs/TabPane'
 
-import { TeamInviteMember, TeamMemberUserPage ,TeamUserSearch} from '@/api/team'
+import { TeamInviteMember, TeamMemberPage, TeamUserSearch } from "@/api/team";
 
 
 const { Text } = Typography
@@ -37,9 +37,9 @@ const MembersAndRoles = ({ teamId }) => {
     current: 1,
     pageSize: 5,
     total: 0,
+    totalPages: 0,
   })
   const [membersData, setMembersData] = useState([])
-  const [rolesData, setRolesData] = useState([])
   const [activeTab, setActiveTab] = useState('1')
   const [activeInviteTab, setActiveInviteTab] = useState('0')
   const [editModalVisible, setEditModalVisible] = useState(false)
@@ -56,11 +56,14 @@ const MembersAndRoles = ({ teamId }) => {
   // 处理分页变化
   const handleTableChange = (pagination) => {
     setPagination({
-      current: pagination.current || 1,
-      pageSize: pagination.pageSize || 5,
-      total: pagination.total || 0,
+      total: pagination.total,
+      current: pagination.current,
+      pageSize: pagination.pageSize,
+      totalPages: pagination.totalPages
     })
+    handleQueryMembers()
   }
+
   // 表格列配置
   const columns = [
     {
@@ -80,7 +83,7 @@ const MembersAndRoles = ({ teamId }) => {
       dataIndex: 'email',
     },
   ]
-  // 模拟搜索，返回带有 id 和 name 的数据
+
   const handleSearch = async (value) => {
     try {
       console.log('搜索关键词:', value)
@@ -118,8 +121,6 @@ const MembersAndRoles = ({ teamId }) => {
       const values = await inviteForm.validateFields()
       console.log('邮箱邀请数据:', values)
 
-      // 这里可以调用 API 发送邀请
-      // await inviteMemberAPI(values);
 
       message.success('邀请已发送！')
       setInviteModalVisible(false)
@@ -159,18 +160,20 @@ const MembersAndRoles = ({ teamId }) => {
   }
 
   // 获取成员数据
-  const fetchMembersData = async () => {
+  const handleQueryMembers = async () => {
     try {
-      const response = await TeamMemberUserPage({
+      const response = await TeamMemberPage({
         current: pagination.current,
         pageSize: pagination.pageSize,
         teamId: teamId,
       })
       setMembersData(response.data.data.records) // 假设返回的数据包含 records 字段
-      setPagination((prev) => ({
-        ...prev,
-        total: response.data.total, // 假设返回的数据包含 total 字段
-      }))
+      setPagination({
+        total: response.data.data.total,
+        totalPages: response.data.data.totalPages,
+        current: response.data.data.current,
+        pageSize: response.data.data.pageSize,
+      })
     } catch (error) {
       console.error('Error fetching members data:', error)
     }
@@ -179,22 +182,6 @@ const MembersAndRoles = ({ teamId }) => {
   const handleOpenInvite = () => {
     setInviteModalVisible(true)
     inviteForm.resetFields()
-  }
-  // 获取角色数据
-  const fetchRolesData = async () => {
-    try {
-      const response = await UserQueryPage({
-        current: pagination.current,
-        pageSize: pagination.pageSize,
-      })
-      setRolesData(response.data.data.records) // 假设返回的数据包含 records 字段
-      setPagination((prev) => ({
-        ...prev,
-        total: response.data.total, // 假设返回的数据包含 total 字段
-      }))
-    } catch (error) {
-      console.error('Error fetching roles data:', error)
-    }
   }
   const handleConfirmInvite = async () => {
     setInviteModalVisible(false)
@@ -205,18 +192,14 @@ const MembersAndRoles = ({ teamId }) => {
     if (response.data.success) {
       message.success(response.data.message)
     }
-    fetchMembersData()
+    handleQueryMembers()
     setSearchQuery('')
     setSearchResult([])
   }
   // 根据当前活动的 Tab 页，决定调用哪个请求
   useEffect(() => {
-    if (activeTab === '1') {
-      fetchMembersData()
-    } else {
-      fetchRolesData()
-    }
-  }, [pagination.current, pagination.pageSize, activeTab])
+    handleQueryMembers()
+  }, [activeTab])
 
   // 成员 Tab 的列定义
   const memberColumns = [
@@ -247,11 +230,11 @@ const MembersAndRoles = ({ teamId }) => {
       render: (text) => <span>{text}</span>,
     },
     {
-      title: '最近活跃',
+      title: '操作',
       key: 'operation',
       render: (_, record) => (
         <Space justify="space-between" style={{ width: '100%' }}>
-          <p>6 小时前</p>
+          {/*<p>6 小时前</p>*/}
           <Button
             icon={<SettingOutlined />}
             size="small"
@@ -430,7 +413,10 @@ const MembersAndRoles = ({ teamId }) => {
 
           {/* 新增成员按钮 */}
           <Col span={24} style={{ marginTop: '16px', textAlign: 'right', marginBottom: '16px' }}>
-            <Button icon={<PlusOutlined />} type="primary" onClick={handleOpenInvite}>
+            <Button style={{marginRight: '16px'}}  type="primary"  onClick={handleQueryMembers}>
+              查询
+            </Button>
+            <Button icon={<PlusOutlined />} type="default" onClick={handleOpenInvite}>
               邀请成员
             </Button>
           </Col>
@@ -534,33 +520,13 @@ const MembersAndRoles = ({ teamId }) => {
               total: pagination.total,
               showSizeChanger: true,
               showQuickJumper: true,
-              pageSizeOptions: ['10', '20', '50'],
+              pageSizeOptions: ['5', '10', '20', '50'],
               showTotal: (total) => `共 ${total} 条`,
             }}
             rowKey="id"
             onChange={handleTableChange}
           />
         </TabPane>
-
-        {/* 角色 Tab */}
-        {/*<TabPane key="2" tab="角色/权限">*/}
-        {/*  <Table*/}
-        {/*    bordered*/}
-        {/*    columns={roleColumns}*/}
-        {/*    dataSource={rolesData}*/}
-        {/*    rowKey="id"*/}
-        {/*    pagination={{*/}
-        {/*      current: pagination.current,*/}
-        {/*      pageSize: pagination.pageSize,*/}
-        {/*      total: pagination.total,*/}
-        {/*      showSizeChanger: true,*/}
-        {/*      showQuickJumper: true,*/}
-        {/*      pageSizeOptions: ['10', '20', '50'],*/}
-        {/*      showTotal: (total) => `共 ${total} 条`,*/}
-        {/*    }}*/}
-        {/*    onChange={handleTableChange}*/}
-        {/*  />*/}
-        {/*</TabPane>*/}
       </Tabs>
 
       {/* 编辑弹窗 */}

@@ -9,6 +9,7 @@ import { useStyles } from '@/hooks/useStyle'
 import type { ApiDetails } from '@/types'
 
 import { ParamsEditableTable } from '../components/ParamsEditableTable'
+import { nanoid } from "nanoid";
 
 const types = [
   { name: 'none', type: BodyType.None },

@@ -73,14 +73,11 @@ export function Schema() {
               data: values
             })
 
-            addTabItem(
-              {
-                key: menuItemId,
-                label: menuName,
-                contentType: MenuItemType.ApiSchema,
-              },
-              { replaceTab: tabData.key }
-            )
+            addTabItem({
+              key: menuItemId,
+              label: menuName,
+              contentType: MenuItemType.ApiSchema
+            }, { replaceTab: tabData.key })
           } else {
             updateMenuItem({
               id: tabData.key,

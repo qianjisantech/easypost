@@ -213,8 +213,8 @@ export function ApiTab(props: TabsProps) {
     if (action === 'add') {
       addTabItem({
         key: nanoid(6),
-        label: '新建...',
-        contentType: 'blank',
+        label: "新建...",
+        contentType: "blank"
       })
     } else if (
       /* eslint-disable-next-line @typescript-eslint/no-unnecessary-condition */

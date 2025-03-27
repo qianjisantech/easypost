@@ -64,7 +64,7 @@ export function ApiMenu() {
           addTabItem({
             key: menuId,
             label: title,
-            contentType: menuId,
+            contentType: menuId
           })
         } else {
           if ('customData' in node) {
@@ -80,8 +80,8 @@ export function ApiMenu() {
                 label: catalog.name,
                 contentType: catalog.type,
                 data: {
-                  tabStatus: PageTabStatus.Update,
-                },
+                  tabStatus: PageTabStatus.Update
+                }
               })
             }
           }

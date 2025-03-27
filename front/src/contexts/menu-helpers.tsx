@@ -3,7 +3,7 @@ import { createContext, useContext, useEffect, useMemo, useState } from 'react'
 import { current, produce } from 'immer'
 import { nanoid } from 'nanoid'
 import type { ApiMenuData } from '@/components/ApiMenu'
-import { apiDirectoryData, creator, recycleGroupData } from "@/data/remote"; // 假设这两个是从远程获取的 API
+import { creator } from "@/data/remote"; // 假设这两个是从远程获取的 API
 import { ApiStatus, BodyType, CatalogType, HttpMethod } from "@/enums";
 import { getCatalogType, isMenuFolder } from '@/helpers'
 import type { ApiDetailsResponse, Parameter, RecycleCatalogType, RecycleData, RecycleDataItem } from "@/types";
@@ -13,15 +13,55 @@ import { moveArrayItem } from '@/utils'
 interface MenuHelpers {
   /** 添加一个新的菜单项到菜单列表中。 */
   addMenuItem: (menuData: {
-    data: { name: string; id: string | undefined; content: string | undefined };
+    data: {
+      editorId?: string;
+      method: HttpMethod;
+      creatorId?: string;
+      description?: string;
+      serverId?: string;
+      tags?: string[];
+      responseExamples?: ApiDetailsResponseExample[];
+      path?: string;
+      createdAt?: string;
+      requestBody?: { Id: string; type: BodyType; parameters?: Parameter[]; jsonSchema?: JsonSchema };
+      name: string;
+      responses?: ApiDetailsResponse[];
+      responsibleId?: string;
+      id: string;
+      parameters?: { cookie?: Parameter[]; header?: Parameter[]; query?: Parameter[]; path?: Parameter[] };
+      status: ApiStatus;
+      updatedAt?: string
+    };
     name: string;
-    id: string | undefined;
+    id: string;
     type: MenuItemType
   }) => void
   /** 从菜单列表中移除一个菜单项。 */
   removeMenuItem: (menuData: Pick<ApiMenuData, 'id'>) => void
   /** 更新一个菜单项的信息。 */
-  updateMenuItem: (menuData: { data: ApiDoc; name: string | undefined; id: any }) => void
+  updateMenuItem: (menuData: {
+    data: {
+      editorId?: string;
+      method: HttpMethod;
+      creatorId?: string;
+      description?: string;
+      serverId?: string;
+      tags?: string[];
+      responseExamples?: ApiDetailsResponseExample[];
+      path?: string;
+      createdAt?: string;
+      requestBody?: { Id: string; type: BodyType; parameters?: Parameter[]; jsonSchema?: JsonSchema };
+      name: string;
+      responses?: ApiDetailsResponse[];
+      responsibleId?: string;
+      id: string;
+      parameters?: { cookie?: Parameter[]; header?: Parameter[]; query?: Parameter[]; path?: Parameter[] };
+      status: ApiStatus;
+      updatedAt?: string
+    };
+    id: any;
+    type: MenuItemType
+  }) => void
   /** 从回收站中恢复菜单项。 */
   restoreMenuItem: (
     menuData: Partial<ApiMenuData> & {

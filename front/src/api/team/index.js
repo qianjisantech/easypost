@@ -46,7 +46,7 @@ export function TeamDetail(id) {
     method: 'get',
   })
 }
-export function TeamMemberUserPage(body) {
+export function TeamMemberPage(body) {
   return request({
     url: '/team/member/page',
     method: 'post',

@@ -49,8 +49,8 @@ export function ApiTabAction() {
         onClick={() => {
           addTabItem({
             key: nanoid(6),
-            label: '新建...',
-            contentType: 'blank',
+            label: "新建...",
+            contentType: "blank"
           })
         }}
       >

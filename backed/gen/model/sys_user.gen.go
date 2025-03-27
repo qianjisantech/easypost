@@ -16,11 +16,11 @@ type SysUser struct {
 	Username   *string    `gorm:"column:username" json:"username"`
 	Name       *string    `gorm:"column:name;comment:姓名" json:"name"` // 姓名
 	Password   *string    `gorm:"column:password" json:"password"`
-	IsDeleted  *bool      `gorm:"column:is_deleted" json:"is_deleted"`
+	IsDeleted  *bool      `gorm:"column:is_deleted;->" json:"is_deleted"`
 	CreateBy   *string    `gorm:"column:create_by" json:"create_by"`
-	CreateTime *time.Time `gorm:"column:create_time;default:CURRENT_TIMESTAMP" json:"create_time"`
+	CreateTime *time.Time `gorm:"column:create_time;default:CURRENT_TIMESTAMP;->" json:"create_time"`
 	UpdateBy   *string    `gorm:"column:update_by" json:"update_by"`
-	UpdateTime *time.Time `gorm:"column:update_time;default:CURRENT_TIMESTAMP" json:"update_time"`
+	UpdateTime *time.Time `gorm:"column:update_time;default:CURRENT_TIMESTAMP;->" json:"update_time"`
 	WorkNo     *string    `gorm:"column:work_no;comment:工号" json:"work_no"` // 工号
 	Email      *string    `gorm:"column:email;comment:邮箱" json:"email"`     // 邮箱
 	Phone      *string    `gorm:"column:phone;comment:手机号" json:"phone"`    // 手机号

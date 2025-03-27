@@ -10,6 +10,7 @@ import { UserProfile } from '@/api/user'
 import { MenuHelpersContextProvider } from '@/contexts/menu-helpers'
 import { ROUTES } from "@/utils/routes";
 import { TeamQueryPage } from "@/api/team";
+import { useSession } from "next-auth/react";
 
 type ModalHookApi = ReturnType<typeof Modal.useModal>[0]
 type MessageApi = ReturnType<typeof message.useMessage>[0]

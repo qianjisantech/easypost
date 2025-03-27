@@ -1,9 +1,10 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 
 import Link from 'next/link'
-import { Col, Form, Row, Select, type SelectProps } from 'antd'
+import { Col, Form, message, Row, Select, type SelectProps } from 'antd'
 import useResizeObserver from 'use-resize-observer'
 
+import { ResponsibleSearch } from 'src/api/api'
 import { SelectorService } from '@/components/SelectorService'
 import { InputDesc } from '@/components/tab-content/api/components/InputDesc'
 import { API_STATUS_CONFIG } from '@/configs/static'
@@ -28,6 +29,22 @@ const statusOptions: SelectProps['options'] = Object.entries(API_STATUS_CONFIG).
 
 export function BaseFormItems() {
   const [containerSize, setContainerSize] = useState<'xs' | 'sm' | 'md' | 'lg'>()
+  const [options, setOptions] = useState([]) // 存储下拉选项
+  const loadingResponsible = async () => {
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-call
+    const response = await ResponsibleSearch({ content: '', teamId: '131' })
+    if (response?.data?.success) {
+      const formattedOptions = response?.data?.data?.map(item => ({
+        label: `${item.name}（@${item.username}）`,
+        value: JSON.stringify(item), // 实际值
+      }))
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
+      setOptions(formattedOptions);
+    }
+  }
+  useEffect(() => {
+    loadingResponsible()
+  }, [])
 
   const { ref } = useResizeObserver<HTMLDivElement>({
     onResize: ({ width }) => {
@@ -69,9 +86,9 @@ export function BaseFormItems() {
         </Col>
 
         <Col span={colSpan}>
-          <Form.Item label="责任人" labelCol={{ span: 24 }} name="responsibleId">
+          <Form.Item label="责任人" labelCol={{ span: 24 }} name="responsible">
             <Select
-              options={[{ label: `${creator.name}（@${creator.username}）`, value: creator.id }]}
+              options={options}
             />
           </Form.Item>
         </Col>

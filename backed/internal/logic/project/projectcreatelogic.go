@@ -53,9 +53,7 @@ func (l *ProjectCreateLogic) ProjectCreate(req *types.ProjectCreateRequest) (*ty
 		ProjectName: &req.ProjectName,
 		IsPublic:    &req.IsPublic,
 		ProjectIcon: &icon,
-		IsDeleted:   new(bool),
 	}
-	*m.IsDeleted = false
 	// 执行数据库操作
 	tx := db.Create(m)
 	if tx.Error != nil {

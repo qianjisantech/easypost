@@ -29,7 +29,6 @@ func newAmAPI(db *gorm.DB, opts ...gen.DOOption) amAPI {
 	_amAPI.ALL = field.NewAsterisk(tableName)
 	_amAPI.ID = field.NewInt64(tableName, "id")
 	_amAPI.Name = field.NewString(tableName, "name")
-	_amAPI.Type = field.NewString(tableName, "type")
 	_amAPI.Path = field.NewString(tableName, "path")
 	_amAPI.Status = field.NewString(tableName, "status")
 	_amAPI.CreateBy = field.NewString(tableName, "create_by")
@@ -41,41 +40,46 @@ func newAmAPI(db *gorm.DB, opts ...gen.DOOption) amAPI {
 	_amAPI.Tag = field.NewString(tableName, "tag")
 	_amAPI.Method = field.NewString(tableName, "method")
 	_amAPI.ParentID = field.NewInt64(tableName, "parent_id")
-	_amAPI.Content = field.NewString(tableName, "content")
 	_amAPI.Remark = field.NewString(tableName, "remark")
 	_amAPI.ServerID = field.NewString(tableName, "server_id")
 	_amAPI.ProjectID = field.NewInt64(tableName, "project_id")
-	_amAPI.ResponsibleID = field.NewInt64(tableName, "responsible_id")
+	_amAPI.Responsible = field.NewString(tableName, "responsible")
+	_amAPI.Parameters = field.NewString(tableName, "parameters")
+	_amAPI.Responses = field.NewString(tableName, "responses")
+	_amAPI.RequestBody = field.NewString(tableName, "request_body")
+	_amAPI.ResponseExamples = field.NewString(tableName, "response_examples")
 
 	_amAPI.fillFieldMap()
 
 	return _amAPI
 }
 
-// amAPI 负责人id
+// amAPI 接口表
 type amAPI struct {
 	amAPIDo amAPIDo
 
-	ALL           field.Asterisk
-	ID            field.Int64
-	Name          field.String
-	Type          field.String
-	Path          field.String
-	Status        field.String
-	CreateBy      field.String
-	UpdateBy      field.String
-	CreateTime    field.Time
-	UpdateTime    field.Time
-	IsDeleted     field.Bool
-	Manager       field.String // 负责人
-	Tag           field.String
-	Method        field.String
-	ParentID      field.Int64
-	Content       field.String
-	Remark        field.String // 备注
-	ServerID      field.String
-	ProjectID     field.Int64
-	ResponsibleID field.Int64 // 负责人id
+	ALL              field.Asterisk
+	ID               field.Int64
+	Name             field.String
+	Path             field.String
+	Status           field.String
+	CreateBy         field.String
+	UpdateBy         field.String
+	CreateTime       field.Time
+	UpdateTime       field.Time
+	IsDeleted        field.Bool
+	Manager          field.String // 负责人
+	Tag              field.String
+	Method           field.String
+	ParentID         field.Int64
+	Remark           field.String // 备注
+	ServerID         field.String
+	ProjectID        field.Int64
+	Responsible      field.String // 负责人
+	Parameters       field.String
+	Responses        field.String
+	RequestBody      field.String
+	ResponseExamples field.String
 
 	fieldMap map[string]field.Expr
 }
@@ -94,7 +98,6 @@ func (a *amAPI) updateTableName(table string) *amAPI {
 	a.ALL = field.NewAsterisk(table)
 	a.ID = field.NewInt64(table, "id")
 	a.Name = field.NewString(table, "name")
-	a.Type = field.NewString(table, "type")
 	a.Path = field.NewString(table, "path")
 	a.Status = field.NewString(table, "status")
 	a.CreateBy = field.NewString(table, "create_by")
@@ -106,11 +109,14 @@ func (a *amAPI) updateTableName(table string) *amAPI {
 	a.Tag = field.NewString(table, "tag")
 	a.Method = field.NewString(table, "method")
 	a.ParentID = field.NewInt64(table, "parent_id")
-	a.Content = field.NewString(table, "content")
 	a.Remark = field.NewString(table, "remark")
 	a.ServerID = field.NewString(table, "server_id")
 	a.ProjectID = field.NewInt64(table, "project_id")
-	a.ResponsibleID = field.NewInt64(table, "responsible_id")
+	a.Responsible = field.NewString(table, "responsible")
+	a.Parameters = field.NewString(table, "parameters")
+	a.Responses = field.NewString(table, "responses")
+	a.RequestBody = field.NewString(table, "request_body")
+	a.ResponseExamples = field.NewString(table, "response_examples")
 
 	a.fillFieldMap()
 
@@ -135,10 +141,9 @@ func (a *amAPI) GetFieldByName(fieldName string) (field.OrderExpr, bool) {
 }
 
 func (a *amAPI) fillFieldMap() {
-	a.fieldMap = make(map[string]field.Expr, 19)
+	a.fieldMap = make(map[string]field.Expr, 21)
 	a.fieldMap["id"] = a.ID
 	a.fieldMap["name"] = a.Name
-	a.fieldMap["type"] = a.Type
 	a.fieldMap["path"] = a.Path
 	a.fieldMap["status"] = a.Status
 	a.fieldMap["create_by"] = a.CreateBy
@@ -150,11 +155,14 @@ func (a *amAPI) fillFieldMap() {
 	a.fieldMap["tag"] = a.Tag
 	a.fieldMap["method"] = a.Method
 	a.fieldMap["parent_id"] = a.ParentID
-	a.fieldMap["content"] = a.Content
 	a.fieldMap["remark"] = a.Remark
 	a.fieldMap["server_id"] = a.ServerID
 	a.fieldMap["project_id"] = a.ProjectID
-	a.fieldMap["responsible_id"] = a.ResponsibleID
+	a.fieldMap["responsible"] = a.Responsible
+	a.fieldMap["parameters"] = a.Parameters
+	a.fieldMap["responses"] = a.Responses
+	a.fieldMap["request_body"] = a.RequestBody
+	a.fieldMap["response_examples"] = a.ResponseExamples
 }
 
 func (a amAPI) clone(db *gorm.DB) amAPI {

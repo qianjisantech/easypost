@@ -1,0 +1,49 @@
+syntax = "v1"
+
+info(
+    title: "easypost后端"
+    desc: "qianji"
+    author: "qianji"
+    email: "2497822530@qq.com"
+    version: "0.1"
+)
+
+type (
+
+    FolderDetailSaveRequest {
+        Id string `json:"id"`
+        ParentId string `json:"parentId"`
+        Name string `json:"name"`
+        Description string  `json:"description"`
+    }
+    FolderDetailSaveResp {
+        Success bool `json:"success"`
+        Message string `json:"message"`
+    }
+    FolderDetailRequest {
+    Id string  `path:"id"`
+    }
+    FolderDetailResp {
+        Success bool `json:"success"`
+        Message string `json:"message"`
+        Data FolderDetailRespData `json:"data"`
+    }
+    FolderDetailRespData {
+        Id string `json:"id"`
+        ParentId string `json:"parentId"`
+        Type string `json:"type"`
+        Name string `json:"name"`
+        Description string  `json:"description"`
+    }
+)
+@server(
+    group: folder
+    prefix: /api
+)
+service easypost-api {
+
+    @handler FolderDetailSave    //文件夹保存
+    post /am/folder/detail/save (FolderDetailSaveRequest) returns (FolderDetailSaveResp)
+    @handler FolderDetail  //文件夹详情
+    get /am/folder/detail/:id (FolderDetailRequest) returns (FolderDetailResp)
+}

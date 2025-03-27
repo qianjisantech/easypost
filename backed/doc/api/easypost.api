@@ -1,8 +1,13 @@
-import "easypost/am.api"
+import "easypost/api.api"
+import "easypost/doc.api"
+import "easypost/folder.api"
+import "easypost/tab.api"
 import "easypost/team.api"
 import "easypost/project.api"
 import "easypost/auth.api"
 import "easypost/user.api"
+import "easypost/trafficmanage.api"
+import "easypost/es.api"
 
 info (
 	title:   "easypost后端"

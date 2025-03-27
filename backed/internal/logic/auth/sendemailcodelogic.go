@@ -91,11 +91,10 @@ func (l *SendEmailCodeLogic) CreateOrUpdateUser(email string, code string) error
 		username := strings.Split(email, "@")[0]
 
 		sysUser := model.SysUser{
-			Email:     &email,
-			Code:      &code,
-			Username:  &username,
-			Name:      &username,
-			IsDeleted: new(bool),
+			Email:    &email,
+			Code:     &code,
+			Username: &username,
+			Name:     &username,
 		}
 
 		fmt.Println("邮箱前缀:", username)

@@ -1,7 +1,6 @@
 import { redirect } from 'next/navigation'
 import { message, Spin } from 'antd'
 import axios, { type AxiosError, type AxiosInstance, type AxiosResponse } from 'axios'
-
 import { ROUTES } from '@/utils/routes'
 
 const request: AxiosInstance = axios.create({
@@ -34,7 +33,7 @@ const errorHandler = (error: AxiosError) => {
     // 清除 Token 或重定向到登录页面
     redirect(ROUTES.LOGIN)
   } else if (status === 500) {
-    showMessage('error', '系统内部错误')
+    showMessage('error', data.message || '系统内部错误')
   } else if (status === 400) {
     showMessage('error', data.message || 'Bad request')
   } else if (status === 404) {
@@ -49,11 +48,27 @@ const errorHandler = (error: AxiosError) => {
 
 // 请求拦截器
 request.interceptors.request.use((config) => {
+
+  console.log('pathname', window.location.pathname)
   const token = localStorage.getItem('accessToken')
   if (token) {
     config.headers['Authorization'] = `Bearer ${token}` // 添加 Authorization header
-  }
 
+  }
+  if (typeof window !== 'undefined') {
+     if (window.location.pathname.startsWith('/project')){
+       const pathSegments = window.location.pathname.split('/')
+       const projectId = pathSegments[2] // 对于 "/project/22" 会得到 "22"
+
+       config.headers['X-Project-Id'] = projectId || 'default'
+     }
+    if (window.location.pathname.startsWith('/main/teams')){
+      const pathSegments = window.location.pathname.split('/')
+      const teamId = pathSegments[3] // 对于 "/project/22" 会得到 "22"
+
+      config.headers['X-Team-Id'] = teamId || 'default'
+    }
+  }
   // 显示全局 loading
   showLoading()
 

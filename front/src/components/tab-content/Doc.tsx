@@ -3,7 +3,8 @@ import { useEffect, useState } from 'react'
 import { Viewer } from '@bytemd/react'
 import { Button, Space, theme } from 'antd'
 
-import { ApiTreeQueryPage, DocDetail, DocSave } from "@/api/am";
+import {  DocDetail, DocSave } from "src/api/doc";
+import { ApiTreeQueryPage, } from "src/api/api";
 import { PageTabStatus } from '@/components/ApiTab/ApiTab.enum'
 import { useTabContentContext } from '@/components/ApiTab/TabContentContext'
 import { InputUnderline } from '@/components/InputUnderline'
@@ -122,21 +123,18 @@ export function Doc() {
                     id: values.id,
                     name: values.name || DEFAULT_DOC_NAME,
                     type: MenuItemType.Doc,
-                    data: values,
+                    data: values
                   })
-                  addTabItem(
-                    {
-                      key: '',
-                      label: docValue?.name || DEFAULT_DOC_NAME,
-                      contentType: MenuItemType.Doc,
-                    },
-                    { replaceTab: tabData.key }
-                  )
+                  addTabItem({
+                    key: "",
+                    label: docValue?.name || DEFAULT_DOC_NAME,
+                    contentType: MenuItemType.Doc
+                  }, { replaceTab: tabData.key })
                 } else {
                   updateMenuItem({
                     id: values.id,
                     name: values.name,
-                    data: values,
+                    data: values
                   })
                 }
                 docSave(values)

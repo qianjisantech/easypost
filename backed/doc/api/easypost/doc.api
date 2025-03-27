@@ -1,0 +1,50 @@
+syntax = "v1"
+
+info(
+    title: "easypost后端"
+    desc: "qianji"
+    author: "qianji"
+    email: "2497822530@qq.com"
+    version: "0.1"
+)
+
+type (
+    DocDetailRequest {
+        Id int `path:"id"`
+    }
+    DocDetailResp {
+        Success bool `json:"success"`
+        Message string `json:"message"`
+        Data DocDetailData `json:"data"`
+    }
+    DocDetailData {
+        Id string `json:"id"`
+        Name string `json:"name"`
+        Content string `json:"content"`
+    }
+    DocSaveRequest {
+        Id string `json:"id"`
+        Name string `json:"name"`
+        Content string `json:"content"`
+    }
+    DocSaveResp {
+        Success bool `json:"success"`
+        Message string `json:"message"`
+        Data DocSaveData `json:"data"`
+    }
+    DocSaveData {
+        Id string `json:"id"`
+    }
+
+)
+@server(
+    group: doc
+    prefix: /api
+)
+service easypost-api {
+    @handler DocDetail //文档详情
+    get /am/doc/detail/:id (DocDetailRequest) returns (DocDetailResp)
+    @handler DocSave  //文档保存
+    post /am/doc/save (DocSaveRequest) returns (DocSaveResp)
+}
+

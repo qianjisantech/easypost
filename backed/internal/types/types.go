@@ -19,97 +19,83 @@ type ApiDeleteResp struct {
 	Message string `json:"message"`
 }
 
+type ApiDetailCreateOrUpdateParameter struct {
+	Id          string `json:"id,optional"`
+	Name        string `json:"name,optional"`
+	Type        string `json:"type,optional"`
+	Example     string `json:"example,optional"`
+	Description string `json:"description,optional"`
+}
+
+type ApiDetailCreateOrUpdateParameters struct {
+	Path   []ApiDetailCreateOrUpdateParameter `json:"path"`
+	Header []ApiDetailCreateOrUpdateParameter `json:"header"`
+	Query  []ApiDetailCreateOrUpdateParameter `json:"query"`
+	Cookie []ApiDetailCreateOrUpdateParameter `json:"cookie"`
+}
+
+type ApiDetailCreateOrUpdateRequest struct {
+	Id               string   `form:"id,optional"`
+	Name             string   `form:"name,optional"`
+	Type             string   `form:"type,optional"`
+	ParentId         string   `form:"parentId,optional"`
+	Method           string   `form:"method,optional"`
+	Path             string   `form:"path,optional"`
+	Status           string   `form:"status,optional"`
+	Responsible      string   `form:"responsible,optional"`
+	Tags             []string `form:"tags,optional"`
+	ServerId         string   `form:"serverId,optional"`
+	Description      string   `form:"description,optional"`
+	Parameters       string   `form:"parameters,optional"`
+	Responses        string   `form:"responses,optional"`
+	RequestBody      string   `form:"requestBody,optional"`
+	ResponseExamples string   `form:"responseExamples,optional"`
+}
+
+type ApiDetailCreateOrUpdateResp struct {
+	Success bool                            `json:"success"`
+	Message string                          `json:"message"`
+	Data    ApiDetailCreateOrUpdateRespData `json:"data"`
+}
+
+type ApiDetailCreateOrUpdateRespData struct {
+	Id               string      `json:"id"`
+	Path             string      `json:"path"`
+	Name             string      `json:"name"`
+	Method           string      `json:"method"`
+	Status           string      `json:"status"`
+	Responsible      string      `json:"responsible"`
+	Tags             []string    `json:"tags"`
+	ServerId         string      `json:"serverId"`
+	Description      string      `json:"description"`
+	Parameters       interface{} `json:"parameters"`
+	Responses        interface{} `json:"responses"`
+	ResponseExamples interface{} `json:"responseExamples"`
+	RequestBody      interface{} `json:"requestBody"`
+}
+
 type ApiDetailData struct {
-	Id               string                         `json:"id"`
-	Path             string                         `json:"path"`
-	Name             string                         `json:"name"`
-	Method           string                         `json:"method"`
-	Status           string                         `json:"status"`
-	ResponsibleId    string                         `json:"responsibleId"`
-	Tags             []string                       `json:"tags"`
-	ServerId         string                         `json:"serverId"`
-	Description      string                         `json:"description"`
-	Parameters       ApiDetailDataParameters        `json:"parameters"`
-	Responses        []ApiDetailDataResponse        `json:"responses"`
-	ResponseExamples []ApiDetailDataResponseExample `json:"responseExamples"`
-	RequestBody      ApiDetailDataRequestBody       `json:"requestBody"`
+	Id       string            `json:"id"`
+	ParentId string            `json:"parentId"`
+	Name     string            `json:"name"`
+	Type     string            `json:"type"`
+	Data     ApiDetailDataData `json:"data"`
 }
 
-type ApiDetailDataParameters struct {
-	Path   []ApiDetailDataParametersPath   `json:"path"`
-	Query  []ApiDetailDataParametersQuery  `json:"query"`
-	Header []ApiDetailDataParametersHeader `json:"header"`
-	Cookie []ApiDetailDataParametersCookie `json:"cookie"`
-}
-
-type ApiDetailDataParametersCookie struct {
-	Id          string `json:"id"`
-	Name        string `json:"name"`
-	Type        string `json:"type"`
-	Example     string `json:"example"`
-	Description string `json:"description"`
-}
-
-type ApiDetailDataParametersHeader struct {
-	Id          string `json:"id"`
-	Name        string `json:"name"`
-	Type        string `json:"type"`
-	Example     string `json:"example"`
-	Description string `json:"description"`
-}
-
-type ApiDetailDataParametersPath struct {
-	Id          string `json:"id"`
-	Name        string `json:"name"`
-	Type        string `json:"type"`
-	Required    bool   `json:"required"`
-	Enabled     bool   `json:"enabled"`
-	Description string `json:"description"`
-	Example     string `json:"example"`
-}
-
-type ApiDetailDataParametersQuery struct {
-	Id          string `json:"id"`
-	Name        string `json:"name"`
-	Type        string `json:"type"`
-	Required    bool   `json:"required"`
-	Enabled     bool   `json:"enabled"`
-	Description string `json:"description"`
-	Example     string `json:"example"`
-}
-
-type ApiDetailDataRequestBody struct {
-	Id         string `json:"id"`
-	JsonSchema string `json:"jsonSchema"`
-	Type       string `json:"type"`
-}
-
-type ApiDetailDataResponse struct {
-	Id          string                          `json:"id"`
-	Code        int                             `json:"code"`
-	Name        string                          `json:"name"`
-	ContentType string                          `json:"contentType"`
-	JsonSchema  ApiDetailDataResponseJsonSchema `json:"jsonSchema"`
-}
-
-type ApiDetailDataResponseExample struct {
-	Id         string      `json:"id"`
-	ResponseId string      `json:"responseId"`
-	Name       string      `json:"name"`
-	Data       interface{} `json:"data"`
-}
-
-type ApiDetailDataResponseJsonSchema struct {
-	Type       string                                    `json:"type"`
-	Properties []ApiDetailDataResponseJsonSchemaProperty `json:"properties"`
-}
-
-type ApiDetailDataResponseJsonSchemaProperty struct {
-	Id          string `json:"id"`
-	Name        string `json:"name"`
-	Type        string `json:"type"`
-	Description string `json:"description"`
-	DisPlayName string `json:"displayName"`
+type ApiDetailDataData struct {
+	Id               string      `json:"id"`
+	Name             string      `json:"name"`
+	Path             string      `json:"path"`
+	Method           string      `json:"method"`
+	Status           string      `json:"status"`
+	Responsible      interface{} `json:"responsible"`
+	Tags             []string    `json:"tags"`
+	ServerId         string      `json:"serverId"`
+	Description      string      `json:"description"`
+	Parameters       interface{} `json:"parameters"`
+	Responses        interface{} `json:"responses"`
+	ResponseExamples interface{} `json:"responseExamples"`
+	RequestBody      interface{} `json:"requestBody"`
 }
 
 type ApiDetailRequest struct {
@@ -122,109 +108,42 @@ type ApiDetailResp struct {
 	Data    ApiDetailData `json:"data"`
 }
 
-type ApiDetailSaveData struct {
-	Method        string                       `json:"method"`
-	Path          string                       `json:"path,optional"`
-	Name          string                       `json:"name"`
-	Status        string                       `json:"status"`
-	ResponsibleId string                       `json:"responsibleId,optional"`
-	Tags          []string                     `json:"tags,optional"`
-	ServerId      string                       `json:"serverId,optional"`
-	Description   string                       `json:"description,optional"`
-	Parameters    ApiDetailSaveDataParameters  `json:"parameters,optional"`
-	Responses     []ApiDetailSaveDataResponse  `json:"responses,optional"`
-	RequestBody   ApiDetailSaveDataRequestBody `json:"requestBody,optional"`
+type ApiDocDetailData struct {
+	Id       string               `json:"id"`
+	ParentId string               `json:"parentId"`
+	Name     string               `json:"name"`
+	Type     string               `json:"type"`
+	Data     ApiDocDetailDataData `json:"data"`
 }
 
-type ApiDetailSaveDataJsonSchema struct {
-	Type       string                                `json:"type"`
-	Properties []ApiDetailSaveDataJsonSchemaProperty `json:"properties,optional"`
+type ApiDocDetailDataData struct {
+	Id               string      `json:"id"`
+	Name             string      `json:"name"`
+	Path             string      `json:"path"`
+	Method           string      `json:"method"`
+	Status           string      `json:"status"`
+	Responsible      interface{} `json:"responsible"`
+	Tags             []string    `json:"tags"`
+	ServerId         string      `json:"serverId"`
+	Description      string      `json:"description"`
+	Parameters       interface{} `json:"parameters"`
+	Responses        interface{} `json:"responses"`
+	ResponseExamples interface{} `json:"responseExamples"`
+	RequestBody      interface{} `json:"requestBody"`
+	CreatBy          string      `json:"createBy"`
+	CreateTime       string      `json:"createTime"`
+	UpdateBy         string      `json:"updateBy"`
+	UpdateTime       string      `json:"updateTime"`
 }
 
-type ApiDetailSaveDataJsonSchemaProperty struct {
-	Id          string `json:"id,optional"`
-	Type        string `json:"type"`
-	Name        string `json:"name"`
-	DisplayName string `json:"displayName,optional"`
-	Description string `json:"description,optional"`
+type ApiDocDetailRequest struct {
+	Id int `path:"id"`
 }
 
-type ApiDetailSaveDataParameters struct {
-	Path   []ApiDetailSaveDataParametersPath   `json:"path,optional"`
-	Query  []ApiDetailSaveDataParametersQuery  `json:"query,optional"`
-	Header []ApiDetailSaveDataParametersHeader `json:"header,optional"`
-	Cookie []ApiDetailSaveDataParametersCookie `json:"cookie,optional"`
-}
-
-type ApiDetailSaveDataParametersCookie struct {
-	Id          string `json:"id"`
-	Name        string `json:"name"`
-	Type        string `json:"type"`
-	Example     string `json:"example,optional"`
-	Description string `json:"description"`
-}
-
-type ApiDetailSaveDataParametersHeader struct {
-	Id          string `json:"id"`
-	Name        string `json:"name"`
-	Type        string `json:"type"`
-	Example     string `json:"example,optional"`
-	Description string `json:"description"`
-}
-
-type ApiDetailSaveDataParametersPath struct {
-	Id          string `json:"id"`
-	Name        string `json:"name"`
-	Type        string `json:"type"`
-	Example     string `json:"example,optional"`
-	Description string `json:"description"`
-}
-
-type ApiDetailSaveDataParametersQuery struct {
-	Id          string `json:"id"`
-	Name        string `json:"name"`
-	Type        string `json:"type"`
-	Example     string `json:"example,optional"`
-	Description string `json:"description"`
-}
-
-type ApiDetailSaveDataRequestBody struct {
-	Type       string `json:"type"`
-	Id         string `json:"id"`
-	JsonSchema string `json:"jsonSchema"`
-}
-
-type ApiDetailSaveDataRequestBodyParameter struct {
-	Id      string `json:"id"`
-	Name    string `json:"name"`
-	Type    string `json:"type"`
-	Example string `json:"example"`
-}
-
-type ApiDetailSaveDataResponse struct {
-	Id          string                      `json:"id"`
-	Code        int                         `json:"code"`
-	Name        string                      `json:"name"`
-	ContentType string                      `json:"contentType"`
-	JsonSchema  ApiDetailSaveDataJsonSchema `json:"jsonSchema"`
-}
-
-type ApiDetailSaveRequest struct {
-	Id       string            `json:"id"`
-	Name     string            `json:"name"`
-	Type     string            `json:"type,optional"`
-	ParentId string            `json:"parentId,optional"`
-	Data     ApiDetailSaveData `json:"data,optional"`
-}
-
-type ApiDetailSaveResp struct {
-	Success bool                  `json:"success"`
-	Message string                `json:"message"`
-	Data    ApiDetailSaveRespData `json:"data"`
-}
-
-type ApiDetailSaveRespData struct {
-	Id string `json:"id"`
+type ApiDocDetailResp struct {
+	Success bool             `json:"success"`
+	Message string           `json:"message"`
+	Data    ApiDocDetailData `json:"data"`
 }
 
 type ApiMoveRequest struct {
@@ -254,6 +173,39 @@ type ApiRenameRequest struct {
 type ApiRenameResp struct {
 	Success bool   `json:"success"`
 	Message string `json:"message"`
+}
+
+type ApiRunDetailData struct {
+	Id       string               `json:"id"`
+	ParentId string               `json:"parentId"`
+	Name     string               `json:"name"`
+	Type     string               `json:"type"`
+	Data     ApiRunDetailDataData `json:"data"`
+}
+
+type ApiRunDetailDataData struct {
+	Id               string      `json:"id"`
+	Name             string      `json:"name"`
+	Path             string      `json:"path"`
+	Method           string      `json:"method"`
+	Status           string      `json:"status"`
+	Tags             []string    `json:"tags"`
+	ServerId         string      `json:"serverId"`
+	Description      string      `json:"description"`
+	Parameters       interface{} `json:"parameters"`
+	Responses        interface{} `json:"responses"`
+	ResponseExamples interface{} `json:"responseExamples"`
+	RequestBody      interface{} `json:"requestBody"`
+}
+
+type ApiRunDetailRequest struct {
+	Id int `path:"id"`
+}
+
+type ApiRunDetailResp struct {
+	Success bool             `json:"success"`
+	Message string           `json:"message"`
+	Data    ApiRunDetailData `json:"data"`
 }
 
 type ApiTreeQueryPageData struct {
@@ -346,13 +298,61 @@ type DocSaveResp struct {
 	Data    DocSaveData `json:"data"`
 }
 
+type EsSearchQuery struct {
+	Key   string `json:"key"`
+	Value string `json:"value"`
+}
+
+type EsSearchRegex struct {
+	Address string   `json:"address"`
+	Header  []string `json:"header"`
+	Paylod  string   `json:"paylod"`
+	Method  string   `json:"method"`
+}
+
+type EsSearchRequest struct {
+	Query []*EsSearchQuery `form:"query"`
+	Regex EsSearchRegex    `form:"regex,optional"`
+}
+
+type EsSearchResp struct {
+	Success bool        `json:"success"`
+	Message string      `json:"message"`
+	Data    interface{} `json:"data"`
+}
+
+type EsSynchronizeRequest struct {
+	Body string `json:"body"`
+}
+
+type EsSynchronizeResp struct {
+	Success bool   `json:"success"`
+	Message string `json:"message"`
+}
+
 type FolderDetailRequest struct {
+	Id string `path:"id"`
 }
 
 type FolderDetailResp struct {
+	Success bool                 `json:"success"`
+	Message string               `json:"message"`
+	Data    FolderDetailRespData `json:"data"`
+}
+
+type FolderDetailRespData struct {
+	Id          string `json:"id"`
+	ParentId    string `json:"parentId"`
+	Type        string `json:"type"`
+	Name        string `json:"name"`
+	Description string `json:"description"`
 }
 
 type FolderDetailSaveRequest struct {
+	Id          string `json:"id"`
+	ParentId    string `json:"parentId"`
+	Name        string `json:"name"`
+	Description string `json:"description"`
 }
 
 type FolderDetailSaveResp struct {
@@ -368,6 +368,21 @@ type GetQRCodeResp struct {
 	Success bool          `json:"success"`
 	Message string        `json:"message"`
 	Data    GetQRCodeData `json:"data"`
+}
+
+type InitialTabItemsRequest struct {
+	ProjectId string `json:"projectId"`
+}
+
+type InitialTabItemsResp struct {
+	Success bool                    `json:"success"`
+	Message string                  `json:"message"`
+	Data    InitialTabItemsRespData `json:"data"`
+}
+
+type InitialTabItemsRespData struct {
+	InitialTabItems interface{} `json:"initialTabItems"`
+	ActiveTabKey    string      `json:"activeTabKey"`
 }
 
 type ProjectCopyRequest struct {
@@ -424,6 +439,53 @@ type ProjectUpdateRequest struct {
 }
 
 type ProjectUpdateResp struct {
+	Success bool   `json:"success"`
+	Message string `json:"message"`
+}
+
+type RemoveTabItemRequest struct {
+	Id string `path:"id"`
+}
+
+type RemoveTabItemResp struct {
+	Success bool   `json:"success"`
+	Message string `json:"message"`
+}
+
+type ResponsibleSearchRequest struct {
+	TeamId  string `json:"teamId"`
+	Content string `json:"content"`
+}
+
+type ResponsibleSearchResp struct {
+	Success bool                        `json:"success"`
+	Message string                      `json:"message"`
+	Data    []ResponsibleSearchRespData `json:"data"`
+}
+
+type ResponsibleSearchRespData struct {
+	Id       string `json:"id"`
+	Name     string `json:"name"`
+	Username string `json:"username"`
+}
+
+type SaveTabItemRequest struct {
+	ProjectId string                     `json:"projectId"`
+	TabItem   SaveTabItemsRequestTabItem `json:"tabItem"`
+}
+
+type SaveTabItemsRequestTabItem struct {
+	Key         string                         `json:"key"`
+	Label       string                         `json:"label"`
+	ContentType string                         `json:"contentType"`
+	Data        SaveTabItemsRequestTabItemData `json:"data"`
+}
+
+type SaveTabItemsRequestTabItemData struct {
+	TabStatus int `json:"tabStatus"`
+}
+
+type SaveTabItemsResp struct {
 	Success bool   `json:"success"`
 	Message string `json:"message"`
 }
@@ -579,6 +641,67 @@ type TeamUserSearchResp struct {
 	Success bool               `json:"success"`
 	Message string             `json:"message"`
 	Data    TeamUserSearchData `json:"data"`
+}
+
+type TrafficDetailData struct {
+	Id          string                     `json:"id"`
+	TaskId      string                     `json:"taskId"`
+	Url         string                     `json:"url"`
+	Method      string                     `json:"method"`
+	RequestBody string                     `json:"requestBody"`
+	Headers     []*TrafficDetailDataHeader `json:"headers"`
+	Response    string                     `json:"response"`
+	Status      int                        `json:"status"`
+	RecordTime  string                     `json:"recordTime"`
+}
+
+type TrafficDetailDataHeader struct {
+	Id    string `json:"id"`
+	Key   string `json:"key"`
+	Value string `json:"value"`
+}
+
+type TrafficDetailRequest struct {
+	Id int `path:"id"`
+}
+
+type TrafficDetailResp struct {
+	Success bool              `json:"success"`
+	Message string            `json:"message"`
+	Data    TrafficDetailData `json:"data"`
+}
+
+type TrafficQueryPageData struct {
+	Total      int64                     `json:"total"`
+	TotalPages int64                     `json:"totalPages"`
+	Current    int64                     `json:"current"`
+	PageSize   int64                     `json:"pageSize"`
+	Records    []*TrafficQueryPageRecord `json:"records"`
+}
+
+type TrafficQueryPageRecord struct {
+	Id         string `json:"id"`
+	Ip         string `json:"ip"`
+	Url        string `json:"url"`
+	Method     string `json:"method"`
+	Status     int    `json:"status"`
+	RecordTime string `json:"recordTime"`
+	TaskId     string `json:"taskId"`
+}
+
+type TrafficQueryPageRequest struct {
+	Current    int    `json:"current"`
+	PageSize   int    `json:"pageSize"`
+	RecordTime string `json:"recordTime,optional"`
+	TaskId     string `json:"taskId,optional"`
+	Ip         string `json:"ip,optional"`
+	Url        string `json:"url,optional"`
+}
+
+type TrafficQueryPageResp struct {
+	Success bool                 `json:"success"`
+	Message string               `json:"message"`
+	Data    TrafficQueryPageData `json:"data"`
 }
 
 type UserActionsRequest struct {

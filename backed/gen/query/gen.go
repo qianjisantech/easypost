@@ -16,32 +16,32 @@ import (
 )
 
 var (
-	Q                     = new(Query)
-	AmAPI                 *amAPI
-	AmAPIParameter        *amAPIParameter
-	AmAPIRequestBodyJSON  *amAPIRequestBodyJSON
-	AmAPIResponse         *amAPIResponse
-	AmAPIResponseExample  *amAPIResponseExample
-	AmAPIResponseProperty *amAPIResponseProperty
-	AmDoc                 *amDoc
-	AmFolder              *amFolder
-	SysOrganizeTeam       *sysOrganizeTeam
-	SysProject            *sysProject
-	SysTeam               *sysTeam
-	SysTeamMember         *sysTeamMember
-	SysUser               *sysUser
+	Q                           = new(Query)
+	AmAPI                       *amAPI
+	AmDoc                       *amDoc
+	AmFolder                    *amFolder
+	AmTab                       *amTab
+	GsTrafficManager            *gsTrafficManager
+	GsTrafficManagerHeader      *gsTrafficManagerHeader
+	GsTrafficManagerRequestBody *gsTrafficManagerRequestBody
+	GsTrafficManagerResponse    *gsTrafficManagerResponse
+	SysOrganizeTeam             *sysOrganizeTeam
+	SysProject                  *sysProject
+	SysTeam                     *sysTeam
+	SysTeamMember               *sysTeamMember
+	SysUser                     *sysUser
 )
 
 func SetDefault(db *gorm.DB, opts ...gen.DOOption) {
 	*Q = *Use(db, opts...)
 	AmAPI = &Q.AmAPI
-	AmAPIParameter = &Q.AmAPIParameter
-	AmAPIRequestBodyJSON = &Q.AmAPIRequestBodyJSON
-	AmAPIResponse = &Q.AmAPIResponse
-	AmAPIResponseExample = &Q.AmAPIResponseExample
-	AmAPIResponseProperty = &Q.AmAPIResponseProperty
 	AmDoc = &Q.AmDoc
 	AmFolder = &Q.AmFolder
+	AmTab = &Q.AmTab
+	GsTrafficManager = &Q.GsTrafficManager
+	GsTrafficManagerHeader = &Q.GsTrafficManagerHeader
+	GsTrafficManagerRequestBody = &Q.GsTrafficManagerRequestBody
+	GsTrafficManagerResponse = &Q.GsTrafficManagerResponse
 	SysOrganizeTeam = &Q.SysOrganizeTeam
 	SysProject = &Q.SysProject
 	SysTeam = &Q.SysTeam
@@ -51,59 +51,59 @@ func SetDefault(db *gorm.DB, opts ...gen.DOOption) {
 
 func Use(db *gorm.DB, opts ...gen.DOOption) *Query {
 	return &Query{
-		db:                    db,
-		AmAPI:                 newAmAPI(db, opts...),
-		AmAPIParameter:        newAmAPIParameter(db, opts...),
-		AmAPIRequestBodyJSON:  newAmAPIRequestBodyJSON(db, opts...),
-		AmAPIResponse:         newAmAPIResponse(db, opts...),
-		AmAPIResponseExample:  newAmAPIResponseExample(db, opts...),
-		AmAPIResponseProperty: newAmAPIResponseProperty(db, opts...),
-		AmDoc:                 newAmDoc(db, opts...),
-		AmFolder:              newAmFolder(db, opts...),
-		SysOrganizeTeam:       newSysOrganizeTeam(db, opts...),
-		SysProject:            newSysProject(db, opts...),
-		SysTeam:               newSysTeam(db, opts...),
-		SysTeamMember:         newSysTeamMember(db, opts...),
-		SysUser:               newSysUser(db, opts...),
+		db:                          db,
+		AmAPI:                       newAmAPI(db, opts...),
+		AmDoc:                       newAmDoc(db, opts...),
+		AmFolder:                    newAmFolder(db, opts...),
+		AmTab:                       newAmTab(db, opts...),
+		GsTrafficManager:            newGsTrafficManager(db, opts...),
+		GsTrafficManagerHeader:      newGsTrafficManagerHeader(db, opts...),
+		GsTrafficManagerRequestBody: newGsTrafficManagerRequestBody(db, opts...),
+		GsTrafficManagerResponse:    newGsTrafficManagerResponse(db, opts...),
+		SysOrganizeTeam:             newSysOrganizeTeam(db, opts...),
+		SysProject:                  newSysProject(db, opts...),
+		SysTeam:                     newSysTeam(db, opts...),
+		SysTeamMember:               newSysTeamMember(db, opts...),
+		SysUser:                     newSysUser(db, opts...),
 	}
 }
 
 type Query struct {
 	db *gorm.DB
 
-	AmAPI                 amAPI
-	AmAPIParameter        amAPIParameter
-	AmAPIRequestBodyJSON  amAPIRequestBodyJSON
-	AmAPIResponse         amAPIResponse
-	AmAPIResponseExample  amAPIResponseExample
-	AmAPIResponseProperty amAPIResponseProperty
-	AmDoc                 amDoc
-	AmFolder              amFolder
-	SysOrganizeTeam       sysOrganizeTeam
-	SysProject            sysProject
-	SysTeam               sysTeam
-	SysTeamMember         sysTeamMember
-	SysUser               sysUser
+	AmAPI                       amAPI
+	AmDoc                       amDoc
+	AmFolder                    amFolder
+	AmTab                       amTab
+	GsTrafficManager            gsTrafficManager
+	GsTrafficManagerHeader      gsTrafficManagerHeader
+	GsTrafficManagerRequestBody gsTrafficManagerRequestBody
+	GsTrafficManagerResponse    gsTrafficManagerResponse
+	SysOrganizeTeam             sysOrganizeTeam
+	SysProject                  sysProject
+	SysTeam                     sysTeam
+	SysTeamMember               sysTeamMember
+	SysUser                     sysUser
 }
 
 func (q *Query) Available() bool { return q.db != nil }
 
 func (q *Query) clone(db *gorm.DB) *Query {
 	return &Query{
-		db:                    db,
-		AmAPI:                 q.AmAPI.clone(db),
-		AmAPIParameter:        q.AmAPIParameter.clone(db),
-		AmAPIRequestBodyJSON:  q.AmAPIRequestBodyJSON.clone(db),
-		AmAPIResponse:         q.AmAPIResponse.clone(db),
-		AmAPIResponseExample:  q.AmAPIResponseExample.clone(db),
-		AmAPIResponseProperty: q.AmAPIResponseProperty.clone(db),
-		AmDoc:                 q.AmDoc.clone(db),
-		AmFolder:              q.AmFolder.clone(db),
-		SysOrganizeTeam:       q.SysOrganizeTeam.clone(db),
-		SysProject:            q.SysProject.clone(db),
-		SysTeam:               q.SysTeam.clone(db),
-		SysTeamMember:         q.SysTeamMember.clone(db),
-		SysUser:               q.SysUser.clone(db),
+		db:                          db,
+		AmAPI:                       q.AmAPI.clone(db),
+		AmDoc:                       q.AmDoc.clone(db),
+		AmFolder:                    q.AmFolder.clone(db),
+		AmTab:                       q.AmTab.clone(db),
+		GsTrafficManager:            q.GsTrafficManager.clone(db),
+		GsTrafficManagerHeader:      q.GsTrafficManagerHeader.clone(db),
+		GsTrafficManagerRequestBody: q.GsTrafficManagerRequestBody.clone(db),
+		GsTrafficManagerResponse:    q.GsTrafficManagerResponse.clone(db),
+		SysOrganizeTeam:             q.SysOrganizeTeam.clone(db),
+		SysProject:                  q.SysProject.clone(db),
+		SysTeam:                     q.SysTeam.clone(db),
+		SysTeamMember:               q.SysTeamMember.clone(db),
+		SysUser:                     q.SysUser.clone(db),
 	}
 }
 
@@ -117,54 +117,54 @@ func (q *Query) WriteDB() *Query {
 
 func (q *Query) ReplaceDB(db *gorm.DB) *Query {
 	return &Query{
-		db:                    db,
-		AmAPI:                 q.AmAPI.replaceDB(db),
-		AmAPIParameter:        q.AmAPIParameter.replaceDB(db),
-		AmAPIRequestBodyJSON:  q.AmAPIRequestBodyJSON.replaceDB(db),
-		AmAPIResponse:         q.AmAPIResponse.replaceDB(db),
-		AmAPIResponseExample:  q.AmAPIResponseExample.replaceDB(db),
-		AmAPIResponseProperty: q.AmAPIResponseProperty.replaceDB(db),
-		AmDoc:                 q.AmDoc.replaceDB(db),
-		AmFolder:              q.AmFolder.replaceDB(db),
-		SysOrganizeTeam:       q.SysOrganizeTeam.replaceDB(db),
-		SysProject:            q.SysProject.replaceDB(db),
-		SysTeam:               q.SysTeam.replaceDB(db),
-		SysTeamMember:         q.SysTeamMember.replaceDB(db),
-		SysUser:               q.SysUser.replaceDB(db),
+		db:                          db,
+		AmAPI:                       q.AmAPI.replaceDB(db),
+		AmDoc:                       q.AmDoc.replaceDB(db),
+		AmFolder:                    q.AmFolder.replaceDB(db),
+		AmTab:                       q.AmTab.replaceDB(db),
+		GsTrafficManager:            q.GsTrafficManager.replaceDB(db),
+		GsTrafficManagerHeader:      q.GsTrafficManagerHeader.replaceDB(db),
+		GsTrafficManagerRequestBody: q.GsTrafficManagerRequestBody.replaceDB(db),
+		GsTrafficManagerResponse:    q.GsTrafficManagerResponse.replaceDB(db),
+		SysOrganizeTeam:             q.SysOrganizeTeam.replaceDB(db),
+		SysProject:                  q.SysProject.replaceDB(db),
+		SysTeam:                     q.SysTeam.replaceDB(db),
+		SysTeamMember:               q.SysTeamMember.replaceDB(db),
+		SysUser:                     q.SysUser.replaceDB(db),
 	}
 }
 
 type queryCtx struct {
-	AmAPI                 IAmAPIDo
-	AmAPIParameter        IAmAPIParameterDo
-	AmAPIRequestBodyJSON  IAmAPIRequestBodyJSONDo
-	AmAPIResponse         IAmAPIResponseDo
-	AmAPIResponseExample  IAmAPIResponseExampleDo
-	AmAPIResponseProperty IAmAPIResponsePropertyDo
-	AmDoc                 IAmDocDo
-	AmFolder              IAmFolderDo
-	SysOrganizeTeam       ISysOrganizeTeamDo
-	SysProject            ISysProjectDo
-	SysTeam               ISysTeamDo
-	SysTeamMember         ISysTeamMemberDo
-	SysUser               ISysUserDo
+	AmAPI                       IAmAPIDo
+	AmDoc                       IAmDocDo
+	AmFolder                    IAmFolderDo
+	AmTab                       IAmTabDo
+	GsTrafficManager            IGsTrafficManagerDo
+	GsTrafficManagerHeader      IGsTrafficManagerHeaderDo
+	GsTrafficManagerRequestBody IGsTrafficManagerRequestBodyDo
+	GsTrafficManagerResponse    IGsTrafficManagerResponseDo
+	SysOrganizeTeam             ISysOrganizeTeamDo
+	SysProject                  ISysProjectDo
+	SysTeam                     ISysTeamDo
+	SysTeamMember               ISysTeamMemberDo
+	SysUser                     ISysUserDo
 }
 
 func (q *Query) WithContext(ctx context.Context) *queryCtx {
 	return &queryCtx{
-		AmAPI:                 q.AmAPI.WithContext(ctx),
-		AmAPIParameter:        q.AmAPIParameter.WithContext(ctx),
-		AmAPIRequestBodyJSON:  q.AmAPIRequestBodyJSON.WithContext(ctx),
-		AmAPIResponse:         q.AmAPIResponse.WithContext(ctx),
-		AmAPIResponseExample:  q.AmAPIResponseExample.WithContext(ctx),
-		AmAPIResponseProperty: q.AmAPIResponseProperty.WithContext(ctx),
-		AmDoc:                 q.AmDoc.WithContext(ctx),
-		AmFolder:              q.AmFolder.WithContext(ctx),
-		SysOrganizeTeam:       q.SysOrganizeTeam.WithContext(ctx),
-		SysProject:            q.SysProject.WithContext(ctx),
-		SysTeam:               q.SysTeam.WithContext(ctx),
-		SysTeamMember:         q.SysTeamMember.WithContext(ctx),
-		SysUser:               q.SysUser.WithContext(ctx),
+		AmAPI:                       q.AmAPI.WithContext(ctx),
+		AmDoc:                       q.AmDoc.WithContext(ctx),
+		AmFolder:                    q.AmFolder.WithContext(ctx),
+		AmTab:                       q.AmTab.WithContext(ctx),
+		GsTrafficManager:            q.GsTrafficManager.WithContext(ctx),
+		GsTrafficManagerHeader:      q.GsTrafficManagerHeader.WithContext(ctx),
+		GsTrafficManagerRequestBody: q.GsTrafficManagerRequestBody.WithContext(ctx),
+		GsTrafficManagerResponse:    q.GsTrafficManagerResponse.WithContext(ctx),
+		SysOrganizeTeam:             q.SysOrganizeTeam.WithContext(ctx),
+		SysProject:                  q.SysProject.WithContext(ctx),
+		SysTeam:                     q.SysTeam.WithContext(ctx),
+		SysTeamMember:               q.SysTeamMember.WithContext(ctx),
+		SysUser:                     q.SysUser.WithContext(ctx),
 	}
 }
 

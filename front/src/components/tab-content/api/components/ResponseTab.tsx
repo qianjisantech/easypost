@@ -175,6 +175,16 @@ export function ResponseTab(props: ResponseTabProps) {
                                   <div className="p-tabContent">
                                     <Form.Item
                                       noStyle
+                                      name={['responseExamples', targetIdx, 'id']}
+                                    >
+                                    </Form.Item>
+                                    <Form.Item
+                                      noStyle
+                                      name={['responseExamples', targetIdx, 'name']}
+                                    >
+                                    </Form.Item>
+                                    <Form.Item
+                                      noStyle
                                       name={['responseExamples', targetIdx, 'data']}
                                     >
                                       <JsonViewer />
@@ -222,7 +232,7 @@ export function ResponseTab(props: ResponseTabProps) {
         onFinish={(values) => {
           setModalOpen(false)
 
-          const newResId = ''
+          const newResId = nanoid(6)
 
           onChange?.([...(value || []), { ...values, id: newResId }])
 

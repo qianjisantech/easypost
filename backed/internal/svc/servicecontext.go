@@ -15,10 +15,11 @@ import (
 )
 
 type ServiceContext struct {
-	Config config.Config
-	DB     *gorm.DB
-	Log    rest.Middleware
-	Auth   rest.Middleware
+	Config  config.Config
+	DB      *gorm.DB
+	Log     rest.Middleware
+	Auth    rest.Middleware
+	Recover rest.Middleware
 }
 
 func NewServiceContext(c config.Config) *ServiceContext {
@@ -26,19 +27,31 @@ func NewServiceContext(c config.Config) *ServiceContext {
 		SkipDefaultTransaction: true,
 		PrepareStmt:            true,
 	})
+
 	if err != nil {
 		panic(err)
 	}
+	// 获取底层的 sql.DB 对象
+	sqlDB, err := DB.DB()
+	if err != nil {
+		panic("failed to get sql.DB")
+	}
+
+	// 配置连接池
+	sqlDB.SetMaxIdleConns(10)           // 设置最大空闲连接数
+	sqlDB.SetMaxOpenConns(1000)         // 设置最大打开连接数
+	sqlDB.SetConnMaxLifetime(time.Hour) // 设置连接的最大存活时间
 
 	logx.Debug("mysql已连接")
 	query.SetDefault(DB)
 	addSnowflakeIDCallback(DB)
 	settingLogConfig()
 	return &ServiceContext{
-		Config: c,
-		DB:     DB,
-		Log:    middleware.NewLogMiddleware().Handle,
-		Auth:   middleware.NewAuthMiddleware().Handle,
+		Config:  c,
+		DB:      DB,
+		Log:     middleware.NewLogMiddleware().Handle,
+		Auth:    middleware.NewAuthMiddleware().Handle,
+		Recover: middleware.NewRecoverMiddleware().Handle,
 	}
 
 }

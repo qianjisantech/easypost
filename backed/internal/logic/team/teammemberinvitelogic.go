@@ -60,7 +60,6 @@ func (l *TeamMemberInviteLogic) TeamMemberInvite(req *types.TeamMemberInviteRequ
 		teamMembers = append(teamMembers, model.SysTeamMember{
 			Username:   sysUser.Username,
 			Name:       sysUser.Name,
-			IsDeleted:  sysUser.IsDeleted,
 			UserID:     &sysUser.ID,
 			Email:      sysUser.Email,
 			TeamID:     &teamId,

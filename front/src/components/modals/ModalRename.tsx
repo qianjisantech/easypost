@@ -5,7 +5,7 @@ import { Form, Input, type InputRef, message, Modal, type ModalProps } from "ant
 
 import type { ApiMenuData } from '@/components/ApiMenu/ApiMenu.type'
 import { useMenuHelpersContext } from '@/contexts/menu-helpers'
-import { ApiRename } from "@/api/am";
+import { ApiRename } from "src/api/api";
 
 interface ModalRenameProps extends Omit<ModalProps, 'open' | 'onOk'> {
   formData?: Pick<ApiMenuData, 'id' | 'name'>

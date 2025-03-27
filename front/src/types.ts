@@ -72,7 +72,7 @@ export interface ApiDetails {
   /** 接口状态 */
   status: ApiStatus
   /** 责任人 */
-  responsibleId?: string
+  responsible?: string
   /** 修改者 */
   editorId?: string
   /** 创建者 */
@@ -101,9 +101,11 @@ export interface ApiDetails {
   /** 响应示例 */
   responseExamples?: ApiDetailsResponseExample[]
   /** 接口文档创建时间 */
-  createdAt?: string
+  createdTime?: string
   /** 接口文档更新时间 */
-  updatedAt?: string
+  updatedTime?: string
+  createBy?: string
+  updateBy?: string
 }
 
 export interface ApiDoc {
@@ -112,15 +114,15 @@ export interface ApiDoc {
   /** 文档标题 */
   name: string
   /** 创建者唯一标识 */
-  creatorId?: string
+  createBy?: string
   /** 编辑者唯一标识 */
-  editorId?: string
+  updateBy?: string
   /** 文档内容 */
   content?: string
   /** 创建时间 */
-  createAt?: string
+  createTime?: string
   /** 最后修改时间 */
-  updateAt?: string
+  updateTime?: string
 }
 
 export interface ApiSchema {
@@ -128,6 +130,7 @@ export interface ApiSchema {
 }
 
 export interface ApiFolder {
+  id:string
   name: string
   parentId?: ApiMenuBase['id']
   serverId?: string

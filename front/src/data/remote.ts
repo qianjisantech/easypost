@@ -20,7 +20,7 @@ const RESPONSE_ID_1 = nanoid(6)
 const RESPONSE_ID_2 = nanoid(6)
 
 const defaultResponse = (): ApiDetailsResponse => {
-  const id = ''
+  const id = nanoid(6)
 
   return {
     id,
@@ -41,62 +41,89 @@ export const creator: Creator = {
 }
 
 /** 菜单原始数据，通常从服务端中获取，然后在客户端中需要被组装为树状结构。 */
-export const apiDirectoryData: ({ name: string; id: MenuId.文档; type: MenuItemType.Doc } | {
-  name: string;
-  id: MenuId.默认分组;
-  type: MenuItemType.ApiDetailFolder
-} | { name: string; id: MenuId.嵌套分组; type: MenuItemType.ApiDetailFolder; parentId: MenuId.默认分组 } | {
-  name: string;
-  id: MenuId.xx;
-  type: MenuItemType.Doc;
-  parentId: MenuId.嵌套分组
-} | {
-  method: HttpMethod;
-  name: string;
-  id: MenuId.示例接口;
-  type: MenuItemType.ApiDetail;
-  parentId: MenuId.嵌套分组
-} | { name: string; id: MenuId.示例接口2; type: MenuItemType.ApiDetail; parentId: MenuId.嵌套分组 } | {
-  name: string;
-  id: MenuId.宠物店;
-  type: MenuItemType.ApiDetailFolder
-} | { name: string; id: MenuId.查询宠物详情; type: MenuItemType.ApiDetail; parentId: MenuId.宠物店 } | {
-  name: string;
-  id: MenuId.新建宠物信息;
-  type: MenuItemType.ApiDetail;
-  parentId: MenuId.宠物店
-} | { name: string; id: MenuId.宠物店S; type: MenuItemType.ApiSchemaFolder } | {
-  name: string;
-  id: MenuId.SchemaPet;
-  type: MenuItemType.ApiSchema;
-  parentId: MenuId.宠物店S
-} | { name: string; id: MenuId.SchemaCategory; type: MenuItemType.ApiSchema; parentId: MenuId.宠物店S } | {
-  name: string;
-  id: MenuId.SchemaTag;
-  type: MenuItemType.ApiSchema;
-  parentId: MenuId.宠物店S
-} | { name: string; id: MenuId.引用模型; type: MenuItemType.ApiSchema } | {
-  name: string;
-  id: MenuId.Request;
-  type: MenuItemType.RequestFolder
-} | { name: string; id: MenuId.Request2; type: MenuItemType.HttpRequest; parentId: MenuId.Request })[] = [
+export const apiDirectoryData: (
+  | { name: string; id: MenuId.文档; type: MenuItemType.Doc }
+  | {
+      name: string
+      id: MenuId.默认分组
+      type: MenuItemType.ApiDetailFolder
+    }
+  | {
+      name: string
+      id: MenuId.嵌套分组
+      type: MenuItemType.ApiDetailFolder
+      parentId: MenuId.默认分组
+    }
+  | {
+      name: string
+      id: MenuId.xx
+      type: MenuItemType.Doc
+      parentId: MenuId.嵌套分组
+    }
+  | {
+      method: HttpMethod
+      name: string
+      id: MenuId.示例接口
+      type: MenuItemType.ApiDetail
+      parentId: MenuId.嵌套分组
+    }
+  | { name: string; id: MenuId.示例接口2; type: MenuItemType.ApiDetail; parentId: MenuId.嵌套分组 }
+  | {
+      name: string
+      id: MenuId.宠物店
+      type: MenuItemType.ApiDetailFolder
+    }
+  | { name: string; id: MenuId.查询宠物详情; type: MenuItemType.ApiDetail; parentId: MenuId.宠物店 }
+  | {
+      name: string
+      id: MenuId.新建宠物信息
+      type: MenuItemType.ApiDetail
+      parentId: MenuId.宠物店
+    }
+  | { name: string; id: MenuId.宠物店S; type: MenuItemType.ApiSchemaFolder }
+  | {
+      name: string
+      id: MenuId.SchemaPet
+      type: MenuItemType.ApiSchema
+      parentId: MenuId.宠物店S
+    }
+  | {
+      name: string
+      id: MenuId.SchemaCategory
+      type: MenuItemType.ApiSchema
+      parentId: MenuId.宠物店S
+    }
+  | {
+      name: string
+      id: MenuId.SchemaTag
+      type: MenuItemType.ApiSchema
+      parentId: MenuId.宠物店S
+    }
+  | { name: string; id: MenuId.引用模型; type: MenuItemType.ApiSchema }
+  | {
+      name: string
+      id: MenuId.Request
+      type: MenuItemType.RequestFolder
+    }
+  | { name: string; id: MenuId.Request2; type: MenuItemType.HttpRequest; parentId: MenuId.Request }
+)[] = [
   {
     id: MenuId.文档,
     name: '🦊 Apifox-UI 是什么',
     type: MenuItemType.Doc,
-//     data: {
-//       id: nanoid(6),
-//       name: '🦊 Apifox-UI 是什么',
-//       content: `## 介绍
-//
-// 这是一个精心仿制 Apifox 界面的纯前端项目，使用 Next + Antd + TypeScript + TailwindCSS 开发，源码融入了很多好的编码实践，能让你学习到如何组织和建设一个复杂的 React 项目，非常适合 React 新手学习！
-//
-// ## 动机
-//
-// 在日常工作中，我经常会使用 Antd 来构建页面，但大多数页面的结构和交互都是比较简单的。为了精进对 Next + Antd 的使用技巧，我选择了 Apifox 这个相对复杂的界面进行模仿，希望在实践中能够掌握使用 Antd 打造出高级的页面效果。
-//
-// 可能有很多小伙伴也抱有类似的学习动机，所以我将代码开源出来，希望能帮助各位，感兴趣的话不妨到点个 star⭐ 收藏一下噢~`,
-//     },
+    //     data: {
+    //       id: nanoid(6),
+    //       name: '🦊 Apifox-UI 是什么',
+    //       content: `## 介绍
+    //
+    // 这是一个精心仿制 Apifox 界面的纯前端项目，使用 Next + Antd + TypeScript + TailwindCSS 开发，源码融入了很多好的编码实践，能让你学习到如何组织和建设一个复杂的 React 项目，非常适合 React 新手学习！
+    //
+    // ## 动机
+    //
+    // 在日常工作中，我经常会使用 Antd 来构建页面，但大多数页面的结构和交互都是比较简单的。为了精进对 Next + Antd 的使用技巧，我选择了 Apifox 这个相对复杂的界面进行模仿，希望在实践中能够掌握使用 Antd 打造出高级的页面效果。
+    //
+    // 可能有很多小伙伴也抱有类似的学习动机，所以我将代码开源出来，希望能帮助各位，感兴趣的话不妨到点个 star⭐ 收藏一下噢~`,
+    //     },
   },
   {
     id: MenuId.默认分组,
@@ -126,7 +153,7 @@ export const apiDirectoryData: ({ name: string; id: MenuId.文档; type: MenuIte
     parentId: MenuId.嵌套分组,
     name: '示例接口',
     type: MenuItemType.ApiDetail,
-    method: HttpMethod.Get
+    method: HttpMethod.Get,
     // data: {
     //   id: nanoid(6),
     //   path: '/example',
@@ -156,7 +183,7 @@ export const apiDirectoryData: ({ name: string; id: MenuId.文档; type: MenuIte
     parentId: MenuId.嵌套分组,
     name: '名称超长的示例接口',
     type: MenuItemType.ApiDetail,
-    method: HttpMethod.Post
+    method: HttpMethod.Post,
     // data: {
     //   id: nanoid(6),
     //   path: '/example',
@@ -178,7 +205,7 @@ export const apiDirectoryData: ({ name: string; id: MenuId.文档; type: MenuIte
     parentId: MenuId.宠物店,
     name: '查询宠物详情',
     type: MenuItemType.ApiDetail,
-    method: HttpMethod.Post
+    method: HttpMethod.Post,
     // data: {
     //   id: nanoid(6),
     //   path: '/pet/{petId}',
@@ -311,7 +338,7 @@ export const apiDirectoryData: ({ name: string; id: MenuId.文档; type: MenuIte
     parentId: MenuId.宠物店,
     name: '新建宠物信息',
     type: MenuItemType.ApiDetail,
-    method: HttpMethod.Post
+    method: HttpMethod.Post,
     // data: {
     //   id: nanoid(6),
     //   path: '/pet',
@@ -491,7 +518,7 @@ export const recycleGroupData: RecycleData = {
           type: MenuItemType.ApiDetail,
           data: {
             id: nanoid(6),
-            path: '/am',
+            path: '/api',
             name: '接口1',
             method: HttpMethod.Get,
             status: ApiStatus.Released,
@@ -571,31 +598,27 @@ export const recycleGroupData: RecycleData = {
   },
 }
 
-export const initialTabItems: ({
-  label: string;
-  contentType: MenuItemType.ApiDetail | MenuItemType.ApiSchema | MenuItemType.ApiSchemaFolder | MenuItemType.Doc | MenuItemType.HttpRequest | MenuItemType.RequestFolder | MenuItemType.ApiDetailFolder;
-  key: string
-} | { label: string; contentType: string; key: string })[] = (() => {
+export const initialTabItems: (
+  | {
+      label: string
+      contentType:
+        | MenuItemType.ApiDetail
+        | MenuItemType.ApiSchema
+        | MenuItemType.ApiSchemaFolder
+        | MenuItemType.Doc
+        | MenuItemType.HttpRequest
+        | MenuItemType.RequestFolder
+        | MenuItemType.ApiDetailFolder
+      key: string
+    }
+  | { label: string; contentType: string; key: string }
+)[] = (() => {
   return [
-
     {
       key: 'newCatalog',
       label: '新建...',
       contentType: 'blank',
-    },
-    ...apiDirectoryData
-        .filter(({ id }) => {
-          return (
-              id === ''
-          )
-        })
-        .map(({ id, name, type }) => {
-          return {
-            key: id,
-            label: name,
-            contentType: type,
-          }
-        }),
+    }
   ]
 })()
 
@@ -614,12 +637,23 @@ export const initialExpandedKeys: ApiMenuData['id'][] = [
     return acc
   }, []),
 ]
-
+export const initialCreateApiParameters: ApiDetails['parameters'] = {
+  query: [],
+  header: [],
+  path: [],
+  cookie: [],
+}
 export const initialCreateApiDetailsData: ApiDetails = {
-  id: nanoid(6),
+  id: '',
   method: HttpMethod.Get,
+  path: '',
+  name: '',
+  responsibleId:'',
+  tags: [],
+  description: '',
   status: ApiStatus.Developing,
   serverId: SERVER_INHERIT,
+  parameters: initialCreateApiParameters,
   responses: [defaultResponse()],
 }
 
@@ -628,3 +662,4 @@ export const initialCreateApiSchemaData: ApiSchema = {
     type: SchemaType.Object,
   },
 }
+

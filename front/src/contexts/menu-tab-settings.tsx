@@ -1,10 +1,10 @@
 import { createContext, useContext, useEffect, useState } from 'react'
 import useEvent from 'react-use-event-hook'
 
-import { ApiDetail, DcoDetail } from "@/api/am";
 import type { ApiTabItem, EditStatus } from '@/components/ApiTab'
 import { initialActiveTabKey, initialTabItems } from '@/data/remote'
-import { MenuItemType } from '@/enums'
+import { HttpMethod, MenuItemType } from "@/enums";
+
 
 interface MenuTabContextData {
   /** 当前在 Tabs 中打开的所有页签。 */
@@ -54,16 +54,20 @@ export const useMenuTabContext = () => useContext(MenuTabContext)
 
 interface MenuTabHelpers {
   /** 激活指定的页签。 */
-  activeTabItem: (payload: ApiTabItem) => void
+  activeTabItem: (payload: Pick<ApiTabItem, 'key'>) => void
   /** 获取指定的页签项。 */
   getTabItem: (payload: Pick<ApiTabItem, 'key'>) => ApiTabItem | undefined
   /** 添加新的页签。 */
   addTabItem: (
-    payload: ApiTabItem,
-    config?: { autoActive?: boolean; replaceTab?: ApiTabItem['key'] }
+    payload: { label: string; contentType: MenuItemType; key: string },
+    config?: { autoActive?: boolean; replaceTab?: ApiTabItem["key"] }
+  ) => void
+  updateTabItem: (
+    payload: { label: string; contentType: MenuItemType; key: string },
+    config?: { autoActive?: boolean; replaceTab?: ApiTabItem["key"] }
   ) => void
   /** 移除页签。 */
-  removeTabItem: (payload: ApiTabItem) => void
+  removeTabItem: (payload: Pick<ApiTabItem, 'key'>) => void
   /** 移除所有页签。 */
   removeAllTabItems: () => void
   /** 移除所有页签，除了当前激活的页签。 */
@@ -80,22 +84,9 @@ export function useMenuTabHelpers(): MenuTabHelpers {
     lastActiveTabKey,
     setLastActiveTabKey,
   } = useMenuTabContext()
-  const apiDetail = async (id: string) => {
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-call
-    const response = await ApiDetail(id)
-  }
+
   const activeTabItem = useEvent<MenuTabHelpers['activeTabItem']>((payload) => {
     setLastActiveTabKey(() => activeTabKey)
-    switch (payload.contentType) {
-      case MenuItemType.ApiDetail:
-        break
-      case MenuItemType.ApiDetailFolder:
-        break
-      case MenuItemType.Doc:
-        break
-      default:
-        break
-    }
 
     if (tabItems.length > 0) {
       setActiveTabKey(() => payload.key)
@@ -111,8 +102,7 @@ export function useMenuTabHelpers(): MenuTabHelpers {
       const isSameTabPresent = tabItems.some((item) => item.key === payload.key)
 
       if (isSameTabPresent) {
-        console.error('已存在相同的页签。')
-        // throw new Error('已存在相同的页签。')
+        throw new Error('已存在相同的页签。')
       } else {
         if (replaceTab) {
           setTabItems((items) => items.map((it) => (it.key === replaceTab ? payload : it)))
@@ -121,12 +111,44 @@ export function useMenuTabHelpers(): MenuTabHelpers {
         }
 
         if (autoActive) {
-          activeTabItem(payload)
+          activeTabItem({ key: payload.key })
         }
       }
+      console.log('addTabItem tabItems',tabItems)
     }
   )
+  const updateTabItem = useEvent<MenuTabHelpers['updateTabItem']>(
+    (payload, { autoActive = true, replaceKey } = {}) => {
+      // 如果指定了 replaceKey，则用新页签替换旧页签
+      if (replaceKey) {
+        setTabItems((items) =>
+          items.map((item) =>
+            item.key === replaceKey ? payload : item
+          )
+        );
+      }
+      // 否则按 key 更新现有页签
+      else {
+        const targetIndex = tabItems.findIndex((item) => item.key === payload.key);
 
+        if (targetIndex === -1) {
+          throw new Error('要更新的页签不存在。');
+        }
+
+        setTabItems((items) =>
+          items.map((item) =>
+            item.key === payload.key ? { ...item, ...payload } : item
+          )
+        );
+      }
+
+      if (autoActive) {
+        activeTabItem({ key: payload.key });
+      }
+
+      console.log('updateTabItem tabItems', tabItems);
+    }
+  )
   const removeTabItem = useEvent<MenuTabHelpers['removeTabItem']>((payload) => {
     setTabItems((items) => {
       const newItems = items.filter((item) => item.key !== payload.key)
@@ -138,14 +160,14 @@ export function useMenuTabHelpers(): MenuTabHelpers {
           lastActiveTabKey && newItems.findIndex((item) => item.key === lastActiveTabKey) !== -1
 
         if (valideTabKey) {
-          activeTabItem(payload)
+          activeTabItem({ key: lastActiveTabKey })
         } else {
           setLastActiveTabKey(() => undefined)
 
           const lastTabKey = newItems.at(-1)?.key
 
           if (lastTabKey) {
-            activeTabItem(payload)
+            activeTabItem({ key: lastTabKey })
           }
         }
       }
@@ -182,6 +204,7 @@ export function useMenuTabHelpers(): MenuTabHelpers {
     activeTabItem,
     getTabItem,
     addTabItem,
+    updateTabItem,
     removeTabItem,
     removeAllTabItems: removeAllPageTabItems,
     removeOtherTabItems,

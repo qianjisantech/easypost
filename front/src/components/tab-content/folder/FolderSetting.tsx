@@ -1,7 +1,8 @@
 import { useEffect, useMemo } from 'react'
 
-import { Button, Form, Input } from 'antd'
+import { Button, Form, Input, message } from 'antd'
 
+import { FolderDetail, FolderDetailSave } from '@/api/folder'
 import { useTabContentContext } from '@/components/ApiTab/TabContentContext'
 import { SelectorCatalog } from '@/components/SelectorCatalog'
 import { SelectorService } from '@/components/SelectorService'
@@ -11,27 +12,34 @@ import { MenuItemType } from '@/enums'
 import type { ApiFolder } from '@/types'
 
 export function FolderSetting() {
-  const { menuRawList, updateMenuItem } = useMenuHelpersContext()
   const { tabData } = useTabContentContext()
 
   const [form] = Form.useForm<ApiFolder>()
 
-  const apiFolder = useMemo(() => {
-    if (menuRawList) {
-      return menuRawList.find(({ id }) => id === tabData.key)
-    }
-  }, [menuRawList, tabData.key])
-
-  useEffect(() => {
-    if (apiFolder && apiFolder.type === MenuItemType.ApiDetailFolder) {
+  const fetchFolderDetail = async () => {
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-call
+    const response = await FolderDetail(tabData.key)
+    if (response.data.success) {
       form.setFieldsValue({
-        name: apiFolder.name,
-        parentId: apiFolder.parentId || ROOT_CATALOG,
-        serverId: apiFolder.data?.serverId || SERVER_INHERIT,
-        description: apiFolder.data?.description,
+        id: response.data.data.id,
+        name: response.data.data.name,
+        parentId: response.data.data.parentId || ROOT_CATALOG,
+        serverId: response.data.data.serverId || SERVER_INHERIT,
+        description: response.data.data.description,
       })
     }
-  }, [form, apiFolder])
+  }
+  const createFolderDetail = async (values) => {
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-call
+    const response = await FolderDetailSave(values)
+    if (response.data.success) {
+      message.success(response.data.message)
+    }
+  }
+
+  useEffect(() => {
+    fetchFolderDetail()
+  }, [form])
 
   return (
     <div className="max-w-2xl">
@@ -40,10 +48,12 @@ export function FolderSetting() {
         form={form}
         labelCol={{ span: 6 }}
         onFinish={(values) => {
-          if (apiFolder) {
+          createFolderDetail({
+            ...values,
+            id: tabData.key,
+          })
 
-            updateMenuItem({ ...values, id: apiFolder.id })
-          }
+          // updateMenuItem({ ...values, id: apiFolder.id })
         }}
       >
         <Form.Item
@@ -56,7 +66,7 @@ export function FolderSetting() {
 
         <Form.Item label="父级目录" name="parentId" required={false} rules={[{ required: true }]}>
           <SelectorCatalog
-            exclued={apiFolder?.id ? [apiFolder.id] : undefined}
+            exclued={form.id ? [form.id] : undefined}
             type={MenuItemType.ApiDetailFolder}
           />
         </Form.Item>

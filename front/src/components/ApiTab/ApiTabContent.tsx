@@ -18,7 +18,7 @@ import { CatalogType, MenuItemType } from '@/enums'
  */
 export function ApiTabContent() {
   const { tabData } = useTabContentContext()
-
+  console.log('ApiTabContent tabData',tabData)
   switch (tabData.contentType) {
     case MenuItemType.ApiDetail:
       return <Api />

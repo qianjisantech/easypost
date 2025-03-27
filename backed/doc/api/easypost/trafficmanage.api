@@ -1,0 +1,83 @@
+syntax = "v1"
+
+info(
+    title: "easypost后端"
+    desc: "qianji"
+    author: "qianji"
+    email: "2497822530@qq.com"
+    version: "0.1"
+)
+
+
+type (
+    TrafficQueryPageRequest {
+        Current int `json:"current"`
+        PageSize int `json:"pageSize"`
+        RecordTime string   `json:"recordTime,optional"`
+        TaskId string   `json:"taskId,optional"`
+        Ip string  `json:"ip,optional"`
+        Url string  `json:"url,optional"`
+    }
+
+    TrafficQueryPageResp {
+        Success bool `json:"success"`
+        Message string `json:"message"`
+        Data TrafficQueryPageData `json:"data"`
+    }
+    TrafficQueryPageData {
+        Total int64 `json:"total"`
+        TotalPages int64 `json:"totalPages"`
+        Current int64 `json:"current"`
+        PageSize int64 `json:"pageSize"`
+        Records []*TrafficQueryPageRecord `json:"records"`
+    }
+    TrafficQueryPageRecord {
+        Id string `json:"id"`
+        Ip string  `json:"ip"`
+        Url string `json:"url"`
+        Method string `json:"method"`
+        Status int `json:"status"`
+        RecordTime string `json:"recordTime"`
+        TaskId string  `json:"taskId"`
+    }
+    TrafficDetailRequest {
+        Id int `path:"id"`
+    }
+    TrafficDetailResp {
+        Success bool `json:"success"`
+        Message string `json:"message"`
+        Data TrafficDetailData `json:"data"`
+    }
+    TrafficDetailData {
+        Id string `json:"id"`
+        TaskId string  `json:"taskId"`
+        Url string `json:"url"`
+        Method string `json:"method"`
+        RequestBody string  `json:"requestBody"`
+        Headers []*TrafficDetailDataHeader `json:"headers"`
+        Response string  `json:"response"`
+        Status int `json:"status"`
+        RecordTime string `json:"recordTime"`
+    }
+
+    TrafficDetailDataHeader {
+       Id string `json:"id"`
+       Key string   `json:"key"`
+       Value string   `json:"value"`
+    }
+
+)
+
+@server(
+    group: trafficmanage
+    prefix: /api
+)
+service easypost-api {
+    @handler TrafficQueryPage //文件夹详情
+    post /gs/traffic/page (TrafficQueryPageRequest) returns (TrafficQueryPageResp)
+
+    @handler TrafficDetail//文件夹详情
+    get /gs/traffic/detail/:id (TrafficDetailRequest) returns (TrafficDetailResp)
+}
+
+

@@ -1,0 +1,53 @@
+syntax = "v1"
+
+info(
+    title: "easypost后端"
+    desc: "qianji"
+    author: "qianji"
+    email: "2497822530@qq.com"
+    version: "0.1"
+)
+
+
+type (
+      EsSearchRequest {
+      Query []*EsSearchQuery `form:"query"`
+      Regex EsSearchRegex `form:"regex,optional"`
+      }
+      EsSearchQuery {
+       Key string  `json:"key"`
+       Value string  `json:"value"`
+      }
+      EsSearchRegex {
+          Address string  `json:"address"`
+          Header []string  `json:"header"`
+          Paylod string  `json:"paylod"`
+          Method string  `json:"method"`
+      }
+      EsSearchResp {
+          Success bool `json:"success"`
+          Message string `json:"message"`
+          Data interface{} `json:"data"`
+      }
+      EsSynchronizeRequest {
+       Body string `json:"body"`
+
+      }
+      EsSynchronizeResp {
+          Success bool `json:"success"`
+          Message string `json:"message"`
+      }
+)
+
+@server(
+    group: es
+    prefix: /api
+)
+service easypost-api {
+    @handler EsSearch //es查询
+    post /gs/es/search (EsSearchRequest) returns (EsSearchResp)
+    @handler EsSynchronize//es查询
+    post /gs/es/synchronize (EsSynchronizeRequest) returns (EsSynchronizeResp)
+}
+
+

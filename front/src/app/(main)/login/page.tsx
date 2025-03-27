@@ -64,7 +64,7 @@ const LoginPage = () => {
         {isQRCodeLogin ? (
           <QRCodeLogin />
         ) : (
-          <EmailLogin  />
+          <EmailLogin />
         )}
 
         {/* 切换登录方式按钮 */}
@@ -73,6 +73,19 @@ const LoginPage = () => {
           setIsQRCodeLogin={setIsQRCodeLogin}
         />
       </Card>
+      <div style={{
+        position: 'fixed',
+        bottom:100,
+        left: 0,
+        right: 0,
+        textAlign: 'center',
+        color: '#666',
+        padding: '10px 0',
+        backgroundColor: '#fff',  // 可选：添加背景色
+        zIndex: 1000              // 确保在其他内容之上
+      }}>
+        测试团队 出品
+      </div>
     </div>
   )
 }

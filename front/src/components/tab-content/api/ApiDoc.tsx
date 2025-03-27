@@ -1,24 +1,28 @@
 import { useEffect, useMemo, useState } from 'react'
 
 import { Viewer } from '@bytemd/react'
-import { Button, Card, Select, type SelectProps, Space, Tabs, theme, Tooltip } from 'antd'
+import { Button, Card, Form, Input, Select, type SelectProps, Space, Tabs, theme, Tooltip } from "antd";
 import dayjs from 'dayjs'
 import { Code2Icon, ZapIcon } from 'lucide-react'
-
-import { ApiDetail } from '@/api/am'
-import type { ApiMenuData } from '@/components/ApiMenu'
+import jsonBeautify from 'json-beautify';
+import { ApiDetail, ApiDocDetail } from "src/api/api";
 import { useTabContentContext } from '@/components/ApiTab/TabContentContext'
 import { IconText } from '@/components/IconText'
+import { JsonSchemaEditor } from '@/components/JsonSchema'
 import { ApiRemoveButton } from '@/components/tab-content/api/ApiRemoveButton'
 import { API_STATUS_CONFIG, HTTP_METHOD_CONFIG } from '@/configs/static'
 import { useGlobalContext } from '@/contexts/global'
-import { useMenuHelpersContext } from '@/contexts/menu-helpers'
 import { creator } from '@/data/remote'
 import { useStyles } from '@/hooks/useStyle'
 import type { ApiDetails, Parameter } from '@/types'
 
 import { css } from '@emotion/css'
-
+import JsonView from "react18-json-view";
+import { JsonSchemaCard } from "@/components/JsonSchemaCard";
+import { JsonViewer } from "@/components/JsonViewer";
+import TextArea from "antd/es/input/TextArea";
+import { ResponseTab } from "@/components/tab-content/api/components/ResponseTab";
+import { getContentTypeString } from '@/helpers'
 const statusOptions: SelectProps['options'] = Object.entries(API_STATUS_CONFIG).map(
   ([method, { text, color }]) => {
     return {
@@ -136,24 +140,23 @@ export function ApiDoc() {
   const [apiDetails, setApiDetails] = useState<ApiDetails | null>(null)
   // 加载 API 详情
   const loadingApiDetails = async () => {
-
-    if (tabData.key){
-      const response = await ApiDetail(tabData.key)
+    if (tabData.key) {
+      const response = await ApiDocDetail(tabData.key)
       if (response.data.success) {
-        setApiDetails(response.data.data) // 注意: 修正 `res` 为 `response`
+        setApiDetails(response.data.data.data) // 注意: 修正 `res` 为 `response`
       }
     }
   }
-
-  useEffect(() => {
-    loadingApiDetails()
-  }, [tabData.key])
   // 计算 `docValue` 和 `methodConfig`
   const { docValue, methodConfig } = useMemo(() => {
     const methodConfig = apiDetails ? HTTP_METHOD_CONFIG[apiDetails.method] : undefined
 
     return { docValue: apiDetails, methodConfig }
   }, [apiDetails]) //
+  useEffect(() => {
+    loadingApiDetails()
+    console.log('docValue', docValue)
+  }, [tabData.key])
 
   const { styles } = useStyles(({ token }) => {
     return {
@@ -195,7 +198,7 @@ export function ApiDoc() {
 
   const pathParams = docValue.parameters?.path
   const queryParams = docValue.parameters?.query
-
+    // 解析 JSON 字符串并格式化
   return (
     <div className="h-full overflow-auto p-tabContent">
       <div className="flex items-center">
@@ -268,11 +271,11 @@ export function ApiDoc() {
 
       <div>
         <Space wrap size="large">
-          <BaseInfoItem label="创建时间" value={dayjs(docValue.createdAt).format('YYYY年M月D日')} />
-          <BaseInfoItem label="修改时间" value={dayjs(docValue.updatedAt).format('YYYY年M月D日')} />
-          <BaseInfoItem label="修改者" value={creator.name} />
-          <BaseInfoItem label="创建者" value={creator.name} />
-          <BaseInfoItem label="责任人" value={creator.name} />
+          <BaseInfoItem label="创建时间" value={dayjs(docValue.createdTime).format('YYYY年M月D日')} />
+          <BaseInfoItem label="修改时间" value={dayjs(docValue.updatedTime).format('YYYY年M月D日')} />
+          <BaseInfoItem label="修改者" value={docValue.updateBy} />
+          <BaseInfoItem label="创建者" value={docValue.createBy} />
+          <BaseInfoItem label="责任人" value={docValue.responsible ? JSON.parse(docValue.responsible).username : ''} />
         </Space>
       </div>
 
@@ -285,12 +288,14 @@ export function ApiDoc() {
 
       <div>
         <GroupTitle>请求参数</GroupTitle>
-        {hasParams ? (
+        {hasPathParams || hasQueryParams || docValue.requestBody?.jsonSchema ? (
           <div className="flex flex-col gap-y-4">
             {hasPathParams && (
               <Card className={styles.card} title="Path 参数">
                 <div className="flex flex-col gap-3">
-                  {pathParams?.map((param) => <ApiParameter key={param.id} param={param} />)}
+                  {pathParams?.map((param) => (
+                    <ApiParameter key={param.id} param={param} />
+                  ))}
                 </div>
               </Card>
             )}
@@ -298,7 +303,19 @@ export function ApiDoc() {
             {hasQueryParams && (
               <Card className={styles.card} title="Query 参数">
                 <div className="flex flex-col gap-3">
-                  {queryParams?.map((param) => <ApiParameter key={param.id} param={param} />)}
+                  {queryParams?.map((param) => (
+                    <ApiParameter key={param.id} param={param} />
+                  ))}
+                </div>
+              </Card>
+            )}
+
+            {docValue.requestBody?.jsonSchema && (
+              <Card className={styles.card} title="Raw参数">
+                <div style={{ height: '100%', overflow: 'auto', width: '100%' }}>
+                  <JsonViewer
+                    value={jsonBeautify(JSON.parse(docValue.requestBody.jsonSchema), null, 2)}
+                  />
                 </div>
               </Card>
             )}
@@ -329,6 +346,13 @@ export function ApiDoc() {
                         <span style={{ color: token.colorTextSecondary }}>内容格式：</span>
                         <span>{res.contentType}</span>
                       </span>
+                      <span>
+                        <span style={{ color: token.colorTextSecondary }}>Content-Type：</span>
+                        <span>{getContentTypeString(res.contentType)}</span>
+                      </span>
+                    </div>
+                    <div>
+
                     </div>
                   </div>
                 ),
