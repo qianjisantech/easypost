@@ -5,7 +5,7 @@ import { Button, Form, type FormProps, Select, type SelectProps, Space } from 'a
 import type { AxiosRequestConfig } from 'axios'
 import { nanoid } from 'nanoid'
 
-import { ApiDetail, ApiDetailSave, ApiRunDetail } from "src/api/api";
+import { ApiDetail, ApiRunDetail,ApiDetailUpdate } from "src/api/api";
 import { PageTabStatus } from '@/components/ApiTab/ApiTab.enum'
 import { useTabContentContext } from '@/components/ApiTab/TabContentContext'
 import { InputUnderline } from '@/components/InputUnderline'
@@ -98,7 +98,7 @@ export function ApiRun() {
     if (isCreating) {
       const menuItemId = ''
       try {
-        await ApiDetailSave({
+        await ApiDetailUpdate({
           id: menuItemId,
           name: menuName,
           type: MenuItemType.ApiDetail,
