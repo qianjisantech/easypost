@@ -26,9 +26,10 @@ func NewProjectQueryPageLogic(ctx context.Context, svcCtx *svc.ServiceContext) *
 }
 
 func (l *ProjectQueryPageLogic) ProjectQueryPage(req *types.ProjectQueryPageRequest) (resp *types.ProjectQueryPageResp, err error) {
-	db := l.svcCtx.DB.Begin().Debug()
+	db := l.svcCtx.DB.Debug()
 
-	teamId := req.TeamId
+	teamIdstring := l.ctx.Value("teamId").(string)
+	teamId, err := strconv.ParseInt(teamIdstring, 10, 64)
 	var projects []*model.SysProject
 
 	tx := db.WithContext(l.ctx).Where("team_id=?", teamId).Find(&projects)

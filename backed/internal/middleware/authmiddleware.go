@@ -27,7 +27,6 @@ func NewAuthMiddleware() *AuthMiddleware {
 	}
 }
 
-// Handle 拦截请求，从 Authorization 头中解析 JWT 并获取 user_id
 func (a *AuthMiddleware) Handle(next http.HandlerFunc) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 		// 检查是否是白名单路径
@@ -38,53 +37,89 @@ func (a *AuthMiddleware) Handle(next http.HandlerFunc) http.HandlerFunc {
 
 		// 从请求头获取 Authorization 字段
 		authHeader := r.Header.Get("Authorization")
-
 		if authHeader == "" {
 			http.Error(w, "Missing Authorization header", http.StatusUnauthorized)
 			return
 		}
 
-		// 通常格式为 "Bearer <token>"
-		parts := strings.SplitN(authHeader, " ", 2)
-		if len(parts) != 2 || strings.ToLower(parts[0]) != "bearer" {
-			http.Error(w, "Invalid Authorization header format", http.StatusUnauthorized)
-			return
-		}
-		tokenString := parts[1]
-
-		// 解析 token
-		token, err := jwt.Parse(tokenString, func(token *jwt.Token) (interface{}, error) {
-			// 检查签名方法是否为 HMAC
-			if _, ok := token.Method.(*jwt.SigningMethodHMAC); !ok {
-				return nil, fmt.Errorf("unexpected signing method: %v", token.Header["alg"])
-			}
-			return []byte(secretKey), nil
-		})
-		if err != nil || !token.Valid {
-			http.Error(w, "Invalid token", http.StatusUnauthorized)
+		// 解析 Bearer token
+		tokenString, err := extractBearerToken(authHeader)
+		if err != nil {
+			http.Error(w, err.Error(), http.StatusUnauthorized)
 			return
 		}
 
-		// 从 token 中获取声明
-		claims, ok := token.Claims.(jwt.MapClaims)
-		if !ok {
-			http.Error(w, "Invalid token claims", http.StatusUnauthorized)
+		// 验证并解析 JWT
+		claims, err := parseAndValidateJWT(tokenString)
+		if err != nil {
+			http.Error(w, err.Error(), http.StatusUnauthorized)
 			return
 		}
 
-		// 提取 user_id。注意 JSON 中数字默认为 float64
-		userIDFloat, ok := claims["user_id"].(float64)
-		if !ok {
-			http.Error(w, "user_id not found in token", http.StatusUnauthorized)
+		// 从 claims 获取 user_id
+		userID, err := extractUserIDFromClaims(claims)
+		if err != nil {
+			http.Error(w, err.Error(), http.StatusUnauthorized)
 			return
 		}
-		userID := int64(userIDFloat)
-		log.Printf("获取到的 userID 为：%s", userID)
-		// 将 userID 放入请求上下文中，方便后续获取
-		ctx := context.WithValue(r.Context(), "userId", userID)
+
+		// 创建新的上下文并添加值
+		ctx := r.Context()
+		ctx = context.WithValue(ctx, "userId", userID)
+
+		// 安全获取并设置 teamId 和 projectId
+		if teamId := r.Header.Get("X-Team-Id"); teamId != "" {
+			ctx = context.WithValue(ctx, "teamId", teamId)
+			log.Printf("获取到的 teamId 为：%s", teamId)
+		}
+
+		if projectId := r.Header.Get("X-Project-Id"); projectId != "" {
+			ctx = context.WithValue(ctx, "projectId", projectId)
+			log.Printf("获取到的 projectId 为：%s", projectId)
+		}
+
+		// 使用新上下文继续处理
 		r = r.WithContext(ctx)
-
-		// 调用下一个处理函数
 		next(w, r)
 	}
+}
+
+// 辅助函数：从 Authorization 头提取 Bearer token
+func extractBearerToken(authHeader string) (string, error) {
+	parts := strings.SplitN(authHeader, " ", 2)
+	if len(parts) != 2 || strings.ToLower(parts[0]) != "bearer" {
+		return "", fmt.Errorf("invalid Authorization header format")
+	}
+	return parts[1], nil
+}
+
+// 辅助函数：解析并验证 JWT
+func parseAndValidateJWT(tokenString string) (jwt.MapClaims, error) {
+	token, err := jwt.Parse(tokenString, func(token *jwt.Token) (interface{}, error) {
+		if _, ok := token.Method.(*jwt.SigningMethodHMAC); !ok {
+			return nil, fmt.Errorf("unexpected signing method: %v", token.Header["alg"])
+		}
+		return []byte(secretKey), nil
+	})
+	if err != nil {
+		return nil, fmt.Errorf("invalid token: %v", err)
+	}
+	if !token.Valid {
+		return nil, fmt.Errorf("invalid token")
+	}
+
+	claims, ok := token.Claims.(jwt.MapClaims)
+	if !ok {
+		return nil, fmt.Errorf("invalid token claims")
+	}
+	return claims, nil
+}
+
+// 辅助函数：从 claims 提取 user_id
+func extractUserIDFromClaims(claims jwt.MapClaims) (int64, error) {
+	userIDFloat, ok := claims["user_id"].(float64)
+	if !ok {
+		return 0, fmt.Errorf("user_id not found in token")
+	}
+	return int64(userIDFloat), nil
 }
