@@ -8,7 +8,7 @@ COPY . .
 RUN go build -ldflags="-s -w" -o /app/easypost ./easypost.go
 
 # 运行阶段
-FROM registry.cn-hangzhou.aliyuncs.com/library/alpine:3.18
+FROM registry.cn-hangzhou.aliyuncs.com/google_containers/alpine:3.18
 RUN apk add --no-cache ca-certificates tzdata && \
     echo "Asia/Shanghai" > /etc/timezone
 WORKDIR /app
