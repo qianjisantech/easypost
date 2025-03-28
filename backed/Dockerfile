@@ -18,7 +18,7 @@ ENV APP_PORT=$APP_PORT
 RUN go build -ldflags="-s -w" -o /app/easypost ./easypost.go
 
 # ===== 运行时阶段 =====
-FROM alpine:3.19
+FROM registry.cn-hangzhou.aliyuncs.com/google_containers/golang:1.21-alpine
 
 # 中国镜像源优化
 RUN sed -i 's/dl-cdn.alpinelinux.org/mirrors.aliyun.com/g' /etc/apk/repositories && \
