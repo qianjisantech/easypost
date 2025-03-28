@@ -1,5 +1,5 @@
 # ===== 构建阶段 =====
-FROM golang:1.22-alpine AS builder
+FROM registry.cn-shanghai.aliyuncs.com/vue-gin-devops/golang1.21.1:latest AS builder
 
 # 配置环境变量
 ENV CGO_ENABLED=0 \
@@ -18,7 +18,7 @@ ENV APP_PORT=$APP_PORT
 RUN go build -ldflags="-s -w" -o /app/easypost ./easypost.go
 
 # ===== 运行时阶段 =====
-FROM registry.cn-hangzhou.aliyuncs.com/google_containers/golang:1.21-alpine
+FROM registry.cn-shanghai.aliyuncs.com/vue-gin-devops/golang1.21.1:latest
 
 # 中国镜像源优化
 RUN sed -i 's/dl-cdn.alpinelinux.org/mirrors.aliyun.com/g' /etc/apk/repositories && \
