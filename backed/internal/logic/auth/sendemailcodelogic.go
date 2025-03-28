@@ -10,6 +10,7 @@ import (
 	"gorm.io/gorm"
 	"log"
 	"math/rand"
+	"net/mail"
 	"strings"
 	"time"
 
@@ -37,9 +38,9 @@ func (l *SendEmailCodeLogic) SendEmailCode(req *types.AuthEmailSendCodeReq) (res
 	if req.Email == "" {
 		return nil, errorx.NewDefaultError("邮箱不能为空")
 	}
-	if !strings.HasSuffix(req.Email, "@jtexpress.com") {
-		return nil, errorx.NewDefaultError("请使用公司邮箱注册！")
-	}
+	//if !strings.HasSuffix(req.Email, "@jtexpress.com") {
+	//	return nil, errorx.NewDefaultError("请使用公司邮箱注册！")
+	//}
 	checkEmail, err := l.CheckEmail(req.Email)
 	if err != nil {
 		return nil, errorx.NewDefaultError(err.Error())
@@ -125,8 +126,15 @@ func (l *SendEmailCodeLogic) CreateOrUpdateUser(email string, code string) error
 
 	return nil
 }
-
+func IsValidEmail(email string) bool {
+	_, err := mail.ParseAddress(email)
+	return err == nil
+}
 func (l *SendEmailCodeLogic) CheckEmail(email string) (bool, error) {
+	isLegal := IsValidEmail(email)
+	if !isLegal {
+		return false, errorx.NewDefaultError("邮箱不合法")
+	}
 	db := l.svcCtx.DB.Debug()
 	var sysUser *model.SysUser
 
