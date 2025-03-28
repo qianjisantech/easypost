@@ -15,7 +15,7 @@ RUN [ -f go.mod ] || exit 1  # 检查 go.mod 是否存在
 RUN go build -ldflags="-s -w" -o /app/easypost easypost.go
 
 # 运行时阶段
-FROM alpine:3.18
+FROM registry.cn-shanghai.aliyuncs.com/vue-gin-devops/golang1.21.1-alpine:latest
 
 
 # 时区配置
