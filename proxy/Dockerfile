@@ -17,10 +17,10 @@ COPY . .
 # 空的 RUN 指令以防止缓存
 RUN echo "Rebuild required"
 # 构建应用程序
-RUN go build -o easypost-backed
+RUN go build -o easypost-proxy
 
 # 暴露应用程序的端口
-EXPOSE 8888
+EXPOSE 80
 
 # 运行应用程序
-CMD ["./easypost-backed"]
+CMD ["./easypost-proxy"]
