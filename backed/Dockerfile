@@ -1,17 +1,26 @@
-# 构建阶段
-FROM golang:1.21-alpine AS builder
-ENV CGO_ENABLED=0 GOPROXY=https://goproxy.cn,direct
-WORKDIR /build
-COPY go.mod go.sum ./
-RUN go mod download
-COPY . .
-RUN go build -ldflags="-s -w" -o /app/easypost ./easypost.go
+# 使用官方的 Golang 镜像作为基础镜像
+FROM registry.cn-shanghai.aliyuncs.com/vue-gin-devops/golang1.21.1:latest
 
-# 运行阶段
-FROM registry.cn-hangzhou.aliyuncs.com/google_containers/alpine:3.18
-RUN apk add --no-cache ca-certificates tzdata && \
-    echo "Asia/Shanghai" > /etc/timezone
+# 设置环境变量
+ENV GO111MODULE=on
+ENV GOPROXY=https://goproxy.cn,direct
+
+# 设置工作目录
 WORKDIR /app
-COPY --from=builder /app/easypost .
-EXPOSE 8888
-CMD ["/app/easypost"]
+
+# 将 go.mod 和 go.sum 复制到工作目录
+COPY go.mod go.sum ./
+# 下载依赖
+RUN go mod download
+# 将项目的所有源代码复制到工作目录
+COPY . .
+# 空的 RUN 指令以防止缓存
+RUN echo "Rebuild required"
+# 构建应用程序
+RUN go build -o easypost-backed
+
+# 暴露应用程序的端口
+EXPOSE 443
+
+# 运行应用程序
+CMD ["./easypost-backed"]
