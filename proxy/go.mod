@@ -1,6 +1,6 @@
 module proxy
 
-go 1.22
+go 1.22.0
 
 require (
 	github.com/tsenart/vegeta/v12 v12.12.0
