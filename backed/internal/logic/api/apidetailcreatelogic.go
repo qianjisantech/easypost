@@ -61,8 +61,8 @@ func (l *ApiDetailCreateLogic) ApiDetailCreate(req *types.ApiDetailCreateOrUpdat
 		ResponseExamples: &req.ResponseExamples,
 		Responses:        &req.Responses,
 	}
-	projectId, ok := l.ctx.Value("projectId").(int64)
-	if !ok || projectId == 0 {
+	projectId := l.ctx.Value("projectId").(int64)
+	if projectId == 0 {
 		// 处理空值或类型不匹配的情况
 		return nil, errorx.NewDefaultError("projectId 无效或未提供")
 	}
