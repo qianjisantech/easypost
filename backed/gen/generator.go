@@ -33,6 +33,15 @@ func main() {
 			gen.FieldGORMTag("update_time", func(tag field.GormTag) field.GormTag {
 				return tag.Set("column", "update_time").Set("->", "")
 			}),
+			gen.FieldGORMTag("is_deleted", func(tag field.GormTag) field.GormTag {
+				return tag.Set("column", "is_deleted").Set("->", "")
+			}),
+			gen.FieldGORMTag("create_by", func(tag field.GormTag) field.GormTag {
+				return tag.Set("column", "create_by").Set("->", "")
+			}),
+			gen.FieldGORMTag("update_by", func(tag field.GormTag) field.GormTag {
+				return tag.Set("column", "update_by").Set("->", "")
+			}),
 		),
 		g.GenerateModel("am_api",
 			gen.FieldGORMTag("create_time", func(tag field.GormTag) field.GormTag {
@@ -43,6 +52,12 @@ func main() {
 			}),
 			gen.FieldGORMTag("is_deleted", func(tag field.GormTag) field.GormTag {
 				return tag.Set("column", "is_deleted").Set("->", "")
+			}),
+			gen.FieldGORMTag("create_by", func(tag field.GormTag) field.GormTag {
+				return tag.Set("column", "create_by").Set("->", "")
+			}),
+			gen.FieldGORMTag("update_by", func(tag field.GormTag) field.GormTag {
+				return tag.Set("column", "update_by").Set("->", "")
 			}),
 		),
 		g.GenerateModel("am_folder",
@@ -55,6 +70,12 @@ func main() {
 			gen.FieldGORMTag("is_deleted", func(tag field.GormTag) field.GormTag {
 				return tag.Set("column", "is_deleted").Set("->", "")
 			}),
+			gen.FieldGORMTag("create_by", func(tag field.GormTag) field.GormTag {
+				return tag.Set("column", "create_by").Set("->", "")
+			}),
+			gen.FieldGORMTag("update_by", func(tag field.GormTag) field.GormTag {
+				return tag.Set("column", "update_by").Set("->", "")
+			}),
 		),
 		g.GenerateModel("am_doc",
 			gen.FieldGORMTag("create_time", func(tag field.GormTag) field.GormTag {
@@ -65,6 +86,12 @@ func main() {
 			}),
 			gen.FieldGORMTag("is_deleted", func(tag field.GormTag) field.GormTag {
 				return tag.Set("column", "is_deleted").Set("->", "")
+			}),
+			gen.FieldGORMTag("create_by", func(tag field.GormTag) field.GormTag {
+				return tag.Set("column", "create_by").Set("->", "")
+			}),
+			gen.FieldGORMTag("update_by", func(tag field.GormTag) field.GormTag {
+				return tag.Set("column", "update_by").Set("->", "")
 			}),
 		),
 		g.GenerateModel("sys_project",
@@ -77,6 +104,12 @@ func main() {
 			gen.FieldGORMTag("is_deleted", func(tag field.GormTag) field.GormTag {
 				return tag.Set("column", "is_deleted").Set("->", "")
 			}),
+			gen.FieldGORMTag("create_by", func(tag field.GormTag) field.GormTag {
+				return tag.Set("column", "create_by").Set("->", "")
+			}),
+			gen.FieldGORMTag("update_by", func(tag field.GormTag) field.GormTag {
+				return tag.Set("column", "update_by").Set("->", "")
+			}),
 		),
 		g.GenerateModel("sys_user",
 			gen.FieldGORMTag("create_time", func(tag field.GormTag) field.GormTag {
@@ -87,6 +120,12 @@ func main() {
 			}),
 			gen.FieldGORMTag("is_deleted", func(tag field.GormTag) field.GormTag {
 				return tag.Set("column", "is_deleted").Set("->", "")
+			}),
+			gen.FieldGORMTag("create_by", func(tag field.GormTag) field.GormTag {
+				return tag.Set("column", "create_by").Set("->", "")
+			}),
+			gen.FieldGORMTag("update_by", func(tag field.GormTag) field.GormTag {
+				return tag.Set("column", "update_by").Set("->", "")
 			}),
 		),
 		g.GenerateModel("sys_team",
@@ -99,6 +138,12 @@ func main() {
 			gen.FieldGORMTag("is_deleted", func(tag field.GormTag) field.GormTag {
 				return tag.Set("column", "is_deleted").Set("->", "")
 			}),
+			gen.FieldGORMTag("create_by", func(tag field.GormTag) field.GormTag {
+				return tag.Set("column", "create_by").Set("->", "")
+			}),
+			gen.FieldGORMTag("update_by", func(tag field.GormTag) field.GormTag {
+				return tag.Set("column", "update_by").Set("->", "")
+			}),
 		),
 		g.GenerateModel("sys_organize_team",
 			gen.FieldGORMTag("create_time", func(tag field.GormTag) field.GormTag {
@@ -109,6 +154,12 @@ func main() {
 			}),
 			gen.FieldGORMTag("is_deleted", func(tag field.GormTag) field.GormTag {
 				return tag.Set("column", "is_deleted").Set("->", "")
+			}),
+			gen.FieldGORMTag("create_by", func(tag field.GormTag) field.GormTag {
+				return tag.Set("column", "create_by").Set("->", "")
+			}),
+			gen.FieldGORMTag("update_by", func(tag field.GormTag) field.GormTag {
+				return tag.Set("column", "update_by").Set("->", "")
 			}),
 		),
 		g.GenerateModel("sys_team_member",
@@ -121,6 +172,12 @@ func main() {
 			gen.FieldGORMTag("is_deleted", func(tag field.GormTag) field.GormTag {
 				return tag.Set("column", "is_deleted").Set("->", "")
 			}),
+			gen.FieldGORMTag("create_by", func(tag field.GormTag) field.GormTag {
+				return tag.Set("column", "create_by").Set("->", "")
+			}),
+			gen.FieldGORMTag("update_by", func(tag field.GormTag) field.GormTag {
+				return tag.Set("column", "update_by").Set("->", "")
+			}),
 		),
 		g.GenerateModel("gs_traffic_manager_header",
 			gen.FieldGORMTag("create_time", func(tag field.GormTag) field.GormTag {
@@ -131,6 +188,12 @@ func main() {
 			}),
 			gen.FieldGORMTag("is_deleted", func(tag field.GormTag) field.GormTag {
 				return tag.Set("column", "is_deleted").Set("->", "")
+			}),
+			gen.FieldGORMTag("create_by", func(tag field.GormTag) field.GormTag {
+				return tag.Set("column", "create_by").Set("->", "")
+			}),
+			gen.FieldGORMTag("update_by", func(tag field.GormTag) field.GormTag {
+				return tag.Set("column", "update_by").Set("->", "")
 			}),
 		),
 		g.GenerateModel("gs_traffic_manager_response",
@@ -143,6 +206,12 @@ func main() {
 			gen.FieldGORMTag("is_deleted", func(tag field.GormTag) field.GormTag {
 				return tag.Set("column", "is_deleted").Set("->", "")
 			}),
+			gen.FieldGORMTag("create_by", func(tag field.GormTag) field.GormTag {
+				return tag.Set("column", "create_by").Set("->", "")
+			}),
+			gen.FieldGORMTag("update_by", func(tag field.GormTag) field.GormTag {
+				return tag.Set("column", "update_by").Set("->", "")
+			}),
 		),
 		g.GenerateModel("gs_traffic_manager",
 			gen.FieldGORMTag("create_time", func(tag field.GormTag) field.GormTag {
@@ -154,6 +223,12 @@ func main() {
 			gen.FieldGORMTag("is_deleted", func(tag field.GormTag) field.GormTag {
 				return tag.Set("column", "is_deleted").Set("->", "")
 			}),
+			gen.FieldGORMTag("create_by", func(tag field.GormTag) field.GormTag {
+				return tag.Set("column", "create_by").Set("->", "")
+			}),
+			gen.FieldGORMTag("update_by", func(tag field.GormTag) field.GormTag {
+				return tag.Set("column", "update_by").Set("->", "")
+			}),
 		),
 		g.GenerateModel("gs_traffic_manager_request_body",
 			gen.FieldGORMTag("create_time", func(tag field.GormTag) field.GormTag {
@@ -164,6 +239,12 @@ func main() {
 			}),
 			gen.FieldGORMTag("is_deleted", func(tag field.GormTag) field.GormTag {
 				return tag.Set("column", "is_deleted").Set("->", "")
+			}),
+			gen.FieldGORMTag("create_by", func(tag field.GormTag) field.GormTag {
+				return tag.Set("column", "create_by").Set("->", "")
+			}),
+			gen.FieldGORMTag("update_by", func(tag field.GormTag) field.GormTag {
+				return tag.Set("column", "update_by").Set("->", "")
 			}),
 		),
 	)

@@ -38,7 +38,7 @@ func (l *AuthEmailCodeRegisterLogic) AuthEmailCodeRegister(req *types.AuthEmailC
 		return nil, errorx.NewDefaultError(tx.Error.Error())
 	}
 	if sysUser != nil {
-		token, err := GenerateJWT(sysUser.ID, *sysUser.Username)
+		token, err := GenerateJWT(sysUser.ID, *sysUser.Username, *sysUser.Email)
 		if err != nil {
 			return nil, errorx.NewDefaultError(err.Error())
 		}

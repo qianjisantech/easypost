@@ -48,8 +48,6 @@ func (l *ApiDetailCreateLogic) ApiDetailCreate(req *types.ApiDetailCreateOrUpdat
 		requestBody = "{\"type\":\"text/plain\",\"parameters\":[],\"jsonSchema\":\"\"}"
 	}
 	amApi := &model.AmAPI{
-		CreateBy:         StringPointer("admin"),
-		UpdateBy:         StringPointer("admin"),
 		Path:             &req.Path,
 		Status:           &req.Status,
 		Remark:           &req.Description,

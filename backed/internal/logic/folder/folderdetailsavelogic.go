@@ -39,8 +39,6 @@ func (l *FolderDetailSaveLogic) FolderDetailSave(req *types.FolderDetailSaveRequ
 	amFolder := &model.AmFolder{
 		Name:     &req.Name,
 		ParentID: &folderId,
-		CreateBy: StringPointer("admin"),
-		UpdateBy: StringPointer("admin"),
 	}
 	if req.Id != "" {
 		id, err := strconv.Atoi(req.Id)

@@ -42,8 +42,6 @@ func (l *ApiDetailUpdateLogic) ApiDetailUpdate(req *types.ApiDetailCreateOrUpdat
 		tags = strings.Join(req.Tags, ",")
 	}
 	amApi := &model.AmAPI{
-		CreateBy:         StringPointer("admin"),
-		UpdateBy:         StringPointer("admin"),
 		Path:             &req.Path,
 		Status:           &req.Status,
 		Remark:           &req.Description,

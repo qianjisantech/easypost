@@ -48,7 +48,7 @@ func (l *AuthEmailLoginLogic) AuthEmailLogin(req *types.AuthEmailLoginReq) (resp
 		return nil, errorx.NewDefaultError("用户不存在")
 	}
 	// 生成 JWT token
-	token, err := GenerateJWT(user.ID, *user.Username)
+	token, err := GenerateJWT(user.ID, *user.Username, *user.Email)
 	if err != nil {
 		return nil, errorx.NewDefaultError(err.Error())
 	}
@@ -77,23 +77,18 @@ func (l *AuthEmailLoginLogic) QueryUserByEmailAndPassword(email string, password
 		return nil, err
 	}
 
-	//// 比对密码
-	//if err := bcrypt.CompareHashAndPassword([]byte(*user.Password), []byte(password)); err != nil {
-	//	// 密码不匹配
-	//	return nil, fmt.Errorf("invalid credentials")
-	//}
-
 	return user, nil
 }
 
 var secretKey = "easypost"
 
 // generateJWT 生成 JWT Token
-func GenerateJWT(userID int64, email string) (string, error) {
+func GenerateJWT(userID int64, username string, email string) (string, error) {
 	claims := jwt.MapClaims{
-		"user_id": userID,
-		"email":   email,
-		"exp":     time.Now().Add(time.Hour * 24).Unix(),
+		"user_id":  userID,
+		"username": username,
+		"email":    email,
+		"exp":      time.Now().Add(time.Hour * 24).Unix(),
 	}
 
 	token := jwt.NewWithClaims(jwt.SigningMethodHS256, claims)
