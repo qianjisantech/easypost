@@ -2,6 +2,7 @@ package api
 
 import (
 	"backed/gen/model"
+	"backed/internal/common/enum"
 	"backed/internal/common/errorx"
 	"backed/internal/utils/ep"
 	"context"
@@ -48,7 +49,7 @@ func (l *ApiTreeQueryPageLogic) ApiTreeQueryPage(req *types.ApiTreeQueryPageRequ
 		if qafr.Name == nil || qafr.ParentID == nil {
 			return nil, errorx.NewDefaultError("报错")
 		}
-		folderType := "apiDetailFolder"
+		folderType := enum.ApiDetailFolder
 		parentId := ""
 		if *qafr.ParentID == 0 || qafr.ParentID == nil {
 			parentId = "_"
@@ -68,7 +69,7 @@ func (l *ApiTreeQueryPageLogic) ApiTreeQueryPage(req *types.ApiTreeQueryPageRequ
 		if qaar.Name == nil || qaar.ParentID == nil {
 			return nil, errorx.NewDefaultError(" 组装接口报错")
 		}
-		apiType := "apiDetail"
+		apiType := enum.ApiCase
 		parentId := ""
 		if *qaar.ParentID == 0 || qaar.ParentID == nil {
 			parentId = "_"
@@ -89,7 +90,7 @@ func (l *ApiTreeQueryPageLogic) ApiTreeQueryPage(req *types.ApiTreeQueryPageRequ
 		if qaacr.Name == nil || qaacr.ParentID == nil {
 			return nil, errorx.NewDefaultError(" 组装接口用例报错")
 		}
-		apiType := "apiCase"
+		apiType := enum.ApiCase
 		parentId := ""
 		if *qaacr.ParentID == 0 || qaacr.ParentID == nil {
 			parentId = "_"
@@ -108,7 +109,7 @@ func (l *ApiTreeQueryPageLogic) ApiTreeQueryPage(req *types.ApiTreeQueryPageRequ
 		if qadr.Name == nil || qadr.Type == nil || qadr.ParentID == nil {
 			return nil, errorx.NewDefaultError("组装文档报错")
 		}
-		docType := "apiDetail"
+		docType := enum.Doc
 		parentId := ""
 		if *qadr.ParentID == 0 || qadr.ParentID == nil {
 			parentId = "_"
