@@ -35,6 +35,7 @@ func (l *ApiTreeQueryPageLogic) ApiTreeQueryPage(req *types.ApiTreeQueryPageRequ
 	queryAmFoldersResp, err := l.QueryAmFolders(projectId)
 	queryAmAPIsResp, err := l.QueryAmAPI(projectId)
 	queryAmDocsResp, err := l.QueryAmDocs(projectId)
+	queryAmApiCasesResp, err := l.QueryAmApiCase(projectId)
 	if err != nil {
 		return nil, errorx.NewCodeError(err.Error())
 	}
@@ -83,6 +84,25 @@ func (l *ApiTreeQueryPageLogic) ApiTreeQueryPage(req *types.ApiTreeQueryPageRequ
 		})
 	}
 
+	// 组装接口用例
+	for _, qaacr := range queryAmApiCasesResp {
+		if qaacr.Name == nil || qaacr.ParentID == nil {
+			return nil, errorx.NewDefaultError(" 组装接口用例报错")
+		}
+		apiType := "apiCase"
+		parentId := ""
+		if *qaacr.ParentID == 0 || qaacr.ParentID == nil {
+			parentId = "_"
+		} else {
+			parentId = strconv.FormatInt(*qaacr.ParentID, 10)
+		}
+		datas = append(datas, types.ApiTreeQueryPageData{
+			Id:       strconv.FormatInt(qaacr.ID, 10),
+			Name:     *qaacr.Name,
+			Type:     apiType,
+			ParentId: parentId,
+		})
+	}
 	// 组装文档
 	for _, qadr := range queryAmDocsResp {
 		if qadr.Name == nil || qadr.Type == nil || qadr.ParentID == nil {
@@ -158,4 +178,18 @@ func (l *ApiTreeQueryPageLogic) QueryAmDocs(projectId int64) ([]*model.AmDoc, er
 		return []*model.AmDoc{}, err // 返回空切片，而不是 nil
 	}
 	return amDocs, nil
+}
+func (l *ApiTreeQueryPageLogic) QueryAmApiCase(projectId int64) ([]*model.AmAPICase, error) {
+	db := l.svcCtx.DB.Debug()
+	var amAPICases []*model.AmAPICase
+	err := db.WithContext(l.ctx).
+		Select("id", "name", "parent_id", "method").
+		Where("project_id = ?", projectId).
+		Where("is_deleted = 0").
+		Find(&amAPICases).Error
+	if err != nil {
+		log.Printf("Error QueryAmAPIs: %v", err)
+		return []*model.AmAPICase{}, err // 返回空切片，而不是 nil
+	}
+	return amAPICases, nil
 }
