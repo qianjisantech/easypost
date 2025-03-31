@@ -30,13 +30,15 @@ func newSysProject(db *gorm.DB, opts ...gen.DOOption) sysProject {
 	_sysProject.ID = field.NewInt64(tableName, "id")
 	_sysProject.ProjectName = field.NewString(tableName, "project_name")
 	_sysProject.ProjectIcon = field.NewString(tableName, "project_icon")
-	_sysProject.CreateBy = field.NewString(tableName, "create_by")
+	_sysProject.CreateBy = field.NewInt64(tableName, "create_by")
 	_sysProject.CreateTime = field.NewTime(tableName, "create_time")
-	_sysProject.UpdateBy = field.NewString(tableName, "update_by")
+	_sysProject.UpdateBy = field.NewInt64(tableName, "update_by")
 	_sysProject.UpdateTime = field.NewTime(tableName, "update_time")
 	_sysProject.IsPublic = field.NewBool(tableName, "is_public")
 	_sysProject.IsDeleted = field.NewBool(tableName, "is_deleted")
 	_sysProject.TeamID = field.NewInt64(tableName, "team_id")
+	_sysProject.CreateByName = field.NewString(tableName, "create_by_name")
+	_sysProject.UpdateByName = field.NewString(tableName, "update_by_name")
 
 	_sysProject.fillFieldMap()
 
@@ -46,17 +48,19 @@ func newSysProject(db *gorm.DB, opts ...gen.DOOption) sysProject {
 type sysProject struct {
 	sysProjectDo sysProjectDo
 
-	ALL         field.Asterisk
-	ID          field.Int64
-	ProjectName field.String
-	ProjectIcon field.String
-	CreateBy    field.String
-	CreateTime  field.Time
-	UpdateBy    field.String
-	UpdateTime  field.Time
-	IsPublic    field.Bool
-	IsDeleted   field.Bool
-	TeamID      field.Int64
+	ALL          field.Asterisk
+	ID           field.Int64
+	ProjectName  field.String
+	ProjectIcon  field.String
+	CreateBy     field.Int64
+	CreateTime   field.Time
+	UpdateBy     field.Int64
+	UpdateTime   field.Time
+	IsPublic     field.Bool
+	IsDeleted    field.Bool
+	TeamID       field.Int64
+	CreateByName field.String
+	UpdateByName field.String
 
 	fieldMap map[string]field.Expr
 }
@@ -76,13 +80,15 @@ func (s *sysProject) updateTableName(table string) *sysProject {
 	s.ID = field.NewInt64(table, "id")
 	s.ProjectName = field.NewString(table, "project_name")
 	s.ProjectIcon = field.NewString(table, "project_icon")
-	s.CreateBy = field.NewString(table, "create_by")
+	s.CreateBy = field.NewInt64(table, "create_by")
 	s.CreateTime = field.NewTime(table, "create_time")
-	s.UpdateBy = field.NewString(table, "update_by")
+	s.UpdateBy = field.NewInt64(table, "update_by")
 	s.UpdateTime = field.NewTime(table, "update_time")
 	s.IsPublic = field.NewBool(table, "is_public")
 	s.IsDeleted = field.NewBool(table, "is_deleted")
 	s.TeamID = field.NewInt64(table, "team_id")
+	s.CreateByName = field.NewString(table, "create_by_name")
+	s.UpdateByName = field.NewString(table, "update_by_name")
 
 	s.fillFieldMap()
 
@@ -109,7 +115,7 @@ func (s *sysProject) GetFieldByName(fieldName string) (field.OrderExpr, bool) {
 }
 
 func (s *sysProject) fillFieldMap() {
-	s.fieldMap = make(map[string]field.Expr, 10)
+	s.fieldMap = make(map[string]field.Expr, 12)
 	s.fieldMap["id"] = s.ID
 	s.fieldMap["project_name"] = s.ProjectName
 	s.fieldMap["project_icon"] = s.ProjectIcon
@@ -120,6 +126,8 @@ func (s *sysProject) fillFieldMap() {
 	s.fieldMap["is_public"] = s.IsPublic
 	s.fieldMap["is_deleted"] = s.IsDeleted
 	s.fieldMap["team_id"] = s.TeamID
+	s.fieldMap["create_by_name"] = s.CreateByName
+	s.fieldMap["update_by_name"] = s.UpdateByName
 }
 
 func (s sysProject) clone(db *gorm.DB) sysProject {

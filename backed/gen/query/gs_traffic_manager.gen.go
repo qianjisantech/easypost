@@ -35,6 +35,12 @@ func newGsTrafficManager(db *gorm.DB, opts ...gen.DOOption) gsTrafficManager {
 	_gsTrafficManager.RecordTime = field.NewTime(tableName, "record_time")
 	_gsTrafficManager.TestTime = field.NewTime(tableName, "test_time")
 	_gsTrafficManager.Method = field.NewString(tableName, "method")
+	_gsTrafficManager.CreateBy = field.NewInt64(tableName, "create_by")
+	_gsTrafficManager.CreateByName = field.NewString(tableName, "create_by_name")
+	_gsTrafficManager.CreateTime = field.NewTime(tableName, "create_time")
+	_gsTrafficManager.UpdateBy = field.NewInt64(tableName, "update_by")
+	_gsTrafficManager.UpdateByName = field.NewString(tableName, "update_by_name")
+	_gsTrafficManager.UpdateTime = field.NewTime(tableName, "update_time")
 
 	_gsTrafficManager.fillFieldMap()
 
@@ -45,15 +51,21 @@ func newGsTrafficManager(db *gorm.DB, opts ...gen.DOOption) gsTrafficManager {
 type gsTrafficManager struct {
 	gsTrafficManagerDo gsTrafficManagerDo
 
-	ALL        field.Asterisk
-	ID         field.Int64
-	IP         field.String
-	URL        field.String
-	Status     field.Int32
-	TaskID     field.Int64
-	RecordTime field.Time
-	TestTime   field.Time
-	Method     field.String
+	ALL          field.Asterisk
+	ID           field.Int64
+	IP           field.String
+	URL          field.String
+	Status       field.Int32
+	TaskID       field.Int64
+	RecordTime   field.Time
+	TestTime     field.Time
+	Method       field.String
+	CreateBy     field.Int64
+	CreateByName field.String
+	CreateTime   field.Time
+	UpdateBy     field.Int64
+	UpdateByName field.String
+	UpdateTime   field.Time
 
 	fieldMap map[string]field.Expr
 }
@@ -78,6 +90,12 @@ func (g *gsTrafficManager) updateTableName(table string) *gsTrafficManager {
 	g.RecordTime = field.NewTime(table, "record_time")
 	g.TestTime = field.NewTime(table, "test_time")
 	g.Method = field.NewString(table, "method")
+	g.CreateBy = field.NewInt64(table, "create_by")
+	g.CreateByName = field.NewString(table, "create_by_name")
+	g.CreateTime = field.NewTime(table, "create_time")
+	g.UpdateBy = field.NewInt64(table, "update_by")
+	g.UpdateByName = field.NewString(table, "update_by_name")
+	g.UpdateTime = field.NewTime(table, "update_time")
 
 	g.fillFieldMap()
 
@@ -106,7 +124,7 @@ func (g *gsTrafficManager) GetFieldByName(fieldName string) (field.OrderExpr, bo
 }
 
 func (g *gsTrafficManager) fillFieldMap() {
-	g.fieldMap = make(map[string]field.Expr, 8)
+	g.fieldMap = make(map[string]field.Expr, 14)
 	g.fieldMap["id"] = g.ID
 	g.fieldMap["ip"] = g.IP
 	g.fieldMap["url"] = g.URL
@@ -115,6 +133,12 @@ func (g *gsTrafficManager) fillFieldMap() {
 	g.fieldMap["record_time"] = g.RecordTime
 	g.fieldMap["test_time"] = g.TestTime
 	g.fieldMap["method"] = g.Method
+	g.fieldMap["create_by"] = g.CreateBy
+	g.fieldMap["create_by_name"] = g.CreateByName
+	g.fieldMap["create_time"] = g.CreateTime
+	g.fieldMap["update_by"] = g.UpdateBy
+	g.fieldMap["update_by_name"] = g.UpdateByName
+	g.fieldMap["update_time"] = g.UpdateTime
 }
 
 func (g gsTrafficManager) clone(db *gorm.DB) gsTrafficManager {

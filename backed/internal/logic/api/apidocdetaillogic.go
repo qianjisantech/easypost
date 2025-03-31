@@ -2,6 +2,7 @@ package api
 
 import (
 	"backed/gen/model"
+	"backed/internal/common/enum"
 	"backed/internal/utils/ep"
 	"context"
 	"encoding/json"
@@ -63,13 +64,12 @@ func (l *ApiDocDetailLogic) ApiDocDetail(req *types.ApiDocDetailRequest) (resp *
 	//	requestBody = RequestBody{}
 	//}
 
-	defaultType := "apiDetail"
 	return &types.ApiDocDetailResp{
 		Success: true,
 		Message: "加载成功",
 		Data: types.ApiDocDetailData{
 			Id:       strconv.FormatInt(amAPI.ID, 10),
-			Type:     defaultType,
+			Type:     enum.Doc,
 			ParentId: strconv.FormatInt(*amAPI.ParentID, 10),
 			Name:     ep.StringIfNotNil(amAPI.Name, ""),
 			Data: types.ApiDocDetailDataData{
@@ -87,8 +87,8 @@ func (l *ApiDocDetailLogic) ApiDocDetail(req *types.ApiDocDetailRequest) (resp *
 				RequestBody:      requestBody,
 				CreateTime:       amAPI.CreateTime.Format(time.DateTime),
 				UpdateTime:       amAPI.UpdateTime.Format(time.DateTime),
-				CreatBy:          ep.StringIfNotNil(amAPI.CreateBy, ""),
-				UpdateBy:         ep.StringIfNotNil(amAPI.UpdateBy, ""),
+				CreatBy:          strconv.FormatInt(*amAPI.CreateBy, 10),
+				UpdateBy:         strconv.FormatInt(*amAPI.UpdateBy, 10),
 			},
 		},
 	}, nil

@@ -12,14 +12,20 @@ const TableNameGsTrafficManager = "gs_traffic_manager"
 
 // GsTrafficManager 流量池
 type GsTrafficManager struct {
-	ID         int64      `gorm:"column:id;not null" json:"id"`
-	IP         *string    `gorm:"column:ip" json:"ip"`
-	URL        *string    `gorm:"column:url" json:"url"`
-	Status     int32      `gorm:"column:status;not null" json:"status"`
-	TaskID     *int64     `gorm:"column:task_id" json:"task_id"`
-	RecordTime time.Time  `gorm:"column:record_time;not null;default:CURRENT_TIMESTAMP" json:"record_time"`
-	TestTime   *time.Time `gorm:"column:test_time" json:"test_time"`
-	Method     *string    `gorm:"column:method" json:"method"`
+	ID           int64      `gorm:"column:id;not null" json:"id"`
+	IP           *string    `gorm:"column:ip" json:"ip"`
+	URL          *string    `gorm:"column:url" json:"url"`
+	Status       int32      `gorm:"column:status;not null" json:"status"`
+	TaskID       *int64     `gorm:"column:task_id" json:"task_id"`
+	RecordTime   time.Time  `gorm:"column:record_time;not null;default:CURRENT_TIMESTAMP" json:"record_time"`
+	TestTime     *time.Time `gorm:"column:test_time" json:"test_time"`
+	Method       *string    `gorm:"column:method" json:"method"`
+	CreateBy     *int64     `gorm:"column:create_by;->" json:"create_by"`
+	CreateByName *string    `gorm:"column:create_by_name;->" json:"create_by_name"`
+	CreateTime   *time.Time `gorm:"column:create_time;default:CURRENT_TIMESTAMP;->" json:"create_time"`
+	UpdateBy     *int64     `gorm:"column:update_by;->" json:"update_by"`
+	UpdateByName *string    `gorm:"column:update_by_name;->" json:"update_by_name"`
+	UpdateTime   *time.Time `gorm:"column:update_time;default:CURRENT_TIMESTAMP;->" json:"update_time"`
 }
 
 // TableName GsTrafficManager's table name

@@ -29,10 +29,12 @@ func newAmFolder(db *gorm.DB, opts ...gen.DOOption) amFolder {
 	_amFolder.ALL = field.NewAsterisk(tableName)
 	_amFolder.ID = field.NewInt64(tableName, "id")
 	_amFolder.Name = field.NewString(tableName, "name")
-	_amFolder.CreateBy = field.NewString(tableName, "create_by")
+	_amFolder.CreateBy = field.NewInt64(tableName, "create_by")
+	_amFolder.CreateByName = field.NewString(tableName, "create_by_name")
 	_amFolder.CreateTime = field.NewTime(tableName, "create_time")
 	_amFolder.IsDeleted = field.NewBool(tableName, "is_deleted")
-	_amFolder.UpdateBy = field.NewString(tableName, "update_by")
+	_amFolder.UpdateBy = field.NewInt64(tableName, "update_by")
+	_amFolder.UpdateByName = field.NewString(tableName, "update_by_name")
 	_amFolder.UpdateTime = field.NewTime(tableName, "update_time")
 	_amFolder.Remark = field.NewString(tableName, "remark")
 	_amFolder.ParentID = field.NewInt64(tableName, "parent_id")
@@ -46,17 +48,19 @@ func newAmFolder(db *gorm.DB, opts ...gen.DOOption) amFolder {
 type amFolder struct {
 	amFolderDo amFolderDo
 
-	ALL        field.Asterisk
-	ID         field.Int64
-	Name       field.String
-	CreateBy   field.String
-	CreateTime field.Time
-	IsDeleted  field.Bool
-	UpdateBy   field.String
-	UpdateTime field.Time
-	Remark     field.String
-	ParentID   field.Int64 // 父级目录id
-	ProjectID  field.Int32
+	ALL          field.Asterisk
+	ID           field.Int64
+	Name         field.String
+	CreateBy     field.Int64
+	CreateByName field.String
+	CreateTime   field.Time
+	IsDeleted    field.Bool
+	UpdateBy     field.Int64
+	UpdateByName field.String
+	UpdateTime   field.Time
+	Remark       field.String
+	ParentID     field.Int64 // 父级目录id
+	ProjectID    field.Int32
 
 	fieldMap map[string]field.Expr
 }
@@ -75,10 +79,12 @@ func (a *amFolder) updateTableName(table string) *amFolder {
 	a.ALL = field.NewAsterisk(table)
 	a.ID = field.NewInt64(table, "id")
 	a.Name = field.NewString(table, "name")
-	a.CreateBy = field.NewString(table, "create_by")
+	a.CreateBy = field.NewInt64(table, "create_by")
+	a.CreateByName = field.NewString(table, "create_by_name")
 	a.CreateTime = field.NewTime(table, "create_time")
 	a.IsDeleted = field.NewBool(table, "is_deleted")
-	a.UpdateBy = field.NewString(table, "update_by")
+	a.UpdateBy = field.NewInt64(table, "update_by")
+	a.UpdateByName = field.NewString(table, "update_by_name")
 	a.UpdateTime = field.NewTime(table, "update_time")
 	a.Remark = field.NewString(table, "remark")
 	a.ParentID = field.NewInt64(table, "parent_id")
@@ -107,13 +113,15 @@ func (a *amFolder) GetFieldByName(fieldName string) (field.OrderExpr, bool) {
 }
 
 func (a *amFolder) fillFieldMap() {
-	a.fieldMap = make(map[string]field.Expr, 10)
+	a.fieldMap = make(map[string]field.Expr, 12)
 	a.fieldMap["id"] = a.ID
 	a.fieldMap["name"] = a.Name
 	a.fieldMap["create_by"] = a.CreateBy
+	a.fieldMap["create_by_name"] = a.CreateByName
 	a.fieldMap["create_time"] = a.CreateTime
 	a.fieldMap["is_deleted"] = a.IsDeleted
 	a.fieldMap["update_by"] = a.UpdateBy
+	a.fieldMap["update_by_name"] = a.UpdateByName
 	a.fieldMap["update_time"] = a.UpdateTime
 	a.fieldMap["remark"] = a.Remark
 	a.fieldMap["parent_id"] = a.ParentID

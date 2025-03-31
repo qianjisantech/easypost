@@ -30,11 +30,13 @@ func newSysTeam(db *gorm.DB, opts ...gen.DOOption) sysTeam {
 	_sysTeam.ID = field.NewInt64(tableName, "id")
 	_sysTeam.Name = field.NewString(tableName, "name")
 	_sysTeam.ManagerID = field.NewInt64(tableName, "manager_id")
-	_sysTeam.CreateBy = field.NewString(tableName, "create_by")
+	_sysTeam.CreateBy = field.NewInt64(tableName, "create_by")
 	_sysTeam.CreateTime = field.NewTime(tableName, "create_time")
-	_sysTeam.UpdateBy = field.NewString(tableName, "update_by")
+	_sysTeam.UpdateBy = field.NewInt64(tableName, "update_by")
 	_sysTeam.UpdateTime = field.NewTime(tableName, "update_time")
 	_sysTeam.IsDeleted = field.NewBool(tableName, "is_deleted")
+	_sysTeam.CreateByName = field.NewString(tableName, "create_by_name")
+	_sysTeam.UpdateByName = field.NewString(tableName, "update_by_name")
 
 	_sysTeam.fillFieldMap()
 
@@ -44,15 +46,17 @@ func newSysTeam(db *gorm.DB, opts ...gen.DOOption) sysTeam {
 type sysTeam struct {
 	sysTeamDo sysTeamDo
 
-	ALL        field.Asterisk
-	ID         field.Int64  // 主键id
-	Name       field.String // 团队名称
-	ManagerID  field.Int64  // 负责人
-	CreateBy   field.String // 创建人
-	CreateTime field.Time   // 创建时间
-	UpdateBy   field.String // 更新人
-	UpdateTime field.Time   // 更新时间
-	IsDeleted  field.Bool   // 逻辑删除 0为未删除 1为已删除
+	ALL          field.Asterisk
+	ID           field.Int64  // 主键id
+	Name         field.String // 团队名称
+	ManagerID    field.Int64  // 负责人
+	CreateBy     field.Int64
+	CreateTime   field.Time // 创建时间
+	UpdateBy     field.Int64
+	UpdateTime   field.Time // 更新时间
+	IsDeleted    field.Bool // 逻辑删除 0为未删除 1为已删除
+	CreateByName field.String
+	UpdateByName field.String
 
 	fieldMap map[string]field.Expr
 }
@@ -72,11 +76,13 @@ func (s *sysTeam) updateTableName(table string) *sysTeam {
 	s.ID = field.NewInt64(table, "id")
 	s.Name = field.NewString(table, "name")
 	s.ManagerID = field.NewInt64(table, "manager_id")
-	s.CreateBy = field.NewString(table, "create_by")
+	s.CreateBy = field.NewInt64(table, "create_by")
 	s.CreateTime = field.NewTime(table, "create_time")
-	s.UpdateBy = field.NewString(table, "update_by")
+	s.UpdateBy = field.NewInt64(table, "update_by")
 	s.UpdateTime = field.NewTime(table, "update_time")
 	s.IsDeleted = field.NewBool(table, "is_deleted")
+	s.CreateByName = field.NewString(table, "create_by_name")
+	s.UpdateByName = field.NewString(table, "update_by_name")
 
 	s.fillFieldMap()
 
@@ -101,7 +107,7 @@ func (s *sysTeam) GetFieldByName(fieldName string) (field.OrderExpr, bool) {
 }
 
 func (s *sysTeam) fillFieldMap() {
-	s.fieldMap = make(map[string]field.Expr, 8)
+	s.fieldMap = make(map[string]field.Expr, 10)
 	s.fieldMap["id"] = s.ID
 	s.fieldMap["name"] = s.Name
 	s.fieldMap["manager_id"] = s.ManagerID
@@ -110,6 +116,8 @@ func (s *sysTeam) fillFieldMap() {
 	s.fieldMap["update_by"] = s.UpdateBy
 	s.fieldMap["update_time"] = s.UpdateTime
 	s.fieldMap["is_deleted"] = s.IsDeleted
+	s.fieldMap["create_by_name"] = s.CreateByName
+	s.fieldMap["update_by_name"] = s.UpdateByName
 }
 
 func (s sysTeam) clone(db *gorm.DB) sysTeam {

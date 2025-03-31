@@ -30,8 +30,10 @@ func newAmAPICase(db *gorm.DB, opts ...gen.DOOption) amAPICase {
 	_amAPICase.ID = field.NewInt64(tableName, "id")
 	_amAPICase.Name = field.NewString(tableName, "name")
 	_amAPICase.Path = field.NewString(tableName, "path")
-	_amAPICase.CreateBy = field.NewString(tableName, "create_by")
-	_amAPICase.UpdateBy = field.NewString(tableName, "update_by")
+	_amAPICase.CreateBy = field.NewInt64(tableName, "create_by")
+	_amAPICase.CreateByName = field.NewString(tableName, "create_by_name")
+	_amAPICase.UpdateBy = field.NewInt64(tableName, "update_by")
+	_amAPICase.UpdateByName = field.NewString(tableName, "update_by_name")
 	_amAPICase.CreateTime = field.NewTime(tableName, "create_time")
 	_amAPICase.UpdateTime = field.NewTime(tableName, "update_time")
 	_amAPICase.IsDeleted = field.NewBool(tableName, "is_deleted")
@@ -51,21 +53,23 @@ func newAmAPICase(db *gorm.DB, opts ...gen.DOOption) amAPICase {
 type amAPICase struct {
 	amAPICaseDo amAPICaseDo
 
-	ALL         field.Asterisk
-	ID          field.Int64
-	Name        field.String
-	Path        field.String
-	CreateBy    field.String
-	UpdateBy    field.String
-	CreateTime  field.Time
-	UpdateTime  field.Time
-	IsDeleted   field.Bool
-	Method      field.String
-	ParentID    field.Int64
-	ProjectID   field.Int64
-	Parameters  field.String
-	Responses   field.String
-	RequestBody field.String
+	ALL          field.Asterisk
+	ID           field.Int64
+	Name         field.String
+	Path         field.String
+	CreateBy     field.Int64
+	CreateByName field.String
+	UpdateBy     field.Int64
+	UpdateByName field.String
+	CreateTime   field.Time
+	UpdateTime   field.Time
+	IsDeleted    field.Bool
+	Method       field.String
+	ParentID     field.Int64
+	ProjectID    field.Int64
+	Parameters   field.String
+	Responses    field.String
+	RequestBody  field.String
 
 	fieldMap map[string]field.Expr
 }
@@ -85,8 +89,10 @@ func (a *amAPICase) updateTableName(table string) *amAPICase {
 	a.ID = field.NewInt64(table, "id")
 	a.Name = field.NewString(table, "name")
 	a.Path = field.NewString(table, "path")
-	a.CreateBy = field.NewString(table, "create_by")
-	a.UpdateBy = field.NewString(table, "update_by")
+	a.CreateBy = field.NewInt64(table, "create_by")
+	a.CreateByName = field.NewString(table, "create_by_name")
+	a.UpdateBy = field.NewInt64(table, "update_by")
+	a.UpdateByName = field.NewString(table, "update_by_name")
 	a.CreateTime = field.NewTime(table, "create_time")
 	a.UpdateTime = field.NewTime(table, "update_time")
 	a.IsDeleted = field.NewBool(table, "is_deleted")
@@ -122,12 +128,14 @@ func (a *amAPICase) GetFieldByName(fieldName string) (field.OrderExpr, bool) {
 }
 
 func (a *amAPICase) fillFieldMap() {
-	a.fieldMap = make(map[string]field.Expr, 14)
+	a.fieldMap = make(map[string]field.Expr, 16)
 	a.fieldMap["id"] = a.ID
 	a.fieldMap["name"] = a.Name
 	a.fieldMap["path"] = a.Path
 	a.fieldMap["create_by"] = a.CreateBy
+	a.fieldMap["create_by_name"] = a.CreateByName
 	a.fieldMap["update_by"] = a.UpdateBy
+	a.fieldMap["update_by_name"] = a.UpdateByName
 	a.fieldMap["create_time"] = a.CreateTime
 	a.fieldMap["update_time"] = a.UpdateTime
 	a.fieldMap["is_deleted"] = a.IsDeleted

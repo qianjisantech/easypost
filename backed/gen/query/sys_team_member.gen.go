@@ -30,9 +30,9 @@ func newSysTeamMember(db *gorm.DB, opts ...gen.DOOption) sysTeamMember {
 	_sysTeamMember.ID = field.NewInt64(tableName, "id")
 	_sysTeamMember.Username = field.NewString(tableName, "username")
 	_sysTeamMember.IsDeleted = field.NewBool(tableName, "is_deleted")
-	_sysTeamMember.CreateBy = field.NewString(tableName, "create_by")
+	_sysTeamMember.CreateBy = field.NewInt64(tableName, "create_by")
 	_sysTeamMember.CreateTime = field.NewTime(tableName, "create_time")
-	_sysTeamMember.UpdateBy = field.NewString(tableName, "update_by")
+	_sysTeamMember.UpdateBy = field.NewInt64(tableName, "update_by")
 	_sysTeamMember.UpdateTime = field.NewTime(tableName, "update_time")
 	_sysTeamMember.WorkNo = field.NewString(tableName, "work_no")
 	_sysTeamMember.Email = field.NewString(tableName, "email")
@@ -42,6 +42,8 @@ func newSysTeamMember(db *gorm.DB, opts ...gen.DOOption) sysTeamMember {
 	_sysTeamMember.TeamID = field.NewInt64(tableName, "team_id")
 	_sysTeamMember.UserID = field.NewInt64(tableName, "user_id")
 	_sysTeamMember.Permission = field.NewInt32(tableName, "permission")
+	_sysTeamMember.CreateByName = field.NewString(tableName, "create_by_name")
+	_sysTeamMember.UpdateByName = field.NewString(tableName, "update_by_name")
 
 	_sysTeamMember.fillFieldMap()
 
@@ -51,22 +53,24 @@ func newSysTeamMember(db *gorm.DB, opts ...gen.DOOption) sysTeamMember {
 type sysTeamMember struct {
 	sysTeamMemberDo sysTeamMemberDo
 
-	ALL        field.Asterisk
-	ID         field.Int64
-	Username   field.String // 用户名
-	IsDeleted  field.Bool   // 逻辑删除
-	CreateBy   field.String // 创建人
-	CreateTime field.Time   // 创建时间
-	UpdateBy   field.String // 更新人
-	UpdateTime field.Time   // 更新时间
-	WorkNo     field.String // 工号
-	Email      field.String // 邮箱
-	Phone      field.String // 手机号
-	Name       field.String // 姓名
-	State      field.Int32  // 0为游客,1为待定,2为成员
-	TeamID     field.Int64  // 团队id
-	UserID     field.Int64
-	Permission field.Int32 // 团队权限
+	ALL          field.Asterisk
+	ID           field.Int64
+	Username     field.String // 用户名
+	IsDeleted    field.Bool   // 逻辑删除
+	CreateBy     field.Int64  // 创建人
+	CreateTime   field.Time   // 创建时间
+	UpdateBy     field.Int64  // 更新人
+	UpdateTime   field.Time   // 更新时间
+	WorkNo       field.String // 工号
+	Email        field.String // 邮箱
+	Phone        field.String // 手机号
+	Name         field.String // 姓名
+	State        field.Int32  // 0为游客,1为待定,2为成员
+	TeamID       field.Int64  // 团队id
+	UserID       field.Int64
+	Permission   field.Int32 // 团队权限
+	CreateByName field.String
+	UpdateByName field.String
 
 	fieldMap map[string]field.Expr
 }
@@ -86,9 +90,9 @@ func (s *sysTeamMember) updateTableName(table string) *sysTeamMember {
 	s.ID = field.NewInt64(table, "id")
 	s.Username = field.NewString(table, "username")
 	s.IsDeleted = field.NewBool(table, "is_deleted")
-	s.CreateBy = field.NewString(table, "create_by")
+	s.CreateBy = field.NewInt64(table, "create_by")
 	s.CreateTime = field.NewTime(table, "create_time")
-	s.UpdateBy = field.NewString(table, "update_by")
+	s.UpdateBy = field.NewInt64(table, "update_by")
 	s.UpdateTime = field.NewTime(table, "update_time")
 	s.WorkNo = field.NewString(table, "work_no")
 	s.Email = field.NewString(table, "email")
@@ -98,6 +102,8 @@ func (s *sysTeamMember) updateTableName(table string) *sysTeamMember {
 	s.TeamID = field.NewInt64(table, "team_id")
 	s.UserID = field.NewInt64(table, "user_id")
 	s.Permission = field.NewInt32(table, "permission")
+	s.CreateByName = field.NewString(table, "create_by_name")
+	s.UpdateByName = field.NewString(table, "update_by_name")
 
 	s.fillFieldMap()
 
@@ -126,7 +132,7 @@ func (s *sysTeamMember) GetFieldByName(fieldName string) (field.OrderExpr, bool)
 }
 
 func (s *sysTeamMember) fillFieldMap() {
-	s.fieldMap = make(map[string]field.Expr, 15)
+	s.fieldMap = make(map[string]field.Expr, 17)
 	s.fieldMap["id"] = s.ID
 	s.fieldMap["username"] = s.Username
 	s.fieldMap["is_deleted"] = s.IsDeleted
@@ -142,6 +148,8 @@ func (s *sysTeamMember) fillFieldMap() {
 	s.fieldMap["team_id"] = s.TeamID
 	s.fieldMap["user_id"] = s.UserID
 	s.fieldMap["permission"] = s.Permission
+	s.fieldMap["create_by_name"] = s.CreateByName
+	s.fieldMap["update_by_name"] = s.UpdateByName
 }
 
 func (s sysTeamMember) clone(db *gorm.DB) sysTeamMember {

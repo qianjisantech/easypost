@@ -12,19 +12,21 @@ const TableNameSysUser = "sys_user"
 
 // SysUser mapped from table <sys_user>
 type SysUser struct {
-	ID         int64      `gorm:"column:id;primaryKey;autoIncrement:true" json:"id"`
-	Username   *string    `gorm:"column:username" json:"username"`
-	Name       *string    `gorm:"column:name;comment:姓名" json:"name"` // 姓名
-	Password   *string    `gorm:"column:password" json:"password"`
-	IsDeleted  *bool      `gorm:"column:is_deleted;->" json:"is_deleted"`
-	CreateBy   *string    `gorm:"column:create_by" json:"create_by"`
-	CreateTime *time.Time `gorm:"column:create_time;default:CURRENT_TIMESTAMP;->" json:"create_time"`
-	UpdateBy   *string    `gorm:"column:update_by" json:"update_by"`
-	UpdateTime *time.Time `gorm:"column:update_time;default:CURRENT_TIMESTAMP;->" json:"update_time"`
-	WorkNo     *string    `gorm:"column:work_no;comment:工号" json:"work_no"` // 工号
-	Email      *string    `gorm:"column:email;comment:邮箱" json:"email"`     // 邮箱
-	Phone      *string    `gorm:"column:phone;comment:手机号" json:"phone"`    // 手机号
-	Code       *string    `gorm:"column:code;comment:验证码" json:"code"`      // 验证码
+	ID           int64      `gorm:"column:id;primaryKey;autoIncrement:true" json:"id"`
+	Username     *string    `gorm:"column:username" json:"username"`
+	Name         *string    `gorm:"column:name;comment:姓名" json:"name"` // 姓名
+	Password     *string    `gorm:"column:password" json:"password"`
+	IsDeleted    *bool      `gorm:"column:is_deleted;->" json:"is_deleted"`
+	CreateBy     *int64     `gorm:"column:create_by;->" json:"create_by"`
+	CreateTime   *time.Time `gorm:"column:create_time;default:CURRENT_TIMESTAMP;->" json:"create_time"`
+	UpdateBy     *int64     `gorm:"column:update_by;->" json:"update_by"`
+	UpdateTime   *time.Time `gorm:"column:update_time;default:CURRENT_TIMESTAMP;->" json:"update_time"`
+	WorkNo       *string    `gorm:"column:work_no;comment:工号" json:"work_no"` // 工号
+	Email        *string    `gorm:"column:email;comment:邮箱" json:"email"`     // 邮箱
+	Phone        *string    `gorm:"column:phone;comment:手机号" json:"phone"`    // 手机号
+	Code         *string    `gorm:"column:code;comment:验证码" json:"code"`      // 验证码
+	CreateByName *string    `gorm:"column:create_by_name;->" json:"create_by_name"`
+	UpdateByName *string    `gorm:"column:update_by_name;->" json:"update_by_name"`
 }
 
 // TableName SysUser's table name

@@ -12,21 +12,23 @@ const TableNameSysTeamMember = "sys_team_member"
 
 // SysTeamMember mapped from table <sys_team_member>
 type SysTeamMember struct {
-	ID         int64      `gorm:"column:id;primaryKey;autoIncrement:true" json:"id"`
-	Username   *string    `gorm:"column:username;comment:用户名" json:"username"`                                     // 用户名
-	IsDeleted  *bool      `gorm:"column:is_deleted;->;comment:逻辑删除" json:"is_deleted"`                             // 逻辑删除
-	CreateBy   *string    `gorm:"column:create_by;comment:创建人" json:"create_by"`                                   // 创建人
-	CreateTime *time.Time `gorm:"column:create_time;default:CURRENT_TIMESTAMP;->;comment:创建时间" json:"create_time"` // 创建时间
-	UpdateBy   *string    `gorm:"column:update_by;comment:更新人" json:"update_by"`                                   // 更新人
-	UpdateTime *time.Time `gorm:"column:update_time;default:CURRENT_TIMESTAMP;->;comment:更新时间" json:"update_time"` // 更新时间
-	WorkNo     *string    `gorm:"column:work_no;comment:工号" json:"work_no"`                                        // 工号
-	Email      *string    `gorm:"column:email;comment:邮箱" json:"email"`                                            // 邮箱
-	Phone      *string    `gorm:"column:phone;comment:手机号" json:"phone"`                                           // 手机号
-	Name       *string    `gorm:"column:name;comment:姓名" json:"name"`                                              // 姓名
-	State      *int32     `gorm:"column:state;comment:0为游客,1为待定,2为成员" json:"state"`                                // 0为游客,1为待定,2为成员
-	TeamID     *int64     `gorm:"column:team_id;comment:团队id" json:"team_id"`                                      // 团队id
-	UserID     *int64     `gorm:"column:user_id" json:"user_id"`
-	Permission *int32     `gorm:"column:permission;comment:团队权限" json:"permission"` // 团队权限
+	ID           int64      `gorm:"column:id;primaryKey;autoIncrement:true" json:"id"`
+	Username     *string    `gorm:"column:username;comment:用户名" json:"username"`                                     // 用户名
+	IsDeleted    *bool      `gorm:"column:is_deleted;->;comment:逻辑删除" json:"is_deleted"`                             // 逻辑删除
+	CreateBy     *int64     `gorm:"column:create_by;->;comment:创建人" json:"create_by"`                                // 创建人
+	CreateTime   *time.Time `gorm:"column:create_time;default:CURRENT_TIMESTAMP;->;comment:创建时间" json:"create_time"` // 创建时间
+	UpdateBy     *int64     `gorm:"column:update_by;->;comment:更新人" json:"update_by"`                                // 更新人
+	UpdateTime   *time.Time `gorm:"column:update_time;default:CURRENT_TIMESTAMP;->;comment:更新时间" json:"update_time"` // 更新时间
+	WorkNo       *string    `gorm:"column:work_no;comment:工号" json:"work_no"`                                        // 工号
+	Email        *string    `gorm:"column:email;comment:邮箱" json:"email"`                                            // 邮箱
+	Phone        *string    `gorm:"column:phone;comment:手机号" json:"phone"`                                           // 手机号
+	Name         *string    `gorm:"column:name;comment:姓名" json:"name"`                                              // 姓名
+	State        *int32     `gorm:"column:state;comment:0为游客,1为待定,2为成员" json:"state"`                                // 0为游客,1为待定,2为成员
+	TeamID       *int64     `gorm:"column:team_id;comment:团队id" json:"team_id"`                                      // 团队id
+	UserID       *int64     `gorm:"column:user_id" json:"user_id"`
+	Permission   *int32     `gorm:"column:permission;comment:团队权限" json:"permission"` // 团队权限
+	CreateByName *string    `gorm:"column:create_by_name;->" json:"create_by_name"`
+	UpdateByName *string    `gorm:"column:update_by_name;->" json:"update_by_name"`
 }
 
 // TableName SysTeamMember's table name

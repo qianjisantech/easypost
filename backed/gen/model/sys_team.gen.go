@@ -12,14 +12,16 @@ const TableNameSysTeam = "sys_team"
 
 // SysTeam mapped from table <sys_team>
 type SysTeam struct {
-	ID         int64      `gorm:"column:id;primaryKey;autoIncrement:true;comment:主键id" json:"id"`                  // 主键id
-	Name       *string    `gorm:"column:name;comment:团队名称" json:"name"`                                            // 团队名称
-	ManagerID  *int64     `gorm:"column:manager_id;comment:负责人" json:"manager_id"`                                 // 负责人
-	CreateBy   *string    `gorm:"column:create_by;comment:创建人" json:"create_by"`                                   // 创建人
-	CreateTime *time.Time `gorm:"column:create_time;default:CURRENT_TIMESTAMP;->;comment:创建时间" json:"create_time"` // 创建时间
-	UpdateBy   *string    `gorm:"column:update_by;comment:更新人" json:"update_by"`                                   // 更新人
-	UpdateTime *time.Time `gorm:"column:update_time;default:CURRENT_TIMESTAMP;->;comment:更新时间" json:"update_time"` // 更新时间
-	IsDeleted  *bool      `gorm:"column:is_deleted;->;comment:逻辑删除 0为未删除 1为已删除" json:"is_deleted"`                 // 逻辑删除 0为未删除 1为已删除
+	ID           int64      `gorm:"column:id;primaryKey;autoIncrement:true;comment:主键id" json:"id"` // 主键id
+	Name         *string    `gorm:"column:name;comment:团队名称" json:"name"`                           // 团队名称
+	ManagerID    *int64     `gorm:"column:manager_id;comment:负责人" json:"manager_id"`                // 负责人
+	CreateBy     *int64     `gorm:"column:create_by;->" json:"create_by"`
+	CreateTime   *time.Time `gorm:"column:create_time;default:CURRENT_TIMESTAMP;->;comment:创建时间" json:"create_time"` // 创建时间
+	UpdateBy     *int64     `gorm:"column:update_by;->" json:"update_by"`
+	UpdateTime   *time.Time `gorm:"column:update_time;default:CURRENT_TIMESTAMP;->;comment:更新时间" json:"update_time"` // 更新时间
+	IsDeleted    *bool      `gorm:"column:is_deleted;->;comment:逻辑删除 0为未删除 1为已删除" json:"is_deleted"`                 // 逻辑删除 0为未删除 1为已删除
+	CreateByName *string    `gorm:"column:create_by_name;->" json:"create_by_name"`
+	UpdateByName *string    `gorm:"column:update_by_name;->" json:"update_by_name"`
 }
 
 // TableName SysTeam's table name

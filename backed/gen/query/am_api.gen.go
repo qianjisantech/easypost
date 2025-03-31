@@ -31,8 +31,10 @@ func newAmAPI(db *gorm.DB, opts ...gen.DOOption) amAPI {
 	_amAPI.Name = field.NewString(tableName, "name")
 	_amAPI.Path = field.NewString(tableName, "path")
 	_amAPI.Status = field.NewString(tableName, "status")
-	_amAPI.CreateBy = field.NewString(tableName, "create_by")
-	_amAPI.UpdateBy = field.NewString(tableName, "update_by")
+	_amAPI.CreateBy = field.NewInt64(tableName, "create_by")
+	_amAPI.CreateByName = field.NewString(tableName, "create_by_name")
+	_amAPI.UpdateBy = field.NewInt64(tableName, "update_by")
+	_amAPI.UpdateByName = field.NewString(tableName, "update_by_name")
 	_amAPI.CreateTime = field.NewTime(tableName, "create_time")
 	_amAPI.UpdateTime = field.NewTime(tableName, "update_time")
 	_amAPI.IsDeleted = field.NewBool(tableName, "is_deleted")
@@ -63,8 +65,10 @@ type amAPI struct {
 	Name             field.String
 	Path             field.String
 	Status           field.String
-	CreateBy         field.String
-	UpdateBy         field.String
+	CreateBy         field.Int64
+	CreateByName     field.String
+	UpdateBy         field.Int64
+	UpdateByName     field.String
 	CreateTime       field.Time
 	UpdateTime       field.Time
 	IsDeleted        field.Bool
@@ -100,8 +104,10 @@ func (a *amAPI) updateTableName(table string) *amAPI {
 	a.Name = field.NewString(table, "name")
 	a.Path = field.NewString(table, "path")
 	a.Status = field.NewString(table, "status")
-	a.CreateBy = field.NewString(table, "create_by")
-	a.UpdateBy = field.NewString(table, "update_by")
+	a.CreateBy = field.NewInt64(table, "create_by")
+	a.CreateByName = field.NewString(table, "create_by_name")
+	a.UpdateBy = field.NewInt64(table, "update_by")
+	a.UpdateByName = field.NewString(table, "update_by_name")
 	a.CreateTime = field.NewTime(table, "create_time")
 	a.UpdateTime = field.NewTime(table, "update_time")
 	a.IsDeleted = field.NewBool(table, "is_deleted")
@@ -141,13 +147,15 @@ func (a *amAPI) GetFieldByName(fieldName string) (field.OrderExpr, bool) {
 }
 
 func (a *amAPI) fillFieldMap() {
-	a.fieldMap = make(map[string]field.Expr, 21)
+	a.fieldMap = make(map[string]field.Expr, 23)
 	a.fieldMap["id"] = a.ID
 	a.fieldMap["name"] = a.Name
 	a.fieldMap["path"] = a.Path
 	a.fieldMap["status"] = a.Status
 	a.fieldMap["create_by"] = a.CreateBy
+	a.fieldMap["create_by_name"] = a.CreateByName
 	a.fieldMap["update_by"] = a.UpdateBy
+	a.fieldMap["update_by_name"] = a.UpdateByName
 	a.fieldMap["create_time"] = a.CreateTime
 	a.fieldMap["update_time"] = a.UpdateTime
 	a.fieldMap["is_deleted"] = a.IsDeleted
