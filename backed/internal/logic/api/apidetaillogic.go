@@ -65,7 +65,7 @@ func (l *ApiDetailLogic) ApiDetail(req *types.ApiDetailRequest) (resp *types.Api
 	defaultType := "apiDetail"
 	return &types.ApiDetailResp{
 		Success: true,
-		Message: "加载成功",
+		Message: "success",
 		Data: types.ApiDetailData{
 			Id:       strconv.FormatInt(amAPI.ID, 10),
 			Type:     defaultType,
