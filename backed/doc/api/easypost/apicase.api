@@ -1,0 +1,177 @@
+syntax = "v1"
+
+info(
+    title: "easypost后端"
+    desc: "qianji"
+    author: "qianji"
+    email: "2497822530@qq.com"
+    version: "0.1"
+)
+
+type (
+    ApiCaseDetailCreateOrUpdateRequest {
+        Id string `form:"id,optional"`
+        Name string `form:"name,optional"`
+        Type string `form:"type,optional"`
+        ParentId string `form:"parentId,optional"`
+        Method  string  `form:"method,optional"`
+        Path string `form:"path,optional"`
+        Status string `form:"status,optional"`
+        Responsible string `form:"responsible,optional"`
+        Tags []string `form:"tags,optional"`
+        ServerId string `form:"serverId,optional"`
+        Description string `form:"description,optional"`
+        Parameters string `form:"parameters,optional"`
+        Responses string `form:"responses,optional"`
+        RequestBody string `form:"requestBody,optional"`
+        ResponseExamples string `form:"responseExamples,optional"`
+    }
+    ApiCaseDetailCreateOrUpdateParameters  {
+    Path   []ApiCaseDetailCreateOrUpdateParameter `json:"path"`
+    Header []ApiCaseDetailCreateOrUpdateParameter `json:"header"`
+    Query  []ApiCaseDetailCreateOrUpdateParameter `json:"query"`
+    Cookie []ApiCaseDetailCreateOrUpdateParameter `json:"cookie"`
+}
+    ApiCaseDetailCreateOrUpdateParameter {
+    Id string `json:"id,optional"`
+    Name string `json:"name,optional"`
+    Type string  `json:"type,optional"`
+    Example string  `json:"example,optional"`
+    Description string  `json:"description,optional"`
+    }
+
+     ApiCaseDetailCreateOrUpdateResp {
+        Success bool `json:"success"`
+        Message string `json:"message"`
+        Data ApiCaseDetailCreateOrUpdateRespData `json:"data"`
+    }
+    ApiCaseDetailCreateOrUpdateRespData {
+        Id string `json:"id"`
+        Path string `json:"path"`
+        Name string `json:"name"`
+        Method string `json:"method"`
+        Status string `json:"status"`
+        Responsible string `json:"responsible"`
+        Tags []string `json:"tags"`
+        ServerId string `json:"serverId"`
+        Description string `json:"description"`
+        Parameters interface{} `json:"parameters"`
+        Responses interface{} `json:"responses"`
+        ResponseExamples interface{} `json:"responseExamples"`
+        RequestBody interface{} `json:"requestBody"`
+    }
+
+    ApiCaseDetailRequest {
+        Id int `path:"id"`
+    }
+    ApiCaseDetailResp {
+        Success bool `json:"success"`
+        Message string `json:"message"`
+        Data ApiCaseDetailData `json:"data"`
+    }
+    ApiCaseDetailData {
+        Id string `json:"id"`
+        ParentId string  `json:"parentId"`
+        Name string `json:"name"`
+        Type string  `json:"type"`
+        Data ApiCaseDetailDataData `json:"data"`
+    }
+    ApiCaseDetailDataData {
+        Id string `json:"id"`
+        Name string `json:"name"`
+        Path string `json:"path"`
+        Method string `json:"method"`
+        Status string `json:"status"`
+        Responsible interface{} `json:"responsible"`
+        Tags []string `json:"tags"`
+        ServerId string `json:"serverId"`
+        Description string `json:"description"`
+        Parameters interface{} `json:"parameters"`
+        Responses interface{} `json:"responses"`
+        ResponseExamples interface{} `json:"responseExamples"`
+        RequestBody interface{} `json:"requestBody"`
+    }
+
+    ApiCaseDeleteRequest {
+        Id string `path:"id"`
+    }
+    ApiCaseDeleteResp {
+        Success bool `json:"success"`
+        Message string `json:"message"`
+    }
+    ApiCaseCopyRequest {
+        Id string `json:"id"`
+    }
+    ApiCaseCopyResp {
+        Success bool `json:"success"`
+        Message string `json:"message"`
+    }
+    ApiCaseRenameRequest {
+        Id string `json:"id"`
+        Name string `json:"name"`
+    }
+    ApiCaseRenameResp {
+        Success bool `json:"success"`
+        Message string `json:"message"`
+    }
+    ApiCaseMoveRequest {
+        Id string `json:"id"`
+        ParentId string `json:"parentId"`
+    }
+    ApiCaseMoveResp {
+        Success bool `json:"success"`
+        Message string `json:"message"`
+    }
+    ApiCaseRunDetailRequest {
+        Id int `path:"id"`
+    }
+    ApiCaseRunDetailResp {
+        Success bool `json:"success"`
+        Message string `json:"message"`
+        Data ApiCaseRunDetailData `json:"data"`
+    }
+    ApiCaseRunDetailData {
+        Id string `json:"id"`
+        ParentId string  `json:"parentId"`
+        Name string `json:"name"`
+        Type string  `json:"type"`
+        Data ApiCaseRunDetailDataData `json:"data"`
+    }
+    ApiCaseRunDetailDataData {
+        Id string `json:"id"`
+        Name string `json:"name"`
+        Path string `json:"path"`
+        Method string `json:"method"`
+        Status string `json:"status"`
+        Tags []string `json:"tags"`
+        ServerId string `json:"serverId"`
+        Description string `json:"description"`
+        Parameters interface{} `json:"parameters"`
+        Responses interface{} `json:"responses"`
+        ResponseExamples interface{} `json:"responseExamples"`
+        RequestBody interface{} `json:"requestBody"`
+    }
+)
+@server(
+    group: ApiCasecase
+    prefix: /ApiCase
+)
+service easypost-api{
+    @handler ApiCaseDetailCreate    //接口新增
+    post /am/apicase/detail/create (ApiCaseDetailCreateOrUpdateRequest) returns (ApiCaseDetailCreateOrUpdateResp)
+    @handler ApiCaseDetailUpdate   //接口新增
+    post /am/apicase/detail/update (ApiCaseDetailCreateOrUpdateRequest) returns (ApiCaseDetailCreateOrUpdateResp)
+    @handler ApiCaseDetail  //接口详情
+    get /am/apicase/detail/:id (ApiCaseDetailRequest) returns (ApiCaseDetailResp)
+    @handler ApiCaseRunDetail  //接口文档详情
+    get /am/apicase/run/detail/:id (ApiCaseRunDetailRequest) returns( ApiCaseRunDetailResp)
+    @handler ApiCaseDelete  //接口删除
+    get /am/apicase/delete/:id (ApiCaseDeleteRequest) returns (ApiCaseDeleteResp)
+    @handler ApiCaseCopy   //接口复制
+    post /am/apicase/copy (ApiCaseCopyRequest) returns (ApiCaseCopyResp)
+    @handler ApiCaseRename   //接口重命名
+    post /am/apicase/rename (ApiCaseRenameRequest) returns (ApiCaseRenameResp)
+    @handler ApiCaseMove  //接口移动
+    post /am/apicase/move (ApiCaseMoveRequest) returns (ApiCaseMoveResp)
+
+}

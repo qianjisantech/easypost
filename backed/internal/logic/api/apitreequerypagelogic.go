@@ -48,11 +48,17 @@ func (l *ApiTreeQueryPageLogic) ApiTreeQueryPage(req *types.ApiTreeQueryPageRequ
 			return nil, errorx.NewDefaultError("报错")
 		}
 		folderType := "apiDetailFolder"
+		parentId := ""
+		if *qafr.ParentID == 0 || qafr.ParentID == nil {
+			parentId = "_"
+		} else {
+			parentId = strconv.FormatInt(*qafr.ParentID, 10)
+		}
 		datas = append(datas, types.ApiTreeQueryPageData{
 			Id:       strconv.FormatInt(qafr.ID, 10),
 			Name:     *qafr.Name,
 			Type:     folderType,
-			ParentId: strconv.FormatInt(*qafr.ParentID, 10),
+			ParentId: parentId,
 		})
 	}
 
@@ -62,12 +68,18 @@ func (l *ApiTreeQueryPageLogic) ApiTreeQueryPage(req *types.ApiTreeQueryPageRequ
 			return nil, errorx.NewDefaultError(" 组装接口报错")
 		}
 		apiType := "apiDetail"
+		parentId := ""
+		if *qaar.ParentID == 0 || qaar.ParentID == nil {
+			parentId = "_"
+		} else {
+			parentId = strconv.FormatInt(*qaar.ParentID, 10)
+		}
 		datas = append(datas, types.ApiTreeQueryPageData{
 			Id:       strconv.FormatInt(qaar.ID, 10),
 			Name:     *qaar.Name,
 			Type:     apiType,
 			Method:   ep.StringIfNotNil(qaar.Method, ""),
-			ParentId: strconv.FormatInt(*qaar.ParentID, 10),
+			ParentId: parentId,
 		})
 	}
 
@@ -76,11 +88,18 @@ func (l *ApiTreeQueryPageLogic) ApiTreeQueryPage(req *types.ApiTreeQueryPageRequ
 		if qadr.Name == nil || qadr.Type == nil || qadr.ParentID == nil {
 			return nil, errorx.NewDefaultError("组装文档报错")
 		}
+		docType := "apiDetail"
+		parentId := ""
+		if *qadr.ParentID == 0 || qadr.ParentID == nil {
+			parentId = "_"
+		} else {
+			parentId = strconv.FormatInt(*qadr.ParentID, 10)
+		}
 		datas = append(datas, types.ApiTreeQueryPageData{
 			Id:       strconv.FormatInt(qadr.ID, 10),
 			Name:     *qadr.Name,
-			Type:     *qadr.Type,
-			ParentId: strconv.FormatInt(*qadr.ParentID, 10),
+			Type:     docType,
+			ParentId: parentId,
 		})
 	}
 

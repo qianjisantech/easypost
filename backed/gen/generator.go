@@ -26,7 +26,7 @@ func main() {
 	g.UseDB(db)
 
 	g.ApplyBasic(
-		g.GenerateModel("am_tab",
+		g.GenerateModel("am_api_case",
 			gen.FieldGORMTag("create_time", func(tag field.GormTag) field.GormTag {
 				return tag.Set("column", "create_time").Set("->", "")
 			}),

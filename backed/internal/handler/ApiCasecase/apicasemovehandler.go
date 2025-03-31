@@ -1,24 +1,24 @@
-package tab
+package ApiCasecase
 
 import (
 	"net/http"
 
-	"backed/internal/logic/tab"
+	"backed/internal/logic/ApiCasecase"
 	"backed/internal/svc"
 	"backed/internal/types"
 	"github.com/zeromicro/go-zero/rest/httpx"
 )
 
-func SaveTabItemHandler(svcCtx *svc.ServiceContext) http.HandlerFunc {
+func ApiCaseMoveHandler(svcCtx *svc.ServiceContext) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
-		var req types.SaveTabItemRequest
+		var req types.ApiCaseMoveRequest
 		if err := httpx.Parse(r, &req); err != nil {
 			httpx.ErrorCtx(r.Context(), w, err)
 			return
 		}
 
-		l := tab.NewSaveTabItemLogic(r.Context(), svcCtx)
-		resp, err := l.SaveTabItem(&req)
+		l := ApiCasecase.NewApiCaseMoveLogic(r.Context(), svcCtx)
+		resp, err := l.ApiCaseMove(&req)
 		if err != nil {
 			httpx.ErrorCtx(r.Context(), w, err)
 		} else {

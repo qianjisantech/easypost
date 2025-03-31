@@ -4,13 +4,13 @@ package handler
 import (
 	"net/http"
 
+	ApiCasecase "backed/internal/handler/ApiCasecase"
 	api "backed/internal/handler/api"
 	auth "backed/internal/handler/auth"
 	doc "backed/internal/handler/doc"
 	es "backed/internal/handler/es"
 	folder "backed/internal/handler/folder"
 	project "backed/internal/handler/project"
-	tab "backed/internal/handler/tab"
 	team "backed/internal/handler/team"
 	trafficmanage "backed/internal/handler/trafficmanage"
 	user "backed/internal/handler/user"
@@ -20,6 +20,52 @@ import (
 )
 
 func RegisterHandlers(server *rest.Server, serverCtx *svc.ServiceContext) {
+	server.AddRoutes(
+		[]rest.Route{
+			{
+				Method:  http.MethodPost,
+				Path:    "/am/apicase/copy",
+				Handler: ApiCasecase.ApiCaseCopyHandler(serverCtx),
+			},
+			{
+				Method:  http.MethodGet,
+				Path:    "/am/apicase/delete/:id",
+				Handler: ApiCasecase.ApiCaseDeleteHandler(serverCtx),
+			},
+			{
+				Method:  http.MethodGet,
+				Path:    "/am/apicase/detail/:id",
+				Handler: ApiCasecase.ApiCaseDetailHandler(serverCtx),
+			},
+			{
+				Method:  http.MethodPost,
+				Path:    "/am/apicase/detail/create",
+				Handler: ApiCasecase.ApiCaseDetailCreateHandler(serverCtx),
+			},
+			{
+				Method:  http.MethodPost,
+				Path:    "/am/apicase/detail/update",
+				Handler: ApiCasecase.ApiCaseDetailUpdateHandler(serverCtx),
+			},
+			{
+				Method:  http.MethodPost,
+				Path:    "/am/apicase/move",
+				Handler: ApiCasecase.ApiCaseMoveHandler(serverCtx),
+			},
+			{
+				Method:  http.MethodPost,
+				Path:    "/am/apicase/rename",
+				Handler: ApiCasecase.ApiCaseRenameHandler(serverCtx),
+			},
+			{
+				Method:  http.MethodGet,
+				Path:    "/am/apicase/run/detail/:id",
+				Handler: ApiCasecase.ApiCaseRunDetailHandler(serverCtx),
+			},
+		},
+		rest.WithPrefix("/ApiCase"),
+	)
+
 	server.AddRoutes(
 		[]rest.Route{
 			{
@@ -181,27 +227,6 @@ func RegisterHandlers(server *rest.Server, serverCtx *svc.ServiceContext) {
 				Method:  http.MethodPost,
 				Path:    "/project/update",
 				Handler: project.ProjectUpdateHandler(serverCtx),
-			},
-		},
-		rest.WithPrefix("/api"),
-	)
-
-	server.AddRoutes(
-		[]rest.Route{
-			{
-				Method:  http.MethodPost,
-				Path:    "/am/tabItem/list",
-				Handler: tab.InitialTabItemsHandler(serverCtx),
-			},
-			{
-				Method:  http.MethodGet,
-				Path:    "/am/tabItem/remove/:id",
-				Handler: tab.RemoveTabItemHandler(serverCtx),
-			},
-			{
-				Method:  http.MethodPost,
-				Path:    "/am/tabItem/save",
-				Handler: tab.SaveTabItemHandler(serverCtx),
 			},
 		},
 		rest.WithPrefix("/api"),

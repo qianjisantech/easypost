@@ -18,9 +18,9 @@ import (
 var (
 	Q                           = new(Query)
 	AmAPI                       *amAPI
+	AmAPICase                   *amAPICase
 	AmDoc                       *amDoc
 	AmFolder                    *amFolder
-	AmTab                       *amTab
 	GsTrafficManager            *gsTrafficManager
 	GsTrafficManagerHeader      *gsTrafficManagerHeader
 	GsTrafficManagerRequestBody *gsTrafficManagerRequestBody
@@ -35,9 +35,9 @@ var (
 func SetDefault(db *gorm.DB, opts ...gen.DOOption) {
 	*Q = *Use(db, opts...)
 	AmAPI = &Q.AmAPI
+	AmAPICase = &Q.AmAPICase
 	AmDoc = &Q.AmDoc
 	AmFolder = &Q.AmFolder
-	AmTab = &Q.AmTab
 	GsTrafficManager = &Q.GsTrafficManager
 	GsTrafficManagerHeader = &Q.GsTrafficManagerHeader
 	GsTrafficManagerRequestBody = &Q.GsTrafficManagerRequestBody
@@ -53,9 +53,9 @@ func Use(db *gorm.DB, opts ...gen.DOOption) *Query {
 	return &Query{
 		db:                          db,
 		AmAPI:                       newAmAPI(db, opts...),
+		AmAPICase:                   newAmAPICase(db, opts...),
 		AmDoc:                       newAmDoc(db, opts...),
 		AmFolder:                    newAmFolder(db, opts...),
-		AmTab:                       newAmTab(db, opts...),
 		GsTrafficManager:            newGsTrafficManager(db, opts...),
 		GsTrafficManagerHeader:      newGsTrafficManagerHeader(db, opts...),
 		GsTrafficManagerRequestBody: newGsTrafficManagerRequestBody(db, opts...),
@@ -72,9 +72,9 @@ type Query struct {
 	db *gorm.DB
 
 	AmAPI                       amAPI
+	AmAPICase                   amAPICase
 	AmDoc                       amDoc
 	AmFolder                    amFolder
-	AmTab                       amTab
 	GsTrafficManager            gsTrafficManager
 	GsTrafficManagerHeader      gsTrafficManagerHeader
 	GsTrafficManagerRequestBody gsTrafficManagerRequestBody
@@ -92,9 +92,9 @@ func (q *Query) clone(db *gorm.DB) *Query {
 	return &Query{
 		db:                          db,
 		AmAPI:                       q.AmAPI.clone(db),
+		AmAPICase:                   q.AmAPICase.clone(db),
 		AmDoc:                       q.AmDoc.clone(db),
 		AmFolder:                    q.AmFolder.clone(db),
-		AmTab:                       q.AmTab.clone(db),
 		GsTrafficManager:            q.GsTrafficManager.clone(db),
 		GsTrafficManagerHeader:      q.GsTrafficManagerHeader.clone(db),
 		GsTrafficManagerRequestBody: q.GsTrafficManagerRequestBody.clone(db),
@@ -119,9 +119,9 @@ func (q *Query) ReplaceDB(db *gorm.DB) *Query {
 	return &Query{
 		db:                          db,
 		AmAPI:                       q.AmAPI.replaceDB(db),
+		AmAPICase:                   q.AmAPICase.replaceDB(db),
 		AmDoc:                       q.AmDoc.replaceDB(db),
 		AmFolder:                    q.AmFolder.replaceDB(db),
-		AmTab:                       q.AmTab.replaceDB(db),
 		GsTrafficManager:            q.GsTrafficManager.replaceDB(db),
 		GsTrafficManagerHeader:      q.GsTrafficManagerHeader.replaceDB(db),
 		GsTrafficManagerRequestBody: q.GsTrafficManagerRequestBody.replaceDB(db),
@@ -136,9 +136,9 @@ func (q *Query) ReplaceDB(db *gorm.DB) *Query {
 
 type queryCtx struct {
 	AmAPI                       IAmAPIDo
+	AmAPICase                   IAmAPICaseDo
 	AmDoc                       IAmDocDo
 	AmFolder                    IAmFolderDo
-	AmTab                       IAmTabDo
 	GsTrafficManager            IGsTrafficManagerDo
 	GsTrafficManagerHeader      IGsTrafficManagerHeaderDo
 	GsTrafficManagerRequestBody IGsTrafficManagerRequestBodyDo
@@ -153,9 +153,9 @@ type queryCtx struct {
 func (q *Query) WithContext(ctx context.Context) *queryCtx {
 	return &queryCtx{
 		AmAPI:                       q.AmAPI.WithContext(ctx),
+		AmAPICase:                   q.AmAPICase.WithContext(ctx),
 		AmDoc:                       q.AmDoc.WithContext(ctx),
 		AmFolder:                    q.AmFolder.WithContext(ctx),
-		AmTab:                       q.AmTab.WithContext(ctx),
 		GsTrafficManager:            q.GsTrafficManager.WithContext(ctx),
 		GsTrafficManagerHeader:      q.GsTrafficManagerHeader.WithContext(ctx),
 		GsTrafficManagerRequestBody: q.GsTrafficManagerRequestBody.WithContext(ctx),

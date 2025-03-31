@@ -4,13 +4,14 @@ import { useEffect, useRef, useState } from 'react'
 import { Button, Form, type FormProps, Select, type SelectProps, Space } from 'antd'
 import type { AxiosRequestConfig } from 'axios'
 import { nanoid } from 'nanoid'
+import { ApiDetail, ApiDetailCreate, ApiDetailUpdate, ApiRunDetail } from "src/api/api";
 
-import { ApiDetail, ApiRunDetail,ApiDetailUpdate } from "src/api/api";
 import { PageTabStatus } from '@/components/ApiTab/ApiTab.enum'
 import { useTabContentContext } from '@/components/ApiTab/TabContentContext'
 import { InputUnderline } from '@/components/InputUnderline'
 import { ApiRemoveButton } from '@/components/tab-content/api/ApiRemoveButton'
 import { ResponseTab } from '@/components/tab-content/api/components/ResponseTab'
+import { ParamsRunTab } from '@/components/tab-content/api/params/ParamsRunTab'
 import { RunResponse } from '@/components/tab-content/api/response/RunResponse'
 import { HTTP_METHOD_CONFIG } from '@/configs/static'
 import { useGlobalContext } from '@/contexts/global'
@@ -25,7 +26,6 @@ import { BaseFormItems } from './components/BaseFormItems'
 import { GroupTitle } from './components/GroupTitle'
 import { PathInput, type PathInputProps } from './components/PathInput'
 import { ParamsTab } from './params/ParamsTab'
-import { ParamsRunTab } from "@/components/tab-content/api/params/ParamsRunTab";
 
 const DEFAULT_NAME = '未命名接口'
 
@@ -76,12 +76,11 @@ export function ApiRun() {
             }
           }
         }
-        console.log('tabData',tabData)
+        console.log('tabData', tabData)
       }
     } catch (error) {
       console.error('加载 API 详情失败:', error)
     }
-
   }
   useEffect(() => {
     if (isCreating) {
@@ -89,8 +88,37 @@ export function ApiRun() {
     } else {
       loadingApiDetails(tabData.key)
     }
-  }, [form,isCreating, tabData.key])
+  }, [form, isCreating, tabData.key])
 
+  const handleSaveCase: FormProps<ApiDetails>['onFinish'] = async (values) => {
+    const menuName = values.name || DEFAULT_NAME
+
+    if (isCreating) {
+      const menuItemId = ''
+      try {
+        await ApiDetailCreate({
+          id: menuItemId,
+          name: menuName,
+          type: MenuItemType.ApiDetail,
+          data: { ...values, name: menuName },
+        }).then((r) => {
+          console.log('保存case', r)
+        })
+      } catch (err) {
+        console.error('保存case失败', err)
+      }
+
+    } else {
+      await ApiDetailUpdate({
+        id: tabData.key,
+        name: menuName,
+        type: MenuItemType.ApiDetail,
+        data: { ...values, name: menuName },
+      }).then((r) => {
+        console.log('更新case结果', r)
+      })
+    }
+  }
 
   const handleFinish: FormProps<ApiDetails>['onFinish'] = async (values) => {
     const menuName = values.name || DEFAULT_NAME
@@ -114,21 +142,23 @@ export function ApiRun() {
         id: menuItemId,
         name: menuName,
         type: MenuItemType.ApiDetail,
-        data: { ...values, name: menuName }
+        data: { ...values, name: menuName },
       })
 
-      addTabItem({
-        key: menuItemId,
-        label: menuName,
-        contentType: MenuItemType.ApiDetail
-      }, { replaceTab: tabData.key })
+      addTabItem(
+        {
+          key: menuItemId,
+          label: menuName,
+          contentType: MenuItemType.ApiDetail,
+        },
+        { replaceTab: tabData.key }
+      )
     } else {
       updateMenuItem({
         id: tabData.key,
         name: menuName,
-        data: { ...values, name: menuName }
+        data: { ...values, name: menuName },
       })
-
     }
   }
 
@@ -327,9 +357,14 @@ export function ApiRun() {
           >
             暂存
           </Button>
-          {/*<Button htmlType="submit">*/}
-          {/*    保存为用例*/}
-          {/*</Button>*/}
+          <Button
+            htmlType="submit"
+            onClick={() => {
+              handleSaveCase(form.getFieldsValue(), true)
+            }}
+          >
+            保存为用例
+          </Button>
         </Space>
       </div>
 
