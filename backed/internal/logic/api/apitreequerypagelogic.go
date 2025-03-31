@@ -69,7 +69,7 @@ func (l *ApiTreeQueryPageLogic) ApiTreeQueryPage(req *types.ApiTreeQueryPageRequ
 		if qaar.Name == nil || qaar.ParentID == nil {
 			return nil, errorx.NewDefaultError(" 组装接口报错")
 		}
-		apiType := enum.ApiCase
+		apiType := enum.ApiDetail
 		parentId := ""
 		if *qaar.ParentID == 0 || qaar.ParentID == nil {
 			parentId = "_"
