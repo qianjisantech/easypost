@@ -34,6 +34,7 @@ func main() {
 	server.Use(ctx.Log)
 	server.Use(ctx.Auth)
 	server.Use(ctx.Recover)
+	server.Use(ctx.Audit)
 	handler.RegisterHandlers(server, ctx)
 	// 自定义错误
 	httpx.SetErrorHandler(func(err error) (int, interface{}) {

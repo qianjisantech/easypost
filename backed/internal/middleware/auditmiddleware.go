@@ -3,19 +3,15 @@ package middleware
 import (
 	"context"
 	"fmt"
+	"github.com/golang-jwt/jwt/v4"
+	"gorm.io/gorm"
 	"net/http"
 	"strconv"
 	"strings"
-	"time"
-
-	"github.com/golang-jwt/jwt/v4"
-	"gorm.io/gorm"
 )
 
 type AuditMiddleware struct {
-	db      *gorm.DB
-	secret  string
-	expires time.Duration
+	db *gorm.DB
 }
 
 func NewAuditMiddleware(db *gorm.DB) *AuditMiddleware {
@@ -29,7 +25,27 @@ func (a *AuditMiddleware) Handle(next http.HandlerFunc) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 		// 1. JWT 认证
 		authHeader := r.Header.Get("Authorization")
-		userId, err := a.ExtractBearerToken(authHeader)
+		// 解析 Bearer token
+		tokenString, err := ExtractBearerToken(authHeader)
+		if err != nil {
+			http.Error(w, err.Error(), http.StatusUnauthorized)
+			return
+		}
+
+		// 验证并解析 JWT
+		claims, err := ParseAndValidateJWT(tokenString)
+		if err != nil {
+			http.Error(w, err.Error(), http.StatusUnauthorized)
+			return
+		}
+
+		// 从 claims 获取 user_id
+		userId, err := ExtractUserIDFromClaims(claims)
+		if err != nil {
+			http.Error(w, err.Error(), http.StatusUnauthorized)
+			return
+		}
+
 		if err != nil {
 			w.WriteHeader(http.StatusUnauthorized)
 			fmt.Fprintf(w, `{"error": "%v"}`, err)
@@ -39,7 +55,7 @@ func (a *AuditMiddleware) Handle(next http.HandlerFunc) http.HandlerFunc {
 		// 2. 设置上下文
 		ctx := context.WithValue(r.Context(), "userId", userId)
 		r = r.WithContext(ctx)
-		userIDInt, err := strconv.ParseInt(userId, 10, 64)
+		userIDInt, err := strconv.ParseInt(strconv.FormatInt(userId, 10), 10, 64)
 		// 3. 设置GORM回调
 		a.setGormCallbacks(userIDInt)
 
@@ -50,7 +66,7 @@ func (a *AuditMiddleware) Handle(next http.HandlerFunc) http.HandlerFunc {
 // 辅助函数：从 Authorization 头提取 Bearer token
 func (a *AuditMiddleware) ExtractBearerToken(authHeader string) (string, error) {
 	parts := strings.SplitN(authHeader, " ", 2)
-	if len(parts) != 2 || strings.ToLower(parts[0]) != "bearer" {
+	if len(parts) != 2 || strings.ToLower(parts[0]) != "Bearer" {
 		return "", fmt.Errorf("invalid Authorization header format")
 	}
 	return parts[1], nil
