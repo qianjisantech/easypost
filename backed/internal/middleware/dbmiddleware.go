@@ -4,6 +4,7 @@ import (
 	"context"
 	"fmt"
 	"net/http"
+	"strconv"
 	"strings"
 	"time"
 
@@ -38,9 +39,9 @@ func (m *DBMiddleware) Handle(next http.HandlerFunc) http.HandlerFunc {
 		// 2. 设置上下文
 		ctx := context.WithValue(r.Context(), "userId", userId)
 		r = r.WithContext(ctx)
-
+		userIDInt, err := strconv.ParseInt(userId, 10, 64)
 		// 3. 设置GORM回调
-		m.setGormCallbacks(userId)
+		m.setGormCallbacks(userIDInt)
 
 		next(w, r)
 	}
@@ -86,7 +87,7 @@ func (m *DBMiddleware) ExtractUserIDFromClaims(claims jwt.MapClaims) (int64, err
 	return int64(userIDFloat), nil
 }
 
-func (m *DBMiddleware) setGormCallbacks(userID uint) {
+func (m *DBMiddleware) setGormCallbacks(userID int64) {
 	// 创建记录时自动设置create_by
 	_ = m.db.Callback().Create().Before("gorm:create").Register("set_create_by", func(d *gorm.DB) {
 		if d.Statement.Schema != nil {
