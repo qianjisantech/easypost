@@ -219,19 +219,7 @@ type ApiDetailCreateOrUpdateResp struct {
 }
 
 type ApiDetailCreateOrUpdateRespData struct {
-	Id               string      `json:"id"`
-	Path             string      `json:"path"`
-	Name             string      `json:"name"`
-	Method           string      `json:"method"`
-	Status           string      `json:"status"`
-	Responsible      string      `json:"responsible"`
-	Tags             []string    `json:"tags"`
-	ServerId         string      `json:"serverId"`
-	Description      string      `json:"description"`
-	Parameters       interface{} `json:"parameters"`
-	Responses        interface{} `json:"responses"`
-	ResponseExamples interface{} `json:"responseExamples"`
-	RequestBody      interface{} `json:"requestBody"`
+	Id string `json:"id"`
 }
 
 type ApiDetailData struct {

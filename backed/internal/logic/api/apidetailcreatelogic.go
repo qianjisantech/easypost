@@ -3,10 +3,7 @@ package api
 import (
 	"backed/gen/model"
 	"backed/internal/common/errorx"
-	"backed/internal/utils/ep"
 	"context"
-	"encoding/json"
-	"log"
 	"strconv"
 	"strings"
 
@@ -37,6 +34,8 @@ func (l *ApiDetailCreateLogic) ApiDetailCreate(req *types.ApiDetailCreateOrUpdat
 	tags := ""
 	if req.ParentId != "" {
 		parentId, _ = strconv.ParseInt(req.ParentId, 10, 64)
+	} else {
+		parentId = 0
 	}
 	if len(req.Tags) > 0 {
 		tags = strings.Join(req.Tags, ",")
@@ -59,7 +58,8 @@ func (l *ApiDetailCreateLogic) ApiDetailCreate(req *types.ApiDetailCreateOrUpdat
 		ResponseExamples: &req.ResponseExamples,
 		Responses:        &req.Responses,
 	}
-	projectId := l.ctx.Value("projectId").(int64)
+	projectIdstring := l.ctx.Value("projectId").(string)
+	projectId, err := strconv.ParseInt(projectIdstring, 10, 64)
 	if projectId == 0 {
 		// 处理空值或类型不匹配的情况
 		return nil, errorx.NewDefaultError("projectId 无效或未提供")
@@ -87,34 +87,12 @@ func (l *ApiDetailCreateLogic) ApiDetailCreate(req *types.ApiDetailCreateOrUpdat
 		db.Rollback()
 		return nil, errorx.NewDefaultError("提交事务失败")
 	}
-	log.Printf("入参%s", req)
-
-	var responseExamples []ResponseExample
-	err = json.Unmarshal([]byte(*amApi.ResponseExamples), &responseExamples)
-
-	var responses []Response
-	err = json.Unmarshal([]byte(*amApi.Responses), &responses)
-
-	var parameters Parameters
-	err = json.Unmarshal([]byte(*amApi.Parameters), &parameters)
 
 	return &types.ApiDetailCreateOrUpdateResp{
 		Success: true,
 		Message: "保存成功",
 		Data: types.ApiDetailCreateOrUpdateRespData{
-			Id:               strconv.FormatInt(amApi.ID, 10),
-			Path:             ep.StringIfNotNil(amApi.Path, ""),
-			Name:             ep.StringIfNotNil(amApi.Name, ""),
-			Method:           ep.StringIfNotNil(amApi.Method, ""),
-			Status:           ep.StringIfNotNil(amApi.Status, ""),
-			ServerId:         ep.StringIfNotNil(amApi.ServerID, ""),
-			Description:      ep.StringIfNotNil(amApi.Remark, ""),
-			ResponseExamples: responseExamples,
-			Responses:        responses,
-			Parameters:       parameters,
+			Id: strconv.FormatInt(amApi.ID, 10),
 		},
 	}, nil
-}
-func StringPointer(s string) *string {
-	return &s
 }

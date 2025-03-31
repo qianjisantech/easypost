@@ -3,7 +3,6 @@ package api
 import (
 	"backed/gen/model"
 	"backed/internal/common/errorx"
-	"backed/internal/utils/ep"
 	"context"
 	"encoding/json"
 	"log"
@@ -96,16 +95,7 @@ func (l *ApiDetailUpdateLogic) ApiDetailUpdate(req *types.ApiDetailCreateOrUpdat
 		Success: true,
 		Message: "保存成功",
 		Data: types.ApiDetailCreateOrUpdateRespData{
-			Id:               strconv.FormatInt(amApi.ID, 10),
-			Path:             ep.StringIfNotNil(amApi.Path, ""),
-			Name:             ep.StringIfNotNil(amApi.Name, ""),
-			Method:           ep.StringIfNotNil(amApi.Method, ""),
-			Status:           ep.StringIfNotNil(amApi.Status, ""),
-			ServerId:         ep.StringIfNotNil(amApi.ServerID, ""),
-			Description:      ep.StringIfNotNil(amApi.Remark, ""),
-			ResponseExamples: responseExamples,
-			Responses:        responses,
-			Parameters:       parameters,
+			Id: strconv.FormatInt(amApi.ID, 10),
 		},
 	}, nil
 }

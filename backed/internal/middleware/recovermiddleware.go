@@ -1,6 +1,7 @@
 package middleware
 
 import (
+	"fmt"
 	"github.com/zeromicro/go-zero/rest/httpx"
 	"log"
 	"net/http"
@@ -19,7 +20,7 @@ func (r RecoverMiddleware) Handle(next http.HandlerFunc) http.HandlerFunc {
 				log.Printf("Recovered from panic: %v", r)
 				httpx.WriteJson(w, http.StatusInternalServerError, map[string]interface{}{
 					"success": false,
-					"message": "Internal Server Error",
+					"message": fmt.Sprintf("%v", r),
 				})
 			}
 		}()

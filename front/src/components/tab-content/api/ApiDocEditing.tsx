@@ -57,7 +57,7 @@ export function ApiDocEditing() {
       if (id) {
         const response = await ApiDetail(id)
         if (response.data.success) {
-          message.success(response.data.message)
+
           const menuData = response.data.data
           const apiDetails = menuData.data
           form.setFieldsValue(apiDetails)
