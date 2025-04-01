@@ -69,7 +69,7 @@ func (l *ApiDocDetailLogic) ApiDocDetail(req *types.ApiDocDetailRequest) (resp *
 		Message: "加载成功",
 		Data: types.ApiDocDetailData{
 			Id:       strconv.FormatInt(amAPI.ID, 10),
-			Type:     enum.Doc,
+			Type:     enum.ApiDetail,
 			ParentId: strconv.FormatInt(*amAPI.ParentID, 10),
 			Name:     ep.StringIfNotNil(amAPI.Name, ""),
 			Data: types.ApiDocDetailDataData{
@@ -85,10 +85,12 @@ func (l *ApiDocDetailLogic) ApiDocDetail(req *types.ApiDocDetailRequest) (resp *
 				Responses:        responses,
 				ResponseExamples: responseExamples,
 				RequestBody:      requestBody,
-				CreateTime:       amAPI.CreateTime.Format(time.DateTime),
-				UpdateTime:       amAPI.UpdateTime.Format(time.DateTime),
 				CreatBy:          strconv.FormatInt(*amAPI.CreateBy, 10),
+				CreatByName:      *amAPI.CreateByName,
+				CreateTime:       amAPI.CreateTime.Format(time.DateTime),
 				UpdateBy:         strconv.FormatInt(*amAPI.UpdateBy, 10),
+				UpdateByName:     *amAPI.UpdateByName,
+				UpdateTime:       amAPI.UpdateTime.Format(time.DateTime),
 			},
 		},
 	}, nil

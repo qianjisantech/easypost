@@ -279,8 +279,10 @@ type ApiDocDetailDataData struct {
 	ResponseExamples interface{} `json:"responseExamples"`
 	RequestBody      interface{} `json:"requestBody"`
 	CreatBy          string      `json:"createBy"`
+	CreatByName      string      `json:"createByName"`
 	CreateTime       string      `json:"createTime"`
 	UpdateBy         string      `json:"updateBy"`
+	UpdateByName     string      `json:"updateByName"`
 	UpdateTime       string      `json:"updateTime"`
 }
 
