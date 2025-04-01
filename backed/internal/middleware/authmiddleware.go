@@ -103,15 +103,15 @@ func (a *AuthMiddleware) registerCallbacks() {
 		log.Printf("创建插入数据自动填充数据")
 		// 从上下文中获取用户信息
 		// 处理 userId
-		userId, ok := db.Statement.Context.Value("userId").(int64)
+		contentInfo, ok := db.Statement.Context.Value("contentInfo").(ContentInfo)
 		if ok {
-			fmt.Printf("DEBUG: Found userId in context: %d\n", userId) // 调试日志
+			fmt.Printf("DEBUG: Found userId in context: %d\n", contentInfo.UserId) // 调试日志
 
 			field := db.Statement.Schema.LookUpField("create_by")
 			if field != nil {
 				fmt.Printf("DEBUG: Found 'update_by' field in schema\n") // 调试日志
-				db.Statement.SetColumn("create_by", userId)
-				fmt.Printf("DEBUG: Set 'update_by' column to: %d\n", userId) // 调试日志
+				db.Statement.SetColumn("create_by", contentInfo.UserId)
+				fmt.Printf("DEBUG: Set 'update_by' column to: %d\n", contentInfo.UserId) // 调试日志
 			} else {
 				fmt.Printf("DEBUG: 'update_by' field not found in schema\n") // 调试日志
 			}
@@ -119,16 +119,14 @@ func (a *AuthMiddleware) registerCallbacks() {
 			fmt.Printf("DEBUG: userId not found in context or not int64 type\n") // 调试日志
 		}
 
-		// 处理 username
-		username, ok := db.Statement.Context.Value("username").(string)
 		if ok {
-			fmt.Printf("DEBUG: Found username in context: %s\n", username) // 调试日志
+			fmt.Printf("DEBUG: Found username in context: %s\n", contentInfo.Username) // 调试日志
 
 			field := db.Statement.Schema.LookUpField("create_by_name")
 			if field != nil {
 				fmt.Printf("DEBUG: Found 'update_by_name' field in schema\n") // 调试日志
-				db.Statement.SetColumn("create_by_name", username)
-				fmt.Printf("DEBUG: Set 'update_by_name' column to: %s\n", username) // 调试日志
+				db.Statement.SetColumn("create_by_name", contentInfo.Username)
+				fmt.Printf("DEBUG: Set 'update_by_name' column to: %s\n", contentInfo.Username) // 调试日志
 			} else {
 				fmt.Printf("DEBUG: 'update_by_name' field not found in schema\n") // 调试日志
 			}
@@ -144,15 +142,15 @@ func (a *AuthMiddleware) registerCallbacks() {
 		}
 		log.Printf("更新插入数据自动填充数据")
 		// 处理 userId
-		userId, ok := db.Statement.Context.Value("userId").(int64)
+		contentInfo, ok := db.Statement.Context.Value("contentInfo").(ContentInfo)
 		if ok {
-			fmt.Printf("DEBUG: Found userId in context: %d\n", userId) // 调试日志
+			fmt.Printf("DEBUG: Found userId in context: %d\n", contentInfo.UserId) // 调试日志
 
 			field := db.Statement.Schema.LookUpField("update_by")
 			if field != nil {
 				fmt.Printf("DEBUG: Found 'update_by' field in schema\n") // 调试日志
-				db.Statement.SetColumn("update_by", userId)
-				fmt.Printf("DEBUG: Set 'update_by' column to: %d\n", userId) // 调试日志
+				db.Statement.SetColumn("update_by", contentInfo.UserId)
+				fmt.Printf("DEBUG: Set 'update_by' column to: %d\n", contentInfo.UserId) // 调试日志
 			} else {
 				fmt.Printf("DEBUG: 'update_by' field not found in schema\n") // 调试日志
 			}
@@ -160,16 +158,14 @@ func (a *AuthMiddleware) registerCallbacks() {
 			fmt.Printf("DEBUG: userId not found in context or not int64 type\n") // 调试日志
 		}
 
-		// 处理 username
-		username, ok := db.Statement.Context.Value("username").(string)
 		if ok {
-			fmt.Printf("DEBUG: Found username in context: %s\n", username) // 调试日志
+			fmt.Printf("DEBUG: Found username in context: %s\n", contentInfo.Username) // 调试日志
 
 			field := db.Statement.Schema.LookUpField("update_by_name")
 			if field != nil {
 				fmt.Printf("DEBUG: Found 'update_by_name' field in schema\n") // 调试日志
-				db.Statement.SetColumn("update_by_name", username)
-				fmt.Printf("DEBUG: Set 'update_by_name' column to: %s\n", username) // 调试日志
+				db.Statement.SetColumn("update_by_name", contentInfo.Username)
+				fmt.Printf("DEBUG: Set 'update_by_name' column to: %s\n", contentInfo.Username) // 调试日志
 			} else {
 				fmt.Printf("DEBUG: 'update_by_name' field not found in schema\n") // 调试日志
 			}
