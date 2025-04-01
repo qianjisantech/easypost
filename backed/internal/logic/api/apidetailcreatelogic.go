@@ -3,6 +3,7 @@ package api
 import (
 	"backed/gen/model"
 	"backed/internal/common/errorx"
+	"backed/internal/middleware"
 	"context"
 	"strconv"
 	"strings"
@@ -28,7 +29,8 @@ func NewApiDetailCreateLogic(ctx context.Context, svcCtx *svc.ServiceContext) *A
 }
 
 func (l *ApiDetailCreateLogic) ApiDetailCreate(req *types.ApiDetailCreateOrUpdateRequest) (resp *types.ApiDetailCreateOrUpdateResp, err error) {
-
+	contentInfo := l.ctx.Value("contentInfo").(*middleware.ContentInfo)
+	projectId := contentInfo.ProjectId
 	db := l.svcCtx.DB.Begin().Debug()
 	parentId := int64(0)
 	tags := ""
@@ -58,8 +60,7 @@ func (l *ApiDetailCreateLogic) ApiDetailCreate(req *types.ApiDetailCreateOrUpdat
 		ResponseExamples: &req.ResponseExamples,
 		Responses:        &req.Responses,
 	}
-	projectIdstring := l.ctx.Value("projectId").(string)
-	projectId, err := strconv.ParseInt(projectIdstring, 10, 64)
+
 	if projectId == 0 {
 		// 处理空值或类型不匹配的情况
 		return nil, errorx.NewDefaultError("projectId 无效或未提供")
