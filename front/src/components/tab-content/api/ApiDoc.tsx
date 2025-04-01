@@ -273,8 +273,8 @@ export function ApiDoc() {
         <Space wrap size="large">
           <BaseInfoItem label="创建时间" value={dayjs(docValue.createdTime).format('YYYY年M月D日')} />
           <BaseInfoItem label="修改时间" value={dayjs(docValue.updatedTime).format('YYYY年M月D日')} />
-          <BaseInfoItem label="修改者" value={docValue.updateBy} />
-          <BaseInfoItem label="创建者" value={docValue.createBy} />
+          <BaseInfoItem label="修改者" value={docValue.updateByName} />
+          <BaseInfoItem label="创建者" value={docValue.createByName} />
           <BaseInfoItem label="责任人" value={docValue.responsible ? JSON.parse(docValue.responsible).username : ''} />
         </Space>
       </div>

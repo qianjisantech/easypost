@@ -106,6 +106,8 @@ export interface ApiDetails {
   updatedTime?: string
   createBy?: string
   updateBy?: string
+  createByName?: string
+  updateByName?: string
 }
 
 export interface ApiDoc {
