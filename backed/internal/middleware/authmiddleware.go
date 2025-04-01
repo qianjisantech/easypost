@@ -4,88 +4,183 @@ import (
 	"context"
 	"fmt"
 	"github.com/golang-jwt/jwt/v4"
+	"gorm.io/gorm"
 	"log"
 	"net/http"
+	"strconv"
 	"strings"
 )
 
 var secretKey = "easypost"
 
-// AuthMiddleware 定义认证中间件
 type AuthMiddleware struct {
 	whitelist map[string]bool
+	db        *gorm.DB
+}
+type ContentInfo struct {
+	UserId    int64
+	Username  string
+	TeamId    int64
+	ProjectId int64
 }
 
-// NewAuthMiddleware 返回一个 AuthMiddleware 实例
-func NewAuthMiddleware() *AuthMiddleware {
-	return &AuthMiddleware{
+func NewAuthMiddleware(db *gorm.DB) *AuthMiddleware {
+	mw := &AuthMiddleware{
 		whitelist: map[string]bool{
-			"/api/auth/email/login":    true, // 这里添加不需要 JWT 认证的路径
+			"/api/auth/email/login":    true,
 			"/api/auth/email/sendCode": true,
 			"/api/auth/email/register": true,
 		},
+		db: db,
 	}
+
+	// 初始化时注册回调，只注册一次
+	mw.registerCallbacks()
+
+	return mw
 }
 
 func (a *AuthMiddleware) Handle(next http.HandlerFunc) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
-		// 检查是否是白名单路径
 		if a.whitelist[r.URL.Path] {
 			next(w, r)
 			return
 		}
 
-		// 从请求头获取 Authorization 字段
 		authHeader := r.Header.Get("Authorization")
 		if authHeader == "" {
 			http.Error(w, "Missing Authorization header", http.StatusUnauthorized)
 			return
 		}
 
-		// 解析 Bearer token
-		tokenString, err := ExtractBearerToken(authHeader)
+		tokenString, err := a.ExtractBearerToken(authHeader)
 		if err != nil {
 			http.Error(w, err.Error(), http.StatusUnauthorized)
 			return
 		}
 
-		// 验证并解析 JWT
-		claims, err := ParseAndValidateJWT(tokenString)
+		claims, err := a.ParseAndValidateJWT(tokenString)
 		if err != nil {
 			http.Error(w, err.Error(), http.StatusUnauthorized)
 			return
 		}
 
-		// 从 claims 获取 user_id
-		userID, err := ExtractUserIDFromClaims(claims)
+		userId, username, err := a.ExtractUserIDFromClaims(claims)
 		if err != nil {
 			http.Error(w, err.Error(), http.StatusUnauthorized)
 			return
 		}
 
-		// 创建新的上下文并添加值
+		// 设置上下文
 		ctx := r.Context()
-		ctx = context.WithValue(ctx, "userId", userID)
-
+		contentInfo := &ContentInfo{
+			UserId:   userId,
+			Username: username,
+		}
 		// 安全获取并设置 teamId 和 projectId
 		if teamId := r.Header.Get("X-Team-Id"); teamId != "" {
-			ctx = context.WithValue(ctx, "teamId", teamId)
+			contentInfo.TeamId, err = strconv.ParseInt(teamId, 10, 64)
 			log.Printf("获取到的 teamId 为：%s", teamId)
 		}
 
 		if projectId := r.Header.Get("X-Project-Id"); projectId != "" {
-			ctx = context.WithValue(ctx, "projectId", projectId)
+			contentInfo.ProjectId, err = strconv.ParseInt(projectId, 10, 64)
 			log.Printf("获取到的 projectId 为：%s", projectId)
 		}
-
-		// 使用新上下文继续处理
+		ctx = context.WithValue(ctx, "contentInfo", contentInfo)
 		r = r.WithContext(ctx)
 		next(w, r)
 	}
 }
 
+// 初始化时注册回调
+func (a *AuthMiddleware) registerCallbacks() {
+	// 创建记录回调
+	a.db.Callback().Create().Before("gorm:create").Register("set_create_fields", func(db *gorm.DB) {
+		if db.Statement.Context == nil {
+			return
+		}
+		log.Printf("创建插入数据自动填充数据")
+		// 从上下文中获取用户信息
+		// 处理 userId
+		userId, ok := db.Statement.Context.Value("userId").(int64)
+		if ok {
+			fmt.Printf("DEBUG: Found userId in context: %d\n", userId) // 调试日志
+
+			field := db.Statement.Schema.LookUpField("create_by")
+			if field != nil {
+				fmt.Printf("DEBUG: Found 'update_by' field in schema\n") // 调试日志
+				db.Statement.SetColumn("create_by", userId)
+				fmt.Printf("DEBUG: Set 'update_by' column to: %d\n", userId) // 调试日志
+			} else {
+				fmt.Printf("DEBUG: 'update_by' field not found in schema\n") // 调试日志
+			}
+		} else {
+			fmt.Printf("DEBUG: userId not found in context or not int64 type\n") // 调试日志
+		}
+
+		// 处理 username
+		username, ok := db.Statement.Context.Value("username").(string)
+		if ok {
+			fmt.Printf("DEBUG: Found username in context: %s\n", username) // 调试日志
+
+			field := db.Statement.Schema.LookUpField("create_by_name")
+			if field != nil {
+				fmt.Printf("DEBUG: Found 'update_by_name' field in schema\n") // 调试日志
+				db.Statement.SetColumn("create_by_name", username)
+				fmt.Printf("DEBUG: Set 'update_by_name' column to: %s\n", username) // 调试日志
+			} else {
+				fmt.Printf("DEBUG: 'update_by_name' field not found in schema\n") // 调试日志
+			}
+		} else {
+			fmt.Printf("DEBUG: username not found in context or not string type\n") // 调试日志
+		}
+	})
+
+	// 更新记录回调
+	a.db.Callback().Update().Before("gorm:update").Register("set_update_fields", func(db *gorm.DB) {
+		if db.Statement.Context == nil {
+			return
+		}
+		log.Printf("更新插入数据自动填充数据")
+		// 处理 userId
+		userId, ok := db.Statement.Context.Value("userId").(int64)
+		if ok {
+			fmt.Printf("DEBUG: Found userId in context: %d\n", userId) // 调试日志
+
+			field := db.Statement.Schema.LookUpField("update_by")
+			if field != nil {
+				fmt.Printf("DEBUG: Found 'update_by' field in schema\n") // 调试日志
+				db.Statement.SetColumn("update_by", userId)
+				fmt.Printf("DEBUG: Set 'update_by' column to: %d\n", userId) // 调试日志
+			} else {
+				fmt.Printf("DEBUG: 'update_by' field not found in schema\n") // 调试日志
+			}
+		} else {
+			fmt.Printf("DEBUG: userId not found in context or not int64 type\n") // 调试日志
+		}
+
+		// 处理 username
+		username, ok := db.Statement.Context.Value("username").(string)
+		if ok {
+			fmt.Printf("DEBUG: Found username in context: %s\n", username) // 调试日志
+
+			field := db.Statement.Schema.LookUpField("update_by_name")
+			if field != nil {
+				fmt.Printf("DEBUG: Found 'update_by_name' field in schema\n") // 调试日志
+				db.Statement.SetColumn("update_by_name", username)
+				fmt.Printf("DEBUG: Set 'update_by_name' column to: %s\n", username) // 调试日志
+			} else {
+				fmt.Printf("DEBUG: 'update_by_name' field not found in schema\n") // 调试日志
+			}
+		} else {
+			fmt.Printf("DEBUG: username not found in context or not string type\n") // 调试日志
+		}
+	})
+}
+
 // 辅助函数：从 Authorization 头提取 Bearer token
-func ExtractBearerToken(authHeader string) (string, error) {
+func (a *AuthMiddleware) ExtractBearerToken(authHeader string) (string, error) {
 	parts := strings.SplitN(authHeader, " ", 2)
 	if len(parts) != 2 || strings.ToLower(parts[0]) != "bearer" {
 		return "", fmt.Errorf("invalid Authorization header format")
@@ -94,7 +189,7 @@ func ExtractBearerToken(authHeader string) (string, error) {
 }
 
 // 辅助函数：解析并验证 JWT
-func ParseAndValidateJWT(tokenString string) (jwt.MapClaims, error) {
+func (a *AuthMiddleware) ParseAndValidateJWT(tokenString string) (jwt.MapClaims, error) {
 	token, err := jwt.Parse(tokenString, func(token *jwt.Token) (interface{}, error) {
 		if _, ok := token.Method.(*jwt.SigningMethodHMAC); !ok {
 			return nil, fmt.Errorf("unexpected signing method: %v", token.Header["alg"])
@@ -116,10 +211,11 @@ func ParseAndValidateJWT(tokenString string) (jwt.MapClaims, error) {
 }
 
 // 辅助函数：从 claims 提取 user_id
-func ExtractUserIDFromClaims(claims jwt.MapClaims) (int64, error) {
-	userIDFloat, ok := claims["user_id"].(float64)
+func (a *AuthMiddleware) ExtractUserIDFromClaims(claims jwt.MapClaims) (int64, string, error) {
+	userId, ok := claims["user_id"].(float64)
+	username, ok := claims["username"].(string)
 	if !ok {
-		return 0, fmt.Errorf("user_id not found in token")
+		return 0, "admin", fmt.Errorf("user_id not found in token")
 	}
-	return int64(userIDFloat), nil
+	return int64(userId), username, nil
 }

@@ -20,7 +20,6 @@ type ServiceContext struct {
 	Log     rest.Middleware
 	Auth    rest.Middleware
 	Recover rest.Middleware
-	Audit   rest.Middleware
 }
 
 func NewServiceContext(c config.Config) *ServiceContext {
@@ -51,9 +50,8 @@ func NewServiceContext(c config.Config) *ServiceContext {
 		Config:  c,
 		DB:      DB,
 		Log:     middleware.NewLogMiddleware().Handle,
-		Auth:    middleware.NewAuthMiddleware().Handle,
+		Auth:    middleware.NewAuthMiddleware(DB).Handle,
 		Recover: middleware.NewRecoverMiddleware().Handle,
-		Audit:   middleware.NewAuditMiddleware(DB).Handle,
 	}
 
 }
