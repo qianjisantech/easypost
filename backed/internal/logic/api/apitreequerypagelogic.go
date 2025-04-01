@@ -4,6 +4,7 @@ import (
 	"backed/gen/model"
 	"backed/internal/common/enum"
 	"backed/internal/common/errorx"
+	"backed/internal/middleware"
 	"backed/internal/utils/ep"
 	"context"
 	"log"
@@ -30,13 +31,13 @@ func NewApiTreeQueryPageLogic(ctx context.Context, svcCtx *svc.ServiceContext) *
 }
 
 func (l *ApiTreeQueryPageLogic) ApiTreeQueryPage(req *types.ApiTreeQueryPageRequest) (resp *types.ApiTreeQueryPageResp, err error) {
-	projectIdstring := l.ctx.Value("projectId").(string)
-	projectId, err := strconv.ParseInt(projectIdstring, 10, 64)
+	contentInfo := l.ctx.Value("contentInfo").(*middleware.ContentInfo)
+	projectId := contentInfo.ProjectId
 	// 获取 API 详情
 	queryAmFoldersResp, err := l.QueryAmFolders(projectId)
 	queryAmAPIsResp, err := l.QueryAmAPI(projectId)
 	queryAmDocsResp, err := l.QueryAmDocs(projectId)
-	queryAmApiCasesResp, err := l.QueryAmApiCase(projectId)
+
 	if err != nil {
 		return nil, errorx.NewCodeError(err.Error())
 	}
@@ -63,7 +64,7 @@ func (l *ApiTreeQueryPageLogic) ApiTreeQueryPage(req *types.ApiTreeQueryPageRequ
 			ParentId: parentId,
 		})
 	}
-
+	var apiIds []int64
 	// 组装接口
 	for _, qaar := range queryAmAPIsResp {
 		if qaar.Name == nil || qaar.ParentID == nil {
@@ -76,6 +77,9 @@ func (l *ApiTreeQueryPageLogic) ApiTreeQueryPage(req *types.ApiTreeQueryPageRequ
 		} else {
 			parentId = strconv.FormatInt(*qaar.ParentID, 10)
 		}
+
+		apiIds = append(apiIds, qaar.ID)
+
 		datas = append(datas, types.ApiTreeQueryPageData{
 			Id:       strconv.FormatInt(qaar.ID, 10),
 			Name:     *qaar.Name,
@@ -84,29 +88,31 @@ func (l *ApiTreeQueryPageLogic) ApiTreeQueryPage(req *types.ApiTreeQueryPageRequ
 			ParentId: parentId,
 		})
 	}
-
-	// 组装接口用例
-	for _, qaacr := range queryAmApiCasesResp {
-		if qaacr.Name == nil || qaacr.ParentID == nil {
-			return nil, errorx.NewDefaultError(" 组装接口用例报错")
+	queryAmApiCasesResp, err := l.QueryAmApiCase(apiIds)
+	if len(queryAmApiCasesResp) > 0 {
+		// 组装接口用例
+		for _, qaacr := range queryAmApiCasesResp {
+			if qaacr.Name == nil || qaacr.APIID == nil {
+				return nil, errorx.NewDefaultError(" 组装接口用例报错")
+			}
+			apiType := enum.ApiCase
+			parentId := ""
+			if *qaacr.APIID == 0 || qaacr.APIID == nil {
+				parentId = "_"
+			} else {
+				parentId = strconv.FormatInt(*qaacr.APIID, 10)
+			}
+			datas = append(datas, types.ApiTreeQueryPageData{
+				Id:       strconv.FormatInt(qaacr.ID, 10),
+				Name:     *qaacr.Name,
+				Type:     apiType,
+				ParentId: parentId,
+			})
 		}
-		apiType := enum.ApiCase
-		parentId := ""
-		if *qaacr.ParentID == 0 || qaacr.ParentID == nil {
-			parentId = "_"
-		} else {
-			parentId = strconv.FormatInt(*qaacr.ParentID, 10)
-		}
-		datas = append(datas, types.ApiTreeQueryPageData{
-			Id:       strconv.FormatInt(qaacr.ID, 10),
-			Name:     *qaacr.Name,
-			Type:     apiType,
-			ParentId: parentId,
-		})
 	}
 	// 组装文档
 	for _, qadr := range queryAmDocsResp {
-		if qadr.Name == nil || qadr.Type == nil || qadr.ParentID == nil {
+		if qadr.Name == nil || qadr.ParentID == nil {
 			return nil, errorx.NewDefaultError("组装文档报错")
 		}
 		docType := enum.Doc
@@ -170,7 +176,7 @@ func (l *ApiTreeQueryPageLogic) QueryAmDocs(projectId int64) ([]*model.AmDoc, er
 	db := l.svcCtx.DB.Debug()
 	var amDocs []*model.AmDoc
 	err := db.WithContext(l.ctx).
-		Select("id", "name", "type", "parent_id").
+		Select("id", "name", "parent_id").
 		Where("project_id = ?", projectId).
 		Where("is_deleted = 0").
 		Find(&amDocs).Error
@@ -180,16 +186,16 @@ func (l *ApiTreeQueryPageLogic) QueryAmDocs(projectId int64) ([]*model.AmDoc, er
 	}
 	return amDocs, nil
 }
-func (l *ApiTreeQueryPageLogic) QueryAmApiCase(projectId int64) ([]*model.AmAPICase, error) {
+func (l *ApiTreeQueryPageLogic) QueryAmApiCase(apiIds []int64) ([]*model.AmAPICase, error) {
 	db := l.svcCtx.DB.Debug()
 	var amAPICases []*model.AmAPICase
 	err := db.WithContext(l.ctx).
-		Select("id", "name", "parent_id", "method").
-		Where("project_id = ?", projectId).
+		Select("id", "name", "api_id").
+		Where("api_id in ?", apiIds).
 		Where("is_deleted = 0").
 		Find(&amAPICases).Error
 	if err != nil {
-		log.Printf("Error QueryAmAPIs: %v", err)
+		log.Printf("Error QueryAmApiCases: %v", err)
 		return []*model.AmAPICase{}, err // 返回空切片，而不是 nil
 	}
 	return amAPICases, nil

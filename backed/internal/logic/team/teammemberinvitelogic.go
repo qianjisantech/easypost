@@ -3,6 +3,7 @@ package team
 import (
 	"backed/gen/model"
 	"backed/internal/common/errorx"
+	"backed/internal/middleware"
 	"backed/internal/svc"
 	"backed/internal/types"
 	"context"
@@ -27,10 +28,8 @@ func NewTeamMemberInviteLogic(ctx context.Context, svcCtx *svc.ServiceContext) *
 }
 
 func (l *TeamMemberInviteLogic) TeamMemberInvite(req *types.TeamMemberInviteRequest) (*types.TeamMemberInviteResp, error) {
-	teamId, err := strconv.ParseInt(req.TeamId, 10, 64)
-	if err != nil {
-		return nil, errorx.NewDefaultError("无效的团队ID")
-	}
+	contentInfo := l.ctx.Value("contentInfo").(*middleware.ContentInfo)
+	teamId := contentInfo.TeamId
 
 	var userIds []int64
 	for _, u := range req.UserIds {

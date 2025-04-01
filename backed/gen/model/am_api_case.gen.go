@@ -23,8 +23,7 @@ type AmAPICase struct {
 	UpdateTime   *time.Time `gorm:"column:update_time;default:CURRENT_TIMESTAMP;->" json:"update_time"`
 	IsDeleted    *bool      `gorm:"column:is_deleted;->" json:"is_deleted"`
 	Method       *string    `gorm:"column:method" json:"method"`
-	ParentID     *int64     `gorm:"column:parent_id" json:"parent_id"`
-	ProjectID    *int64     `gorm:"column:project_id" json:"project_id"`
+	APIID        *int64     `gorm:"column:api_id" json:"api_id"`
 	Parameters   *string    `gorm:"column:parameters" json:"parameters"`
 	Responses    *string    `gorm:"column:responses" json:"responses"`
 	RequestBody  *string    `gorm:"column:request_body" json:"request_body"`

@@ -3,6 +3,7 @@ package folder
 import (
 	"backed/gen/model"
 	"backed/internal/common/errorx"
+	"backed/internal/middleware"
 	"context"
 	"log"
 	"strconv"
@@ -29,12 +30,8 @@ func NewFolderDetailSaveLogic(ctx context.Context, svcCtx *svc.ServiceContext) *
 
 func (l *FolderDetailSaveLogic) FolderDetailSave(req *types.FolderDetailSaveRequest) (resp *types.FolderDetailSaveResp, err error) {
 	db := l.svcCtx.DB.Begin().Debug()
-	defer func() {
-		if r := recover(); r != nil {
-			db.Rollback()
-		}
-	}()
-
+	contentInfo := l.ctx.Value("contentInfo").(*middleware.ContentInfo)
+	projectId := contentInfo.ProjectId
 	folderId, _ := strconv.ParseInt(req.Id, 10, 64)
 	amFolder := &model.AmFolder{
 		Name:     &req.Name,
@@ -50,11 +47,7 @@ func (l *FolderDetailSaveLogic) FolderDetailSave(req *types.FolderDetailSaveRequ
 	if req.Description != "" {
 		amFolder.Remark = &req.Description
 	}
-	projectId, ok := l.ctx.Value("projectId").(int32)
-	if !ok || projectId == 0 {
-		// 处理空值或类型不匹配的情况
-		return nil, errorx.NewDefaultError("projectId 无效或未提供")
-	}
+
 	amFolder.ProjectID = &projectId
 	// 执行数据库操作
 	tx := db.Save(amFolder)
@@ -73,7 +66,4 @@ func (l *FolderDetailSaveLogic) FolderDetailSave(req *types.FolderDetailSaveRequ
 		Success: true,
 		Message: "保存成功",
 	}, nil
-}
-func StringPointer(s string) *string {
-	return &s
 }

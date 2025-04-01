@@ -29,7 +29,6 @@ func newAmDoc(db *gorm.DB, opts ...gen.DOOption) amDoc {
 	_amDoc.ALL = field.NewAsterisk(tableName)
 	_amDoc.ID = field.NewInt64(tableName, "id")
 	_amDoc.Name = field.NewString(tableName, "name")
-	_amDoc.Type = field.NewString(tableName, "type")
 	_amDoc.CreateBy = field.NewInt64(tableName, "create_by")
 	_amDoc.CreateByName = field.NewString(tableName, "create_by_name")
 	_amDoc.CreateTime = field.NewTime(tableName, "create_time")
@@ -39,7 +38,7 @@ func newAmDoc(db *gorm.DB, opts ...gen.DOOption) amDoc {
 	_amDoc.UpdateTime = field.NewTime(tableName, "update_time")
 	_amDoc.Remark = field.NewString(tableName, "remark")
 	_amDoc.ParentID = field.NewInt64(tableName, "parent_id")
-	_amDoc.ProjectID = field.NewInt32(tableName, "project_id")
+	_amDoc.ProjectID = field.NewInt64(tableName, "project_id")
 	_amDoc.Content = field.NewString(tableName, "content")
 
 	_amDoc.fillFieldMap()
@@ -53,7 +52,6 @@ type amDoc struct {
 	ALL          field.Asterisk
 	ID           field.Int64
 	Name         field.String
-	Type         field.String
 	CreateBy     field.Int64
 	CreateByName field.String
 	CreateTime   field.Time
@@ -63,7 +61,7 @@ type amDoc struct {
 	UpdateTime   field.Time
 	Remark       field.String
 	ParentID     field.Int64 // 父级目录id
-	ProjectID    field.Int32
+	ProjectID    field.Int64
 	Content      field.String
 
 	fieldMap map[string]field.Expr
@@ -83,7 +81,6 @@ func (a *amDoc) updateTableName(table string) *amDoc {
 	a.ALL = field.NewAsterisk(table)
 	a.ID = field.NewInt64(table, "id")
 	a.Name = field.NewString(table, "name")
-	a.Type = field.NewString(table, "type")
 	a.CreateBy = field.NewInt64(table, "create_by")
 	a.CreateByName = field.NewString(table, "create_by_name")
 	a.CreateTime = field.NewTime(table, "create_time")
@@ -93,7 +90,7 @@ func (a *amDoc) updateTableName(table string) *amDoc {
 	a.UpdateTime = field.NewTime(table, "update_time")
 	a.Remark = field.NewString(table, "remark")
 	a.ParentID = field.NewInt64(table, "parent_id")
-	a.ProjectID = field.NewInt32(table, "project_id")
+	a.ProjectID = field.NewInt64(table, "project_id")
 	a.Content = field.NewString(table, "content")
 
 	a.fillFieldMap()
@@ -119,10 +116,9 @@ func (a *amDoc) GetFieldByName(fieldName string) (field.OrderExpr, bool) {
 }
 
 func (a *amDoc) fillFieldMap() {
-	a.fieldMap = make(map[string]field.Expr, 14)
+	a.fieldMap = make(map[string]field.Expr, 13)
 	a.fieldMap["id"] = a.ID
 	a.fieldMap["name"] = a.Name
-	a.fieldMap["type"] = a.Type
 	a.fieldMap["create_by"] = a.CreateBy
 	a.fieldMap["create_by_name"] = a.CreateByName
 	a.fieldMap["create_time"] = a.CreateTime

@@ -3,6 +3,7 @@ package team
 import (
 	"backed/gen/model"
 	"backed/internal/common/errorx"
+	"backed/internal/middleware"
 	"backed/internal/svc"
 	"backed/internal/types"
 	"context"
@@ -27,7 +28,8 @@ func NewTeamCreateLogic(ctx context.Context, svcCtx *svc.ServiceContext) *TeamCr
 }
 
 func (l *TeamCreateLogic) TeamCreate(req *types.TeamCreateRequest) (resp *types.TeamCreateResp, err error) {
-	userId := l.ctx.Value("userId").(int64)
+	contentInfo := l.ctx.Value("contentInfo").(*middleware.ContentInfo)
+	userId := contentInfo.UserId
 	// 从数据库开始事务
 	db := l.svcCtx.DB.Begin().Debug()
 

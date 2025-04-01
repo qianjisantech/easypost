@@ -1,4 +1,4 @@
-package ApiCasecase
+package apicase
 
 import (
 	"context"
@@ -9,21 +9,21 @@ import (
 	"github.com/zeromicro/go-zero/core/logx"
 )
 
-type ApiCaseMoveLogic struct {
+type ApiCaseDetailLogic struct {
 	logx.Logger
 	ctx    context.Context
 	svcCtx *svc.ServiceContext
 }
 
-func NewApiCaseMoveLogic(ctx context.Context, svcCtx *svc.ServiceContext) *ApiCaseMoveLogic {
-	return &ApiCaseMoveLogic{
+func NewApiCaseDetailLogic(ctx context.Context, svcCtx *svc.ServiceContext) *ApiCaseDetailLogic {
+	return &ApiCaseDetailLogic{
 		Logger: logx.WithContext(ctx),
 		ctx:    ctx,
 		svcCtx: svcCtx,
 	}
 }
 
-func (l *ApiCaseMoveLogic) ApiCaseMove(req *types.ApiCaseMoveRequest) (resp *types.ApiCaseMoveResp, err error) {
+func (l *ApiCaseDetailLogic) ApiCaseDetail(req *types.ApiCaseDetailRequest) (resp *types.ApiCaseDetailResp, err error) {
 	// todo: add your logic here and delete this line
 
 	return

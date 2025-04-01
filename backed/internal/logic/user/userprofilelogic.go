@@ -2,6 +2,7 @@ package user
 
 import (
 	"backed/gen/model"
+	"backed/internal/middleware"
 	"backed/internal/svc"
 	"backed/internal/types"
 	"backed/internal/utils/ep"
@@ -26,8 +27,8 @@ func NewUserProfileLogic(ctx context.Context, svcCtx *svc.ServiceContext) *UserP
 }
 
 func (l *UserProfileLogic) UserProfile(req *types.UserProfileRequest) (resp *types.UserProfileResp, err error) {
-	userId := l.ctx.Value("userId").(int64)
-
+	contentInfo := l.ctx.Value("contentInfo").(*middleware.ContentInfo)
+	userId := contentInfo.UserId
 	db := l.svcCtx.DB.Begin().Debug()
 	var user *model.SysUser
 	tx := db.Where("id = ?", userId).First(&user)

@@ -3,6 +3,7 @@ package team
 import (
 	"backed/gen/model"
 	"backed/internal/common/errorx"
+	"backed/internal/middleware"
 	"context"
 	"strconv"
 
@@ -27,7 +28,8 @@ func NewTeamSettingsDetailLogic(ctx context.Context, svcCtx *svc.ServiceContext)
 }
 
 func (l *TeamSettingsDetailLogic) TeamSettingsDetail(req *types.TeamSettingsDetailRequest) (resp *types.TeamSettingsDetailResp, err error) {
-	userId := l.ctx.Value("userId").(int64)
+	contentInfo := l.ctx.Value("contentInfo").(*middleware.ContentInfo)
+	userId := contentInfo.UserId
 	db := l.svcCtx.DB.Begin().Debug()
 
 	id, err := strconv.ParseInt(req.Id, 10, 64)

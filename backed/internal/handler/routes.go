@@ -4,8 +4,8 @@ package handler
 import (
 	"net/http"
 
-	ApiCasecase "backed/internal/handler/ApiCasecase"
 	api "backed/internal/handler/api"
+	apicase "backed/internal/handler/apicase"
 	auth "backed/internal/handler/auth"
 	doc "backed/internal/handler/doc"
 	es "backed/internal/handler/es"
@@ -20,52 +20,6 @@ import (
 )
 
 func RegisterHandlers(server *rest.Server, serverCtx *svc.ServiceContext) {
-	server.AddRoutes(
-		[]rest.Route{
-			{
-				Method:  http.MethodPost,
-				Path:    "/am/apicase/copy",
-				Handler: ApiCasecase.ApiCaseCopyHandler(serverCtx),
-			},
-			{
-				Method:  http.MethodGet,
-				Path:    "/am/apicase/delete/:id",
-				Handler: ApiCasecase.ApiCaseDeleteHandler(serverCtx),
-			},
-			{
-				Method:  http.MethodGet,
-				Path:    "/am/apicase/detail/:id",
-				Handler: ApiCasecase.ApiCaseDetailHandler(serverCtx),
-			},
-			{
-				Method:  http.MethodPost,
-				Path:    "/am/apicase/detail/create",
-				Handler: ApiCasecase.ApiCaseDetailCreateHandler(serverCtx),
-			},
-			{
-				Method:  http.MethodPost,
-				Path:    "/am/apicase/detail/update",
-				Handler: ApiCasecase.ApiCaseDetailUpdateHandler(serverCtx),
-			},
-			{
-				Method:  http.MethodPost,
-				Path:    "/am/apicase/move",
-				Handler: ApiCasecase.ApiCaseMoveHandler(serverCtx),
-			},
-			{
-				Method:  http.MethodPost,
-				Path:    "/am/apicase/rename",
-				Handler: ApiCasecase.ApiCaseRenameHandler(serverCtx),
-			},
-			{
-				Method:  http.MethodGet,
-				Path:    "/am/apicase/run/detail/:id",
-				Handler: ApiCasecase.ApiCaseRunDetailHandler(serverCtx),
-			},
-		},
-		rest.WithPrefix("/ApiCase"),
-	)
-
 	server.AddRoutes(
 		[]rest.Route{
 			{
@@ -122,6 +76,52 @@ func RegisterHandlers(server *rest.Server, serverCtx *svc.ServiceContext) {
 				Method:  http.MethodPost,
 				Path:    "/am/responsible/search",
 				Handler: api.ResponsibleSearchHandler(serverCtx),
+			},
+		},
+		rest.WithPrefix("/api"),
+	)
+
+	server.AddRoutes(
+		[]rest.Route{
+			{
+				Method:  http.MethodPost,
+				Path:    "/am/apicase/copy",
+				Handler: apicase.ApiCaseCopyHandler(serverCtx),
+			},
+			{
+				Method:  http.MethodGet,
+				Path:    "/am/apicase/delete/:id",
+				Handler: apicase.ApiCaseDeleteHandler(serverCtx),
+			},
+			{
+				Method:  http.MethodGet,
+				Path:    "/am/apicase/detail/:id",
+				Handler: apicase.ApiCaseDetailHandler(serverCtx),
+			},
+			{
+				Method:  http.MethodPost,
+				Path:    "/am/apicase/detail/create",
+				Handler: apicase.ApiCaseDetailCreateHandler(serverCtx),
+			},
+			{
+				Method:  http.MethodPost,
+				Path:    "/am/apicase/detail/update",
+				Handler: apicase.ApiCaseDetailUpdateHandler(serverCtx),
+			},
+			{
+				Method:  http.MethodPost,
+				Path:    "/am/apicase/move",
+				Handler: apicase.ApiCaseMoveHandler(serverCtx),
+			},
+			{
+				Method:  http.MethodPost,
+				Path:    "/am/apicase/rename",
+				Handler: apicase.ApiCaseRenameHandler(serverCtx),
+			},
+			{
+				Method:  http.MethodGet,
+				Path:    "/am/apicase/run/detail/:id",
+				Handler: apicase.ApiCaseRunDetailHandler(serverCtx),
 			},
 		},
 		rest.WithPrefix("/api"),

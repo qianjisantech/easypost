@@ -38,8 +38,7 @@ func newAmAPICase(db *gorm.DB, opts ...gen.DOOption) amAPICase {
 	_amAPICase.UpdateTime = field.NewTime(tableName, "update_time")
 	_amAPICase.IsDeleted = field.NewBool(tableName, "is_deleted")
 	_amAPICase.Method = field.NewString(tableName, "method")
-	_amAPICase.ParentID = field.NewInt64(tableName, "parent_id")
-	_amAPICase.ProjectID = field.NewInt64(tableName, "project_id")
+	_amAPICase.APIID = field.NewInt64(tableName, "api_id")
 	_amAPICase.Parameters = field.NewString(tableName, "parameters")
 	_amAPICase.Responses = field.NewString(tableName, "responses")
 	_amAPICase.RequestBody = field.NewString(tableName, "request_body")
@@ -65,8 +64,7 @@ type amAPICase struct {
 	UpdateTime   field.Time
 	IsDeleted    field.Bool
 	Method       field.String
-	ParentID     field.Int64
-	ProjectID    field.Int64
+	APIID        field.Int64
 	Parameters   field.String
 	Responses    field.String
 	RequestBody  field.String
@@ -97,8 +95,7 @@ func (a *amAPICase) updateTableName(table string) *amAPICase {
 	a.UpdateTime = field.NewTime(table, "update_time")
 	a.IsDeleted = field.NewBool(table, "is_deleted")
 	a.Method = field.NewString(table, "method")
-	a.ParentID = field.NewInt64(table, "parent_id")
-	a.ProjectID = field.NewInt64(table, "project_id")
+	a.APIID = field.NewInt64(table, "api_id")
 	a.Parameters = field.NewString(table, "parameters")
 	a.Responses = field.NewString(table, "responses")
 	a.RequestBody = field.NewString(table, "request_body")
@@ -128,7 +125,7 @@ func (a *amAPICase) GetFieldByName(fieldName string) (field.OrderExpr, bool) {
 }
 
 func (a *amAPICase) fillFieldMap() {
-	a.fieldMap = make(map[string]field.Expr, 16)
+	a.fieldMap = make(map[string]field.Expr, 15)
 	a.fieldMap["id"] = a.ID
 	a.fieldMap["name"] = a.Name
 	a.fieldMap["path"] = a.Path
@@ -140,8 +137,7 @@ func (a *amAPICase) fillFieldMap() {
 	a.fieldMap["update_time"] = a.UpdateTime
 	a.fieldMap["is_deleted"] = a.IsDeleted
 	a.fieldMap["method"] = a.Method
-	a.fieldMap["parent_id"] = a.ParentID
-	a.fieldMap["project_id"] = a.ProjectID
+	a.fieldMap["api_id"] = a.APIID
 	a.fieldMap["parameters"] = a.Parameters
 	a.fieldMap["responses"] = a.Responses
 	a.fieldMap["request_body"] = a.RequestBody

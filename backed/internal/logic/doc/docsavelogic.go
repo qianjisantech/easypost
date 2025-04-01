@@ -3,6 +3,7 @@ package doc
 import (
 	"backed/gen/model"
 	"backed/internal/common/errorx"
+	"backed/internal/middleware"
 	"backed/internal/svc"
 	"backed/internal/types"
 	"context"
@@ -28,22 +29,14 @@ func NewDocSaveLogic(ctx context.Context, svcCtx *svc.ServiceContext) *DocSaveLo
 func (l *DocSaveLogic) DocSave(req *types.DocSaveRequest) (resp *types.DocSaveResp, err error) {
 	// 开启事务
 	db := l.svcCtx.DB.Begin().Debug()
-	defer func() {
-		if r := recover(); r != nil {
-			db.Rollback()
-			log.Printf("Panic recovered: %v", r)
-			err = errorx.NewDefaultError("内部错误")
-		}
-	}()
-
-	// 定义文档模型
-	docType := "doc" // 创建一个 doc 字符串变量
+	contentInfo := l.ctx.Value("contentInfo").(*middleware.ContentInfo)
+	projectId := contentInfo.ProjectId
 	defaultParentId := int64(0)
 	amDoc := &model.AmDoc{
-		Name:     &req.Name,
-		Type:     &docType, // 将 docType 的地址传递给 *string 类型的字段
-		Content:  &req.Content,
-		ParentID: &defaultParentId,
+		Name:      &req.Name,
+		Content:   &req.Content,
+		ParentID:  &defaultParentId,
+		ProjectID: &projectId,
 	}
 
 	// 判断是创建还是更新
@@ -67,12 +60,7 @@ func (l *DocSaveLogic) DocSave(req *types.DocSaveRequest) (resp *types.DocSaveRe
 			return nil, errorx.NewDefaultError("文档创建失败: " + err.Error())
 		}
 	}
-	projectId, ok := l.ctx.Value("projectId").(int32)
-	if !ok || projectId == 0 {
-		// 处理空值或类型不匹配的情况
-		return nil, errorx.NewDefaultError("projectId 无效或未提供")
-	}
-	amDoc.ProjectID = &projectId
+
 	// 提交事务
 	if err := db.Commit().Error; err != nil {
 		db.Rollback()

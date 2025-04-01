@@ -1,24 +1,24 @@
-package ApiCasecase
+package apicase
 
 import (
 	"net/http"
 
-	"backed/internal/logic/ApiCasecase"
+	"backed/internal/logic/apicase"
 	"backed/internal/svc"
 	"backed/internal/types"
 	"github.com/zeromicro/go-zero/rest/httpx"
 )
 
-func ApiCaseMoveHandler(svcCtx *svc.ServiceContext) http.HandlerFunc {
+func ApiCaseDetailHandler(svcCtx *svc.ServiceContext) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
-		var req types.ApiCaseMoveRequest
+		var req types.ApiCaseDetailRequest
 		if err := httpx.Parse(r, &req); err != nil {
 			httpx.ErrorCtx(r.Context(), w, err)
 			return
 		}
 
-		l := ApiCasecase.NewApiCaseMoveLogic(r.Context(), svcCtx)
-		resp, err := l.ApiCaseMove(&req)
+		l := apicase.NewApiCaseDetailLogic(r.Context(), svcCtx)
+		resp, err := l.ApiCaseDetail(&req)
 		if err != nil {
 			httpx.ErrorCtx(r.Context(), w, err)
 		} else {

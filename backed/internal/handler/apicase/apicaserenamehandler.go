@@ -1,9 +1,9 @@
-package ApiCasecase
+package apicase
 
 import (
 	"net/http"
 
-	"backed/internal/logic/ApiCasecase"
+	"backed/internal/logic/apicase"
 	"backed/internal/svc"
 	"backed/internal/types"
 	"github.com/zeromicro/go-zero/rest/httpx"
@@ -17,7 +17,7 @@ func ApiCaseRenameHandler(svcCtx *svc.ServiceContext) http.HandlerFunc {
 			return
 		}
 
-		l := ApiCasecase.NewApiCaseRenameLogic(r.Context(), svcCtx)
+		l := apicase.NewApiCaseRenameLogic(r.Context(), svcCtx)
 		resp, err := l.ApiCaseRename(&req)
 		if err != nil {
 			httpx.ErrorCtx(r.Context(), w, err)

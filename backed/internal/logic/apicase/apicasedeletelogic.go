@@ -1,4 +1,4 @@
-package ApiCasecase
+package apicase
 
 import (
 	"context"

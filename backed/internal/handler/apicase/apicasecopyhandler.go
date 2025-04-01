@@ -1,24 +1,24 @@
-package ApiCasecase
+package apicase
 
 import (
 	"net/http"
 
-	"backed/internal/logic/ApiCasecase"
+	"backed/internal/logic/apicase"
 	"backed/internal/svc"
 	"backed/internal/types"
 	"github.com/zeromicro/go-zero/rest/httpx"
 )
 
-func ApiCaseDetailCreateHandler(svcCtx *svc.ServiceContext) http.HandlerFunc {
+func ApiCaseCopyHandler(svcCtx *svc.ServiceContext) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
-		var req types.ApiCaseDetailCreateOrUpdateRequest
+		var req types.ApiCaseCopyRequest
 		if err := httpx.Parse(r, &req); err != nil {
 			httpx.ErrorCtx(r.Context(), w, err)
 			return
 		}
 
-		l := ApiCasecase.NewApiCaseDetailCreateLogic(r.Context(), svcCtx)
-		resp, err := l.ApiCaseDetailCreate(&req)
+		l := apicase.NewApiCaseCopyLogic(r.Context(), svcCtx)
+		resp, err := l.ApiCaseCopy(&req)
 		if err != nil {
 			httpx.ErrorCtx(r.Context(), w, err)
 		} else {

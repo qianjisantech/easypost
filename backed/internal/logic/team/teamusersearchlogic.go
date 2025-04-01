@@ -3,6 +3,7 @@ package team
 import (
 	"backed/gen/model"
 	"backed/internal/common/errorx"
+	"backed/internal/middleware"
 	"backed/internal/utils/ep"
 	"context"
 	"math"
@@ -30,11 +31,8 @@ func NewTeamUserSearchLogic(ctx context.Context, svcCtx *svc.ServiceContext) *Te
 
 func (l *TeamUserSearchLogic) TeamUserSearch(req *types.TeamUserSearchRequest) (resp *types.TeamUserSearchResp, err error) {
 	db := l.svcCtx.DB.Debug()
-	teamId, err := strconv.ParseInt(req.TeamId, 10, 64)
-	if err != nil {
-		return nil, errorx.NewDefaultError("invalid team ID")
-	}
-
+	contentInfo := l.ctx.Value("contentInfo").(*middleware.ContentInfo)
+	teamId := contentInfo.TeamId
 	// 校验分页参数
 	if req.PageSize <= 0 || req.Current <= 0 {
 		return nil, errorx.NewDefaultError("invalid pagination parameters")

@@ -38,7 +38,7 @@ func newAmFolder(db *gorm.DB, opts ...gen.DOOption) amFolder {
 	_amFolder.UpdateTime = field.NewTime(tableName, "update_time")
 	_amFolder.Remark = field.NewString(tableName, "remark")
 	_amFolder.ParentID = field.NewInt64(tableName, "parent_id")
-	_amFolder.ProjectID = field.NewInt32(tableName, "project_id")
+	_amFolder.ProjectID = field.NewInt64(tableName, "project_id")
 
 	_amFolder.fillFieldMap()
 
@@ -60,7 +60,7 @@ type amFolder struct {
 	UpdateTime   field.Time
 	Remark       field.String
 	ParentID     field.Int64 // 父级目录id
-	ProjectID    field.Int32
+	ProjectID    field.Int64
 
 	fieldMap map[string]field.Expr
 }
@@ -88,7 +88,7 @@ func (a *amFolder) updateTableName(table string) *amFolder {
 	a.UpdateTime = field.NewTime(table, "update_time")
 	a.Remark = field.NewString(table, "remark")
 	a.ParentID = field.NewInt64(table, "parent_id")
-	a.ProjectID = field.NewInt32(table, "project_id")
+	a.ProjectID = field.NewInt64(table, "project_id")
 
 	a.fillFieldMap()
 

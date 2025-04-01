@@ -2,6 +2,7 @@ package user
 
 import (
 	"backed/gen/model"
+	"backed/internal/middleware"
 	"backed/internal/utils/md5"
 	"context"
 	"errors"
@@ -29,11 +30,8 @@ func NewUserSetPasswordLogic(ctx context.Context, svcCtx *svc.ServiceContext) *U
 }
 
 func (l *UserSetPasswordLogic) UserSetPassword(req *types.UserSetPasswordRequest) (*types.UserSetPasswordResp, error) {
-	userId, ok := l.ctx.Value("userId").(int64)
-	if !ok {
-		return nil, errors.New("无法获取用户 ID")
-	}
-
+	contentInfo := l.ctx.Value("userId").(*middleware.ContentInfo)
+	userId := contentInfo.UserId
 	// 开启事务
 	db := l.svcCtx.DB.Begin()
 	if db.Error != nil {
