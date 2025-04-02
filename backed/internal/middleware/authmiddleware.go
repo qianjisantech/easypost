@@ -34,7 +34,6 @@ func NewAuthMiddleware(db *gorm.DB) *AuthMiddleware {
 		},
 		db: db,
 	}
-	mw.RegisterCallbacks()
 	return mw
 }
 
@@ -87,6 +86,7 @@ func (a *AuthMiddleware) Handle(next http.HandlerFunc) http.HandlerFunc {
 		}
 		ctx = context.WithValue(ctx, "contentInfo", contentInfo)
 		r = r.WithContext(ctx)
+		a.RegisterCallbacks()
 		a.db = a.db.Statement.WithContext(ctx)
 
 		next(w, r)
