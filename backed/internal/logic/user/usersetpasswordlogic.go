@@ -30,7 +30,7 @@ func NewUserSetPasswordLogic(ctx context.Context, svcCtx *svc.ServiceContext) *U
 }
 
 func (l *UserSetPasswordLogic) UserSetPassword(req *types.UserSetPasswordRequest) (*types.UserSetPasswordResp, error) {
-	contentInfo := l.ctx.Value("userId").(*middleware.ContentInfo)
+	contentInfo := l.ctx.Value("contentInfo").(*middleware.ContentInfo)
 	userId := contentInfo.UserId
 	// 开启事务
 	db := l.svcCtx.DB.Begin()

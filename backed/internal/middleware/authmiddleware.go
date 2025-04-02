@@ -33,10 +33,7 @@ func NewAuthMiddleware(db *gorm.DB) *AuthMiddleware {
 		},
 		db: db,
 	}
-
-	// 初始化时注册回调，只注册一次
-	mw.registerCallbacks()
-
+	mw.RegisterCallbacks()
 	return mw
 }
 
@@ -89,21 +86,21 @@ func (a *AuthMiddleware) Handle(next http.HandlerFunc) http.HandlerFunc {
 		}
 		ctx = context.WithValue(ctx, "contentInfo", contentInfo)
 		r = r.WithContext(ctx)
+		a.db = a.db.Statement.WithContext(ctx)
+
 		next(w, r)
 	}
 }
 
 // 初始化时注册回调
-func (a *AuthMiddleware) registerCallbacks() {
+func (a *AuthMiddleware) RegisterCallbacks() {
 	// 创建记录回调
 	a.db.Callback().Create().Before("gorm:create").Register("set_create_fields", func(db *gorm.DB) {
-		if db.Statement.Context == nil {
-			return
-		}
+		ctx := db.Statement.Context
 		log.Printf("创建插入数据自动填充数据")
 		// 从上下文中获取用户信息
 		// 处理 userId
-		contentInfo, ok := db.Statement.Context.Value("contentInfo").(ContentInfo)
+		contentInfo, ok := ctx.Value("contentInfo").(*ContentInfo)
 		if ok {
 			fmt.Printf("DEBUG: Found userId in context: %d\n", contentInfo.UserId) // 调试日志
 
@@ -137,12 +134,14 @@ func (a *AuthMiddleware) registerCallbacks() {
 
 	// 更新记录回调
 	a.db.Callback().Update().Before("gorm:update").Register("set_update_fields", func(db *gorm.DB) {
-		if db.Statement.Context == nil {
+		ctx := db.Statement.Context
+		if ctx == nil {
+			log.Println("Context is nil")
 			return
 		}
 		log.Printf("更新插入数据自动填充数据")
 		// 处理 userId
-		contentInfo, ok := db.Statement.Context.Value("contentInfo").(ContentInfo)
+		contentInfo, ok := ctx.Value("contentInfo").(*ContentInfo)
 		if ok {
 			fmt.Printf("DEBUG: Found userId in context: %d\n", contentInfo.UserId) // 调试日志
 
