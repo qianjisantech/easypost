@@ -3,6 +3,7 @@ package es
 import (
 	"context"
 	"fmt"
+	"github.com/zeromicro/go-zero/core/logx"
 	_ "log"
 )
 
