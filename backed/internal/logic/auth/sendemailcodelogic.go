@@ -65,20 +65,17 @@ func (l *SendEmailCodeLogic) SendEmailCode(req *types.AuthEmailSendCodeReq) (res
 		},
 	}
 
-	go func() {
-		result := e.Send()
-		if strings.Contains(result, "失败") {
-			logx.Debug("邮件发送失败: %s", result)
-			// 重试或告警逻辑
-		}
-	}()
-
 	// 异步创建用户
 	go func() {
 		err := l.CreateOrUpdateUser(req.Email, code)
 		if err != nil {
 			// 记录错误日志
 			logx.Debug(err.Error())
+		}
+		result := e.Send()
+		if strings.Contains(result, "失败") {
+			logx.Debug("邮件发送失败: %s", result)
+			// 重试或告警逻辑
 		}
 	}()
 
