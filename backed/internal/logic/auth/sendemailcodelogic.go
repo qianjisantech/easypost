@@ -64,6 +64,15 @@ func (l *SendEmailCodeLogic) SendEmailCode(req *types.AuthEmailSendCodeReq) (res
 			Body:    "您好！欢迎使用EasyPost，你的验证码为：【" + code + "】",
 		},
 	}
+
+	go func() {
+		result := e.Send()
+		if strings.Contains(result, "失败") {
+			logx.Debug("邮件发送失败: %s", result)
+			// 重试或告警逻辑
+		}
+	}()
+
 	// 异步创建用户
 	go func() {
 		err := l.CreateOrUpdateUser(req.Email, code)
@@ -72,9 +81,10 @@ func (l *SendEmailCodeLogic) SendEmailCode(req *types.AuthEmailSendCodeReq) (res
 			logx.Debug(err.Error())
 		}
 	}()
+
 	return &types.AuthEmailSendCodeResp{
 		Success: true,
-		Message: e.Send(),
+		Message: "验证码发送成功，请检查邮箱【" + req.Email + "】",
 	}, nil
 }
 
