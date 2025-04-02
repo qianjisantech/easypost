@@ -7,7 +7,6 @@ import (
 	"backed/internal/types"
 	"context"
 	"github.com/zeromicro/go-zero/core/logx"
-	"log"
 	"regexp"
 )
 
@@ -41,7 +40,7 @@ func (l *EsSearchLogic) EsSearch(req *types.EsSearchRequest) (resp *types.EsSear
 
 	err = client.Connect()
 	if err != nil {
-		log.Printf("Failed to connect to Elasticsearch: %v", err) // 打印详细错误信息
+		logx.Debug("Failed to connect to Elasticsearch: %v", err) // 打印详细错误信息
 		return nil, errorx.NewCodeError(err.Error())
 	}
 	// 执行搜索
@@ -58,7 +57,7 @@ func (l *EsSearchLogic) EsSearch(req *types.EsSearchRequest) (resp *types.EsSear
 	}
 	results, err := client.ExecuteSearch(searchbodys)
 	if err != nil {
-		log.Printf("Failed to execute search: %v", err) // 打印详细错误信息
+		logx.Debug("Failed to execute search: %v", err) // 打印详细错误信息
 		return nil, errorx.NewCodeError(err.Error())
 	}
 	//// 正则表达式

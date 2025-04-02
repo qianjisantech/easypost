@@ -5,7 +5,6 @@ import (
 	"backed/internal/common/errorx"
 	"backed/internal/utils/ep"
 	"context"
-	"log"
 	"math"
 	"strconv"
 
@@ -63,8 +62,8 @@ func (l *TeamMemberQueryPageLogic) TeamMemberQueryPage(req *types.TeamMemberQuer
 	}
 
 	// 打印调试信息
-	log.Printf("SQL Query: team_id=%d, offset=%d, limit=%d\n", teamId, offset, req.PageSize)
-	log.Printf("Found %d records out of %d total\n", len(sysTeamMembers), total)
+	logx.Debug("SQL Query: team_id=%d, offset=%d, limit=%d\n", teamId, offset, req.PageSize)
+	logx.Debug("Found %d records out of %d total\n", len(sysTeamMembers), total)
 
 	// 转换记录
 	records := make([]*types.TeamMemberQueryPageRecord, len(sysTeamMembers))

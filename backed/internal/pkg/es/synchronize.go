@@ -3,7 +3,6 @@ package es
 import (
 	"context"
 	"fmt"
-	"log"
 	_ "log"
 )
 
@@ -29,6 +28,6 @@ func (es *Client) SynchronizeData(index string, logData LogInfo) error {
 	//if res.IsError() {
 	//	return fmt.Errorf("failed to index data: %s", res.Status())
 	//}
-	log.Printf("成功%v", res)
+	logx.Debug("成功%v", res)
 	return nil
 }

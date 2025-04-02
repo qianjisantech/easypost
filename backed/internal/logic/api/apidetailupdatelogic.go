@@ -5,7 +5,6 @@ import (
 	"backed/internal/common/errorx"
 	"context"
 	"encoding/json"
-	"log"
 	"strconv"
 	"strings"
 
@@ -80,7 +79,7 @@ func (l *ApiDetailUpdateLogic) ApiDetailUpdate(req *types.ApiDetailCreateOrUpdat
 		db.Rollback()
 		return nil, errorx.NewDefaultError("提交事务失败")
 	}
-	log.Printf("入参%s", req)
+	logx.Debug("入参%s", req)
 
 	var responseExamples []ResponseExample
 	err = json.Unmarshal([]byte(*amApi.ResponseExamples), &responseExamples)

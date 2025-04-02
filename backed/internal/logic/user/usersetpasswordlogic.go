@@ -3,14 +3,12 @@ package user
 import (
 	"backed/gen/model"
 	"backed/internal/middleware"
+	"backed/internal/svc"
+	"backed/internal/types"
 	"backed/internal/utils/md5"
 	"context"
 	"errors"
 	"gorm.io/gorm"
-	"log"
-
-	"backed/internal/svc"
-	"backed/internal/types"
 
 	"github.com/zeromicro/go-zero/core/logx"
 )
@@ -60,7 +58,7 @@ func (l *UserSetPasswordLogic) UserSetPassword(req *types.UserSetPasswordRequest
 	// 提交事务
 	if err := db.Commit().Error; err != nil {
 		db.Rollback()
-		log.Printf("Error committing transaction: %v", err)
+		logx.Debug("Error committing transaction: %v", err)
 		return nil, err
 	}
 

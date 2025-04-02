@@ -4,7 +4,6 @@ import (
 	"backed/gen/model"
 	"backed/internal/common/errorx"
 	"context"
-	"log"
 	"math/rand"
 	"strconv"
 	"time"
@@ -62,7 +61,7 @@ func (l *ProjectCreateLogic) ProjectCreate(req *types.ProjectCreateRequest) (*ty
 	}
 	if err := db.Commit().Error; err != nil {
 		db.Rollback()
-		log.Printf("Error committing transaction: %v", err)
+		logx.Debug("Error committing transaction: %v", err)
 		return nil, errorx.NewDefaultError("Error committing transaction")
 	}
 	// 返回成功响应

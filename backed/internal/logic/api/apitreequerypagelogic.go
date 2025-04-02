@@ -7,7 +7,6 @@ import (
 	"backed/internal/middleware"
 	"backed/internal/utils/ep"
 	"context"
-	"log"
 	"strconv"
 
 	"backed/internal/svc"
@@ -148,7 +147,7 @@ func (l *ApiTreeQueryPageLogic) QueryAmAPI(projectId int64) ([]*model.AmAPI, err
 		Where("is_deleted = 0").
 		Find(&amAPIs).Error
 	if err != nil {
-		log.Printf("Error QueryAmAPIs: %v", err)
+		logx.Debug("Error QueryAmAPIs: %v", err)
 		return []*model.AmAPI{}, err // 返回空切片，而不是 nil
 	}
 	return amAPIs, nil
@@ -164,7 +163,7 @@ func (l *ApiTreeQueryPageLogic) QueryAmFolders(projectId int64) ([]*model.AmFold
 		Where("is_deleted = 0").
 		Find(&amFolders).Error
 	if err != nil {
-		log.Printf("Error QueryAmFolders: %v", err)
+		logx.Debug("Error QueryAmFolders: %v", err)
 		return []*model.AmFolder{}, err // 返回空切片，而不是 nil
 
 	}
@@ -181,7 +180,7 @@ func (l *ApiTreeQueryPageLogic) QueryAmDocs(projectId int64) ([]*model.AmDoc, er
 		Where("is_deleted = 0").
 		Find(&amDocs).Error
 	if err != nil {
-		log.Printf("Error QueryAmDocs: %v", err)
+		logx.Debug("Error QueryAmDocs: %v", err)
 		return []*model.AmDoc{}, err // 返回空切片，而不是 nil
 	}
 	return amDocs, nil
@@ -195,7 +194,7 @@ func (l *ApiTreeQueryPageLogic) QueryAmApiCase(apiIds []int64) ([]*model.AmAPICa
 		Where("is_deleted = 0").
 		Find(&amAPICases).Error
 	if err != nil {
-		log.Printf("Error QueryAmApiCases: %v", err)
+		logx.Debug("Error QueryAmApiCases: %v", err)
 		return []*model.AmAPICase{}, err // 返回空切片，而不是 nil
 	}
 	return amAPICases, nil

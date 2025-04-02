@@ -4,7 +4,6 @@ import (
 	"backed/gen/model"
 	"backed/internal/common/errorx"
 	"context"
-	"log"
 	"strconv"
 
 	"backed/internal/svc"
@@ -43,7 +42,7 @@ func (l *ProjectDeleteLogic) ProjectDelete(req *types.ProjectDeleteRequest) (res
 	}
 	if err := db.Commit().Error; err != nil {
 		db.Rollback()
-		log.Printf("Error committing transaction: %v", err)
+		logx.Debug("Error committing transaction: %v", err)
 		return nil, errorx.NewDefaultError("Error committing transaction")
 	}
 	return &types.ProjectDeleteResp{

@@ -15,7 +15,6 @@ import (
 	"github.com/zeromicro/go-zero/rest/httpx"
 	"gorm.io/gorm"
 	"io"
-	"log"
 	"net"
 	"net/http"
 	"os"
@@ -77,7 +76,7 @@ func main() {
 			return errorx.ErrorResponse(http.StatusBadRequest, errorx.ContextDeadlineExceeded)
 		default:
 			// 记录未知错误的详细信息
-			log.Printf("未知错误: %v", err)
+			logx.Debug("未知错误: %v", err)
 			return errorx.ErrorResponse(http.StatusInternalServerError, http.StatusText(http.StatusInternalServerError))
 		}
 

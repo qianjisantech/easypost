@@ -8,7 +8,6 @@ import (
 	"errors"
 	"fmt"
 	"gorm.io/gorm"
-	"log"
 	"math/rand"
 	"net/mail"
 	"strings"
@@ -70,7 +69,7 @@ func (l *SendEmailCodeLogic) SendEmailCode(req *types.AuthEmailSendCodeReq) (res
 		err := l.CreateOrUpdateUser(req.Email, code)
 		if err != nil {
 			// 记录错误日志
-			log.Printf(err.Error())
+			logx.Debug(err.Error())
 		}
 	}()
 	return &types.AuthEmailSendCodeResp{

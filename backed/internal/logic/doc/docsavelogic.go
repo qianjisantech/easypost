@@ -8,7 +8,6 @@ import (
 	"backed/internal/types"
 	"context"
 	"github.com/zeromicro/go-zero/core/logx"
-	"log"
 	"strconv"
 )
 
@@ -64,7 +63,7 @@ func (l *DocSaveLogic) DocSave(req *types.DocSaveRequest) (resp *types.DocSaveRe
 	// 提交事务
 	if err := db.Commit().Error; err != nil {
 		db.Rollback()
-		log.Printf("事务提交失败: %v", err)
+		logx.Debug("事务提交失败: %v", err)
 		return nil, errorx.NewDefaultError("事务提交失败: " + err.Error())
 	}
 

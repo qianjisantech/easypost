@@ -7,7 +7,6 @@ import (
 	"backed/internal/svc"
 	"backed/internal/types"
 	"context"
-	"log"
 	"strconv"
 
 	"github.com/zeromicro/go-zero/core/logx"
@@ -63,7 +62,7 @@ func (l *TeamCreateLogic) TeamCreate(req *types.TeamCreateRequest) (resp *types.
 	}
 	if err := db.Commit().Error; err != nil {
 		db.Rollback()
-		log.Printf("Error committing transaction: %v", err)
+		logx.Debug("Error committing transaction: %v", err)
 		return nil, errorx.NewDefaultError("Error committing transaction")
 	}
 	// 返回成功响应

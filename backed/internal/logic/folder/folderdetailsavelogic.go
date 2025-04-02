@@ -5,7 +5,6 @@ import (
 	"backed/internal/common/errorx"
 	"backed/internal/middleware"
 	"context"
-	"log"
 	"strconv"
 
 	"backed/internal/svc"
@@ -58,7 +57,7 @@ func (l *FolderDetailSaveLogic) FolderDetailSave(req *types.FolderDetailSaveRequ
 	// 提交事务
 	if err := db.Commit().Error; err != nil {
 		db.Rollback()
-		log.Printf("Error committing transaction: %v", err)
+		logx.Debug("Error committing transaction: %v", err)
 		return nil, errorx.NewDefaultError("Error committing transaction")
 	}
 	// 返回成功响应

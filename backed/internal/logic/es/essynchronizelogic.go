@@ -4,7 +4,6 @@ import (
 	"backed/internal/common/errorx"
 	"backed/internal/pkg/es"
 	"context"
-	"log"
 	"time"
 
 	"backed/internal/svc"
@@ -36,7 +35,7 @@ func (l *EsSynchronizeLogic) EsSynchronize(req *types.EsSynchronizeRequest) (res
 
 	err = client.Connect()
 	if err != nil {
-		log.Printf("Failed to connect to Elasticsearch: %v", err) // 打印详细错误信息
+		logx.Debug("Failed to connect to Elasticsearch: %v", err) // 打印详细错误信息
 		return nil, errorx.NewCodeError(err.Error())
 	}
 	loginfo := es.LogInfo{
@@ -46,7 +45,7 @@ func (l *EsSynchronizeLogic) EsSynchronize(req *types.EsSynchronizeRequest) (res
 	}
 	err = client.SynchronizeData("uat-jmssa-applog-"+time.Now().Format(time.DateOnly), loginfo)
 	if err != nil {
-		log.Printf("Failed to synchronize data: %v", err) // 打印详细错误信息
+		logx.Debug("Failed to synchronize data: %v", err) // 打印详细错误信息
 		return nil, errorx.NewCodeError(err.Error())
 	}
 	return &types.EsSynchronizeResp{

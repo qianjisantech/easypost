@@ -77,12 +77,12 @@ func (a *AuthMiddleware) Handle(next http.HandlerFunc) http.HandlerFunc {
 		// 安全获取并设置 teamId 和 projectId
 		if teamId := r.Header.Get("X-Team-Id"); teamId != "" {
 			contentInfo.TeamId, err = strconv.ParseInt(teamId, 10, 64)
-			log.Printf("获取到的 teamId 为：%s", teamId)
+			logx.Debug("获取到的 teamId 为：%s", teamId)
 		}
 
 		if projectId := r.Header.Get("X-Project-Id"); projectId != "" {
 			contentInfo.ProjectId, err = strconv.ParseInt(projectId, 10, 64)
-			log.Printf("获取到的 projectId 为：%s", projectId)
+			logx.Debug("获取到的 projectId 为：%s", projectId)
 		}
 		ctx = context.WithValue(ctx, "contentInfo", contentInfo)
 		r = r.WithContext(ctx)
@@ -97,7 +97,7 @@ func (a *AuthMiddleware) RegisterCallbacks() {
 	// 创建记录回调
 	a.db.Callback().Create().Before("gorm:create").Register("set_create_fields", func(db *gorm.DB) {
 		ctx := db.Statement.Context
-		log.Printf("创建插入数据自动填充数据")
+		logx.Debug("创建插入数据自动填充数据")
 		// 从上下文中获取用户信息
 		// 处理 userId
 		contentInfo, ok := ctx.Value("contentInfo").(*ContentInfo)
@@ -139,7 +139,7 @@ func (a *AuthMiddleware) RegisterCallbacks() {
 			log.Println("Context is nil")
 			return
 		}
-		log.Printf("更新插入数据自动填充数据")
+		logx.Debug("更新插入数据自动填充数据")
 		// 处理 userId
 		contentInfo, ok := ctx.Value("contentInfo").(*ContentInfo)
 		if ok {

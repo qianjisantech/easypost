@@ -7,7 +7,6 @@ import (
 	"backed/internal/svc"
 	"backed/internal/types"
 	"context"
-	"log"
 	"strconv"
 
 	"github.com/zeromicro/go-zero/core/logx"
@@ -79,7 +78,7 @@ func (l *TeamMemberInviteLogic) TeamMemberInvite(req *types.TeamMemberInviteRequ
 
 	if err := tx.Commit().Error; err != nil {
 		tx.Rollback()
-		log.Printf("Error committing transaction: %v", err)
+		logx.Debug("Error committing transaction: %v", err)
 		return nil, errorx.NewDefaultError("提交事务失败")
 	}
 
