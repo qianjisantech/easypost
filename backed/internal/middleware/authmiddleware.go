@@ -103,33 +103,33 @@ func (a *AuthMiddleware) RegisterCallbacks() {
 		// 处理 userId
 		contentInfo, ok := ctx.Value("contentInfo").(*ContentInfo)
 		if ok {
-			fmt.Printf("DEBUG: Found userId in context: %d\n", contentInfo.UserId) // 调试日志
+			logx.Debug("DEBUG: Found userId in context: %d\n", contentInfo.UserId) // 调试日志
 
 			field := db.Statement.Schema.LookUpField("create_by")
 			if field != nil {
-				fmt.Printf("DEBUG: Found 'update_by' field in schema\n") // 调试日志
+				logx.Debug("DEBUG: Found 'update_by' field in schema\n") // 调试日志
 				db.Statement.SetColumn("create_by", contentInfo.UserId)
-				fmt.Printf("DEBUG: Set 'update_by' column to: %d\n", contentInfo.UserId) // 调试日志
+				logx.Debug("DEBUG: Set 'update_by' column to: %d\n", contentInfo.UserId) // 调试日志
 			} else {
-				fmt.Printf("DEBUG: 'update_by' field not found in schema\n") // 调试日志
+				logx.Debug("DEBUG: 'update_by' field not found in schema\n") // 调试日志
 			}
 		} else {
-			fmt.Printf("DEBUG: userId not found in context or not int64 type\n") // 调试日志
+			logx.Debug("DEBUG: userId not found in context or not int64 type\n") // 调试日志
 		}
 
 		if ok {
-			fmt.Printf("DEBUG: Found username in context: %s\n", contentInfo.Username) // 调试日志
+			logx.Debug("DEBUG: Found username in context: %s\n", contentInfo.Username) // 调试日志
 
 			field := db.Statement.Schema.LookUpField("create_by_name")
 			if field != nil {
-				fmt.Printf("DEBUG: Found 'update_by_name' field in schema\n") // 调试日志
+				logx.Debug("DEBUG: Found 'update_by_name' field in schema\n") // 调试日志
 				db.Statement.SetColumn("create_by_name", contentInfo.Username)
-				fmt.Printf("DEBUG: Set 'update_by_name' column to: %s\n", contentInfo.Username) // 调试日志
+				logx.Debug("DEBUG: Set 'update_by_name' column to: %s\n", contentInfo.Username) // 调试日志
 			} else {
-				fmt.Printf("DEBUG: 'update_by_name' field not found in schema\n") // 调试日志
+				logx.Debug("DEBUG: 'update_by_name' field not found in schema\n") // 调试日志
 			}
 		} else {
-			fmt.Printf("DEBUG: username not found in context or not string type\n") // 调试日志
+			logx.Debug("DEBUG: username not found in context or not string type\n") // 调试日志
 		}
 	})
 
@@ -144,33 +144,33 @@ func (a *AuthMiddleware) RegisterCallbacks() {
 		// 处理 userId
 		contentInfo, ok := ctx.Value("contentInfo").(*ContentInfo)
 		if ok {
-			fmt.Printf("DEBUG: Found userId in context: %d\n", contentInfo.UserId) // 调试日志
+			logx.Debug("DEBUG: Found userId in context: %d\n", contentInfo.UserId) // 调试日志
 
 			field := db.Statement.Schema.LookUpField("update_by")
 			if field != nil {
-				fmt.Printf("DEBUG: Found 'update_by' field in schema\n") // 调试日志
+				logx.Debug("DEBUG: Found 'update_by' field in schema\n") // 调试日志
 				db.Statement.SetColumn("update_by", contentInfo.UserId)
-				fmt.Printf("DEBUG: Set 'update_by' column to: %d\n", contentInfo.UserId) // 调试日志
+				logx.Debug("DEBUG: Set 'update_by' column to: %d\n", contentInfo.UserId) // 调试日志
 			} else {
-				fmt.Printf("DEBUG: 'update_by' field not found in schema\n") // 调试日志
+				logx.Debug("DEBUG: 'update_by' field not found in schema\n") // 调试日志
 			}
 		} else {
-			fmt.Printf("DEBUG: userId not found in context or not int64 type\n") // 调试日志
+			logx.Debug("DEBUG: userId not found in context or not int64 type\n") // 调试日志
 		}
 
 		if ok {
-			fmt.Printf("DEBUG: Found username in context: %s\n", contentInfo.Username) // 调试日志
+			logx.Debug("DEBUG: Found username in context: %s\n", contentInfo.Username) // 调试日志
 
 			field := db.Statement.Schema.LookUpField("update_by_name")
 			if field != nil {
-				fmt.Printf("DEBUG: Found 'update_by_name' field in schema\n") // 调试日志
+				logx.Debug("DEBUG: Found 'update_by_name' field in schema\n") // 调试日志
 				db.Statement.SetColumn("update_by_name", contentInfo.Username)
-				fmt.Printf("DEBUG: Set 'update_by_name' column to: %s\n", contentInfo.Username) // 调试日志
+				logx.Debug("DEBUG: Set 'update_by_name' column to: %s\n", contentInfo.Username) // 调试日志
 			} else {
-				fmt.Printf("DEBUG: 'update_by_name' field not found in schema\n") // 调试日志
+				logx.Debug("DEBUG: 'update_by_name' field not found in schema\n") // 调试日志
 			}
 		} else {
-			fmt.Printf("DEBUG: username not found in context or not string type\n") // 调试日志
+			logx.Debug("DEBUG: username not found in context or not string type\n") // 调试日志
 		}
 	})
 }
