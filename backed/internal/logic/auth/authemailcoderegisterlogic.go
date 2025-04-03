@@ -48,6 +48,8 @@ func (l *AuthEmailCodeRegisterLogic) AuthEmailCodeRegister(req *types.AuthEmailC
 	sysUser.Name = &username
 	//通过code校验 创建用户
 	tx = db.Create(sysUser)
+	_, err = l.svcCtx.Redis.Del(req.Email)
+
 	if tx.Error != nil {
 		logx.Debugf("创建用户出错%v", tx.Error)
 	}
