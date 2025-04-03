@@ -3,8 +3,11 @@ package email
 import (
 	"encoding/base64"
 	"fmt"
+	"github.com/zeromicro/go-zero/core/logx"
+	"net"
 	"net/smtp"
 	"strings"
+	"time"
 )
 
 type Email struct {
@@ -27,6 +30,25 @@ type Content struct {
 }
 
 func (e Email) Send() string {
+	dialer := &net.Dialer{
+		Timeout:   30 * time.Second, // 增加超时时间
+		KeepAlive: 30 * time.Second,
+	}
+	conn, err := dialer.Dial("tcp", e.From.Host+":"+e.From.Port)
+	if err != nil {
+		logx.Debugf("SMTP连接失败: %v", err.Error())
+		return "SMTP连接失败: %v" + err.Error()
+	}
+	defer conn.Close()
+
+	// 2. 创建带超时的SMTP客户端
+	client, err := smtp.NewClient(conn, e.From.Host)
+	if err != nil {
+		logx.Debugf("SMTP连接失败: %v", err.Error())
+		return "创建SMTP客户端失败: %v" + err.Error()
+	}
+	defer client.Close()
+
 	// 设置邮件服务器信息
 	host := e.From.Host         // 邮件服务器地址
 	port := e.From.Port         // 邮件服务器端口
@@ -59,8 +81,9 @@ func (e Email) Send() string {
 	auth := smtp.PlainAuth("", username, password, host)
 
 	// 发送邮件
-	err := smtp.SendMail(host+":"+port, auth, username, to, []byte(message))
+	err = smtp.SendMail(host+":"+port, auth, username, to, []byte(message))
 	if err != nil {
+		logx.Debugf("发送邮件失败: %v", err.Error())
 		return "发送邮件失败：" + err.Error()
 	}
 	return "邮件发送成功,请检查邮箱"
