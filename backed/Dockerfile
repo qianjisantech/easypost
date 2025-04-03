@@ -20,7 +20,7 @@ RUN echo "Rebuild required"
 RUN go build -o easypost-backed
 
 # 暴露应用程序的端口
-EXPOSE 8888
+EXPOSE 8888 25
 
 # 运行应用程序
 CMD ["./easypost-backed"]
