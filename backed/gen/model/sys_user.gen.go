@@ -24,7 +24,6 @@ type SysUser struct {
 	WorkNo       *string    `gorm:"column:work_no;comment:工号" json:"work_no"` // 工号
 	Email        *string    `gorm:"column:email;comment:邮箱" json:"email"`     // 邮箱
 	Phone        *string    `gorm:"column:phone;comment:手机号" json:"phone"`    // 手机号
-	Code         *string    `gorm:"column:code;comment:验证码" json:"code"`      // 验证码
 	CreateByName *string    `gorm:"column:create_by_name;->" json:"create_by_name"`
 	UpdateByName *string    `gorm:"column:update_by_name;->" json:"update_by_name"`
 }

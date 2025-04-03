@@ -7,6 +7,12 @@ type Config struct {
 	Mysql struct {
 		Datasource string
 	}
+	Redis struct {
+		Host     string
+		Port     string
+		Password string
+		Tls      bool
+	}
 	Email struct {
 		Host     string
 		Port     string

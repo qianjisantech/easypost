@@ -416,6 +416,20 @@ type AuthEmailSendCodeResp struct {
 	Message string `json:"message"`
 }
 
+type DeepSeekChatData struct {
+	Conetent string `json:"conetent"`
+}
+
+type DeepSeekChatRequest struct {
+	Conetent string `json:"conetent"`
+}
+
+type DeepSeekChatResp struct {
+	Success bool             `json:"success"`
+	Message string           `json:"message"`
+	Data    DeepSeekChatData `json:"data"`
+}
+
 type DocDetailData struct {
 	Id      string `json:"id"`
 	Name    string `json:"name"`

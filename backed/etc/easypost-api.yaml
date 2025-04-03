@@ -6,8 +6,14 @@ Timeout: 20000
 Mysql:
   Datasource: root:Sy122812@tcp(rm-uf6vr2e018e95e4hz6o.mysql.rds.aliyuncs.com:3306)/easypost?charset=utf8mb4&parseTime=true&loc=Asia%2FShanghai
 
+Redis:
+  Host: 47.94.96.190
+  Port: "6379"
+  Password:
+  Tls: false
+
 Email:
   Host: smtp.163.com
-  Port: "25"
+  Port: "465"
   Username: shenyuan122812@163.com
   Password: ZQVBUWYMAEZEXMTB

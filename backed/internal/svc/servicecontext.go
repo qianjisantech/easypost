@@ -7,6 +7,7 @@ import (
 	"fmt"
 	"github.com/bwmarrin/snowflake"
 	"github.com/zeromicro/go-zero/core/logx"
+	"github.com/zeromicro/go-zero/core/stores/redis"
 	"github.com/zeromicro/go-zero/rest"
 	"gorm.io/driver/mysql"
 	"gorm.io/gorm"
@@ -20,6 +21,7 @@ type ServiceContext struct {
 	Log     rest.Middleware
 	Auth    rest.Middleware
 	Recover rest.Middleware
+	Redis   redis.Redis
 }
 
 func NewServiceContext(c config.Config) *ServiceContext {
@@ -36,13 +38,24 @@ func NewServiceContext(c config.Config) *ServiceContext {
 	if err != nil {
 		panic("failed to get sql.DB")
 	}
-
+	logx.Debug("mysql已连接")
 	// 配置连接池
 	sqlDB.SetMaxIdleConns(10)           // 设置最大空闲连接数
 	sqlDB.SetMaxOpenConns(1000)         // 设置最大打开连接数
 	sqlDB.SetConnMaxLifetime(time.Hour) // 设置连接的最大存活时间
 
-	logx.Debug("mysql已连接")
+	//配置redis
+	redisConf := redis.RedisConf{
+		Host:        c.Redis.Host + ":" + c.Redis.Port,
+		Type:        "node",
+		Pass:        c.Redis.Password,
+		Tls:         c.Redis.Tls,
+		NonBlock:    false,
+		PingTimeout: time.Second,
+	}
+	mustNewRedis := redis.MustNewRedis(redisConf)
+	logx.Debug("redis已连接")
+
 	query.SetDefault(DB)
 	addSnowflakeIDCallback(DB)
 	settingLogConfig()
@@ -52,6 +65,7 @@ func NewServiceContext(c config.Config) *ServiceContext {
 		Log:     middleware.NewLogMiddleware().Handle,
 		Auth:    middleware.NewAuthMiddleware(DB).Handle,
 		Recover: middleware.NewRecoverMiddleware().Handle,
+		Redis:   *mustNewRedis,
 	}
 
 }

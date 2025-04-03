@@ -39,7 +39,6 @@ func newSysUser(db *gorm.DB, opts ...gen.DOOption) sysUser {
 	_sysUser.WorkNo = field.NewString(tableName, "work_no")
 	_sysUser.Email = field.NewString(tableName, "email")
 	_sysUser.Phone = field.NewString(tableName, "phone")
-	_sysUser.Code = field.NewString(tableName, "code")
 	_sysUser.CreateByName = field.NewString(tableName, "create_by_name")
 	_sysUser.UpdateByName = field.NewString(tableName, "update_by_name")
 
@@ -64,7 +63,6 @@ type sysUser struct {
 	WorkNo       field.String // 工号
 	Email        field.String // 邮箱
 	Phone        field.String // 手机号
-	Code         field.String // 验证码
 	CreateByName field.String
 	UpdateByName field.String
 
@@ -95,7 +93,6 @@ func (s *sysUser) updateTableName(table string) *sysUser {
 	s.WorkNo = field.NewString(table, "work_no")
 	s.Email = field.NewString(table, "email")
 	s.Phone = field.NewString(table, "phone")
-	s.Code = field.NewString(table, "code")
 	s.CreateByName = field.NewString(table, "create_by_name")
 	s.UpdateByName = field.NewString(table, "update_by_name")
 
@@ -122,7 +119,7 @@ func (s *sysUser) GetFieldByName(fieldName string) (field.OrderExpr, bool) {
 }
 
 func (s *sysUser) fillFieldMap() {
-	s.fieldMap = make(map[string]field.Expr, 15)
+	s.fieldMap = make(map[string]field.Expr, 14)
 	s.fieldMap["id"] = s.ID
 	s.fieldMap["username"] = s.Username
 	s.fieldMap["name"] = s.Name
@@ -135,7 +132,6 @@ func (s *sysUser) fillFieldMap() {
 	s.fieldMap["work_no"] = s.WorkNo
 	s.fieldMap["email"] = s.Email
 	s.fieldMap["phone"] = s.Phone
-	s.fieldMap["code"] = s.Code
 	s.fieldMap["create_by_name"] = s.CreateByName
 	s.fieldMap["update_by_name"] = s.UpdateByName
 }

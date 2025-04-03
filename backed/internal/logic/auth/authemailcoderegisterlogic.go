@@ -3,12 +3,10 @@ package auth
 import (
 	"backed/gen/model"
 	"backed/internal/common/errorx"
-	"context"
-	"errors"
-	"gorm.io/gorm"
-
 	"backed/internal/svc"
 	"backed/internal/types"
+	"context"
+	"strings"
 
 	"github.com/zeromicro/go-zero/core/logx"
 )
@@ -30,12 +28,28 @@ func NewAuthEmailCodeRegisterLogic(ctx context.Context, svcCtx *svc.ServiceConte
 func (l *AuthEmailCodeRegisterLogic) AuthEmailCodeRegister(req *types.AuthEmailCodeRegisterReq) (resp *types.AuthEmailCodeRegisterResp, err error) {
 	db := l.svcCtx.DB.Debug()
 	var sysUser *model.SysUser
-	tx := db.Where("email = ?", req.Email).Where("code=?", req.Code).First(&sysUser)
+	tx := db.Where("email = ?", req.Email).Where("password IS NOT NULL").First(&sysUser)
 	if tx.Error != nil {
-		if errors.Is(tx.Error, gorm.ErrRecordNotFound) {
-			return nil, errorx.NewDefaultError("邮箱尚未注册或者验证码错误")
-		}
-		return nil, errorx.NewDefaultError(tx.Error.Error())
+		logx.Debugf("用户尚未注册%v", tx.Error)
+	}
+	code, err := l.svcCtx.Redis.Get(req.Email)
+	if err != nil {
+		return nil, errorx.NewCodeError(err.Error())
+	}
+	if code == "" {
+		return nil, errorx.NewCodeError("验证码已过期")
+	}
+	if code != req.Code {
+		return nil, errorx.NewCodeError("验证码不正确!")
+	}
+	sysUser.Email = &req.Email
+	username := strings.Split(req.Email, "@")[0]
+	sysUser.Username = &username
+	sysUser.Name = &username
+	//通过code校验 创建用户
+	tx = db.Create(sysUser)
+	if tx.Error != nil {
+		logx.Debugf("创建用户出错%v", tx.Error)
 	}
 	if sysUser != nil {
 		token, err := GenerateJWT(sysUser.ID, *sysUser.Username, *sysUser.Email)

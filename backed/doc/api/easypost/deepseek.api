@@ -1,0 +1,32 @@
+syntax = "v1"
+
+info(
+    title: "easypost后端"
+    desc: "qianji"
+    author: "qianji"
+    email: "2497822530@qq.com"
+    version: "0.1"
+)
+
+type (
+    DeepSeekChatRequest {
+     Conetent string  `json:"conetent"`
+    }
+    DeepSeekChatResp {
+     Success bool `json:"success"`
+     Message string  `json:"message"`
+     Data DeepSeekChatData `json:"data"`
+    }
+    DeepSeekChatData {
+    Conetent string `json:"conetent"`
+    }
+
+)
+@server(
+    group: deepseek
+    prefix: /api
+)
+service easypost-api {
+    @handler DeepSeekChat
+    post /am/deepseek/chat (DeepSeekChatRequest) returns (DeepSeekChatResp)
+}

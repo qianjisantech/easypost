@@ -16,8 +16,12 @@ RUN go mod download
 COPY . .
 # 空的 RUN 指令以防止缓存
 RUN echo "Rebuild required"
+
+RUN apt-get update && apt-get install -y ca-certificates
+
 # 构建应用程序
 RUN go build -o easypost-backed
+
 
 # 暴露应用程序的端口
 EXPOSE 8888 25

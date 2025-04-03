@@ -7,6 +7,7 @@ import (
 	api "backed/internal/handler/api"
 	apicase "backed/internal/handler/apicase"
 	auth "backed/internal/handler/auth"
+	deepseek "backed/internal/handler/deepseek"
 	doc "backed/internal/handler/doc"
 	es "backed/internal/handler/es"
 	folder "backed/internal/handler/folder"
@@ -148,6 +149,17 @@ func RegisterHandlers(server *rest.Server, serverCtx *svc.ServiceContext) {
 				Method:  http.MethodPost,
 				Path:    "/auth/getQRCode",
 				Handler: auth.GetQRCodeHandler(serverCtx),
+			},
+		},
+		rest.WithPrefix("/api"),
+	)
+
+	server.AddRoutes(
+		[]rest.Route{
+			{
+				Method:  http.MethodPost,
+				Path:    "/am/deepseek/chat",
+				Handler: deepseek.DeepSeekChatHandler(serverCtx),
 			},
 		},
 		rest.WithPrefix("/api"),

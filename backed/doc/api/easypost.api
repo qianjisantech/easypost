@@ -8,6 +8,7 @@ import "easypost/user.api"
 import "easypost/trafficmanage.api"
 import "easypost/es.api"
 import "easypost/apicase.api"
+import "easypost/deepseek.api"
 
 info (
 	title:   "easypost后端"
