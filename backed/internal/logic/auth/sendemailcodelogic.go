@@ -72,16 +72,11 @@ func (l *SendEmailCodeLogic) SendEmailCode(req *types.AuthEmailSendCodeReq) (res
 			// 记录错误日志
 			logx.Debug(err.Error())
 		}
-		result := e.Send()
-		if strings.Contains(result, "失败") {
-			logx.Debug("邮件发送失败: %s", result)
-			// 重试或告警逻辑
-		}
 	}()
 
 	return &types.AuthEmailSendCodeResp{
 		Success: true,
-		Message: "验证码发送成功，请检查邮箱【" + req.Email + "】",
+		Message: e.Send(),
 	}, nil
 }
 
