@@ -32,6 +32,12 @@ func (l *AuthEmailCodeRegisterLogic) AuthEmailCodeRegister(req *types.AuthEmailC
 	if tx.Error != nil {
 		logx.Debugf("用户尚未注册%v", tx.Error)
 	}
+	if req.Email == "" {
+		return nil, errorx.NewCodeError("邮箱不能为空")
+	}
+	if req.Code == "" {
+		return nil, errorx.NewCodeError("验证码不能为空")
+	}
 	code, err := l.svcCtx.Redis.Get(req.Email)
 	if err != nil {
 		return nil, errorx.NewCodeError(err.Error())
