@@ -25,7 +25,7 @@ func NewAuthLogoutLogic(ctx context.Context, svcCtx *svc.ServiceContext) *AuthLo
 	}
 }
 
-func (l *AuthLogoutLogic) AuthLogout() (resp *types.AuthLogoutResp, err error) {
+func (l *AuthLogoutLogic) AuthLogout(req *types.AuthLogoutRequest) (resp *types.AuthLogoutResp, err error) {
 	contentInfo := l.ctx.Value("contentInfo").(*middleware.ContentInfo)
 	email := contentInfo.Email
 	_, err = l.svcCtx.Redis.Del(email)

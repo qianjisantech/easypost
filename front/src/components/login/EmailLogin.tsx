@@ -25,7 +25,7 @@ const EmailLogin = (p: { password: string; email: string }) => {
     const response = await EmailSendCode({ email })
     if (response?.data?.success) {
       setCodeLoading(true)
-      setCountdown(60) // 设置倒计时为60秒
+      setCountdown(30) // 设置倒计时为60秒
       message.info(response?.data?.message)
       // 模拟发送验证码的异步操作
       setTimeout(() => {

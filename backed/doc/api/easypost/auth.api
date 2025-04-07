@@ -51,6 +51,9 @@ type (
         Success bool `json:"success"`
         Message string `json:"message"`
     }
+    AuthLogoutRequest {
+
+    }
     AuthLogoutResp {
     Success bool  `json:"success"`
     Message string  `json:"message"`
@@ -71,5 +74,5 @@ service easypost-api {
     @handler SendEmailCode
     post /auth/email/sendCode (AuthEmailSendCodeReq) returns (AuthEmailSendCodeResp)
     @handler  AuthLogout
-    get  /auth/logout () returns (AuthLogoutResp)
+    get  /auth/logout (AuthLogoutRequest) returns (AuthLogoutResp)
 }
