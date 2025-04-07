@@ -150,6 +150,11 @@ func RegisterHandlers(server *rest.Server, serverCtx *svc.ServiceContext) {
 				Path:    "/auth/getQRCode",
 				Handler: auth.GetQRCodeHandler(serverCtx),
 			},
+			{
+				Method:  http.MethodGet,
+				Path:    "/auth/logout",
+				Handler: auth.AuthLogoutHandler(serverCtx),
+			},
 		},
 		rest.WithPrefix("/api"),
 	)

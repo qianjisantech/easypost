@@ -7,6 +7,7 @@ import (
 	"backed/internal/types"
 	"context"
 	"strings"
+	"time"
 
 	"github.com/zeromicro/go-zero/core/logx"
 )
@@ -70,7 +71,13 @@ func (l *AuthEmailCodeRegisterLogic) AuthEmailCodeRegister(req *types.AuthEmailC
 		} else {
 			*needSetPassword = false // 如果已经设置密码
 		}
-
+		err = l.svcCtx.Redis.Hmset(req.Email, map[string]string{
+			"token": token,
+		})
+		err = l.svcCtx.Redis.Expire(req.Email, int(24*time.Hour))
+		if err != nil {
+			return nil, errorx.NewCodeError(err.Error())
+		}
 		return &types.AuthEmailCodeRegisterResp{
 			Success: true,
 			Message: "登录成功",

@@ -52,7 +52,13 @@ func (l *AuthEmailLoginLogic) AuthEmailLogin(req *types.AuthEmailLoginReq) (resp
 	if err != nil {
 		return nil, errorx.NewDefaultError(err.Error())
 	}
-
+	err = l.svcCtx.Redis.Hmset(req.Email, map[string]string{
+		"token": token,
+	})
+	err = l.svcCtx.Redis.Expire(req.Email, int(24*time.Hour))
+	if err != nil {
+		return nil, errorx.NewCodeError(err.Error())
+	}
 	return &types.AuthEmailLoginResp{
 		Success: true,
 		Message: "登录成功",

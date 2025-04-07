@@ -51,6 +51,10 @@ type (
         Success bool `json:"success"`
         Message string `json:"message"`
     }
+    AuthLogoutResp {
+    Success bool  `json:"success"`
+    Message string  `json:"message"`
+    }
 )
 
 @server(
@@ -66,4 +70,6 @@ service easypost-api {
     post /auth/email/register (AuthEmailCodeRegisterReq) returns (AuthEmailCodeRegisterResp)
     @handler SendEmailCode
     post /auth/email/sendCode (AuthEmailSendCodeReq) returns (AuthEmailSendCodeResp)
+    @handler  AuthLogout
+    get  /auth/logout () returns (AuthLogoutResp)
 }

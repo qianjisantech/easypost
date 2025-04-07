@@ -58,7 +58,10 @@ func (l *SendEmailCodeLogic) SendEmailCode(req *types.AuthEmailSendCodeReq) (res
 			Body:    "您好！欢迎使用EasyPost，你的验证码为：【" + code + "】,验证码在5分钟以内有效",
 		},
 	}
-	err = l.SetCodeToRedis(req.Email, code, 5*time.Minute)
+
+	err = l.SetHashToRedis(req.Email, map[string]string{
+		"code": code,
+	}, 5*time.Minute)
 	if err != nil {
 		// 记录错误日志
 		logx.Debug(err.Error())
@@ -81,10 +84,16 @@ func (l *SendEmailCodeLogic) ValidEmail(email string) error {
 	return nil
 }
 
-func (l *SendEmailCodeLogic) SetCodeToRedis(email string, code string, expiration time.Duration) error {
-	err := l.svcCtx.Redis.Setex(email, code, int(expiration))
+func (l *SendEmailCodeLogic) SetHashToRedis(key string, fields map[string]string, expiration time.Duration) error {
+	err := l.svcCtx.Redis.Hmset(key, fields)
 	if err != nil {
 		return err
+	}
+	if expiration > 0 {
+		err := l.svcCtx.Redis.Expire(key, int(expiration.Seconds()))
+		if err != nil {
+			return err
+		}
 	}
 	return nil
 }
