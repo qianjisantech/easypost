@@ -3,6 +3,7 @@ import type { JsonSchema } from '@/components/JsonSchema'
 
 import type {
   ApiStatus,
+  AuthorizationType,
   BodyType,
   CatalogType,
   ContentType,
@@ -90,6 +91,10 @@ export interface ApiDetails {
     query?: Parameter[]
     path?: Parameter[]
   }
+  authorization?: {
+    type?: AuthorizationType
+    data?: object
+  }
   /** 请求参数 - Body */
   requestBody?: {
     type: BodyType
@@ -132,7 +137,7 @@ export interface ApiSchema {
 }
 
 export interface ApiFolder {
-  id:string
+  id: string
   name: string
   parentId?: ApiMenuBase['id']
   serverId?: string

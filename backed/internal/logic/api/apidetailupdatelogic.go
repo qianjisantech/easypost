@@ -51,6 +51,7 @@ func (l *ApiDetailUpdateLogic) ApiDetailUpdate(req *types.ApiDetailCreateOrUpdat
 		RequestBody:      &req.RequestBody,
 		ResponseExamples: &req.ResponseExamples,
 		Responses:        &req.Responses,
+		Authorization:    &req.Authorization,
 	}
 	if req.Id != "" {
 		amApi.ID, _ = strconv.ParseInt(req.Id, 10, 64)

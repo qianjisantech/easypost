@@ -4,7 +4,7 @@ import { useEffect, useRef, useState } from 'react'
 import { Button, Form, type FormProps, Select, type SelectProps, Space } from 'antd'
 import type { AxiosRequestConfig } from 'axios'
 import { nanoid } from 'nanoid'
-import { ApiDetail, ApiDetailCreate, ApiDetailUpdate, ApiRunDetail } from "src/api/api";
+import { ApiDetail, ApiDetailCreate, ApiDetailUpdate, ApiRunDetail } from 'src/api/api'
 
 import { PageTabStatus } from '@/components/ApiTab/ApiTab.enum'
 import { useTabContentContext } from '@/components/ApiTab/TabContentContext'
@@ -18,7 +18,7 @@ import { useGlobalContext } from '@/contexts/global'
 import { useMenuHelpersContext } from '@/contexts/menu-helpers'
 import { useMenuTabHelpers } from '@/contexts/menu-tab-settings'
 import { initialCreateApiDetailsData } from '@/data/remote'
-import { MenuItemType, ParamType } from '@/enums'
+import { AuthorizationType, MenuItemType, ParamType } from "@/enums";
 import type { ApiDetails } from '@/types'
 import { request } from '@/utils/request'
 
@@ -107,7 +107,6 @@ export function ApiRun() {
       } catch (err) {
         console.error('保存case失败', err)
       }
-
     } else {
       await ApiDetailUpdate({
         id: tabData.key,
@@ -211,7 +210,6 @@ export function ApiRun() {
     }
   }
 
-  // send方法
   const send = async (values: ApiDetails) => {
     console.log('apiDetail', values)
 
@@ -219,7 +217,7 @@ export function ApiRun() {
     const headers = values.parameters?.header?.reduce(
       (acc, item) => {
         if (item.name && item.example) {
-          acc[item.name] = item.example // 使用 name 作为 key，example 作为 value
+          acc[item.name] = item.example
         }
         return acc
       },
@@ -228,18 +226,50 @@ export function ApiRun() {
 
     setLoading(true)
 
+    // 从 path 中提取域名作为 Host
+    let host = ''
+    try {
+      // 如果 path 不是完整 URL，添加 https:// 前缀以便解析
+      const urlPath = values.path.startsWith('http') ? values.path : `https://${values.path}`
+      const url = new URL(urlPath)
+      host = url.hostname
+    } catch (e) {
+      console.error('无法从 path 中解析域名:', e)
+      setLoading(false)
+      return // 如果无法解析域名，直接返回不发送请求
+    }
+
+    // 检查 headers 中是否已有 Content-Type
+    const hasContentType = headers && Object.keys(headers).some(
+      key => key.toLowerCase() === 'content-type'
+    )
+
     const fixedHeaders = {
       'User-Agent': 'Easypost/1.0.0 (https://easypost.com)',
       Accept: '*/*',
-      Host: '',
+      Host: host, // 使用从 path 提取的域名
       Connection: 'keep-alive',
+      ...(!hasContentType && { 'Content-Type': 'text/plain' }) // 如果没有 Content-Type 则添加默认值
     }
-
+// 处理 Basic Auth 认证
+    if (values.authorization?.type === AuthorizationType.BasicAuth) {
+      const { username, password } = values.authorization.data as { username: string; password: string }
+      if (username && password) {
+        const token = btoa(`${username}:${password}`) // Base64 编码
+        fixedHeaders['Authorization'] = `Basic ${token}`
+      }
+    }
+    if (values.authorization?.type === AuthorizationType.BearerToken) {
+      const { token } = values.authorization.data as { token: string}
+      if (token) {
+        fixedHeaders['Authorization'] = `Bearer ${token}`
+      }
+    }
     const allHeaders = { ...headers, ...fixedHeaders }
 
     const easypostHeaders = {
       'Api-u': values.path,
-      'Api-o0': `method=${values.method}, timings=true, timeout=300000, rejectUnauthorized=false`,
+      'Api-o0': `method=${values.method},timings=true,timeout=300000,rejectUnauthorized=false,followRedirect=true`,
       'Api-H0': Object.entries(allHeaders)
         .map(([key, value]) => `${key}=${value}`)
         .join(', '),
@@ -277,7 +307,6 @@ export function ApiRun() {
       setLoading(false)
     }
   }
-
   const handleParseQueryParams: PathInputProps['onParseQueryParams'] = (parsedParams) => {
     if (Array.isArray(parsedParams)) {
       type Param = NonNullable<ApiDetails['parameters']>['query']

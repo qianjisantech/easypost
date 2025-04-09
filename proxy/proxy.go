@@ -22,7 +22,7 @@ func main() {
 	ctx := svc.NewServiceContext(c)
 	server := rest.MustNewServer(c.RestConf)
 	defer server.Stop()
-	server.Use(ctx.ProxyRequest)
+	//server.Use(ctx.ProxyRequest)
 	handler.RegisterHandlers(server, ctx)
 
 	fmt.Printf("Starting server at %s:%d...\n", c.Host, c.Port)

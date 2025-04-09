@@ -7,7 +7,7 @@ export function request(config: Record<string, any>): Promise<AxiosResponse> {
     ...config,
     // 默认允许跨域请求携带 Cookies，若服务器支持
     withCredentials: true,
-    timeout: 5000,
+    timeout: 60000,
   })
 
   // 设置必要的请求头，防止跨域请求时没有授权

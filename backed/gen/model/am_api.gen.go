@@ -35,6 +35,9 @@ type AmAPI struct {
 	Responses        *string    `gorm:"column:responses" json:"responses"`
 	RequestBody      *string    `gorm:"column:request_body" json:"request_body"`
 	ResponseExamples *string    `gorm:"column:response_examples" json:"response_examples"`
+	Authorization    *string    `gorm:"column:authorization" json:"authorization"`
+	PostScript       *string    `gorm:"column:post_script;comment:后置脚本" json:"post_script"` // 后置脚本
+	PreScript        *string    `gorm:"column:pre_script;comment:前置脚本" json:"pre_script"`   // 前置脚本
 }
 
 // TableName AmAPI's table name

@@ -1,3 +1,5 @@
+import { Authorization } from '@/components/tab-content/api/authorization/Authorization'
+
 /** HTTP 请求方法。 */
 export const enum HttpMethod {
   Get = 'GET',
@@ -93,4 +95,23 @@ export const enum BodyType {
   Xml = 'application/xml',
   Raw = 'text/plain',
   Binary = 'application/octet-stream',
+}
+
+export const enum AuthorizationTypeName {
+  无需鉴权 = '无需鉴权',
+  BasicAuth = 'Basic Auth',
+  BearerToken = 'Bearer Token',
+  ApiKey = 'Api Key',
+  OAuth2 = 'OAuth 2.0',
+  DigestAuth = 'Digest Auth',
+  HawkAuthorization = 'Hawk Authorization',
+}
+export const enum AuthorizationType {
+  无需鉴权 = 'NoneAuth',
+  BasicAuth = 'BasicAuth',
+  BearerToken = 'BearerToken',
+  ApiKey = 'ApiKey',
+  OAuth2 = 'OAuth2',
+  DigestAuth = 'DigestAuth',
+  HawkAuthorization = 'HawkAuthorization',
 }

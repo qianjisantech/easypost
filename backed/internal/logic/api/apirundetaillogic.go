@@ -32,29 +32,22 @@ func (l *ApiRunDetailLogic) ApiRunDetail(req *types.ApiRunDetailRequest) (resp *
 	amAPI, err := l.QueryApiDetailById(id) //根据id查询api详情
 
 	var parameters Parameters
-	var responses []Response
-	var responseExamples []ResponseExample
 	var requestBody RequestBody
+	var authorization Authorization
 	if amAPI.Parameters != nil {
 		err = json.Unmarshal([]byte(*amAPI.Parameters), &parameters)
 	} else {
 		parameters = Parameters{}
 	}
-	if amAPI.Responses != nil {
-		err = json.Unmarshal([]byte(*amAPI.Responses), &responses)
-	} else {
-		responses = []Response{}
-	}
-
-	if amAPI.ResponseExamples != nil {
-		err = json.Unmarshal([]byte(*amAPI.ResponseExamples), &responseExamples)
-	} else {
-		responseExamples = []ResponseExample{}
-	}
 	if amAPI.RequestBody != nil && *amAPI.RequestBody != "{}" {
 		err = json.Unmarshal([]byte(*amAPI.RequestBody), &requestBody)
 	} else {
 		requestBody = RequestBody{}
+	}
+	if amAPI.Authorization != nil && *amAPI.Authorization != "{}" {
+		err = json.Unmarshal([]byte(*amAPI.Authorization), &authorization)
+	} else {
+		authorization = Authorization{}
 	}
 	defaultType := "apiDetail"
 	return &types.ApiRunDetailResp{
@@ -66,17 +59,13 @@ func (l *ApiRunDetailLogic) ApiRunDetail(req *types.ApiRunDetailRequest) (resp *
 			ParentId: strconv.FormatInt(*amAPI.ParentID, 10),
 			Name:     ep.StringIfNotNil(amAPI.Name, ""),
 			Data: types.ApiRunDetailDataData{
-				Id:               strconv.FormatInt(amAPI.ID, 10),
-				Name:             ep.StringIfNotNil(amAPI.Name, ""),
-				Path:             ep.StringIfNotNil(amAPI.Path, ""),
-				Method:           ep.StringIfNotNil(amAPI.Method, ""),
-				Status:           ep.StringIfNotNil(amAPI.Status, ""),
-				ServerId:         ep.StringIfNotNil(amAPI.ServerID, ""),
-				Description:      ep.StringIfNotNil(amAPI.Remark, ""),
-				Parameters:       parameters,
-				Responses:        responses,
-				ResponseExamples: responseExamples,
-				RequestBody:      requestBody,
+				Id:            strconv.FormatInt(amAPI.ID, 10),
+				Name:          ep.StringIfNotNil(amAPI.Name, ""),
+				Path:          ep.StringIfNotNil(amAPI.Path, ""),
+				Method:        ep.StringIfNotNil(amAPI.Method, ""),
+				Parameters:    parameters,
+				Authorization: authorization,
+				RequestBody:   requestBody,
 			},
 		},
 	}, nil

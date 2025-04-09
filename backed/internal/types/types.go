@@ -210,6 +210,7 @@ type ApiDetailCreateOrUpdateRequest struct {
 	Responses        string   `form:"responses,optional"`
 	RequestBody      string   `form:"requestBody,optional"`
 	ResponseExamples string   `form:"responseExamples,optional"`
+	Authorization    string   `form:"authorization,optional"`
 }
 
 type ApiDetailCreateOrUpdateResp struct {
@@ -244,6 +245,7 @@ type ApiDetailDataData struct {
 	Responses        interface{} `json:"responses"`
 	ResponseExamples interface{} `json:"responseExamples"`
 	RequestBody      interface{} `json:"requestBody"`
+	Authorization    interface{} `json:"authorization"`
 }
 
 type ApiDetailRequest struct {
@@ -278,6 +280,7 @@ type ApiDocDetailDataData struct {
 	Responses        interface{} `json:"responses"`
 	ResponseExamples interface{} `json:"responseExamples"`
 	RequestBody      interface{} `json:"requestBody"`
+	Authorization    interface{} `json:"authorization"`
 	CreatBy          string      `json:"createBy"`
 	CreatByName      string      `json:"createByName"`
 	CreateTime       string      `json:"createTime"`
@@ -334,18 +337,13 @@ type ApiRunDetailData struct {
 }
 
 type ApiRunDetailDataData struct {
-	Id               string      `json:"id"`
-	Name             string      `json:"name"`
-	Path             string      `json:"path"`
-	Method           string      `json:"method"`
-	Status           string      `json:"status"`
-	Tags             []string    `json:"tags"`
-	ServerId         string      `json:"serverId"`
-	Description      string      `json:"description"`
-	Parameters       interface{} `json:"parameters"`
-	Responses        interface{} `json:"responses"`
-	ResponseExamples interface{} `json:"responseExamples"`
-	RequestBody      interface{} `json:"requestBody"`
+	Id            string      `json:"id"`
+	Name          string      `json:"name"`
+	Path          string      `json:"path"`
+	Method        string      `json:"method"`
+	Parameters    interface{} `json:"parameters"`
+	RequestBody   interface{} `json:"requestBody"`
+	Authorization interface{} `json:"authorization"`
 }
 
 type ApiRunDetailRequest struct {

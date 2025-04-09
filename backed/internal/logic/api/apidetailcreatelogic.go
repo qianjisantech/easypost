@@ -59,6 +59,7 @@ func (l *ApiDetailCreateLogic) ApiDetailCreate(req *types.ApiDetailCreateOrUpdat
 		RequestBody:      &requestBody,
 		ResponseExamples: &req.ResponseExamples,
 		Responses:        &req.Responses,
+		Authorization:    &req.Authorization,
 	}
 
 	if projectId == 0 {

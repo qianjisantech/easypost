@@ -105,17 +105,17 @@ func (a *AuthMiddleware) RegisterCallbacks(db *gorm.DB) {
 			return
 		}
 
-		contentInfo, ok := ctx.Value("contentInfo").(*ContentInfo)
-		if !ok {
-			logx.Debug("DEBUG: contentInfo not found in context")
-			return
-		}
+		//contentInfo, ok := ctx.Value("contentInfo").(*ContentInfo)
+		//if !ok {
+		//	logx.Debug("DEBUG: contentInfo not found in context")
+		//	return
+		//}
 
 		if field := db.Statement.Schema.LookUpField("create_by"); field != nil {
-			db.Statement.SetColumn("create_by", contentInfo.UserId)
+			db.Statement.SetColumn("create_by", 1)
 		}
 		if field := db.Statement.Schema.LookUpField("create_by_name"); field != nil {
-			db.Statement.SetColumn("create_by_name", contentInfo.Username)
+			db.Statement.SetColumn("create_by_name", "admin")
 		}
 	})
 
@@ -126,17 +126,17 @@ func (a *AuthMiddleware) RegisterCallbacks(db *gorm.DB) {
 			return
 		}
 
-		contentInfo, ok := ctx.Value("contentInfo").(*ContentInfo)
-		if !ok {
-			logx.Debug("DEBUG: contentInfo not found in context")
-			return
-		}
+		//contentInfo, ok := ctx.Value("contentInfo").(*ContentInfo)
+		//if !ok {
+		//	logx.Debug("DEBUG: contentInfo not found in context")
+		//	return
+		//}
 
 		if field := db.Statement.Schema.LookUpField("update_by"); field != nil {
-			db.Statement.SetColumn("update_by", contentInfo.UserId)
+			db.Statement.SetColumn("update_by", 1)
 		}
 		if field := db.Statement.Schema.LookUpField("update_by_name"); field != nil {
-			db.Statement.SetColumn("update_by_name", contentInfo.Username)
+			db.Statement.SetColumn("update_by_name", "admin")
 		}
 	})
 }

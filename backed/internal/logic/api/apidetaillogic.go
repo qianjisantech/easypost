@@ -34,6 +34,7 @@ func (l *ApiDetailLogic) ApiDetail(req *types.ApiDetailRequest) (resp *types.Api
 	var responses []Response
 	var responseExamples []ResponseExample
 	var requestBody RequestBody
+	var authorization Authorization
 	//var responsible Responsible
 	if amAPI.Parameters != nil {
 		err = json.Unmarshal([]byte(*amAPI.Parameters), &parameters)
@@ -61,7 +62,11 @@ func (l *ApiDetailLogic) ApiDetail(req *types.ApiDetailRequest) (resp *types.Api
 	//} else {
 	//	requestBody = RequestBody{}
 	//}
-
+	if amAPI.Authorization != nil && *amAPI.Authorization != "{}" {
+		err = json.Unmarshal([]byte(*amAPI.Authorization), &authorization)
+	} else {
+		authorization = Authorization{}
+	}
 	defaultType := "apiDetail"
 	return &types.ApiDetailResp{
 		Success: true,
@@ -84,6 +89,7 @@ func (l *ApiDetailLogic) ApiDetail(req *types.ApiDetailRequest) (resp *types.Api
 				Responses:        responses,
 				ResponseExamples: responseExamples,
 				RequestBody:      requestBody,
+				Authorization:    authorization,
 			},
 		},
 	}, nil
@@ -157,4 +163,9 @@ type Responsible struct {
 	Id       string `json:"id"`
 	Name     string `json:"name"`
 	Username string `json:"username"`
+}
+
+type Authorization struct {
+	Type string      `json:"type"`
+	Data interface{} `json:"data"`
 }
