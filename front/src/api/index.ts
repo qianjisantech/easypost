@@ -33,9 +33,9 @@ const errorHandler = (error: AxiosError) => {
     // 清除 Token 或重定向到登录页面
     redirect(ROUTES.LOGIN)
   } else if (status === 500) {
-    showMessage('error', data.message || '系统内部错误')
+    showMessage('error', data?.message || '系统内部错误')
   } else if (status === 400) {
-    showMessage('error', data.message || 'Bad request')
+    showMessage('error', data?.message || 'Bad request')
   } else if (status === 404) {
     showMessage('error', '资源未找到，请联系管理员')
   } else {
