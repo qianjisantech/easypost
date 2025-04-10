@@ -90,17 +90,18 @@ export interface ApiDetails {
     header?: Parameter[]
     query?: Parameter[]
     path?: Parameter[]
+    authorization?: {
+      type?: AuthorizationType
+      data?: object
+    }
+    /** 请求参数 - Body */
+    payload?: {
+      type: BodyType
+      parameters?: Parameter[]
+      jsonSchema?: JsonSchema
+    }
   }
-  authorization?: {
-    type?: AuthorizationType
-    data?: object
-  }
-  /** 请求参数 - Body */
-  requestBody?: {
-    type: BodyType
-    parameters?: Parameter[]
-    jsonSchema?: JsonSchema
-  }
+
   /** 返回响应 */
   responses?: ApiDetailsResponse[]
   /** 响应示例 */

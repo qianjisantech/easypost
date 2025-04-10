@@ -1,12 +1,12 @@
 import { Form, Tabs, theme, Typography } from 'antd'
 
+import { Authorization } from '@/components/tab-content/api/authorization/Authorization'
+import { Scripts } from '@/components/tab-content/api/scripts/Scripts'
 import type { ApiDetails } from '@/types'
 
 import { ParamsEditableTable } from '../components/ParamsEditableTable'
 
-import { ParamsBody } from './ParamsBody'
-import {Authorization} from "@/components/tab-content/api/authorization/Authorization";
-import {Scripts} from "@/components/tab-content/api/scripts/Scripts";
+import { ParamsBody, ParamsPayload } from './ParamsPayload'
 
 function BadgeLabel(props: React.PropsWithChildren<{ count?: number }>) {
   const { token } = theme.useToken()
@@ -82,22 +82,28 @@ export function ParamsTab(props: ParamsTabProps) {
             </div>
           ),
         },
-          {
-              key: 'authorization',
-              label: 'Authorization',
-              children: (
-                  <Form.Item noStyle name="authorization">
-                      <Authorization />
-                  </Form.Item>
-              ),
-          },
+        {
+          key: 'authorization',
+          label: 'Authorization',
+          children: (
+            <Authorization
+              value={value?.authorization}
+              onChange={(authorization) => {
+                onChange?.({ ...value, authorization })
+              }}
+            />
+          ),
+        },
         {
           key: 'body',
           label: 'Body',
           children: (
-            <Form.Item noStyle name="requestBody">
-              <ParamsBody />
-            </Form.Item>
+            <ParamsPayload
+              value={value?.payload}
+              onChange={(payload) => {
+                onChange?.({ ...value, payload })
+              }}
+            />
           ),
         },
 
@@ -130,15 +136,15 @@ export function ParamsTab(props: ParamsTabProps) {
             </div>
           ),
         },
-          {
-              key: 'scripts',
-              label: '脚本',
-              children: (
-                  <Form.Item noStyle name="scripts">
-                      <Scripts />
-                  </Form.Item>
-              ),
-          },
+        {
+          key: 'scripts',
+          label: '脚本',
+          children: (
+            <Form.Item noStyle name="scripts">
+              <Scripts />
+            </Form.Item>
+          ),
+        },
       ]}
     />
   )

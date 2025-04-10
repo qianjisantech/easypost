@@ -50,9 +50,6 @@ func newAmAPI(db *gorm.DB, opts ...gen.DOOption) amAPI {
 	_amAPI.Responses = field.NewString(tableName, "responses")
 	_amAPI.RequestBody = field.NewString(tableName, "request_body")
 	_amAPI.ResponseExamples = field.NewString(tableName, "response_examples")
-	_amAPI.Authorization = field.NewString(tableName, "authorization")
-	_amAPI.PostScript = field.NewString(tableName, "post_script")
-	_amAPI.PreScript = field.NewString(tableName, "pre_script")
 
 	_amAPI.fillFieldMap()
 
@@ -87,9 +84,6 @@ type amAPI struct {
 	Responses        field.String
 	RequestBody      field.String
 	ResponseExamples field.String
-	Authorization    field.String
-	PostScript       field.String // 后置脚本
-	PreScript        field.String // 前置脚本
 
 	fieldMap map[string]field.Expr
 }
@@ -129,9 +123,6 @@ func (a *amAPI) updateTableName(table string) *amAPI {
 	a.Responses = field.NewString(table, "responses")
 	a.RequestBody = field.NewString(table, "request_body")
 	a.ResponseExamples = field.NewString(table, "response_examples")
-	a.Authorization = field.NewString(table, "authorization")
-	a.PostScript = field.NewString(table, "post_script")
-	a.PreScript = field.NewString(table, "pre_script")
 
 	a.fillFieldMap()
 
@@ -156,7 +147,7 @@ func (a *amAPI) GetFieldByName(fieldName string) (field.OrderExpr, bool) {
 }
 
 func (a *amAPI) fillFieldMap() {
-	a.fieldMap = make(map[string]field.Expr, 26)
+	a.fieldMap = make(map[string]field.Expr, 23)
 	a.fieldMap["id"] = a.ID
 	a.fieldMap["name"] = a.Name
 	a.fieldMap["path"] = a.Path
@@ -180,9 +171,6 @@ func (a *amAPI) fillFieldMap() {
 	a.fieldMap["responses"] = a.Responses
 	a.fieldMap["request_body"] = a.RequestBody
 	a.fieldMap["response_examples"] = a.ResponseExamples
-	a.fieldMap["authorization"] = a.Authorization
-	a.fieldMap["post_script"] = a.PostScript
-	a.fieldMap["pre_script"] = a.PreScript
 }
 
 func (a amAPI) clone(db *gorm.DB) amAPI {

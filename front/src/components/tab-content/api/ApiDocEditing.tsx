@@ -103,11 +103,11 @@ export function ApiDocEditing() {
     formData.append('serverId', values.data.serverId || '')
     formData.append('parameters', JSON.stringify(values.data.parameters))
     formData.append('responses', JSON.stringify(values.data.responses|| []))
-    formData.append('authorization', JSON.stringify(values.data.authorization || {"type":"NoneAuth","data":{}}))
-    formData.append(
-      'requestBody',
-      JSON.stringify(values.data.requestBody || { type: 'none', parameters: [], jsonSchema: '' })
-    )
+    // formData.append('authorization', JSON.stringify(values.data.authorization || {"type":"NoneAuth","data":{}}))
+    // formData.append(
+    //   'requestBody',
+    //   JSON.stringify(values.data.requestBody || { type: 'none', parameters: [], jsonSchema: '' })
+    // )
     formData.append('responseExamples', JSON.stringify(values.data.responseExamples || []))
 
     const response = await ApiDetailCreate(formData)
@@ -136,11 +136,11 @@ export function ApiDocEditing() {
     formData.append('serverId', values.data.serverId || '')
     formData.append('parameters', JSON.stringify(values.data.parameters))
     formData.append('responses', JSON.stringify(values.data.responses|| []))
-    formData.append('authorization', JSON.stringify(values.data.authorization || {"type":"NoneAuth","data":{}}))
-    formData.append(
-      'requestBody',
-      JSON.stringify(values.data.requestBody || { type: 'none', parameters: [], jsonSchema: '' })
-    )
+    // formData.append('authorization', JSON.stringify(values.data.authorization || {"type":"NoneAuth","data":{}}))
+    // formData.append(
+    //   'requestBody',
+    //   JSON.stringify(values.data.requestBody || { type: 'none', parameters: [], jsonSchema: '' })
+    // )
     formData.append('responseExamples', JSON.stringify(values.data.responseExamples || []))
 
     const response = await ApiDetailUpdate(formData)

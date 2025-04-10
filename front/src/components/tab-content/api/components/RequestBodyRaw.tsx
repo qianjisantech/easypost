@@ -1,6 +1,7 @@
 import { useRef, useState } from 'react'
 
 import TextArea from 'antd/es/input/TextArea'
+import PostmanStyleJsonEditor from "@/components/JsonSchema/PostmanStyleJsonEditor";
 
 interface TextInputProps {
   value?: string
@@ -15,7 +16,7 @@ export function RequestBodyRaw(props: TextInputProps) {
   const [inputValue, setInputValue] = useState<string>(value || '')
 
   // 编辑器的高度状态
-  const [editorHeight, setEditorHeight] = useState<number>(100) // 默认高度 100px
+  const [editorHeight, setEditorHeight] = useState<number>(300) // 默认高度 100px
 
   const editorRef = useRef<HTMLDivElement | null>(null)
 
@@ -56,20 +57,7 @@ export function RequestBodyRaw(props: TextInputProps) {
         border: '1px solid #ccc',
       }}
     >
-      {/* 普通输入框 */}
-      <TextArea
-        style={{
-          width: '100%',
-          height: '100%',
-          padding: '10px',
-          fontSize: '14px',
-          textAlign: 'left',
-          verticalAlign: 'top',
-          border: 'none',
-        }}
-        value={inputValue}
-        onChange={handleInputChange}
-      />
+      <PostmanStyleJsonEditor value={inputValue} defaultValue={"{}"}></PostmanStyleJsonEditor>
 
       {/* 调整高度的拖动手柄 */}
       <div
@@ -78,7 +66,6 @@ export function RequestBodyRaw(props: TextInputProps) {
           bottom: 0,
           left: 0,
           right: 0,
-          height: '10px',
           cursor: 'ns-resize',
           backgroundColor: '#ccc',
         }}

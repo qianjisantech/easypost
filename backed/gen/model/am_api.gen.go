@@ -16,10 +16,10 @@ type AmAPI struct {
 	Name             *string    `gorm:"column:name" json:"name"`
 	Path             *string    `gorm:"column:path" json:"path"`
 	Status           *string    `gorm:"column:status" json:"status"`
-	CreateBy         *int64     `gorm:"column:create_by;->" json:"create_by"`
-	CreateByName     *string    `gorm:"column:create_by_name;->" json:"create_by_name"`
-	UpdateBy         *int64     `gorm:"column:update_by;->" json:"update_by"`
-	UpdateByName     *string    `gorm:"column:update_by_name;->" json:"update_by_name"`
+	CreateBy         *int64     `gorm:"column:create_by;default:1;->" json:"create_by"`
+	CreateByName     *string    `gorm:"column:create_by_name;default:admin;->" json:"create_by_name"`
+	UpdateBy         *int64     `gorm:"column:update_by;default:1;->" json:"update_by"`
+	UpdateByName     *string    `gorm:"column:update_by_name;default:admin;->" json:"update_by_name"`
 	CreateTime       *time.Time `gorm:"column:create_time;default:CURRENT_TIMESTAMP;->" json:"create_time"`
 	UpdateTime       *time.Time `gorm:"column:update_time;default:CURRENT_TIMESTAMP;->" json:"update_time"`
 	IsDeleted        *bool      `gorm:"column:is_deleted;->" json:"is_deleted"`
@@ -35,9 +35,6 @@ type AmAPI struct {
 	Responses        *string    `gorm:"column:responses" json:"responses"`
 	RequestBody      *string    `gorm:"column:request_body" json:"request_body"`
 	ResponseExamples *string    `gorm:"column:response_examples" json:"response_examples"`
-	Authorization    *string    `gorm:"column:authorization" json:"authorization"`
-	PostScript       *string    `gorm:"column:post_script;comment:后置脚本" json:"post_script"` // 后置脚本
-	PreScript        *string    `gorm:"column:pre_script;comment:前置脚本" json:"pre_script"`   // 前置脚本
 }
 
 // TableName AmAPI's table name

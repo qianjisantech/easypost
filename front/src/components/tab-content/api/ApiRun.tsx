@@ -212,7 +212,6 @@ export function ApiRun() {
 
   const send = async (values: ApiDetails) => {
     console.log('apiDetail', values)
-
     // 1. 处理 headers
     const headers = values.parameters?.header?.reduce(
       (acc, item) => {
@@ -252,15 +251,15 @@ export function ApiRun() {
       ...(!hasContentType && { 'Content-Type': 'text/plain' }) // 如果没有 Content-Type 则添加默认值
     }
 // 处理 Basic Auth 认证
-    if (values.authorization?.type === AuthorizationType.BasicAuth) {
+    if (values.parameters.authorization?.type === AuthorizationType.BasicAuth) {
       const { username, password } = values.authorization.data as { username: string; password: string }
       if (username && password) {
         const token = btoa(`${username}:${password}`) // Base64 编码
         fixedHeaders['Authorization'] = `Basic ${token}`
       }
     }
-    if (values.authorization?.type === AuthorizationType.BearerToken) {
-      const { token } = values.authorization.data as { token: string}
+    if (values.parameters.authorization?.type === AuthorizationType.BearerToken) {
+      const { token } = values.parameters.authorization.data as { token: string}
       if (token) {
         fixedHeaders['Authorization'] = `Bearer ${token}`
       }
@@ -273,6 +272,7 @@ export function ApiRun() {
       'Api-H0': Object.entries(allHeaders)
         .map(([key, value]) => `${key}=${value}`)
         .join(', '),
+      'Content-Type': 'application/json'
     }
 
     // 2. 组装 requestConfig
@@ -284,12 +284,13 @@ export function ApiRun() {
       },
       baseURL: '/proxy/v1/request',
     }
+    console.log('values.parameters.payload',values.parameters?.payload)
 
-    if (values.requestBody?.jsonSchema) {
-      requestConfig.data = values.requestBody.jsonSchema
-    } else if (values.requestBody?.parameters) {
+    if (values.parameters?.payload?.jsonSchema) {
+      requestConfig.data = values.parameters?.payload?.jsonSchema
+    } else if (values.parameters?.payload?.parameters) {
       const formData = new FormData()
-      values.requestBody.parameters.forEach((item) => {
+      values.parameters?.payload?.parameters.forEach((item) => {
         formData.append(item.name!, item.example)
       })
       requestConfig.data = formData

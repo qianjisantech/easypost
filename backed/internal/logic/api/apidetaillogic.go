@@ -33,9 +33,7 @@ func (l *ApiDetailLogic) ApiDetail(req *types.ApiDetailRequest) (resp *types.Api
 	var parameters Parameters
 	var responses []Response
 	var responseExamples []ResponseExample
-	var requestBody RequestBody
-	var authorization Authorization
-	//var responsible Responsible
+
 	if amAPI.Parameters != nil {
 		err = json.Unmarshal([]byte(*amAPI.Parameters), &parameters)
 	} else {
@@ -52,21 +50,12 @@ func (l *ApiDetailLogic) ApiDetail(req *types.ApiDetailRequest) (resp *types.Api
 	} else {
 		responseExamples = []ResponseExample{}
 	}
-	if amAPI.RequestBody != nil && *amAPI.RequestBody != "{}" {
-		err = json.Unmarshal([]byte(*amAPI.RequestBody), &requestBody)
-	} else {
-		requestBody = RequestBody{}
-	}
 	//if amAPI.Responsible != nil {
 	//	err = json.Unmarshal([]byte(*amAPI.Responsible), &responsible)
 	//} else {
 	//	requestBody = RequestBody{}
 	//}
-	if amAPI.Authorization != nil && *amAPI.Authorization != "{}" {
-		err = json.Unmarshal([]byte(*amAPI.Authorization), &authorization)
-	} else {
-		authorization = Authorization{}
-	}
+
 	defaultType := "apiDetail"
 	return &types.ApiDetailResp{
 		Success: true,
@@ -88,8 +77,6 @@ func (l *ApiDetailLogic) ApiDetail(req *types.ApiDetailRequest) (resp *types.Api
 				Parameters:       parameters,
 				Responses:        responses,
 				ResponseExamples: responseExamples,
-				RequestBody:      requestBody,
-				Authorization:    authorization,
 			},
 		},
 	}, nil
@@ -133,10 +120,12 @@ type ResponseJsonSchemaProperty struct {
 }
 
 type Parameters struct {
-	Query  []Parameter `json:"query"`
-	Path   []Parameter `json:"path"`
-	Cookie []Parameter `json:"cookie"`
-	Header []Parameter `json:"header"`
+	Query         []Parameter   `json:"query"`
+	Path          []Parameter   `json:"path"`
+	Cookie        []Parameter   `json:"cookie"`
+	Header        []Parameter   `json:"header"`
+	Authorization Authorization `json:"authorization"`
+	Payload       Payload       `json:"payload"`
 }
 
 type Parameter struct {
@@ -147,12 +136,12 @@ type Parameter struct {
 	Example     string `json:"example"`
 }
 
-type RequestBody struct {
-	Type       string                 `json:"type"`
-	Parameters []RequestBodyParameter `json:"parameters"`
-	JsonSchema string                 `json:"jsonSchema"`
+type Payload struct {
+	Type       string             `json:"type"`
+	Parameters []PayloadParameter `json:"parameters"`
+	JsonSchema string             `json:"jsonSchema"`
 }
-type RequestBodyParameter struct {
+type PayloadParameter struct {
 	Id          string `json:"id"`
 	Name        string `json:"name"`
 	Description string `json:"description"`

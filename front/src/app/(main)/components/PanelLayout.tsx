@@ -149,12 +149,12 @@ export function PanelLayout(props: PanelLayoutProps) {
         >
           <div className="flex-1 overflow-auto">{right}</div>
 
-          <div
-            className="shrink-0 basis-9"
-            style={{ borderTop: `1px solid ${token.colorBorderSecondary}` }}
-          >
-            <FooterBar />
-          </div>
+          {/*<div*/}
+          {/*  className="shrink-0 basis-9"*/}
+          {/*  style={{ borderTop: `1px solid ${token.colorBorderSecondary}` }}*/}
+          {/*>*/}
+          {/*  <FooterBar />*/}
+          {/*</div>*/}
         </Panel>
       </PanelGroup>
 

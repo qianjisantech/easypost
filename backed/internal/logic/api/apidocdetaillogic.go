@@ -36,7 +36,6 @@ func (l *ApiDocDetailLogic) ApiDocDetail(req *types.ApiDocDetailRequest) (resp *
 	var parameters Parameters
 	var responses []Response
 	var responseExamples []ResponseExample
-	var requestBody RequestBody
 	if amAPI.Parameters != nil {
 		err = json.Unmarshal([]byte(*amAPI.Parameters), &parameters)
 	} else {
@@ -53,11 +52,7 @@ func (l *ApiDocDetailLogic) ApiDocDetail(req *types.ApiDocDetailRequest) (resp *
 	} else {
 		responseExamples = []ResponseExample{}
 	}
-	if amAPI.RequestBody != nil && *amAPI.RequestBody != "{}" {
-		err = json.Unmarshal([]byte(*amAPI.RequestBody), &requestBody)
-	} else {
-		requestBody = RequestBody{}
-	}
+
 	//if amAPI.Responsible != nil {
 	//	err = json.Unmarshal([]byte(*amAPI.Responsible), &responsible)
 	//} else {
@@ -84,7 +79,6 @@ func (l *ApiDocDetailLogic) ApiDocDetail(req *types.ApiDocDetailRequest) (resp *
 				Parameters:       parameters,
 				Responses:        responses,
 				ResponseExamples: responseExamples,
-				RequestBody:      requestBody,
 				CreatBy:          strconv.FormatInt(*amAPI.CreateBy, 10),
 				CreatByName:      *amAPI.CreateByName,
 				CreateTime:       amAPI.CreateTime.Format(time.DateTime),

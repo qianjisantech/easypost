@@ -6,8 +6,8 @@ import { AuthorizationType, AuthorizationTypeName } from '@/enums'
 import type { ApiDetails } from '@/types'
 
 interface AuthorizationProps {
-  value?: ApiDetails['authorization']
-  onChange?: (value: AuthorizationProps['authorization']) => void
+  value?: ApiDetails['parameters']['authorization']
+  onChange?: (value: AuthorizationProps['value']) => void
 }
 
 export function Authorization({ value, onChange }: AuthorizationProps) {
@@ -15,6 +15,8 @@ export function Authorization({ value, onChange }: AuthorizationProps) {
   const [form] = Form.useForm()
 
   useEffect(() => {
+    console.log(' Authorization value',value)
+    console.log(' Authorization onChange',onChange)
     if (value) {
       setType(value.type || AuthorizationType.无需鉴权)
       form.setFieldsValue(value.data || {})

@@ -47,22 +47,7 @@ type (
         Description string `form:"description,optional"`
         Parameters string `form:"parameters,optional"`
         Responses string `form:"responses,optional"`
-        RequestBody string `form:"requestBody,optional"`
         ResponseExamples string `form:"responseExamples,optional"`
-        Authorization string  `form:"authorization,optional"`
-    }
-    ApiDetailCreateOrUpdateParameters  {
-    Path   []ApiDetailCreateOrUpdateParameter `json:"path"`
-    Header []ApiDetailCreateOrUpdateParameter `json:"header"`
-    Query  []ApiDetailCreateOrUpdateParameter `json:"query"`
-    Cookie []ApiDetailCreateOrUpdateParameter `json:"cookie"`
-}
-    ApiDetailCreateOrUpdateParameter {
-    Id string `json:"id,optional"`
-    Name string `json:"name,optional"`
-    Type string  `json:"type,optional"`
-    Example string  `json:"example,optional"`
-    Description string  `json:"description,optional"`
     }
 
      ApiDetailCreateOrUpdateResp {
@@ -101,8 +86,6 @@ type (
         Parameters interface{} `json:"parameters"`
         Responses interface{} `json:"responses"`
         ResponseExamples interface{} `json:"responseExamples"`
-        RequestBody interface{} `json:"requestBody"`
-        Authorization interface{} `json:"authorization"`
         CreatBy  string `json:"createBy"`
         CreatByName  string `json:"createByName"`
         CreateTime string `json:"createTime"`
@@ -138,8 +121,6 @@ type (
         Parameters interface{} `json:"parameters"`
         Responses interface{} `json:"responses"`
         ResponseExamples interface{} `json:"responseExamples"`
-        RequestBody interface{} `json:"requestBody"`
-        Authorization interface{} `json:"authorization"`
     }
 
     ApiDeleteRequest {
@@ -207,8 +188,6 @@ type (
         Path string `json:"path"`
         Method string `json:"method"`
         Parameters interface{} `json:"parameters"`
-        RequestBody interface{} `json:"requestBody"`
-        Authorization interface{} `json:"authorization"`
     }
 )
 @server(

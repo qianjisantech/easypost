@@ -42,12 +42,12 @@ func (l *ApiDetailCreateLogic) ApiDetailCreate(req *types.ApiDetailCreateOrUpdat
 	if len(req.Tags) > 0 {
 		tags = strings.Join(req.Tags, ",")
 	}
-	requestBody := ""
-	if req.RequestBody != "" {
-		requestBody = req.RequestBody
-	} else {
-		requestBody = "{\"type\":\"text/plain\",\"parameters\":[],\"jsonSchema\":\"\"}"
-	}
+	//requestBody := ""
+	//if req.RequestBody != "" {
+	//	requestBody = req.RequestBody
+	//} else {
+	//	requestBody = "{\"type\":\"text/plain\",\"parameters\":[],\"jsonSchema\":\"\"}"
+	//}
 	amApi := &model.AmAPI{
 		Path:             &req.Path,
 		Status:           &req.Status,
@@ -56,10 +56,8 @@ func (l *ApiDetailCreateLogic) ApiDetailCreate(req *types.ApiDetailCreateOrUpdat
 		ParentID:         &parentId,
 		Tag:              &tags,
 		Parameters:       &req.Parameters,
-		RequestBody:      &requestBody,
 		ResponseExamples: &req.ResponseExamples,
 		Responses:        &req.Responses,
-		Authorization:    &req.Authorization,
 	}
 
 	if projectId == 0 {

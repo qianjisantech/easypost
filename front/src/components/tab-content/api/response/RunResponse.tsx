@@ -1,8 +1,8 @@
-import { useEffect, useState } from 'react'
+import { useEffect, useRef, useState } from "react";
 import { Prism as SyntaxHighlighter } from 'react-syntax-highlighter'
 import { docco } from 'react-syntax-highlighter/dist/cjs/styles/hljs'
 
-import { Segmented, Table, Tabs } from 'antd'
+import { Divider, Segmented, Space, Statistic, Table, Tabs, Tooltip } from "antd";
 
 import type { JsonSchemaEditorProps } from '@/components/JsonSchema'
 import { JsonSchemaCard } from '@/components/JsonSchemaCard'
@@ -23,16 +23,68 @@ interface JsonSchemaCardProps extends Pick<JsonSchemaEditorProps, 'value' | 'onC
 export function RunResponse(props: JsonSchemaCardProps) {
   const { value = {}, onChange, editorProps, cookies = [], actualRequest } = props
   const [body, setBodyStr] = useState<string>('')
-  const [headers, setHeaders] = useState<Record<string, string>>({})
+  const [headers, setHeaders] = useState<string>('')
+  const [sidebarWidth, setSidebarWidth] = useState(280);
+  const [isDragging, setIsDragging] = useState(false);
+  const [startX, setStartX] = useState(0);
+  const [startWidth, setStartWidth] = useState(0);
+  const containerRef = useRef(null);
+  const sidebarRef = useRef(null);
+
+  // 计算响应信息
+  const responseSize = props.value?.data
+    ? new Blob([JSON.stringify(props.value.data)]).size
+    : 0;
+  const requestSize = props.actualRequest?.body
+    ? new Blob([JSON.stringify(props.actualRequest.body)]).size
+    : 0;
+  const responseTime = props.responseTime || 0;
+
+  // 处理鼠标按下事件
+  const handleMouseDown = (e) => {
+    setIsDragging(true);
+    setStartX(e.clientX);
+    setStartWidth(sidebarWidth);
+    document.body.style.cursor = 'col-resize';
+    document.body.style.userSelect = 'none';
+  };
+
+  // 处理鼠标移动事件
+  const handleMouseMove = (e) => {
+    if (!isDragging) return;
+    const newWidth = startWidth + (startX - e.clientX);
+    setSidebarWidth(Math.max(200, Math.min(400, newWidth)));
+  };
+
+  // 处理鼠标抬起事件
+  const handleMouseUp = () => {
+    if (!isDragging) return;
+    setIsDragging(false);
+    document.body.style.cursor = '';
+    document.body.style.userSelect = '';
+  };
+
+  // 添加全局事件监听
   useEffect(() => {
-      console.log('value.data', actualRequest)
+    document.addEventListener('mousemove', handleMouseMove);
+    document.addEventListener('mouseup', handleMouseUp);
+    return () => {
+      document.removeEventListener('mousemove', handleMouseMove);
+      document.removeEventListener('mouseup', handleMouseUp);
+    };
+  }, [isDragging, startX, startWidth]);
+  useEffect(() => {
+      console.log('value.headers', value.headers)
     const data = value.data
     if (typeof data === 'object') {
       setBodyStr(JSON.stringify(data, null, 2))
     } else {
       setBodyStr(data || '')
     }
-    setHeaders(value.headers || {})
+  // const headers =  value.headers.get('Api-H0')
+  // if (headers){
+  //   setHeaders(headers)
+  // }
   }, [value.data,value.headers])
 
   const isJson = (str: string) => {
@@ -178,10 +230,51 @@ export function RunResponse(props: JsonSchemaCardProps) {
       label: 'Header',
       children: (
         <Table
-          columns={headerColumns}
-          dataSource={Object.entries(headers).map(([name, value]) => ({ name, value, key: name }))}
+          columns={[
+            {
+              title: '名称',
+              dataIndex: 'key',
+              key: 'key',
+              render: (text) => <span style={{ fontWeight: 500 }}>{text}</span>,
+            },
+            {
+              title: '值',
+              dataIndex: 'value',
+              key: 'value',
+              render: (value) => {
+                // 特殊处理 Set-Cookie 头
+                if (value.includes('Set-Cookie')) {
+                  const cookies = value.split(/(?<=; path=\/)\s/);
+                  return (
+                    <div>
+                      {cookies.map((cookie, index) => (
+                        <div key={index} style={{ marginBottom: index < cookies.length - 1 ? 8 : 0 }}>
+                          <SyntaxHighlighter language="text" style={docco}>
+                            {cookie.trim()}
+                          </SyntaxHighlighter>
+                        </div>
+                      ))}
+                    </div>
+                  );
+                }
+                // 其他头值
+                return (
+                  <SyntaxHighlighter language="text" style={docco}>
+                    {value}
+                  </SyntaxHighlighter>
+                );
+              },
+            },
+          ]}
+          dataSource={Object.entries(headers).map(([name, value]) => ({
+            name,
+            value,
+            key: name
+          }))}
           pagination={false}
           size="small"
+          bordered
+          rowKey="name"
         />
       ),
     },
@@ -240,12 +333,124 @@ export function RunResponse(props: JsonSchemaCardProps) {
   ]
 
   return (
-    <div className="run-response-container">
-      <Tabs
-        defaultActiveKey="body"
-        indicator={{ size: (origin) => origin - 20, align: 'center' }}
-        items={ResponseInfoItem}
-      />
+    <div
+
+      ref={containerRef}
+      style={{
+        display: 'flex',
+        height: '100%',
+        position: 'relative'
+      }}
+    >
+      {/* 主内容区域 */}
+      <div style={{
+        flex: 1,
+        overflow: 'auto',
+        marginRight: sidebarWidth,
+        transition: 'margin 0.2s'
+      }}>
+        <Tabs
+          defaultActiveKey="body"
+          indicator={{ size: (origin) => origin - 20, align: 'center' }}
+          items={ResponseInfoItem}
+        />
+      </div>
+
+      {/* 可拖动的侧边栏 */}
+      <div
+        ref={sidebarRef}
+        style={{
+          position: 'absolute',
+          right: 0,
+          top: 0,
+          bottom: 0,
+          width: sidebarWidth,
+          background: '#fff',
+          borderLeft: '1px solid #f0f0f0',
+          padding: '16px',
+          overflow: 'auto',
+          boxSizing: 'border-box'
+        }}
+      >
+        {/* 拖动条 */}
+        <div
+          style={{
+            position: 'absolute',
+            left: -5,
+            top: 0,
+            bottom: 0,
+            width: 10,
+            cursor: 'col-resize',
+            zIndex: 1
+          }}
+          onMouseDown={handleMouseDown}
+        />
+        <Space
+          direction="horizontal"
+          size="middle"
+          style={{
+            width: '100%',
+            justifyContent: 'space-between',
+            padding: '12px 16px', // 增加上下内边距
+            fontSize: '12px',
+            backgroundColor: '#f5f5f5', // 淡灰色背景
+            borderRadius: '4px', // 添加圆角
+            border: '1px solid #e8e8e8' // 添加细边框
+          }}
+        >
+          <Tooltip title="状态码" placement="top">
+            <Statistic
+              value={props.responseStatus || 200}
+              valueStyle={{
+                color: '#52c41a',
+                fontSize: '12px',
+                cursor: 'help'
+              }}
+            />
+          </Tooltip>
+
+
+          <Tooltip title="响应时间" placement="top">
+            <Statistic
+              value={responseTime}
+              valueStyle={{
+                color: '#52c41a',
+                fontSize: '12px',
+                cursor: 'help'
+              }}
+              suffix="ms"
+              precision={2}
+            />
+          </Tooltip>
+
+
+          <Tooltip title="请求体大小" placement="top">
+            <Statistic
+              value={requestSize}
+              valueStyle={{
+                color: '#52c41a',
+                fontSize: '12px',
+                cursor: 'help'
+              }}
+              suffix="bytes"
+            />
+          </Tooltip>
+
+
+
+          <Tooltip title="响应体大小" placement="top">
+            <Statistic
+              value={responseSize}
+              valueStyle={{
+                color: '#52c41a',
+                fontSize: '12px',
+                cursor: 'help'
+              }}
+              suffix="bytes"
+            />
+          </Tooltip>
+        </Space>
+      </div>
     </div>
-  )
+  );
 }

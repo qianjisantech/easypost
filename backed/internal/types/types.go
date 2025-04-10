@@ -179,21 +179,6 @@ type ApiDeleteResp struct {
 	Message string `json:"message"`
 }
 
-type ApiDetailCreateOrUpdateParameter struct {
-	Id          string `json:"id,optional"`
-	Name        string `json:"name,optional"`
-	Type        string `json:"type,optional"`
-	Example     string `json:"example,optional"`
-	Description string `json:"description,optional"`
-}
-
-type ApiDetailCreateOrUpdateParameters struct {
-	Path   []ApiDetailCreateOrUpdateParameter `json:"path"`
-	Header []ApiDetailCreateOrUpdateParameter `json:"header"`
-	Query  []ApiDetailCreateOrUpdateParameter `json:"query"`
-	Cookie []ApiDetailCreateOrUpdateParameter `json:"cookie"`
-}
-
 type ApiDetailCreateOrUpdateRequest struct {
 	Id               string   `form:"id,optional"`
 	Name             string   `form:"name,optional"`
@@ -208,9 +193,7 @@ type ApiDetailCreateOrUpdateRequest struct {
 	Description      string   `form:"description,optional"`
 	Parameters       string   `form:"parameters,optional"`
 	Responses        string   `form:"responses,optional"`
-	RequestBody      string   `form:"requestBody,optional"`
 	ResponseExamples string   `form:"responseExamples,optional"`
-	Authorization    string   `form:"authorization,optional"`
 }
 
 type ApiDetailCreateOrUpdateResp struct {
@@ -244,8 +227,6 @@ type ApiDetailDataData struct {
 	Parameters       interface{} `json:"parameters"`
 	Responses        interface{} `json:"responses"`
 	ResponseExamples interface{} `json:"responseExamples"`
-	RequestBody      interface{} `json:"requestBody"`
-	Authorization    interface{} `json:"authorization"`
 }
 
 type ApiDetailRequest struct {
@@ -279,8 +260,6 @@ type ApiDocDetailDataData struct {
 	Parameters       interface{} `json:"parameters"`
 	Responses        interface{} `json:"responses"`
 	ResponseExamples interface{} `json:"responseExamples"`
-	RequestBody      interface{} `json:"requestBody"`
-	Authorization    interface{} `json:"authorization"`
 	CreatBy          string      `json:"createBy"`
 	CreatByName      string      `json:"createByName"`
 	CreateTime       string      `json:"createTime"`
@@ -337,13 +316,11 @@ type ApiRunDetailData struct {
 }
 
 type ApiRunDetailDataData struct {
-	Id            string      `json:"id"`
-	Name          string      `json:"name"`
-	Path          string      `json:"path"`
-	Method        string      `json:"method"`
-	Parameters    interface{} `json:"parameters"`
-	RequestBody   interface{} `json:"requestBody"`
-	Authorization interface{} `json:"authorization"`
+	Id         string      `json:"id"`
+	Name       string      `json:"name"`
+	Path       string      `json:"path"`
+	Method     string      `json:"method"`
+	Parameters interface{} `json:"parameters"`
 }
 
 type ApiRunDetailRequest struct {
