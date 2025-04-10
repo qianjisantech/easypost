@@ -4,12 +4,6 @@ const runtimeCaching = require('next-pwa/cache');
 
 const nextConfig = {
   reactStrictMode: false,
-  eslint: {
-    ignoreDuringBuilds: true,
-  },
-  typescript: {
-    ignoreBuildErrors: true,
-  },
   async rewrites() {
     return [
       {
