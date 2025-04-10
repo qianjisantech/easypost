@@ -85,15 +85,15 @@ function ProjectContent() {
 
 
   return (
-     <div style={{marginTop:50}}>
-       <Flex direction="row" style={{ height: '100%' }}>
+     <div style={{marginTop:40}}>
+       <Flex direction="row" style={{ height: '100%'}}>
          {/* 左侧导航栏 */}
-         <div className="flex h-full shrink-0 basis-[80px] flex-col items-center overflow-y-auto overflow-x-hidden px-1 pt-layoutHeader">
+         <div className="flex h-full shrink-0 basis-[80px] flex-col items-center overflow-y-auto overflow-x-hidden px-1 pt-layoutHeader" style={{backgroundColor: '#f0f0f0',height: '100vh',top:0}}>
            <div
              className="mb-5 mt-2 size-10 rounded-xl p-[6px]"
              style={{ color: token.colorText, border: `1px solid ${token.colorBorder}` }}
            >
-             <div style={{width: '100%', height: '100%', display: 'flex', justifyContent: 'center', alignItems: 'center'}}>
+             <div style={{width: '100%', height: '100%', display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
                <svg
                  t="1735037586493"
                  className="icon"
@@ -129,7 +129,7 @@ function ProjectContent() {
          </div>
 
          {/* 右侧内容区域 */}
-         <div className="flex-1">
+         <div style={{ flex: 1, padding: '20px 20px 20px 20px' }}>
            {selectedMenu === "接口管理" ? (
              <PanelLayout
                layoutName="接口管理"

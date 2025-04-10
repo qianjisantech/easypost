@@ -131,7 +131,17 @@ export function PanelLayout(props: PanelLayoutProps) {
               }}
             >
               <div className="p-2">
-                <span className="px-2 text-lg font-semibold">{layoutName}</span>
+                <span
+                  style={{
+                    fontSize: '20px',
+                    fontWeight: 520,
+                    fontFeatureSettings: 'tnum',
+                    color: 'rgba(16, 24, 40, 0.8)',
+                    fontFamily: '-apple-system, BlinkMacSystemFont, "Segoe UI", roboto, "Helvetica Neue", arial, "Noto Sans", sans-serif, "Apple Color Emoji", "Segoe UI Emoji"',
+                  }}
+                >
+                  {layoutName}
+                </span>
               </div>
 
               {left}
