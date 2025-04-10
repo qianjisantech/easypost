@@ -57,7 +57,7 @@ export function RequestBodyRaw(props: TextInputProps) {
         border: '1px solid #ccc',
       }}
     >
-      <PostmanStyleJsonEditor value={inputValue} defaultValue={"{}"}></PostmanStyleJsonEditor>
+      <PostmanStyleJsonEditor value={inputValue} defaultValue={""} disabled={false}></PostmanStyleJsonEditor>
 
       {/* 调整高度的拖动手柄 */}
       <div

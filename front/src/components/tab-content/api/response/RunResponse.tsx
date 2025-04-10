@@ -7,6 +7,7 @@ import { Divider, Segmented, Space, Statistic, Table, Tabs, Tooltip } from "antd
 import type { JsonSchemaEditorProps } from '@/components/JsonSchema'
 import { JsonSchemaCard } from '@/components/JsonSchemaCard'
 import { JsonViewer } from '@/components/JsonViewer'
+import PostmanStyleJsonEditor from "@/components/JsonSchema/PostmanStyleJsonEditor";
 
 interface JsonSchemaCardProps extends Pick<JsonSchemaEditorProps, 'value' | 'onChange'> {
   editorProps?: JsonSchemaEditorProps
@@ -30,7 +31,7 @@ export function RunResponse(props: JsonSchemaCardProps) {
   const [startWidth, setStartWidth] = useState(0);
   const containerRef = useRef(null);
   const sidebarRef = useRef(null);
-
+  const [isEditorReady, setIsEditorReady] = useState(false);
   // 计算响应信息
   const responseSize = props.value?.data
     ? new Blob([JSON.stringify(props.value.data)]).size
@@ -48,7 +49,11 @@ export function RunResponse(props: JsonSchemaCardProps) {
     document.body.style.cursor = 'col-resize';
     document.body.style.userSelect = 'none';
   };
-
+  useEffect(() => {
+    if (body && !isEditorReady) {
+      setIsEditorReady(true);
+    }
+  }, [body]);
   // 处理鼠标移动事件
   const handleMouseMove = (e) => {
     if (!isDragging) return;
@@ -102,7 +107,19 @@ export function RunResponse(props: JsonSchemaCardProps) {
   const renderResponseBody = () => {
     switch (alignValue) {
       case 'pretty':
-        return <div>{body}</div>
+        return isEditorReady ? (
+          <PostmanStyleJsonEditor
+            value={body}
+            defaultValue={body}
+            disabled={true}
+          />
+        ) : (
+          <div style={{ padding: 16, background: '#f5f5f5' }}>
+            <SyntaxHighlighter language="json" style={docco}>
+              {body}
+            </SyntaxHighlighter>
+          </div>
+        );
       case 'raw':
         return (
           <SyntaxHighlighter language="json" style={docco}>

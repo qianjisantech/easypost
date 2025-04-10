@@ -1,8 +1,9 @@
-import React, { useState } from 'react';
+import React, { useEffect, useRef, useState } from "react";
 import MonacoEditor from '@monaco-editor/react';
 import { JsonEditor as Editor } from 'react-json-editor-ajrm';
 import { validate } from 'jsonschema';
-import { Button } from "antd";
+import { Button, Divider, Space } from "antd";
+import { CodeOutlined, ExpandOutlined, ShrinkOutlined } from "@ant-design/icons";
 
 interface JsonEditorChangeEvent {
   jsObject: any;
@@ -13,14 +14,17 @@ interface PostmanStyleJsonEditorProps {
   value?: string
   onChange?: (value: string) => void
   defaultValue?: string
+  disabled: boolean
 }
-function PostmanStyleJsonEditor(props:PostmanStyleJsonEditorProps) {
-  const { defaultValue, value = defaultValue, onChange } = props
+function PostmanStyleJsonEditor(props: PostmanStyleJsonEditorProps) {
+  const { disabled,defaultValue, value = defaultValue, onChange } = props
 
   const [json, setJson] = useState(value);
   const [rawJson, setRawJson] = useState(value);
   const [error, setError] = useState<string | null>(null);
-
+  const editorRef = useRef<any>(null);
+  const containerRef = useRef<HTMLDivElement>(null);
+  const [isMounted, setIsMounted] = useState(false);
   // 处理 react-json-editor-ajrm 的变化
   const handleJsonEditorChange = (data: JsonEditorChangeEvent) => {
     if (!data.jsObject) return;
@@ -31,16 +35,14 @@ function PostmanStyleJsonEditor(props:PostmanStyleJsonEditorProps) {
 
   // 处理 Monaco Editor 的变化
   const handleMonacoChange = (value: string | undefined) => {
+    if (disabled) return;
     setRawJson(value || '');
-    try {
-      const parsed = JSON.parse(value || '{}');
-      setJson(parsed);
-      setError(null);
-    } catch (err) {
-      setError(err instanceof Error ? err.message : String(err));
-    }
+    onChange?.(value || '');
   };
-
+  useEffect(() => {
+    setIsMounted(true);
+    return () => setIsMounted(false);
+  }, []);
   // 格式化 JSON
   const formatJson = () => {
     try {
@@ -52,7 +54,35 @@ function PostmanStyleJsonEditor(props:PostmanStyleJsonEditorProps) {
       setError(err instanceof Error ? err.message : String(err));
     }
   };
+  const handleEditorDidMount = (editor: any, monaco: any) => {
+    editorRef.current = editor;
 
+    // 立即触发布局计算
+    requestAnimationFrame(() => {
+      editor.layout();
+      editor.render();
+    });
+
+    // 添加resize观察器
+    const resizeObserver = new ResizeObserver(() => {
+      editor.layout();
+    });
+
+    if (containerRef.current) {
+      resizeObserver.observe(containerRef.current);
+    }
+
+    return () => resizeObserver.disconnect();
+  };
+
+  useEffect(() => {
+    if (editorRef.current) {
+      // 手动触发编辑器布局计算
+      setTimeout(() => {
+        editorRef.current?.layout();
+      }, 0);
+    }
+  }, []);
   // 压缩 JSON
   const minifyJson = () => {
     try {
@@ -65,64 +95,110 @@ function PostmanStyleJsonEditor(props:PostmanStyleJsonEditorProps) {
     }
   };
 
-  // 验证 JSON
-  const validateJson = () => {
-    try {
-      JSON.parse(rawJson);
-      setError(null);
-      alert('JSON 有效!');
-    } catch (err) {
-      setError(err instanceof Error ? err.message : String(err));
-    }
-  };
-
   return (
-    <div style={{  fontFamily: 'Arial' }}>
-      <div style={{ marginBottom: '10px', marginTop: '10px', right: 0 }}>
-        <Button type={"primary"} size={"small"} onClick={formatJson} style={{ marginRight: '10px' }}>美化</Button>
-        <Button type={"primary"} size={"small"} onClick={minifyJson}>压缩</Button>
-        {/*<Button onClick={validateJson} style={buttonStyle}>验证</Button>*/}
-        {error && <span style={{ color: 'red', marginLeft: '10px' }}>{error}</span>}
+    <div style={{
+      fontFamily: 'Arial',
+      position: 'relative',
+      opacity: disabled ? 0.7 : 1, // 轻度透明
+    }}>
+      {/* 按钮容器 - 使用 flex 布局右对齐 */}
+      <div style={{
+        display: 'flex',
+        justifyContent: 'flex-end',
+        marginBottom: '12px',
+        padding: '8px 12px',
+        backgroundColor: '#f8f9fa',
+        borderRadius: '6px',
+        border: '1px solid #e9ecef',
+        boxShadow: '0 1px 2px rgba(0,0,0,0.05)'
+      }}>
+        <Space>
+          <Button
+            type="text"
+            size="small"
+            onClick={formatJson}
+            icon={<ExpandOutlined />}
+            style={buttonStyle}
+            disabled={disabled}
+          >
+            格式化
+          </Button>
+          <Button
+            type="text"
+            size="small"
+            onClick={minifyJson}
+            icon={<ShrinkOutlined />}
+            style={buttonStyle}
+            disabled={disabled}
+          >
+            压缩
+          </Button>
+          <Divider type="vertical" style={{ margin: '0 8px', height: '20px' }} />
+          {error && (
+            <span style={{
+              color: '#ff4d4f',
+              marginLeft: '12px',
+              display: 'flex',
+              alignItems: 'center',
+              fontSize: '12px'
+            }}>
+              {error}
+            </span>
+          )}
+        </Space>
       </div>
+      {/* 编辑器区域 */}
       <div style={{ display: 'flex', gap: '20px' }}>
-        {/* 使用 react-json-editor-ajrm */}
-
-        {/* 使用 Monaco Editor */}
-        <MonacoEditor
-          height="500px"
-          language="json"
-          theme="vs"
-          value={rawJson}
-          onChange={handleMonacoChange}
-          options={{
-            minimap: { enabled: false },
-            scrollBeyondLastLine: false,
-            fontSize: 14,
-            wordWrap: 'on',
-            automaticLayout: true,
-            renderWhitespace: 'none',
-            formatOnPaste: true,
-            formatOnType: true,
-            lineNumbers: 'on',  // 显示行号
-            lineNumbersMinChars: 3,  // 行号最小宽度
-            lineDecorationsWidth: 10,  // 行号区域宽度
-          }}
-        />
+        {isMounted && (
+          <MonacoEditor
+            height="500px"
+            language="json"
+            theme="vs"
+            value={rawJson}
+            onChange={handleMonacoChange}
+            onMount={handleEditorDidMount} // 添加挂载回调
+            options={{
+              readOnly: disabled || false, // 设置为只读
+              minimap: { enabled: false },
+              scrollBeyondLastLine: false,
+              fontSize: 14,
+              wordWrap: 'on',
+              automaticLayout: true,
+              renderWhitespace: 'none',
+              formatOnPaste: true,
+              formatOnType: true,
+              lineNumbers: 'on',
+              lineNumbersMinChars: 3,
+              lineDecorationsWidth: 10,
+            }}
+          />
+        )}
       </div>
-
-
     </div>
   );
 }
 
+export default PostmanStyleJsonEditor;
+
+// 按钮样式常量
 const buttonStyle = {
-  padding: '8px 16px',
-  marginRight: '10px',
-  backgroundColor: '#4CAF50',
-  color: 'white',
+  color: '#495057',
   border: 'none',
   borderRadius: '4px',
-  cursor: 'pointer',
+  padding: '0 8px',
+  height: '28px',
+  display: 'flex',
+  alignItems: 'center',
+  transition: 'all 0.2s',
+  ':hover': {
+    backgroundColor: '#e9ecef',
+    color: '#212529'
+  },
+  ':active': {
+    backgroundColor: '#dee2e6'
+  },
+  ':disabled': {
+    color: '#adb5bd',
+    cursor: 'not-allowed'
+  }
 };
-
-export default PostmanStyleJsonEditor;
