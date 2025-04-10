@@ -3,20 +3,22 @@ import { message, Spin } from 'antd'
 import axios, { type AxiosError, type AxiosInstance, type AxiosResponse } from 'axios'
 import { ROUTES } from '@/utils/routes'
 
-const request: AxiosInstance = axios.create({
-  baseURL: '/api', // API的基础URL
-  timeout: 10000, // 请求超时
-})
-
-// 创建一个全局消息提示的组件
-const showMessage = (type: 'success' | 'error', content: string) => {
-  message[type](content) // 通过 message 展示不同类型的消息
+// 定义响应数据类型
+interface ApiResponse<T = any> {
+  success: boolean;
+  message?: string;
+  data?: T;
+  [key: string]: any;
 }
 
-// 错误处理函数
-const errorHandler = (error: AxiosError) => {
+const request: AxiosInstance = axios.create({
+  baseURL: '/api',
+  timeout: 10000,
+})
+
+// 错误处理函数（使用类型断言）
+const errorHandler = (error: AxiosError<ApiResponse>) => {
   if (!error.response) {
-    // 网络错误或请求超时
     showMessage('error', 'Network or timeout error')
     hideLoading()
     return Promise.reject(error)
@@ -24,78 +26,71 @@ const errorHandler = (error: AxiosError) => {
 
   const { status, data } = error.response
 
-  // 根据 HTTP 状态码显示不同的错误信息
+  // 现在可以安全访问 data.message
+  const errorMessage = data?.message ||
+    (status === 401 ? 'Token已过期，请重新登录' :
+      status === 500 ? '系统内部错误' :
+        status === 400 ? 'Bad request' :
+          status === 404 ? '资源未找到' :
+            `Request failed with status: ${status}`)
+
+  showMessage('error', errorMessage)
+
   if (status === 401) {
-    showMessage('error', 'Token已过期，请重新登录')
-    if (localStorage.getItem('accessToken')) {
+    if (typeof localStorage !== 'undefined' && localStorage.getItem('accessToken')) {
       localStorage.removeItem('accessToken')
     }
-    // 清除 Token 或重定向到登录页面
     redirect(ROUTES.LOGIN)
-  } else if (status === 500) {
-    showMessage('error', data?.message || '系统内部错误')
-  } else if (status === 400) {
-    showMessage('error', data?.message || 'Bad request')
-  } else if (status === 404) {
-    showMessage('error', '资源未找到，请联系管理员')
-  } else {
-    showMessage('error', `Request failed with status: ${status}`)
   }
 
   hideLoading()
   return Promise.reject(error)
 }
 
-// 请求拦截器
+// 请求拦截器（添加类型）
 request.interceptors.request.use((config) => {
-
-  console.log('pathname', window.location.pathname)
-  const token = localStorage.getItem('accessToken')
-  if (token) {
-    config.headers['Authorization'] = `Bearer ${token}` // 添加 Authorization header
-
-  }
   if (typeof window !== 'undefined') {
-     if (window.location.pathname.startsWith('/project')){
-       const pathSegments = window.location.pathname.split('/')
-       const projectId = pathSegments[2] // 对于 "/project/22" 会得到 "22"
+    const token = localStorage.getItem('accessToken')
+    if (token) {
+      config.headers['Authorization'] = `Bearer ${token}`
+    }
 
-       config.headers['X-Project-Id'] = projectId || 'default'
-     }
-    if (window.location.pathname.startsWith('/main/teams')){
-      const pathSegments = window.location.pathname.split('/')
-      const teamId = pathSegments[3] // 对于 "/project/22" 会得到 "22"
-
-      config.headers['X-Team-Id'] = teamId || 'default'
+    const path = window.location.pathname
+    if (path.startsWith('/project')) {
+      const projectId = path.split('/')[2]
+      config.headers['X-Project-Id'] = projectId || ''
+    }
+    if (path.startsWith('/main/teams')) {
+      const teamId = path.split('/')[3]
+      config.headers['X-Team-Id'] = teamId || ''
     }
   }
-  // 显示全局 loading
+
   showLoading()
-
   return config
-}, errorHandler)
+}, (error) => errorHandler(error))
 
-// 响应拦截器
-request.interceptors.response.use((response: AxiosResponse) => {
+// 响应拦截器（添加类型）
+request.interceptors.response.use((response: AxiosResponse<ApiResponse>) => {
   hideLoading()
-  // 判断响应中的业务逻辑，如果有错误则显示消息
   if (response.data.success === false) {
     showMessage('error', response.data.message || 'Request failed')
-  } else {
-    // 请求成功后可以选择显示成功提示
-    // showMessage('success', response.data.message || "请求成功")
-    return response
+    return Promise.reject(response)
   }
-}, errorHandler)
+  return response
+}, (error) => errorHandler(error))
 
-// 显示全局loading
-const showLoading = () => {
-  message.loading({ content: '', key: 'global_loading', duration: 0 }) // duration: 0 表示持续显示，直到手动隐藏
+// 消息工具函数
+const showMessage = (type: 'success' | 'error', content: string) => {
+  message[type](content)
 }
 
-// 隐藏全局loading
+const showLoading = () => {
+  message.loading({ content: '', key: 'global_loading', duration: 0 })
+}
+
 const hideLoading = () => {
-  message.destroy('global_loading') // 隐藏 loading
+  message.destroy('global_loading')
 }
 
 export default request
