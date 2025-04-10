@@ -23,6 +23,7 @@ interface JsonSchemaCardProps extends Pick<JsonSchemaEditorProps, 'value' | 'onC
 
 export function RunResponse(props: JsonSchemaCardProps) {
   const { value = {}, onChange, editorProps, cookies = [], actualRequest } = props
+  // 只有当value.data有值时才渲染组件
   const [body, setBodyStr] = useState<string>('')
   const [headers, setHeaders] = useState<string>('')
   const [sidebarWidth, setSidebarWidth] = useState(280);

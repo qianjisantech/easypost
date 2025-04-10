@@ -1,7 +1,7 @@
 'use client'
 import { useEffect, useRef, useState } from 'react'
 
-import { Button, Form, type FormProps, Select, type SelectProps, Space } from 'antd'
+import { Button, Divider, Empty, Form, type FormProps, Select, type SelectProps, Space } from "antd";
 import type { AxiosRequestConfig } from 'axios'
 import { nanoid } from 'nanoid'
 import { ApiDetail, ApiDetailCreate, ApiDetailUpdate, ApiRunDetail } from 'src/api/api'
@@ -402,10 +402,27 @@ export function ApiRun() {
         <Form.Item noStyle name="parameters">
           <ParamsRunTab />
         </Form.Item>
-
+        <Divider style={{ borderColor: '#737b83' }}></Divider>
         <GroupTitle className="mb-3 mt-8">返回响应</GroupTitle>
         <Form.Item noStyle name="responses">
-          <RunResponse />
+          {form.getFieldValue('responses') ? (
+            <RunResponse />
+          ) : (
+            <Empty
+              image={Empty.PRESENTED_IMAGE_SIMPLE}
+              description={
+                <span style={{ color: '#666', fontSize: '14px' }}>
+                  {/* eslint-disable-next-line react/no-unescaped-entities */}
+          点击<span style={{ color: '#1890ff', fontWeight: 500 }}>"发送"</span>按钮获取返回结果
+        </span>
+              }
+              style={{
+                margin: '40px 0',
+                padding: '40px 0',
+                background: 'transparent'
+              }}
+            />
+          )}
         </Form.Item>
       </div>
     </Form>
