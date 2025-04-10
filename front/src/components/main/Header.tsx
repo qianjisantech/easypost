@@ -16,7 +16,7 @@ import { Avatar, Button, Dropdown, Menu, Modal, Space, Spin, Tooltip } from 'ant
 import { ROUTES } from '@/utils/routes'
 
 const headerStyle = {
-  height: '30px',
+  height: '40px',
   backgroundColor: '#f0f0f0',
   display: 'flex',
   alignItems: 'center',
