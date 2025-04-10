@@ -1,11 +1,11 @@
 import React, { useState, useEffect } from 'react';
 import dynamic from 'next/dynamic';
 import { JsonSchemaEditorProps } from '@/components/JsonSchema';
-import { Tabs, TabsProps } from 'antd';
+import { Tabs, TabsProps, Card, Collapse, Space, Button } from 'antd';
+import { CopyOutlined } from '@ant-design/icons';
 
-// 动态加载 MonacoEditor，避免初次加载时影响性能
 const MonacoEditor = dynamic(() => import('@monaco-editor/react'), {
-    ssr: false, // 禁用 SSR 渲染
+    ssr: false,
 });
 
 interface JsonSchemaCardProps extends Pick<JsonSchemaEditorProps, 'value' | 'onChange'> {
@@ -15,99 +15,208 @@ interface JsonSchemaCardProps extends Pick<JsonSchemaEditorProps, 'value' | 'onC
 export function Scripts(props: JsonSchemaCardProps) {
     const { value = {}, onChange, editorProps } = props;
     const [body, setBodyStr] = useState<string>('');
+    const [activeKey, setActiveKey] = useState<string | string[]>(['1','2']);
 
     useEffect(() => {
         const data = value.data;
         setBodyStr(typeof data === 'object' ? JSON.stringify(data, null, 2) : data || '');
     }, [value.data]);
 
-    // Monaco 编辑器的配置
-    const renderMonacoEditor = (onChange: (value: string) => void) => (
-        <MonacoEditor
-            language="javascript" // 设置 JavaScript 语言
-            value={body} // 初始值
-            theme="vs-dark" // 设置主题
-            onChange={(newValue) => {
-                setBodyStr(newValue || ''); // 更新值
-                onChange(newValue || ''); // 触发 onChange 事件
-            }}
-            options={{
-                automaticLayout: true, // 自动布局
-                minimap: { enabled: false, showSlider: 'mouseover' }, // 禁用小地图
-                quickSuggestions: true, // 启用快速建议（代码补全）
-                snippetSuggestions: 'inline', // 启用内联代码片段建议
-                suggestOnTriggerCharacters: true, // 启用在触发字符时提供建议
-                wordBasedSuggestions: true,
-                parameterHints: true,
-                lineNumbers: true,
-                tabSize: 2,
-            }}
-            width="100%"
-            height="300px"
-            onMount={(editor, monaco) => {
-                // 在 Monaco Editor 加载后注册补全提供者
-                monaco.languages.registerCompletionItemProvider('javascript', {
-                    provideCompletionItems: (model, position) => {
-                        const word = model.getWordAtPosition(position);
-                        const suggestions = [
-                            {
-                                label: 'console.log',
-                                kind: monaco.languages.CompletionItemKind.Function,
-                                insertText: 'console.log($1);',
-                                detail: 'Log output to console',
-                                documentation: 'This will log output to the console',
-                            },
-                            {
-                                label: 'alert',
-                                kind: monaco.languages.CompletionItemKind.Function,
-                                insertText: 'alert($1);',
-                                detail: 'Display an alert box',
-                                documentation: 'This will show an alert dialog box',
-                            },
-                            // pm.environment.set 的补全项
-                            {
-                                label: 'pm.environment.set',
-                                kind: monaco.languages.CompletionItemKind.Function,
-                                insertText: 'pm.environment.set("$1", "$2");',
-                                detail: 'Set an environment variable in Postman',
-                                documentation: 'This will set an environment variable in Postman',
-                            },
-                            // 你可以继续添加其他的补全项
-                        ];
-
-                        // 在输入 pm. 时提供 pm.environment.set 补全
-                        if (word && word.word.startsWith('pm.')) {
-                            return { suggestions };
-                        }
-
-                        // 返回空数组，如果当前输入不匹配 pm.，就不提供任何补全项
-                        return { suggestions: [] };
-                    },
-                });
-            }}
-        />
-    );
-
-    // Tabs 配置
-    const items: TabsProps['items'] = [
+    // 代码片段数据
+    const snippetItems = [
         {
             key: '1',
-            label: '前置脚本',
-            children: <div>{renderMonacoEditor(onChange)}</div>,
+            label: '环境变量',
+            children: (
+              <Space direction="vertical" style={{ width: '100%',alignItems: 'flex-start'  }}>
+                  <Button
+                    type={'link'}
+                    block
+                    onClick={() => insertSnippet('pm.environment.get("variable_name")')}
+
+                  >
+                      获取环境变量
+                  </Button>
+                  <Button
+                    type={'link'}
+                    block
+                    onClick={() => insertSnippet('pm.environment.set("variable_name", "value")')}
+
+                  >
+                      设置环境变量
+                  </Button>
+                <Button
+                  type={'link'}
+                  block
+                  onClick={() => insertSnippet('pm.variables.get("variable_name")')}
+
+                >
+                  获取临时变量
+                </Button>
+                <Button
+                  type={'link'}
+                  block
+                  onClick={() => insertSnippet('pm.variables.set("variable_name", "value")')}
+
+                >
+                  设置临时变量
+                </Button>
+                <Button
+                  type={'link'}
+                  block
+                  onClick={() => insertSnippet('pm.sendRequest("https://www.api.com/xxx", function (err, response) {\n' +
+                    '  console.log(response.json());\n' +
+                    '});')}
+
+                >
+                  请求接口
+                </Button>
+              </Space>
+            ),
         },
+        {
+            key: '2',
+            label: '高级功能',
+            children: (
+              <Space direction="vertical" style={{ width: '100%',alignItems: 'flex-start' }}>
+                  <Button
+                    type={'link'}
+                    block
+                    onClick={() => insertSnippet('const moment = require(\'moment\');\n' +
+                      'const CryptoJS = require(\'crypto-js\');\n' +
+                      '\n' +
+                      'const timestamp = moment().format(\'YYYY-MM-DD HH:mm:ss\');\n' +
+                      'const md5Hash = CryptoJS.MD5(timestamp).toString();\n' +
+                      '\n' +
+                      'pm.environment.set("timestamp_md5", md5Hash);')}
+
+                  >
+                      MD5加密
+                  </Button>
+                  <Button
+                    type={'link'}
+                    block
+                    onClick={() => insertSnippet('const timestamp = new Date().toISOString();\n' +
+                      'const base64Encoded = btoa(timestamp);  // 编码\n' +
+                      'const base64Decoded = atob(base64Encoded);  // 解码\n' +
+                      '\n' +
+                      '\n' +
+                      'const base64Encoded = Buffer.from(timestamp).toString(\'base64\');\n' +
+                      'const base64Decoded = Buffer.from(base64Encoded, \'base64\').toString(\'ascii\');\n' +
+                      '\n' +
+                      'pm.environment.set("base64Encoded", base64Encoded);\n' +
+                      'pm.environment.set("base64Decoded", base64Decoded);')}
+
+                  >
+                      Base64加密
+                  </Button>
+              </Space>
+            ),
+        },
+        // {
+        //     key: '3',
+        //     label: '响应处理',
+        //     children: (
+        //       <Space direction="vertical" style={{ width: '100%' }}>
+        //           <Button
+        //             type={'link'}
+        //             block
+        //             onClick={() => insertSnippet('pm.response.json()')}
+        //
+        //           >
+        //               解析JSON响应
+        //           </Button>
+        //           <Button
+        //             type={'link'}
+        //             block
+        //             onClick={() => insertSnippet('pm.response.text()')}
+        //
+        //           >
+        //               获取文本响应
+        //           </Button>
+        //       </Space>
+        //     ),
+        // },
     ];
 
-    return (
-        <div style={{ height: '100%' }}>
-            <Tabs
-                tabPosition="left"
-                items={items}
-                style={{
-                    marginTop: 40,
-                    marginLeft: 5,
-                    height: '100%',
+    // 插入代码片段到编辑器
+    const insertSnippet = (snippet: string) => {
+        const newValue = body ? `${body}\n${snippet}` : snippet;
+        setBodyStr(newValue);
+        onChange?.(newValue);
+    };
+
+    const renderMonacoEditor = (onChange: (value: string) => void) => (
+      <div style={{ display: 'flex', height: '100%', gap: 16 }}>
+          <div style={{ flex: 1 }}>
+              <MonacoEditor
+                language="javascript"
+                value={body}
+                theme="vs-light"
+                onChange={(newValue) => {
+                    setBodyStr(newValue || '');
+                    onChange(newValue || '');
                 }}
-            />
-        </div>
+                options={{
+                    automaticLayout: true,
+                    minimap: { enabled: false },
+                    quickSuggestions: true,
+                    lineNumbers: true,
+                    tabSize: 2,
+                }}
+                width="100%"
+                height="400px"
+                onMount={(editor, monaco) => {
+                    monaco.languages.registerCompletionItemProvider('javascript', {
+                        provideCompletionItems: (model, position) => {
+                            const suggestions = [
+                                {
+                                    label: 'pm.environment.get',
+                                    kind: monaco.languages.CompletionItemKind.Function,
+                                    insertText: 'pm.environment.get("${1:variable_name}")',
+                                    documentation: 'Get environment variable',
+                                },
+                                {
+                                    label: 'pm.environment.set',
+                                    kind: monaco.languages.CompletionItemKind.Function,
+                                    insertText: 'pm.environment.set("${1:variable_name}", "${2:value}")',
+                                    documentation: 'Set environment variable',
+                                },
+                                {
+                                    label: 'pm.response.json',
+                                    kind: monaco.languages.CompletionItemKind.Function,
+                                    insertText: 'pm.response.json()',
+                                    documentation: 'Parse response as JSON',
+                                },
+                            ];
+                            return { suggestions };
+                        },
+                    });
+                }}
+              />
+          </div>
+
+          {/* 右侧代码片段面板 */}
+          <div style={{ width: 250 }}>
+              <Card
+                title="代码片段"
+                size="small"
+                bodyStyle={{ padding: 0 }}
+              >
+                  <Collapse
+                    activeKey={activeKey}
+                    onChange={setActiveKey}
+                    bordered={false}
+                    items={snippetItems}
+                  />
+              </Card>
+          </div>
+      </div>
+    );
+
+    return (
+      <div style={{ height: '100%' }}>
+          {renderMonacoEditor(onChange)}
+      </div>
     );
 }

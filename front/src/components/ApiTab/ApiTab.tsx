@@ -1,6 +1,13 @@
-import { cloneElement, type PointerEvent, useMemo, useState } from 'react'
+import React, { cloneElement, type PointerEvent, useMemo, useState } from 'react'
 import useEvent from 'react-use-event-hook'
 
+import {
+  AppstoreOutlined, BellOutlined, CloudOutlined, CloudServerOutlined, ClusterOutlined, CodeOutlined, DesktopOutlined,
+  EnvironmentOutlined, ExperimentOutlined, GlobalOutlined, LockOutlined, MailOutlined,
+  MoreOutlined,
+  SearchOutlined,
+  SettingOutlined
+} from "@ant-design/icons";
 import {
   DndContext,
   type DndContextProps,
@@ -14,7 +21,17 @@ import {
   useSortable,
 } from '@dnd-kit/sortable'
 import { CSS } from '@dnd-kit/utilities'
-import { ConfigProvider, Dropdown, Popconfirm, Tabs, type TabsProps, theme } from 'antd'
+import {
+  Button,
+  ConfigProvider, Divider,
+  Dropdown, Menu, Modal,
+  Popconfirm,
+  Select,
+  Tabs,
+  type TabsProps,
+  theme,
+  Tooltip
+} from "antd";
 import { BadgeInfoIcon, XIcon } from 'lucide-react'
 import { nanoid } from 'nanoid'
 
@@ -31,6 +48,7 @@ import { ApiTabLabel } from './ApiTabLabel'
 import { TabContentProvider } from './TabContentContext'
 
 import { css } from '@emotion/css'
+import TabPane from "antd/es/tabs/TabPane";
 
 // 如果元素有 "data-no-dnd" 属性，则阻止 DnD 事件传播。
 const handler = ({ nativeEvent: event }: PointerEvent) => {
@@ -133,10 +151,11 @@ export function ApiTab(props: TabsProps) {
             }}
           >
             <span
-              className={`main-tabs-tab-close-icon flex size-full items-center justify-center text-[15px] opacity-0 ${tabItem.data?.editStatus === 'changed'
+              className={`main-tabs-tab-close-icon flex size-full items-center justify-center text-[15px] opacity-0 ${
+                tabItem.data?.editStatus === 'changed'
                   ? 'changed after:bg-primary-500 group relative overflow-hidden rounded-full after:absolute after:size-2 after:rounded-full after:content-[""] hover:overflow-auto hover:bg-transparent hover:after:hidden'
                   : ''
-                }`}
+              }`}
               data-no-dnd="true" // 「关闭」按钮不允许触发拖拽。
             >
               <XIcon
@@ -169,23 +188,57 @@ export function ApiTab(props: TabsProps) {
     }
   }
 
-  const renderTabBar: TabsProps['renderTabBar'] = (tabBarProps, DefaultTabBar) => (
-    <DndContext sensors={[sensor]} onDragEnd={handleDragEnd}>
-      <SortableContext items={items.map((i) => i.key)} strategy={horizontalListSortingStrategy}>
-        <DefaultTabBar {...tabBarProps} className="ui-tabs-nav">
-          {(node) => (
-            <DraggableTabNode {...node.props} key={node.key}>
-              <div>
-                <Dropdown menu={{ items: menuItems }} trigger={['contextMenu']}>
-                  {node}
-                </Dropdown>
-              </div>
-            </DraggableTabNode>
-          )}
-        </DefaultTabBar>
-      </SortableContext>
-    </DndContext>
-  )
+  const renderTabBar: TabsProps['renderTabBar'] = (tabBarProps, DefaultTabBar) => {
+    return (
+      <DndContext sensors={[sensor]} onDragEnd={handleDragEnd}>
+        <SortableContext items={items.map((i) => i.key)} strategy={horizontalListSortingStrategy}>
+          <div
+            style={{
+              display: 'flex',
+              alignItems: 'center',
+              width: '100%',
+              position: 'relative',
+            }}
+          >
+            <DefaultTabBar
+              {...tabBarProps}
+              className="ui-tabs-nav"
+              style={{
+                flex: 1,
+                marginRight: 0,
+                overflow: 'hidden',
+              }}
+            >
+              {(node) => {
+                console.log('node', node)
+                const isLastTab = node.props['data-node-key'] === tabItems[tabItems.length - 1].key
+                return (
+                  <DraggableTabNode {...node.props} key={node.key}>
+                    <div style={{ display: 'flex', alignItems: 'center' }}>
+                      <Dropdown menu={{ items: menuItems }} trigger={['contextMenu']}>
+                        {node}
+                      </Dropdown>
+                      {isLastTab && (
+                        <div
+                          style={{
+                            marginLeft: 8,
+                            display: 'inline-flex',
+                            alignItems: 'center',
+                          }}
+                        >
+                          <ApiTabAction />
+                        </div>
+                      )}
+                    </div>
+                  </DraggableTabNode>
+                )
+              }}
+            </DefaultTabBar>
+          </div>
+        </SortableContext>
+      </DndContext>
+    )
+  }
 
   const { styles } = useStyles(({ token }) => {
     return {
@@ -213,8 +266,8 @@ export function ApiTab(props: TabsProps) {
     if (action === 'add') {
       addTabItem({
         key: nanoid(6),
-        label: "新建...",
-        contentType: "blank"
+        label: '新建...',
+        contentType: 'blank',
       })
     } else if (
       /* eslint-disable-next-line @typescript-eslint/no-unnecessary-condition */
@@ -243,7 +296,7 @@ export function ApiTab(props: TabsProps) {
         className={`ui-tabs main-tabs ${styles.appTabs}`}
         items={items}
         renderTabBar={renderTabBar}
-        tabBarExtraContent={<ApiTabAction />}
+        tabBarExtraContent={<TabActionsENVDropdown />}
         tabBarStyle={{ width: '100%', marginBottom: 0 }}
         type="editable-card"
         onEdit={handleEdit}
@@ -255,3 +308,202 @@ export function ApiTab(props: TabsProps) {
     </ConfigProvider>
   )
 }
+
+const TabActionsENVDropdown = () => {
+  const [currentEnv, setCurrentEnv] = useState<string | undefined>(undefined);
+  const { Option } = Select;
+  const [modalState, setModalState] = useState({
+    visible: false,
+    tab: 'globalVariables' // 默认选中全局变量
+  });
+
+  // 定义环境配置
+  const envConfig = {
+    dev: {
+      name: '开发环境',
+      url: 'https://dev.api.example.com',
+    },
+    test: {
+      name: '测试环境',
+      url: 'https://test.api.example.com',
+    },
+    stage: {
+      name: '演示环境',
+      url: 'https://stage.api.example.com',
+    },
+  };
+
+  // 管理环境弹窗内容
+  const content = {
+    globalVariables: (
+      <div>
+        <h3>全局变量管理</h3>
+        <p>在这里管理所有API请求共用的全局变量</p>
+        {/* 这里可以添加变量表格 */}
+      </div>
+    ),
+    globalParams: (
+      <div>
+        <h3>全局参数设置</h3>
+        <p>配置默认请求头、认证信息等</p>
+      </div>
+    ),
+    vaultSecrets: (
+      <div>
+        <h3>密钥库管理</h3>
+        <p>安全存储和管理敏感信息</p>
+      </div>
+    ),
+    devEnv: (
+      <div>
+        <h3>开发环境配置</h3>
+        <p>当前API端点: {envConfig.dev.url}</p>
+      </div>
+    ),
+    testEnv: (
+      <div>
+        <h3>测试环境配置</h3>
+        <p>当前API端点: {envConfig.test.url}</p>
+      </div>
+    ),
+    prodEnv: (
+      <div>
+        <h3>正式环境配置</h3>
+        <p>当前API端点: {envConfig.stage.url}</p>
+      </div>
+    ),
+    localMock: (
+      <div>
+        <h3>本地Mock服务</h3>
+        <p>配置本地模拟接口服务</p>
+      </div>
+    ),
+    cloudMock: (
+      <div>
+        <h3>云端Mock服务</h3>
+        <p>连接云端模拟接口服务</p>
+      </div>
+    ),
+    selfHostedMock: (
+      <div>
+        <h3>自托管Mock服务</h3>
+        <p>管理自建的Mock服务配置</p>
+      </div>
+    )
+  };
+
+  return (
+    <div>
+      <Select
+        placeholder={'请选择环境'}
+        style={{
+          width: 150,
+          marginLeft: 8,
+          textAlign: 'center',
+        }}
+        suffixIcon={<SearchOutlined />}
+        value={currentEnv}
+        onChange={(value) => {
+          setCurrentEnv(value);
+          console.log(`切换到${envConfig[value as keyof typeof envConfig]?.name}`);
+        }}
+        dropdownRender={(menu) => (
+          <>
+            {menu}
+            <div style={{
+              padding: '1px',
+              textAlign: 'left',
+              borderTop: '1px solid #f0f0f0',
+              marginTop: 4
+            }}>
+              <Button
+                size={'small'}
+                icon={<SettingOutlined />}
+                type="link"
+                onClick={(e) => {
+                  e.stopPropagation()
+                  setModalState({...modalState, visible: true});
+                }}
+              >
+                管理环境
+              </Button>
+            </div>
+          </>
+        )}
+      >
+        {Object.entries(envConfig).map(([key, config]) => (
+          <Option key={key} value={key}>
+            <Tooltip
+              mouseEnterDelay={0.3}
+              placement="right"
+              title={`${config.name}  ${config.url}`}
+            >
+              <span>{config.name}</span>
+            </Tooltip>
+          </Option>
+        ))}
+      </Select>
+
+      {/* 环境管理弹窗 */}
+      <Modal
+        title="环境与变量管理"
+        open={modalState.visible}
+        width={800}
+        style={{ maxWidth: '90vw' }}
+        footer={null}
+        onCancel={() => setModalState({...modalState, visible: false})}
+      >
+        <div style={{ display: 'flex', minHeight: 400 }}>
+          {/* 左侧菜单 */}
+          <Menu
+            mode="inline"
+            selectedKeys={[modalState.tab]}
+            style={{ width: 220, borderRight: '1px solid #f0f0f0' }}
+            onClick={(e) => setModalState({...modalState, tab: e.key})}
+          >
+            <Menu.ItemGroup key="globalSettings" title="全局设置">
+              <Menu.Item key="globalVariables" icon={<GlobalOutlined />}>
+                全局变量
+              </Menu.Item>
+              <Menu.Item key="globalParams" icon={<GlobalOutlined />}>
+                全局参数
+              </Menu.Item>
+              <Menu.Item key="vaultSecrets" icon={<LockOutlined />}>
+                密钥库
+              </Menu.Item>
+            </Menu.ItemGroup>
+
+            <Menu.ItemGroup key="environmentSettings" title="环境配置">
+              <Menu.Item key="devEnv" icon={<CodeOutlined />}>
+                开发环境
+              </Menu.Item>
+              <Menu.Item key="testEnv" icon={<ExperimentOutlined />}>
+                测试环境
+              </Menu.Item>
+              <Menu.Item key="prodEnv" icon={<CloudServerOutlined />}>
+                正式环境
+              </Menu.Item>
+            </Menu.ItemGroup>
+
+            <Menu.ItemGroup key="mockServices" title="Mock服务">
+              <Menu.Item key="localMock" icon={<DesktopOutlined />}>
+                本地Mock
+              </Menu.Item>
+              <Menu.Item key="cloudMock" icon={<CloudOutlined />}>
+                云端Mock
+              </Menu.Item>
+              <Menu.Item key="selfHostedMock" icon={<ClusterOutlined />}>
+                自托管Mock
+              </Menu.Item>
+            </Menu.ItemGroup>
+          </Menu>
+
+          {/* 右侧内容区 */}
+          <div style={{ flex: 1, padding: '0 24px' }}>
+            {content[modalState.tab as keyof typeof content]}
+          </div>
+        </div>
+      </Modal>
+    </div>
+  );
+};

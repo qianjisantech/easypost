@@ -137,8 +137,17 @@ export function ParamsTab(props: ParamsTabProps) {
           ),
         },
         {
-          key: 'scripts',
-          label: '脚本',
+          key: 'pre-scripts',
+          label: '前置脚本',
+          children: (
+            <Form.Item noStyle name="pre-scripts">
+              <Scripts />
+            </Form.Item>
+          ),
+        },
+        {
+          key: 'post-scripts',
+          label: '后置脚本',
           children: (
             <Form.Item noStyle name="scripts">
               <Scripts />

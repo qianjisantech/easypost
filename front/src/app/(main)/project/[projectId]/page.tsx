@@ -88,7 +88,7 @@ function ProjectContent() {
      <div style={{marginTop:40}}>
        <Flex direction="row" style={{ height: '100%'}}>
          {/* 左侧导航栏 */}
-         <div className="flex h-full shrink-0 basis-[80px] flex-col items-center overflow-y-auto overflow-x-hidden px-1 pt-layoutHeader" style={{backgroundColor: '#f0f0f0',height: '100vh',top:0}}>
+         <div className="flex h-full shrink-0 basis-[80px] flex-col items-center overflow-y-auto overflow-x-hidden px-1 pt-layoutHeader" style={{backgroundColor: '#f0f0f0',  height: 'calc(200vh - 64px)',top:0}}>
            <div
              className="mb-5 mt-2 size-10 rounded-xl p-[6px]"
              style={{ color: token.colorText, border: `1px solid ${token.colorBorder}` }}
