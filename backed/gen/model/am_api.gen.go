@@ -33,7 +33,6 @@ type AmAPI struct {
 	Responsible      *string    `gorm:"column:responsible;comment:负责人" json:"responsible"` // 负责人
 	Parameters       *string    `gorm:"column:parameters" json:"parameters"`
 	Responses        *string    `gorm:"column:responses" json:"responses"`
-	RequestBody      *string    `gorm:"column:request_body" json:"request_body"`
 	ResponseExamples *string    `gorm:"column:response_examples" json:"response_examples"`
 }
 

@@ -48,7 +48,6 @@ func newAmAPI(db *gorm.DB, opts ...gen.DOOption) amAPI {
 	_amAPI.Responsible = field.NewString(tableName, "responsible")
 	_amAPI.Parameters = field.NewString(tableName, "parameters")
 	_amAPI.Responses = field.NewString(tableName, "responses")
-	_amAPI.RequestBody = field.NewString(tableName, "request_body")
 	_amAPI.ResponseExamples = field.NewString(tableName, "response_examples")
 
 	_amAPI.fillFieldMap()
@@ -82,7 +81,6 @@ type amAPI struct {
 	Responsible      field.String // 负责人
 	Parameters       field.String
 	Responses        field.String
-	RequestBody      field.String
 	ResponseExamples field.String
 
 	fieldMap map[string]field.Expr
@@ -121,7 +119,6 @@ func (a *amAPI) updateTableName(table string) *amAPI {
 	a.Responsible = field.NewString(table, "responsible")
 	a.Parameters = field.NewString(table, "parameters")
 	a.Responses = field.NewString(table, "responses")
-	a.RequestBody = field.NewString(table, "request_body")
 	a.ResponseExamples = field.NewString(table, "response_examples")
 
 	a.fillFieldMap()
@@ -147,7 +144,7 @@ func (a *amAPI) GetFieldByName(fieldName string) (field.OrderExpr, bool) {
 }
 
 func (a *amAPI) fillFieldMap() {
-	a.fieldMap = make(map[string]field.Expr, 23)
+	a.fieldMap = make(map[string]field.Expr, 22)
 	a.fieldMap["id"] = a.ID
 	a.fieldMap["name"] = a.Name
 	a.fieldMap["path"] = a.Path
@@ -169,7 +166,6 @@ func (a *amAPI) fillFieldMap() {
 	a.fieldMap["responsible"] = a.Responsible
 	a.fieldMap["parameters"] = a.Parameters
 	a.fieldMap["responses"] = a.Responses
-	a.fieldMap["request_body"] = a.RequestBody
 	a.fieldMap["response_examples"] = a.ResponseExamples
 }
 
