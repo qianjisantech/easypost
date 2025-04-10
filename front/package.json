@@ -5,7 +5,7 @@
   "license": "UNLECENSED",
   "type": "module",
   "scripts": {
-    "build": "next build ",
+    "build": "NEXT_IGNORE_ESLINT=1 NEXT_IGNORE_TYPECHECK=1 next build ",
     "deps": "pnpm up --interactive --latest",
     "dev": "next dev",
     "lint": "run-p lint:ts lint:es lint:css",
