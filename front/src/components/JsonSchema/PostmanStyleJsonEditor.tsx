@@ -1,61 +1,58 @@
 import React, { useEffect, useRef, useState } from "react";
 import MonacoEditor from '@monaco-editor/react';
-import { JsonEditor as Editor } from 'react-json-editor-ajrm';
-import { validate } from 'jsonschema';
 import { Button, Divider, Space } from "antd";
 import { CodeOutlined, ExpandOutlined, ShrinkOutlined } from "@ant-design/icons";
 
-interface JsonEditorChangeEvent {
-  jsObject: any;
-  json: string;
-  error: Error | null;
-}
 interface PostmanStyleJsonEditorProps {
-  value?: string
-  onChange?: (value: string) => void
-  defaultValue?: string
-  disabled: boolean
+  value?: string;
+  onChange?: (value: string) => void;
+  defaultValue?: string;
+  disabled: boolean;
 }
-function PostmanStyleJsonEditor(props: PostmanStyleJsonEditorProps) {
-  const { disabled,defaultValue, value = defaultValue, onChange } = props
 
-  const [json, setJson] = useState(value);
+function PostmanStyleJsonEditor(props: PostmanStyleJsonEditorProps) {
+  const { disabled, defaultValue, value = defaultValue, onChange } = props;
+  const [theme, setTheme] = useState('light');
   const [rawJson, setRawJson] = useState(value);
   const [error, setError] = useState<string | null>(null);
   const editorRef = useRef<any>(null);
   const containerRef = useRef<HTMLDivElement>(null);
   const [isMounted, setIsMounted] = useState(false);
-  // 处理 react-json-editor-ajrm 的变化
-  const handleJsonEditorChange = (data: JsonEditorChangeEvent) => {
-    if (!data.jsObject) return;
-    setJson(data.jsObject);
-    setRawJson(JSON.stringify(data.jsObject, null, 2));
-    setError(data.error ? data.error.message : null);
-  };
 
-  // 处理 Monaco Editor 的变化
-  const handleMonacoChange = (value: string | undefined) => {
-    if (disabled) return;
-    setRawJson(value || '');
-    onChange?.(value || '');
-  };
+  // 1. 定义稳定主题
   useEffect(() => {
-    setIsMounted(true);
-    return () => setIsMounted(false);
+    const monaco = window.monaco;
+    if (!monaco) return;
+
+    monaco.editor.defineTheme('custom-light', {
+      base: 'vs',
+      inherit: true,
+      rules: [],
+      colors: {
+        'editor.background': '#ffffff',
+        'editor.lineNumbersBackground': '#f5f5f5',
+        'editor.lineNumbersColor': '#666666',
+      }
+    });
+
+    monaco.editor.defineTheme('custom-dark', {
+      base: 'vs-dark',
+      inherit: true,
+      rules: [],
+      colors: {
+        'editor.background': '#1e1e1e',
+        'editor.lineNumbersBackground': '#252526',
+        'editor.lineNumbersColor': '#858585',
+      }
+    });
   }, []);
-  // 格式化 JSON
-  const formatJson = () => {
-    try {
-      const parsed = JSON.parse(rawJson);
-      setRawJson(JSON.stringify(parsed, null, 2));
-      setJson(parsed);
-      setError(null);
-    } catch (err) {
-      setError(err instanceof Error ? err.message : String(err));
-    }
-  };
+
+  // 处理编辑器挂载
   const handleEditorDidMount = (editor: any, monaco: any) => {
     editorRef.current = editor;
+
+    // 应用当前主题
+    monaco.editor.setTheme(theme === 'dark' ? 'custom-dark' : 'custom-light');
 
     // 立即触发布局计算
     requestAnimationFrame(() => {
@@ -75,20 +72,42 @@ function PostmanStyleJsonEditor(props: PostmanStyleJsonEditorProps) {
     return () => resizeObserver.disconnect();
   };
 
+  // 主题同步
   useEffect(() => {
-    if (editorRef.current) {
-      // 手动触发编辑器布局计算
-      setTimeout(() => {
-        editorRef.current?.layout();
-      }, 0);
+    if (editorRef.current && window.monaco) {
+      window.monaco.editor.setTheme(theme === 'dark' ? 'custom-dark' : 'custom-light');
     }
+  }, [theme]);
+
+  // 初始化组件
+  useEffect(() => {
+    setIsMounted(true);
+    return () => setIsMounted(false);
   }, []);
+
+  // 处理编辑器变化
+  const handleMonacoChange = (value: string | undefined) => {
+    if (disabled) return;
+    setRawJson(value || '');
+    onChange?.(value || '');
+  };
+
+  // 格式化 JSON
+  const formatJson = () => {
+    try {
+      const parsed = JSON.parse(rawJson);
+      setRawJson(JSON.stringify(parsed, null, 2));
+      setError(null);
+    } catch (err) {
+      setError(err instanceof Error ? err.message : String(err));
+    }
+  };
+
   // 压缩 JSON
   const minifyJson = () => {
     try {
       const parsed = JSON.parse(rawJson);
       setRawJson(JSON.stringify(parsed));
-      setJson(parsed);
       setError(null);
     } catch (err) {
       setError(err instanceof Error ? err.message : String(err));
@@ -99,9 +118,8 @@ function PostmanStyleJsonEditor(props: PostmanStyleJsonEditorProps) {
     <div style={{
       fontFamily: 'Arial',
       position: 'relative',
-      opacity: disabled ? 0.7 : 1, // 轻度透明
     }}>
-      {/* 按钮容器 - 使用 flex 布局右对齐 */}
+      {/* 按钮容器 */}
       <div style={{
         display: 'flex',
         justifyContent: 'flex-end',
@@ -119,7 +137,6 @@ function PostmanStyleJsonEditor(props: PostmanStyleJsonEditorProps) {
             onClick={formatJson}
             icon={<ExpandOutlined />}
             style={buttonStyle}
-            disabled={disabled}
           >
             格式化
           </Button>
@@ -129,7 +146,6 @@ function PostmanStyleJsonEditor(props: PostmanStyleJsonEditorProps) {
             onClick={minifyJson}
             icon={<ShrinkOutlined />}
             style={buttonStyle}
-            disabled={disabled}
           >
             压缩
           </Button>
@@ -147,18 +163,38 @@ function PostmanStyleJsonEditor(props: PostmanStyleJsonEditorProps) {
           )}
         </Space>
       </div>
+
       {/* 编辑器区域 */}
       <div style={{ display: 'flex', gap: '20px' }}>
         {isMounted && (
           <MonacoEditor
             height="500px"
             language="json"
-            theme="vs"
+            theme={theme === 'dark' ? 'custom-dark' : 'custom-light'}
             value={rawJson}
             onChange={handleMonacoChange}
-            onMount={handleEditorDidMount} // 添加挂载回调
+            onMount={(editor, monaco) => {
+              // 1. 移除默认的只读警告处理器
+              editor.onDidAttemptReadOnlyEdit = () => {};
+
+              // 2. 覆盖编辑器贡献点
+              const contributions = editor.getContribution('editor.contrib.readOnlyMessage');
+              if (contributions) {
+                contributions.dispose();
+              }
+
+              handleEditorDidMount(editor, monaco);
+            }}
+            // 覆盖默认的编辑器贡献（去除只读警告）
+            beforeMount={(monaco) => {
+              monaco.editor.onDidCreateEditor((editor) => {
+                editor.onDidAttemptReadOnlyEdit(() => {
+                  // 空函数，阻止默认警告行为
+                });
+              });
+            }}
             options={{
-              readOnly: disabled || false, // 设置为只读
+              readOnly: disabled,
               minimap: { enabled: false },
               scrollBeyondLastLine: false,
               fontSize: 14,
@@ -170,6 +206,9 @@ function PostmanStyleJsonEditor(props: PostmanStyleJsonEditorProps) {
               lineNumbers: 'on',
               lineNumbersMinChars: 3,
               lineDecorationsWidth: 10,
+              hover:{enabled:false},
+              cursorStyle:'line',
+
             }}
           />
         )}
@@ -177,8 +216,6 @@ function PostmanStyleJsonEditor(props: PostmanStyleJsonEditorProps) {
     </div>
   );
 }
-
-export default PostmanStyleJsonEditor;
 
 // 按钮样式常量
 const buttonStyle = {
@@ -202,3 +239,5 @@ const buttonStyle = {
     cursor: 'not-allowed'
   }
 };
+
+export default PostmanStyleJsonEditor;
