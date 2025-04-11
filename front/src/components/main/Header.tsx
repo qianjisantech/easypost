@@ -3,15 +3,15 @@ import React, { useState } from 'react'
 import { useRouter } from 'next/navigation'
 import {
   AppstoreOutlined,
-  BellOutlined,
+  BellOutlined, CodeOutlined, GithubOutlined, GitlabOutlined,
   HomeOutlined,
   LoadingOutlined,
   MailOutlined,
   ReloadOutlined,
   SettingOutlined,
-  UserOutlined,
-} from '@ant-design/icons'
-import { Avatar, Button, Dropdown, Menu, Modal, Space, Spin, Tooltip } from 'antd'
+  UserOutlined
+} from "@ant-design/icons";
+import { Avatar, Button, Dropdown, Menu, message, Modal, Space, Spin, Tooltip } from "antd";
 
 import { ROUTES } from '@/utils/routes'
 
@@ -79,7 +79,30 @@ const HeaderPage = () => {
       </Menu.Item>
     </Menu>
   )
-
+  // 处理代码仓库菜单点击
+  const handleCodeRepoClick = ({ key }) => {
+    switch(key) {
+      case 'github':
+        // eslint-disable-next-line @typescript-eslint/no-unsafe-call
+        window.open('https://github.com/qianjisantech/easypost', '_blank');
+        break
+      case 'gitee':
+        window.open('https://gitee.com/xiaoyuanyuan-rush_admin/easypost', '_blank');
+        break
+      default:
+        message.info(`已选择 ${key}`);
+    }
+  };
+  const CodeRepositoryMenu = (
+    <Menu onClick={handleCodeRepoClick}>
+      <Menu.Item key="github" icon={<GithubOutlined />}>
+        GitHub 项目地址
+      </Menu.Item>
+      <Menu.Item key="gitee" icon={<GitlabOutlined />}>
+        Gitee 项目地址
+      </Menu.Item>
+    </Menu>
+  )
   // 账号设置内容
   const content = {
     basicSettings: <div>基础设置功能待开放</div>,
@@ -125,6 +148,10 @@ const HeaderPage = () => {
         <HomeOutlined /> Home
       </Button>
       <Space size="middle" style={{ position: 'absolute', right: 10 }}>
+        {/* 新增代码仓库下拉菜单 */}
+        <Dropdown overlay={CodeRepositoryMenu} trigger={['hover']}>
+          <GithubOutlined style={iconStyle} />
+        </Dropdown>
         <Tooltip title="刷新">
           {loading ? (
             <Spin indicator={<LoadingOutlined spin style={iconStyle} />} />

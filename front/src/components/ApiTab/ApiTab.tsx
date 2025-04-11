@@ -49,8 +49,9 @@ import { TabContentProvider } from './TabContentContext'
 
 import { css } from '@emotion/css'
 import TabPane from "antd/es/tabs/TabPane";
-import GlobalParameters from "@/components/EnvManagement/GlobalParameters";
+import GlobalVariable from "@/components/EnvManagement/GlobalVariable";
 import zhCN from "antd/locale/zh_CN";
+import GlobalParameters from "@/components/EnvManagement/GlobalParameters";
 
 // 如果元素有 "data-no-dnd" 属性，则阻止 DnD 事件传播。
 const handler = ({ nativeEvent: event }: PointerEvent) => {
@@ -341,7 +342,7 @@ const TabActionsENVDropdown = () => {
       <div>
         <h3>全局变量管理</h3>
         <ConfigProvider locale={zhCN}>
-          <GlobalParameters />
+          <GlobalVariable />
         </ConfigProvider>
         {/* 这里可以添加变量表格 */}
       </div>
@@ -349,7 +350,9 @@ const TabActionsENVDropdown = () => {
     globalParams: (
       <div>
         <h3>全局参数设置</h3>
-        <p>配置默认请求头、认证信息等</p>
+        <ConfigProvider locale={zhCN}>
+          <GlobalParameters />
+        </ConfigProvider>
       </div>
     ),
     vaultSecrets: (
