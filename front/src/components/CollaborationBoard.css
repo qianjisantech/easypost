@@ -1,0 +1,230 @@
+/* 基础样式 - 只缩小容器宽度 */
+.collaboration-board {
+    padding: 16px;
+    max-width: 700px; /* 看板整体宽度缩小 */
+    margin: 0 auto;
+    position: relative;
+    min-height: 100vh;
+}
+
+/* 玻璃拟态背景层 */
+.glass-bg-layer {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    z-index: -1;
+}
+
+/* 玻璃拟态基础样式 - 增强边框 */
+.glass-bg {
+    background: rgba(255, 255, 255, 0.8);
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+    border-radius: 12px;
+    border: 1px solid rgba(255, 255, 255, 0.5); /* 增强边框效果 */
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
+}
+
+/* 玻璃按钮样式 */
+.glass-btn {
+    background: rgba(255, 255, 255, 0.2) !important;
+    border: 1px solid rgba(255, 255, 255, 0.4) !important;
+    color: rgba(0, 0, 0, 0.85) !important;
+    transition: all 0.3s ease;
+}
+
+.glass-btn.ant-btn-primary {
+    background: rgba(24, 144, 255, 0.7) !important;
+    color: white !important;
+    border: 1px solid rgba(24, 144, 255, 0.8) !important;
+}
+
+.glass-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+/* 卡片样式 - 宽度自适应缩小容器 */
+.glass-card {
+    background: rgba(255, 255, 255, 0.85) !important;
+    border: 1px solid rgba(255, 255, 255, 0.6) !important;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1) !important;
+    transition: all 0.3s ease;
+}
+
+.project-card {
+    width: 100%; /* 卡片宽度自适应 */
+    border-radius: 10px;
+    overflow: hidden;
+    margin-bottom: 16px;
+}
+
+.project-card.featured {
+    border: 2px solid rgba(255, 193, 7, 0.8);
+}
+
+/* 卡片封面 */
+.card-cover {
+    position: relative;
+    cursor: pointer;
+    height: 140px; /* 稍微缩小封面高度 */
+    overflow: hidden;
+}
+
+.cover-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    opacity: 0;
+    transition: opacity 0.3s;
+    background: rgba(0, 0, 0, 0.4) !important;
+}
+
+.card-cover:hover .cover-overlay {
+    opacity: 1;
+}
+
+.link-icon {
+    color: white;
+    font-size: 24px;
+}
+
+/* 卡片内容 - 保持原文字大小 */
+.card-title {
+    font-size: 16px;
+    font-weight: 500;
+    margin-bottom: 8px;
+    color: rgba(0, 0, 0, 0.85) !important;
+}
+
+.card-description {
+    font-size: 14px;
+    color: rgba(0, 0, 0, 0.7);
+    margin-bottom: 12px;
+}
+
+.card-tags {
+    margin-top: 8px;
+}
+
+/* 标签样式 */
+.dark-tag {
+    color: rgba(0, 0, 0, 0.8) !important;
+    background: rgba(255, 255, 255, 0.7) !important;
+    border: 1px solid rgba(0, 0, 0, 0.15) !important;
+}
+
+/* 头部样式 */
+.board-header {
+    padding: 12px 16px;
+    margin-bottom: 16px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+/* 瀑布流布局 */
+.masonry-container {
+    width: 100%;
+}
+
+.masonry-grid {
+    display: flex;
+    margin-left: -12px;
+    width: auto;
+}
+
+.masonry-column {
+    padding-left: 12px;
+    background-clip: padding-box;
+}
+
+.masonry-item {
+    margin-bottom: 16px;
+}
+
+/* 加载状态 */
+.loading-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 200px;
+}
+
+.loading-dots {
+    display: flex;
+    margin-top: 20px;
+}
+
+.dot {
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    margin: 0 6px;
+    background: rgba(255, 255, 255, 0.8);
+}
+
+/* 空状态 */
+.empty-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 300px;
+}
+
+.empty-description {
+    font-size: 16px;
+    color: rgba(0, 0, 0, 0.85);
+}
+
+.create-button {
+    margin-top: 16px;
+}
+
+/* 精选项目标识 */
+.featured-star {
+    color: #faad14;
+    margin-right: 8px;
+}
+
+/* 响应式调整 */
+@media (max-width: 768px) {
+    .collaboration-board {
+        max-width: 95%;
+        padding: 12px;
+    }
+
+    .board-header {
+        flex-direction: column;
+        gap: 12px;
+    }
+
+    .card-cover {
+        height: 120px;
+    }
+}
+
+@media (max-width: 480px) {
+    .card-title {
+        font-size: 15px;
+    }
+
+    .card-description {
+        font-size: 13px;
+    }
+
+    .glass-btn {
+        padding: 4px 8px;
+        font-size: 13px;
+    }
+}
