@@ -172,14 +172,27 @@ export function ParamsRunTab(props: ParamsTabProps) {
       ),
     },
     {
-      key: 'scripts',
+      key: 'pre-scripts',
       label: (
         <BadgeLabel>
-          脚本
+          前置脚本
         </BadgeLabel>
       ),
       children: (
-        <Form.Item noStyle name="scripts">
+        <Form.Item noStyle name="pre-scripts">
+          <Scripts />
+        </Form.Item>
+      ),
+    },
+    {
+      key: 'post-scripts',
+      label: (
+        <BadgeLabel>
+          后置脚本
+        </BadgeLabel>
+      ),
+      children: (
+        <Form.Item noStyle name="post-scripts">
           <Scripts />
         </Form.Item>
       ),

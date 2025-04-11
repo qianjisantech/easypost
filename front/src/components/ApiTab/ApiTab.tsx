@@ -49,6 +49,8 @@ import { TabContentProvider } from './TabContentContext'
 
 import { css } from '@emotion/css'
 import TabPane from "antd/es/tabs/TabPane";
+import GlobalParameters from "@/components/EnvManagement/GlobalParameters";
+import zhCN from "antd/locale/zh_CN";
 
 // 如果元素有 "data-no-dnd" 属性，则阻止 DnD 事件传播。
 const handler = ({ nativeEvent: event }: PointerEvent) => {
@@ -338,7 +340,9 @@ const TabActionsENVDropdown = () => {
     globalVariables: (
       <div>
         <h3>全局变量管理</h3>
-        <p>在这里管理所有API请求共用的全局变量</p>
+        <ConfigProvider locale={zhCN}>
+          <GlobalParameters />
+        </ConfigProvider>
         {/* 这里可以添加变量表格 */}
       </div>
     ),
@@ -446,10 +450,10 @@ const TabActionsENVDropdown = () => {
 
       {/* 环境管理弹窗 */}
       <Modal
-        title="环境与变量管理"
+        title=""
         open={modalState.visible}
-        width={800}
-        style={{ maxWidth: '90vw' }}
+        width={1200}
+        style={{ maxWidth: '100vw' }}
         footer={null}
         onCancel={() => setModalState({...modalState, visible: false})}
       >
