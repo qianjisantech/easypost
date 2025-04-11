@@ -6,11 +6,14 @@ import (
 	"backed/internal/svc"
 	"backed/internal/types"
 	"context"
+	"github.com/emicklei/go-restful/v3/log"
 	"strings"
 	"time"
 
 	"github.com/zeromicro/go-zero/core/logx"
 )
+
+var user = []string{"code"}
 
 type AuthEmailCodeRegisterLogic struct {
 	logx.Logger
@@ -39,15 +42,15 @@ func (l *AuthEmailCodeRegisterLogic) AuthEmailCodeRegister(req *types.AuthEmailC
 	if req.Code == "" {
 		return nil, errorx.NewCodeError("验证码不能为空")
 	}
-	code, err := l.svcCtx.Redis.Get(req.Email)
+
+	values, err := l.svcCtx.Redis.Hmget(req.Email, user...)
+	// values 是 []string 类型
 	if err != nil {
-		return nil, errorx.NewCodeError(err.Error())
+		return nil, errorx.NewCodeError("验证码格式无效")
 	}
-	if code == "" {
-		return nil, errorx.NewCodeError("验证码已过期")
-	}
-	if code != req.Code {
-		return nil, errorx.NewCodeError("验证码不正确!")
+	log.Printf("redis 验证码%v", values[0])
+	if values[0] != req.Code {
+		return nil, errorx.NewCodeError("验证码不正确")
 	}
 	sysUser.Email = &req.Email
 	username := strings.Split(req.Email, "@")[0]

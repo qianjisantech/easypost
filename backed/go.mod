@@ -4,6 +4,7 @@ go 1.22.0
 
 require (
 	github.com/bwmarrin/snowflake v0.3.0
+	github.com/emicklei/go-restful/v3 v3.11.0
 	github.com/golang-jwt/jwt/v4 v4.5.1
 	github.com/olivere/elastic/v7 v7.0.32
 	github.com/zeromicro/go-zero v1.8.1
