@@ -126,8 +126,13 @@ type Parameters struct {
 	Header        []Parameter   `json:"header"`
 	Authorization Authorization `json:"authorization"`
 	Payload       Payload       `json:"payload"`
+	PreScripts    Scripts       `json:"prescripts"`
+	PostScripts   Scripts       `json:"postscripts"`
 }
-
+type Scripts struct {
+	Type string `json:"type"`
+	Data string `json:"data"`
+}
 type Parameter struct {
 	Id          string `json:"id"`
 	Name        string `json:"name"`

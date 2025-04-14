@@ -45,7 +45,10 @@
     ".next/types/**/*.ts",
     "./tailwind.config.ts",
     "../../../../home/JetBrains/WebStorm 2024.1/plugins/javascript-impl/jsLanguageServicesImpl/external/lib.es5.d.ts",
-    "../../../../home/JetBrains/WebStorm 2024.1/plugins/javascript-impl/jsLanguageServicesImpl/external/lib.es5.d.ts"
+    "../../../../home/JetBrains/WebStorm 2024.1/plugins/javascript-impl/jsLanguageServicesImpl/external/lib.es5.d.ts",
+    "node_modules/.pnpm/yaml@2.7.0/node_modules/yaml/dist/schema/json-schema.d.ts",
+    "node_modules/.pnpm/yaml@2.7.0/node_modules/yaml/dist/schema/json-schema.d.ts",
+    "node_modules/.pnpm/yaml@2.7.0/node_modules/yaml/dist/schema/json-schema.d.ts"
   ],
   "exclude": [
     "node_modules",

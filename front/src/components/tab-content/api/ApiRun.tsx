@@ -1,31 +1,25 @@
-'use client'
-import { useEffect, useRef, useState } from 'react'
+"use client";
+import { useEffect, useRef, useState } from "react";
 
 import { Button, Divider, Empty, Form, type FormProps, Select, type SelectProps, Space } from "antd";
-import type { AxiosRequestConfig } from 'axios'
-import { nanoid } from 'nanoid'
-import { ApiDetail, ApiDetailCreate, ApiDetailUpdate, ApiRunDetail } from 'src/api/api'
+import { nanoid } from "nanoid";
+import { ApiDetailCreate, ApiDetailUpdate, ApiRunDetail } from "src/api/api";
 
-import { PageTabStatus } from '@/components/ApiTab/ApiTab.enum'
-import { useTabContentContext } from '@/components/ApiTab/TabContentContext'
-import { InputUnderline } from '@/components/InputUnderline'
-import { ApiRemoveButton } from '@/components/tab-content/api/ApiRemoveButton'
-import { ResponseTab } from '@/components/tab-content/api/components/ResponseTab'
-import { ParamsRunTab } from '@/components/tab-content/api/params/ParamsRunTab'
-import { RunResponse } from '@/components/tab-content/api/response/RunResponse'
-import { HTTP_METHOD_CONFIG } from '@/configs/static'
-import { useGlobalContext } from '@/contexts/global'
-import { useMenuHelpersContext } from '@/contexts/menu-helpers'
-import { useMenuTabHelpers } from '@/contexts/menu-tab-settings'
-import { initialCreateApiDetailsData } from '@/data/remote'
-import { AuthorizationType, MenuItemType, ParamType } from "@/enums";
-import type { ApiDetails } from '@/types'
-import { request } from '@/utils/request'
-
-import { BaseFormItems } from './components/BaseFormItems'
-import { GroupTitle } from './components/GroupTitle'
-import { PathInput, type PathInputProps } from './components/PathInput'
-import { ParamsTab } from './params/ParamsTab'
+import { PageTabStatus } from "@/components/ApiTab/ApiTab.enum";
+import { useTabContentContext } from "@/components/ApiTab/TabContentContext";
+import { ParamsRunTab } from "@/components/tab-content/api/params/ParamsRunTab";
+import { RunResponse } from "@/components/tab-content/api/response/RunResponse";
+import { HTTP_METHOD_CONFIG } from "@/configs/static";
+import { useGlobalContext } from "@/contexts/global";
+import { useMenuHelpersContext } from "@/contexts/menu-helpers";
+import { useMenuTabHelpers } from "@/contexts/menu-tab-settings";
+import { initialCreateApiDetailsData } from "@/data/remote";
+import { AuthorizationType, MenuItemType, ParamType, ScriptsType } from "@/enums";
+import type { ApiDetails, GlobalParameter } from "@/types";
+import { request } from "@/utils/request";
+import { GroupTitle } from "./components/GroupTitle";
+import { PathInput, type PathInputProps } from "./components/PathInput";
+import { PrimitiveSchema, RefSchema } from "@/components/JsonSchema/JsonSchema.type";
 
 const DEFAULT_NAME = '未命名接口'
 
@@ -45,7 +39,7 @@ const methodOptions: SelectProps['options'] = Object.entries(HTTP_METHOD_CONFIG)
 /**
  * API 「运行」部分。
  */
-export function ApiRun() {
+export function ApiRun({ activeKey }: { activeKey: string }) {
   const [form] = Form.useForm<ApiDetails>()
 
   const { messageApi } = useGlobalContext()
@@ -57,8 +51,6 @@ export function ApiRun() {
   const [loading, setLoading] = useState(false)
 
   const isCreating = tabData.data?.tabStatus === PageTabStatus.Create
-
-  const [requestConfig, setRequestConfig] = useState<AxiosRequestConfig>({})
   const loadingApiDetails = async (id: string) => {
     try {
       if (id) {
@@ -86,9 +78,11 @@ export function ApiRun() {
     if (isCreating) {
       form.setFieldsValue(initialCreateApiDetailsData)
     } else {
-      loadingApiDetails(tabData.key)
+      if (activeKey === 'run') {
+        loadingApiDetails(tabData.key)
+      }
     }
-  }, [form, isCreating, tabData.key])
+  }, [activeKey, isCreating, tabData.key])
 
   const handleSaveCase: FormProps<ApiDetails>['onFinish'] = async (values) => {
     const menuName = values.name || DEFAULT_NAME
@@ -209,8 +203,76 @@ export function ApiRun() {
       form.setFieldValue('parameters', newParameters)
     }
   }
+  //替换参数
+  const replaceRawParameter = (
+    data: PrimitiveSchema | ObjectSchema | ArraySchema | RefSchema | undefined,
+    globalParameterList: GlobalParameter[]
+  ): PrimitiveSchema | ObjectSchema | ArraySchema | RefSchema | undefined => {
+    // 处理undefined或null情况
+    if (data === undefined || data === null) {
+      return data;
+    }
 
+    // 如果是字符串类型，执行参数替换
+    if (typeof data === 'string') {
+      return data.replace(/\{\{(.*?)\}\}/g, (match, key) => {
+        // 去除可能的空格
+        key = key.trim();
+
+        // 在globalParameterList中查找匹配的参数
+        const param = globalParameterList.find((p) => p.name === key);
+
+        // 如果找到参数则返回其值，否则保留原始匹配
+        return param ? String(param.value) : match;
+      });
+    }
+
+    // 对于其他类型（数字、布尔值、对象、数组等），直接返回原值
+    return data;
+  };
+  const globalParameterList: GlobalParameter[] = [
+    {
+      id: '1',
+      name: 'tracking_number',
+      value: 'UAT450000014284',
+      description: '描述',
+    },
+    {
+      id: '2',
+      name: 'message',
+      value: '这是一个message',
+      description: '描述',
+    },
+  ]
+
+  const handleJsPreScripts = (script: string) => {
+    console.log('handleJsPreScripts', script)
+  }
   const send = async (values: ApiDetails) => {
+    console.log('values.parameters?.prescripts:', values.parameters?.prescripts);
+    console.log('values.parameters?.prescripts.data:', values.parameters?.prescripts.data);
+    console.log('values.parameters?.prescripts.type:', values.parameters?.prescripts.type);
+// 检查prescripts是否存在且有data
+    if (values.parameters?.prescripts?.data) {
+      // 使用正确的switch语法检查type
+      switch (values.parameters.prescripts.type) {
+        case ScriptsType.JavaScript:
+          console.log('执行JavaScript预处理脚本');
+          handleJsPreScripts(values.parameters.prescripts.data);
+          break;
+        case ScriptsType.Java:
+          console.log('Java脚本');
+          break;
+        case ScriptsType.Python:
+          console.log('Python脚本');
+          break;
+        default:
+          console.log('未知脚本类型');
+          break;
+      }
+    } else {
+      console.log('未设置预处理脚本或脚本数据为空');
+    }
     console.log('apiDetail', values)
     // 1. 处理 headers
     const headers = values.parameters?.header?.reduce(
@@ -239,27 +301,29 @@ export function ApiRun() {
     }
 
     // 检查 headers 中是否已有 Content-Type
-    const hasContentType = headers && Object.keys(headers).some(
-      key => key.toLowerCase() === 'content-type'
-    )
+    const hasContentType =
+      headers && Object.keys(headers).some((key) => key.toLowerCase() === 'content-type')
 
     const fixedHeaders = {
       'User-Agent': 'Easypost/1.0.0 (https://easypost.com)',
       Accept: '*/*',
       Host: host, // 使用从 path 提取的域名
       Connection: 'keep-alive',
-      ...(!hasContentType && { 'Content-Type': 'text/plain' }) // 如果没有 Content-Type 则添加默认值
+      ...(!hasContentType && { 'Content-Type': 'text/plain' }), // 如果没有 Content-Type 则添加默认值
     }
-// 处理 Basic Auth 认证
+    // 处理 Basic Auth 认证
     if (values.parameters.authorization?.type === AuthorizationType.BasicAuth) {
-      const { username, password } = values.authorization.data as { username: string; password: string }
+      const { username, password } = values.authorization.data as {
+        username: string
+        password: string
+      }
       if (username && password) {
         const token = btoa(`${username}:${password}`) // Base64 编码
         fixedHeaders['Authorization'] = `Basic ${token}`
       }
     }
     if (values.parameters.authorization?.type === AuthorizationType.BearerToken) {
-      const { token } = values.parameters.authorization.data as { token: string}
+      const { token } = values.parameters.authorization.data as { token: string }
       if (token) {
         fixedHeaders['Authorization'] = `Bearer ${token}`
       }
@@ -272,7 +336,7 @@ export function ApiRun() {
       'Api-H0': Object.entries(allHeaders)
         .map(([key, value]) => `${key}=${value}`)
         .join(', '),
-      'Content-Type': 'application/json'
+      'Content-Type': 'application/json',
     }
 
     // 2. 组装 requestConfig
@@ -284,13 +348,15 @@ export function ApiRun() {
       },
       baseURL: '/proxy/v1/request',
     }
-    console.log('values.parameters.payload',values.parameters?.payload)
+    console.log('values.parameters.payload', values.parameters?.payload)
 
     if (values.parameters?.payload?.jsonSchema) {
-      requestConfig.data = values.parameters?.payload?.jsonSchema
+
+      requestConfig.data = replaceRawParameter(values.parameters.payload.jsonSchema, globalParameterList)
+
     } else if (values.parameters?.payload?.parameters) {
       const formData = new FormData()
-      values.parameters?.payload?.parameters.forEach((item) => {
+      values.parameters.payload.parameters.forEach((item) => {
         formData.append(item.name!, item.example)
       })
       requestConfig.data = formData
@@ -409,17 +475,18 @@ export function ApiRun() {
             <RunResponse />
           ) : (
             <Empty
-              image={Empty.PRESENTED_IMAGE_SIMPLE}
               description={
                 <span style={{ color: '#666', fontSize: '14px' }}>
                   {/* eslint-disable-next-line react/no-unescaped-entities */}
-          点击<span style={{ color: '#1890ff', fontWeight: 500 }}>"发送"</span>按钮获取返回结果
-        </span>
+                  点击<span style={{ color: '#1890ff', fontWeight: 500 }}>"发送"</span>
+                  按钮获取返回结果
+                </span>
               }
+              image={Empty.PRESENTED_IMAGE_SIMPLE}
               style={{
                 margin: '40px 0',
                 padding: '40px 0',
-                background: 'transparent'
+                background: 'transparent',
               }}
             />
           )}

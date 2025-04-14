@@ -2,6 +2,7 @@ import { useRef, useState } from 'react'
 
 import TextArea from 'antd/es/input/TextArea'
 import PostmanStyleJsonEditor from "@/components/JsonSchema/PostmanStyleJsonEditor";
+import { Input } from "antd";
 
 interface TextInputProps {
   value?: string
@@ -21,10 +22,10 @@ export function RequestBodyRaw(props: TextInputProps) {
   const editorRef = useRef<HTMLDivElement | null>(null)
 
   // 输入框内容变化时触发
-  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const newValue = e.target.value
+// 修改后的处理函数，直接接收字符串值
+  const handleEditorChange = (newValue: string) => {
     setInputValue(newValue)
-    console.log('Input value changed:', inputValue)
+    console.log('Editor value changed:', newValue)
     onChange?.(newValue) // 调用回调
   }
 
@@ -57,7 +58,7 @@ export function RequestBodyRaw(props: TextInputProps) {
         border: '1px solid #ccc',
       }}
     >
-      <PostmanStyleJsonEditor value={inputValue} defaultValue={""} disabled={false}></PostmanStyleJsonEditor>
+      <PostmanStyleJsonEditor  onChange={handleEditorChange} defaultValue={""} disabled={false} value={inputValue}></PostmanStyleJsonEditor>
 
       {/* 调整高度的拖动手柄 */}
       <div

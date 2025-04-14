@@ -1,28 +1,39 @@
-import React, { useEffect, useRef, useState } from "react";
-import MonacoEditor from '@monaco-editor/react';
-import { Button, Divider, Space } from "antd";
-import { CodeOutlined, ExpandOutlined, ShrinkOutlined } from "@ant-design/icons";
+import React, { useEffect, useRef, useState } from 'react'
+import { ExpandOutlined, QuestionCircleOutlined, ShrinkOutlined } from '@ant-design/icons'
+import MonacoEditor from '@monaco-editor/react'
+import { Button, Divider, Space } from 'antd'
+import DynamicValueModal from "@/components/DynamicValueModal";
 
 interface PostmanStyleJsonEditorProps {
-  value?: string;
-  onChange?: (value: string) => void;
-  defaultValue?: string;
-  disabled: boolean;
+  value?: string
+  onChange?: (value: string) => void
+  defaultValue?: string
+  disabled: boolean
 }
 
 function PostmanStyleJsonEditor(props: PostmanStyleJsonEditorProps) {
-  const { disabled, defaultValue, value = defaultValue, onChange } = props;
-  const [theme, setTheme] = useState('light');
-  const [rawJson, setRawJson] = useState(value);
-  const [error, setError] = useState<string | null>(null);
-  const editorRef = useRef<any>(null);
-  const containerRef = useRef<HTMLDivElement>(null);
-  const [isMounted, setIsMounted] = useState(false);
+  const { disabled, defaultValue, value = defaultValue, onChange } = props
+  const [theme, setTheme] = useState('light')
+  const [rawJson, setRawJson] = useState(value || '')
+  const [error, setError] = useState<string | null>(null)
+  const editorRef = useRef<any>(null)
+  const containerRef = useRef<HTMLDivElement>(null)
+  const [isMounted, setIsMounted] = useState(false)
+  const [modalVisible, setModalVisible] = useState(false);
+
+  // 初始化时设置默认值
+  useEffect(() => {
+    if (value !== undefined) {
+      setRawJson(value)
+    }
+  }, [value])
 
   // 1. 定义稳定主题
   useEffect(() => {
-    const monaco = window.monaco;
-    if (!monaco) return;
+    const monaco = window.monaco
+    if (!monaco) {
+      return
+    }
 
     monaco.editor.defineTheme('custom-light', {
       base: 'vs',
@@ -32,8 +43,8 @@ function PostmanStyleJsonEditor(props: PostmanStyleJsonEditorProps) {
         'editor.background': '#ffffff',
         'editor.lineNumbersBackground': '#f5f5f5',
         'editor.lineNumbersColor': '#666666',
-      }
-    });
+      },
+    })
 
     monaco.editor.defineTheme('custom-dark', {
       base: 'vs-dark',
@@ -43,149 +54,216 @@ function PostmanStyleJsonEditor(props: PostmanStyleJsonEditorProps) {
         'editor.background': '#1e1e1e',
         'editor.lineNumbersBackground': '#252526',
         'editor.lineNumbersColor': '#858585',
+      },
+    })
+  }, [])
+
+  // 处理动态值插入
+  const handleInsertDynamicValue = (value: string) => {
+    try {
+      const parsed = rawJson ? JSON.parse(rawJson) : {};
+      // 根据不同的动态值类型插入不同的内容
+      switch(value) {
+        case '{{timestamp}}':
+          parsed.timestamp = Date.now();
+          break;
+        case '{{randomId}}':
+          parsed.randomId = Math.random().toString(36).substring(2, 10);
+          break;
+        case '{{uuid}}':
+          parsed.uuid = 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {
+            const r = Math.random() * 16 | 0, v = c === 'x' ? r : (r & 0x3 | 0x8);
+            return v.toString(16);
+          });
+          break;
+        case '{{date}}':
+          parsed.date = new Date().toISOString().split('T')[0];
+          break;
+        case '{{datetime}}':
+          parsed.datetime = new Date().toISOString();
+          break;
+        default:
+          parsed.dynamicValue = value;
       }
-    });
-  }, []);
+      const newJson = JSON.stringify(parsed, null, 2);
+      setRawJson(newJson);
+      onChange?.(newJson); // 通知父组件值已变更
+      setError(null);
+    } catch (err) {
+      setError(err instanceof Error ? err.message : String(err));
+    }
+  };
 
   // 处理编辑器挂载
   const handleEditorDidMount = (editor: any, monaco: any) => {
-    editorRef.current = editor;
+    editorRef.current = editor
 
     // 应用当前主题
-    monaco.editor.setTheme(theme === 'dark' ? 'custom-dark' : 'custom-light');
+    monaco.editor.setTheme(theme === 'dark' ? 'custom-dark' : 'custom-light')
 
     // 立即触发布局计算
     requestAnimationFrame(() => {
-      editor.layout();
-      editor.render();
-    });
+      editor.layout()
+      editor.render()
+    })
 
     // 添加resize观察器
     const resizeObserver = new ResizeObserver(() => {
-      editor.layout();
-    });
+      editor.layout()
+    })
 
     if (containerRef.current) {
-      resizeObserver.observe(containerRef.current);
+      resizeObserver.observe(containerRef.current)
     }
 
-    return () => resizeObserver.disconnect();
-  };
+    return () => resizeObserver.disconnect()
+  }
 
   // 主题同步
   useEffect(() => {
     if (editorRef.current && window.monaco) {
-      window.monaco.editor.setTheme(theme === 'dark' ? 'custom-dark' : 'custom-light');
+      window.monaco.editor.setTheme(theme === 'dark' ? 'custom-dark' : 'custom-light')
     }
-  }, [theme]);
+  }, [theme])
 
   // 初始化组件
   useEffect(() => {
-    setIsMounted(true);
-    return () => setIsMounted(false);
-  }, []);
+    setIsMounted(true)
+    return () => {
+      setIsMounted(false)
+    }
+  }, [])
 
   // 处理编辑器变化
   const handleMonacoChange = (value: string | undefined) => {
-    if (disabled) return;
-    setRawJson(value || '');
-    onChange?.(value || '');
-  };
+    if (disabled) {
+      return
+    }
+    const newValue = value || '';
+    setRawJson(newValue);
+    onChange?.(newValue); // 通知父组件值已变更
+  }
 
   // 格式化 JSON
   const formatJson = () => {
     try {
-      const parsed = JSON.parse(rawJson);
-      setRawJson(JSON.stringify(parsed, null, 2));
-      setError(null);
+      const parsed = JSON.parse(rawJson)
+      const formattedJson = JSON.stringify(parsed, null, 2)
+      setRawJson(formattedJson)
+      onChange?.(formattedJson); // 通知父组件值已变更
+      setError(null)
     } catch (err) {
-      setError(err instanceof Error ? err.message : String(err));
+      setError(err instanceof Error ? err.message : String(err))
     }
-  };
+  }
 
   // 压缩 JSON
   const minifyJson = () => {
     try {
-      const parsed = JSON.parse(rawJson);
-      setRawJson(JSON.stringify(parsed));
-      setError(null);
+      const parsed = JSON.parse(rawJson)
+      const minifiedJson = JSON.stringify(parsed)
+      setRawJson(minifiedJson)
+      onChange?.(minifiedJson); // 通知父组件值已变更
+      setError(null)
     } catch (err) {
-      setError(err instanceof Error ? err.message : String(err));
+      setError(err instanceof Error ? err.message : String(err))
+    }
+  }
+
+  // 动态值按钮的特殊样式
+  const dynamicButtonStyle = {
+    ...buttonStyle,
+    marginRight: '8px',
+    backgroundColor: '#f0f0f0', // 浅灰色背景
+    ':hover': {
+      backgroundColor: '#e0e0e0', // 悬停时稍深的灰色
+      color: '#212529'
     }
   };
 
   return (
-    <div style={{
-      fontFamily: 'Arial',
-      position: 'relative',
-    }}>
-      {/* 按钮容器 */}
-      <div style={{
-        display: 'flex',
-        justifyContent: 'flex-end',
-        marginBottom: '12px',
-        padding: '8px 12px',
-        backgroundColor: '#f8f9fa',
-        borderRadius: '6px',
-        border: '1px solid #e9ecef',
-        boxShadow: '0 1px 2px rgba(0,0,0,0.05)'
-      }}>
-        <Space>
+    <div
+      style={{
+        fontFamily: 'Arial',
+        position: 'relative',
+      }}
+    >
+      {/* 按钮容器 - 修改为左右布局 */}
+      <div
+        style={{
+          display: 'flex',
+          justifyContent: 'space-between', // 左右两端对齐
+          alignItems: 'center', // 垂直居中
+          marginBottom: '8px',
+          padding: '4px 8px',
+          backgroundColor: '#ffffff',
+          borderRadius: '4px',
+          border: '1px solid #e9ecef',
+          boxShadow: '0 1px 2px rgba(0,0,0,0.05)',
+        }}
+      >
+        {/* 左侧 - 自动生成按钮和动态值弹窗 */}
+        <div style={{
+          display: 'flex',
+          justifyContent: 'space-between', // 左右两端对齐
+          alignItems: 'center', // 垂直居中
+        }}>
           <Button
             type="text"
             size="small"
-            onClick={formatJson}
-            icon={<ExpandOutlined />}
-            style={buttonStyle}
+            icon={<QuestionCircleOutlined />}
+            style={dynamicButtonStyle}
+            onClick={() => setModalVisible(true)}
           >
-            格式化
+            自动生成
           </Button>
-          <Button
-            type="text"
-            size="small"
-            onClick={minifyJson}
-            icon={<ShrinkOutlined />}
-            style={buttonStyle}
-          >
-            压缩
-          </Button>
-          <Divider type="vertical" style={{ margin: '0 8px', height: '20px' }} />
+          <DynamicValueModal
+            visible={modalVisible}
+            onClose={() => { setModalVisible(false); }}
+            onInsert={handleInsertDynamicValue}
+          />
+        </div>
+
+        {/* 右侧 - 格式化、压缩按钮和错误信息 */}
+        <div style={{ display: 'flex', alignItems: 'center' }}>
           {error && (
-            <span style={{
-              color: '#ff4d4f',
-              marginLeft: '12px',
-              display: 'flex',
-              alignItems: 'center',
-              fontSize: '12px'
-            }}>
+            <span
+              style={{
+                color: '#ff4d4f',
+                marginRight: '8px',
+                fontSize: '12px',
+              }}
+            >
               {error}
             </span>
           )}
-        </Space>
+          <Space>
+            <Button
+              icon={<ExpandOutlined />}
+              size="small"
+              style={buttonStyle}
+              type="text"
+              onClick={formatJson}
+            >
+              格式化
+            </Button>
+            <Button
+              icon={<ShrinkOutlined />}
+              size="small"
+              style={buttonStyle}
+              type="text"
+              onClick={minifyJson}
+            >
+              压缩
+            </Button>
+          </Space>
+        </div>
       </div>
 
       {/* 编辑器区域 */}
       <div style={{ display: 'flex', gap: '20px' }}>
         {isMounted && (
           <MonacoEditor
-            height="500px"
-            language="json"
-            theme={theme === 'dark' ? 'custom-dark' : 'custom-light'}
-            value={rawJson}
-            onChange={handleMonacoChange}
-            onMount={(editor, monaco) => {
-              // 1. 移除默认的只读警告处理器
-              editor.onDidAttemptReadOnlyEdit = () => {};
-
-              // 2. 覆盖编辑器贡献点
-              const contributions = editor.getContribution('editor.contrib.readOnlyMessage');
-              if (contributions) {
-                contributions.dispose();
-              }
-
-              handleEditorDidMount(editor, monaco);
-            }}
-            // 覆盖默认的编辑器贡献（去除只读警告）
             beforeMount={(monaco) => {
               monaco.editor.onDidCreateEditor((editor) => {
                 editor.onDidAttemptReadOnlyEdit(() => {
@@ -193,6 +271,8 @@ function PostmanStyleJsonEditor(props: PostmanStyleJsonEditorProps) {
                 });
               });
             }}
+            height="500px"
+            language="json"
             options={{
               readOnly: disabled,
               minimap: { enabled: false },
@@ -208,36 +288,53 @@ function PostmanStyleJsonEditor(props: PostmanStyleJsonEditorProps) {
               lineDecorationsWidth: 10,
               hover:{enabled:false},
               cursorStyle:'line',
-
             }}
+            theme={theme === 'dark' ? 'custom-dark' : 'custom-light'}
+            onMount={(editor, monaco) => {
+              // 1. 移除默认的只读警告处理器
+              editor.onDidAttemptReadOnlyEdit = () => {};
+
+              // 2. 覆盖编辑器贡献点
+              const contributions = editor.getContribution('editor.contrib.readOnlyMessage');
+              if (contributions) {
+                contributions.dispose();
+              }
+
+              handleEditorDidMount(editor, monaco);
+            }}
+            value={rawJson}
+            onChange={handleMonacoChange}
           />
         )}
       </div>
     </div>
-  );
+  )
 }
 
 // 按钮样式常量
 const buttonStyle = {
+  marginRight: '8px',
   color: '#495057',
   border: 'none',
   borderRadius: '4px',
   padding: '0 8px',
-  height: '28px',
+  height: '24px',
+  fontSize: '12px',
   display: 'flex',
   alignItems: 'center',
   transition: 'all 0.2s',
+  backgroundColor: 'transparent',
   ':hover': {
-    backgroundColor: '#e9ecef',
-    color: '#212529'
+    backgroundColor: '#f0f0f0',
+    color: '#212529',
   },
   ':active': {
-    backgroundColor: '#dee2e6'
+    backgroundColor: '#e0e0e0',
   },
   ':disabled': {
     color: '#adb5bd',
-    cursor: 'not-allowed'
-  }
-};
+    cursor: 'not-allowed',
+  },
+}
 
-export default PostmanStyleJsonEditor;
+export default PostmanStyleJsonEditor

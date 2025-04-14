@@ -1,230 +1,247 @@
-/* 基础样式 - 只缩小容器宽度 */
+/* 基础样式 */
 .collaboration-board {
-    padding: 16px;
-    max-width: 700px; /* 看板整体宽度缩小 */
-    margin: 0 auto;
-    position: relative;
-    min-height: 100vh;
+  position: relative;
+  max-width: 100%;
+  min-height: 100%;
+  margin: 0 auto;
+  padding: 16px;
 }
 
 /* 玻璃拟态背景层 */
 .glass-bg-layer {
-    position: fixed;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-    z-index: -1;
+  position: fixed;
+  z-index: -1;
+  inset: 0;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
 }
 
-/* 玻璃拟态基础样式 - 增强边框 */
+/* 玻璃拟态基础样式 */
 .glass-bg {
-    background: rgba(255, 255, 255, 0.8);
-    backdrop-filter: blur(8px);
-    -webkit-backdrop-filter: blur(8px);
-    border-radius: 12px;
-    border: 1px solid rgba(255, 255, 255, 0.5); /* 增强边框效果 */
-    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
+  background: rgb(255 255 255 / 80%);
+  backdrop-filter: blur(8px);
+  border: 1px solid rgb(255 255 255 / 50%);
+  border-radius: 12px;
+  box-shadow: 0 4px 16px rgb(0 0 0 / 10%);
 }
 
 /* 玻璃按钮样式 */
 .glass-btn {
-    background: rgba(255, 255, 255, 0.2) !important;
-    border: 1px solid rgba(255, 255, 255, 0.4) !important;
-    color: rgba(0, 0, 0, 0.85) !important;
-    transition: all 0.3s ease;
+  color: rgb(0 0 0 / 85%) !important;
+  background: rgb(255 255 255 / 20%) !important;
+  border: 1px solid rgb(255 255 255 / 40%) !important;
+  transition: all 0.3s ease;
 }
 
 .glass-btn.ant-btn-primary {
-    background: rgba(24, 144, 255, 0.7) !important;
-    color: white !important;
-    border: 1px solid rgba(24, 144, 255, 0.8) !important;
+  color: white !important;
+  background: rgb(24 144 255 / 70%) !important;
+  border: 1px solid rgb(24 144 255 / 80%) !important;
 }
 
 .glass-btn:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgb(0 0 0 / 15%);
 }
 
-/* 卡片样式 - 宽度自适应缩小容器 */
+/* 卡片样式 - 宽度缩小一半 */
 .glass-card {
-    background: rgba(255, 255, 255, 0.85) !important;
-    border: 1px solid rgba(255, 255, 255, 0.6) !important;
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1) !important;
-    transition: all 0.3s ease;
+  background: rgb(255 255 255 / 85%) !important;
+  border: 1px solid rgb(255 255 255 / 60%) !important;
+  box-shadow: 0 2px 8px rgb(0 0 0 / 10%) !important;
+  transition: all 0.3s ease;
 }
 
 .project-card {
-    width: 100%; /* 卡片宽度自适应 */
-    border-radius: 10px;
-    overflow: hidden;
-    margin-bottom: 16px;
+  overflow: hidden;
+  width: 50%; /* 卡片宽度缩小一半 */
+  margin-bottom: 3.2px; /* 垂直间距缩小为原来的1/5 */
+  border-radius: 10px;
 }
 
 .project-card.featured {
-    border: 2px solid rgba(255, 193, 7, 0.8);
+  border: 2px solid rgb(255 193 7 / 80%);
 }
 
 /* 卡片封面 */
 .card-cover {
-    position: relative;
-    cursor: pointer;
-    height: 140px; /* 稍微缩小封面高度 */
-    overflow: hidden;
+  cursor: pointer;
+  position: relative;
+  overflow: hidden;
+  height: 140px;
 }
 
 .cover-overlay {
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    opacity: 0;
-    transition: opacity 0.3s;
-    background: rgba(0, 0, 0, 0.4) !important;
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 0;
+  background: rgb(0 0 0 / 40%) !important;
+  transition: opacity 0.3s;
 }
 
 .card-cover:hover .cover-overlay {
-    opacity: 1;
+  opacity: 1;
 }
 
 .link-icon {
-    color: white;
-    font-size: 24px;
+  font-size: 24px;
+  color: white;
 }
 
-/* 卡片内容 - 保持原文字大小 */
+/* 卡片内容 */
 .card-title {
-    font-size: 16px;
-    font-weight: 500;
-    margin-bottom: 8px;
-    color: rgba(0, 0, 0, 0.85) !important;
+  margin-bottom: 8px;
+  font-size: 16px;
+  font-weight: 500;
+  color: rgb(0 0 0 / 85%) !important;
 }
 
 .card-description {
-    font-size: 14px;
-    color: rgba(0, 0, 0, 0.7);
-    margin-bottom: 12px;
+  margin-bottom: 12px;
+  font-size: 14px;
+  color: rgb(0 0 0 / 70%);
 }
 
 .card-tags {
-    margin-top: 8px;
+  margin-top: 8px;
 }
 
 /* 标签样式 */
 .dark-tag {
-    color: rgba(0, 0, 0, 0.8) !important;
-    background: rgba(255, 255, 255, 0.7) !important;
-    border: 1px solid rgba(0, 0, 0, 0.15) !important;
+  color: rgb(0 0 0 / 80%) !important;
+  background: rgb(255 255 255 / 70%) !important;
+  border: 1px solid rgb(0 0 0 / 15%) !important;
 }
 
 /* 头部样式 */
 .board-header {
-    padding: 12px 16px;
-    margin-bottom: 16px;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 16px;
+  padding: 12px 16px;
 }
 
-/* 瀑布流布局 */
+/* 瀑布流布局 - 水平间距缩小为原来的1/5 */
 .masonry-container {
-    width: 100%;
+  width: 100%;
 }
 
 .masonry-grid {
-    display: flex;
-    margin-left: -12px;
-    width: auto;
+  display: flex;
+  width: auto;
+  margin-left: -1px; /* 负边距与padding-left保持一致 */
 }
 
 .masonry-column {
-    padding-left: 12px;
-    background-clip: padding-box;
+  padding-left: 1px;
+  background-clip: padding-box;
 }
 
 .masonry-item {
-    margin-bottom: 16px;
+  margin-bottom: 8px;
+  width:100%;
 }
 
 /* 加载状态 */
 .loading-container {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    height: 200px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 200px;
 }
 
 .loading-dots {
-    display: flex;
-    margin-top: 20px;
+  display: flex;
+  margin-top: 20px;
 }
 
 .dot {
-    width: 12px;
-    height: 12px;
-    border-radius: 50%;
-    margin: 0 6px;
-    background: rgba(255, 255, 255, 0.8);
+  width: 12px;
+  height: 12px;
+  margin: 0 6px;
+  background: rgb(255 255 255 / 80%);
+  border-radius: 50%;
 }
 
 /* 空状态 */
 .empty-container {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    height: 300px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 300px;
 }
 
 .empty-description {
-    font-size: 16px;
-    color: rgba(0, 0, 0, 0.85);
+  font-size: 16px;
+  color: rgb(0 0 0 / 85%);
 }
 
 .create-button {
-    margin-top: 16px;
+  margin-top: 16px;
 }
 
 /* 精选项目标识 */
 .featured-star {
-    color: #faad14;
-    margin-right: 8px;
+  margin-right: 8px;
+  color: #faad14;
 }
 
 /* 响应式调整 */
-@media (max-width: 768px) {
-    .collaboration-board {
-        max-width: 95%;
-        padding: 12px;
-    }
+@media (width <= 768px) {
+  .collaboration-board {
+    max-width: 95%;
+    padding: 12px;
+  }
 
-    .board-header {
-        flex-direction: column;
-        gap: 12px;
-    }
+  .board-header {
+    flex-direction: column;
+    gap: 12px;
+  }
 
-    .card-cover {
-        height: 120px;
-    }
+  .card-cover {
+    height: 120px;
+  }
+
+  /* 在移动端恢复卡片全宽和正常间距 */
+  .project-card {
+    width: 100%;
+    margin-bottom: 16px;
+  }
+
+  .masonry-grid {
+    margin-left: -8px;
+  }
+
+  .masonry-column {
+    padding-left: 8px;
+  }
+
+  .masonry-item {
+    margin-bottom: 16px;
+  }
+}
+.project-card {
+  width: calc(50% - 1px); /* 减去间隔宽度 */
+  margin-bottom: 8px;
+  border: 1px solid rgba(255, 255, 255, 0.6); /* 增强边框可见性 */
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1); /* 微调阴影 */
 }
 
-@media (max-width: 480px) {
-    .card-title {
-        font-size: 15px;
-    }
-
-    .card-description {
-        font-size: 13px;
-    }
-
-    .glass-btn {
-        padding: 4px 8px;
-        font-size: 13px;
-    }
+/* 移动端适配 */
+@media (width <= 768px) {
+  .masonry-grid {
+    margin-left: -8px; /* 恢复默认间隔 */
+  }
+  .masonry-column {
+    padding-left: 8px;
+  }
+  .project-card {
+    width: 100%; /* 恢复全宽 */
+    border-width: 1px;
+  }
 }

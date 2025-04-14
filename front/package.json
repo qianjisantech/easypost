@@ -72,6 +72,7 @@
     "react18-json-view": "^0.2.8",
     "reactflow": "^11.11.4",
     "serialize-javascript": "^6.0.2",
+    "styled-components": "^6.1.17",
     "use-debounce": "^10.0.4",
     "use-resize-observer": "^9.1.0"
   },

@@ -1,12 +1,11 @@
 import { Form, Tabs, theme, Typography } from 'antd'
 
 import { Authorization } from '@/components/tab-content/api/authorization/Authorization'
-import { Scripts } from '@/components/tab-content/api/scripts/Scripts'
+import { PreScripts } from '@/components/tab-content/api/scripts/PreScripts'
 import type { ApiDetails } from '@/types'
-
 import { ParamsEditableTable } from '../components/ParamsEditableTable'
-
-import { ParamsBody, ParamsPayload } from './ParamsPayload'
+import { ParamsPayload } from './ParamsPayload'
+import PostScripts from "@/components/tab-content/api/scripts/PostScripts";
 
 function BadgeLabel(props: React.PropsWithChildren<{ count?: number }>) {
   const { token } = theme.useToken()
@@ -39,7 +38,7 @@ interface ParamsTabProps {
  */
 export function ParamsTab(props: ParamsTabProps) {
   const { value, onChange } = props
-
+  console.log('ParamsTab', value)
   return (
     <Tabs
       animated={false}
@@ -137,21 +136,26 @@ export function ParamsTab(props: ParamsTabProps) {
           ),
         },
         {
-          key: 'pre-scripts',
+          key: 'prescripts',
           label: '前置脚本',
           children: (
-            <Form.Item noStyle name="pre-scripts">
-              <Scripts />
-            </Form.Item>
+            <PreScripts
+              value={value?.prescripts}
+              onChange={(prescripts) => {
+                onChange?.({ ...value, prescripts})
+              }}
+            />
           ),
         },
         {
-          key: 'post-scripts',
+          key: 'postscripts',
           label: '后置脚本',
           children: (
-            <Form.Item noStyle name="scripts">
-              <Scripts />
-            </Form.Item>
+            <PostScripts
+              value={value?.postscripts}
+              onChange={(postscripts) => {
+                onChange?.({ ...value, postscripts})
+              }}/>
           ),
         },
       ]}

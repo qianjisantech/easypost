@@ -115,3 +115,8 @@ export const enum AuthorizationType {
   DigestAuth = 'DigestAuth',
   HawkAuthorization = 'HawkAuthorization',
 }
+export const enum ScriptsType {
+  JavaScript = 'javascript',
+  Java= 'java',
+  Python = 'python',
+}

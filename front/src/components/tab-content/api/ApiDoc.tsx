@@ -8,21 +8,19 @@ import jsonBeautify from 'json-beautify';
 import {  ApiDocDetail } from "src/api/api";
 import { useTabContentContext } from '@/components/ApiTab/TabContentContext'
 import { IconText } from '@/components/IconText'
-import { JsonSchemaEditor } from '@/components/JsonSchema'
+
 import { ApiRemoveButton } from '@/components/tab-content/api/ApiRemoveButton'
 import { API_STATUS_CONFIG, HTTP_METHOD_CONFIG } from '@/configs/static'
 import { useGlobalContext } from '@/contexts/global'
-import { creator } from '@/data/remote'
+
 import { useStyles } from '@/hooks/useStyle'
 import type { ApiDetails, Parameter } from '@/types'
 
 import { css } from '@emotion/css'
-import JsonView from "react18-json-view";
-import { JsonSchemaCard } from "@/components/JsonSchemaCard";
+
 import { JsonViewer } from "@/components/JsonViewer";
-import TextArea from "antd/es/input/TextArea";
-import { ResponseTab } from "@/components/tab-content/api/components/ResponseTab";
 import { getContentTypeString } from '@/helpers'
+import { initialCreateApiDetailsData } from "@/data/remote";
 const statusOptions: SelectProps['options'] = Object.entries(API_STATUS_CONFIG).map(
   ([method, { text, color }]) => {
     return {
@@ -132,7 +130,7 @@ function ApiParameter({ param }: { param: Parameter }) {
   )
 }
 
-export function ApiDoc() {
+export function ApiDoc({ activeKey }: { activeKey: string }) {
   const { token } = theme.useToken()
 
   const { messageApi } = useGlobalContext()
@@ -154,9 +152,10 @@ export function ApiDoc() {
     return { docValue: apiDetails, methodConfig }
   }, [apiDetails]) //
   useEffect(() => {
-    loadingApiDetails()
-    console.log('docValue', docValue)
-  }, [tabData.key])
+    if (activeKey === 'doc'){
+      loadingApiDetails()
+    }
+  }, [activeKey, tabData.key])
 
   const { styles } = useStyles(({ token }) => {
     return {

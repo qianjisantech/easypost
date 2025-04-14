@@ -43,7 +43,7 @@ const methodOptions: SelectProps['options'] = Object.entries(HTTP_METHOD_CONFIG)
 /**
  * API 「修改文档」部分。
  */
-export function ApiDocEditing() {
+export function ApiDocEditing({ activeKey }: { activeKey: string }) {
   const [form] = Form.useForm<ApiDetails>()
   const { messageApi } = useGlobalContext()
   const msgKey = useRef<string>()
@@ -60,6 +60,7 @@ export function ApiDocEditing() {
 
           const menuData = response.data.data
           const apiDetails = menuData.data
+          // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
           form.setFieldsValue(apiDetails)
           console.log('menuData',apiDetails)
           }
@@ -71,6 +72,16 @@ export function ApiDocEditing() {
     }
 
   }
+  useEffect(() => {
+    if (isCreating) {
+      form.setFieldsValue(initialCreateApiDetailsData)
+    } else {
+      if (activeKey === 'docEdit'){
+        loadingApiDetails(tabData.key)
+      }
+
+    }
+  }, [activeKey, isCreating, tabData.key])
   const loadingMenuTree = async (projectId: string) => {
     const response = await ApiTreeQueryPage({ projectId })
     if (response.data.success && setMenuRawList) {

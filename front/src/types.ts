@@ -11,6 +11,7 @@ import type {
   MenuItemType,
   ParamType,
 } from './enums'
+import { ScriptsType } from "./enums";
 
 export type TabContentType = CatalogType | MenuItemType | 'blank'
 
@@ -100,6 +101,14 @@ export interface ApiDetails {
       parameters?: Parameter[]
       jsonSchema?: JsonSchema
     }
+    prescripts: {
+      data: string
+      type: ScriptsType
+    }
+    postscripts: {
+      data: string
+      type?: ScriptsType
+    }
   }
 
   /** 返回响应 */
@@ -156,3 +165,10 @@ export interface RecycleDataItem {
 export type RecycleCatalogType = CatalogType.Http | CatalogType.Schema | CatalogType.Request
 
 export type RecycleData = Record<RecycleCatalogType, { list?: RecycleDataItem[] }>
+
+export interface GlobalParameter {
+  id: string
+  name: string
+  value: string
+  description: string
+}
