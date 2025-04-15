@@ -20,6 +20,7 @@ var (
 	AmAPI                       *amAPI
 	AmAPICase                   *amAPICase
 	AmDoc                       *amDoc
+	AmEnvironmentManage         *amEnvironmentManage
 	AmFolder                    *amFolder
 	GsTrafficManager            *gsTrafficManager
 	GsTrafficManagerHeader      *gsTrafficManagerHeader
@@ -37,6 +38,7 @@ func SetDefault(db *gorm.DB, opts ...gen.DOOption) {
 	AmAPI = &Q.AmAPI
 	AmAPICase = &Q.AmAPICase
 	AmDoc = &Q.AmDoc
+	AmEnvironmentManage = &Q.AmEnvironmentManage
 	AmFolder = &Q.AmFolder
 	GsTrafficManager = &Q.GsTrafficManager
 	GsTrafficManagerHeader = &Q.GsTrafficManagerHeader
@@ -55,6 +57,7 @@ func Use(db *gorm.DB, opts ...gen.DOOption) *Query {
 		AmAPI:                       newAmAPI(db, opts...),
 		AmAPICase:                   newAmAPICase(db, opts...),
 		AmDoc:                       newAmDoc(db, opts...),
+		AmEnvironmentManage:         newAmEnvironmentManage(db, opts...),
 		AmFolder:                    newAmFolder(db, opts...),
 		GsTrafficManager:            newGsTrafficManager(db, opts...),
 		GsTrafficManagerHeader:      newGsTrafficManagerHeader(db, opts...),
@@ -74,6 +77,7 @@ type Query struct {
 	AmAPI                       amAPI
 	AmAPICase                   amAPICase
 	AmDoc                       amDoc
+	AmEnvironmentManage         amEnvironmentManage
 	AmFolder                    amFolder
 	GsTrafficManager            gsTrafficManager
 	GsTrafficManagerHeader      gsTrafficManagerHeader
@@ -94,6 +98,7 @@ func (q *Query) clone(db *gorm.DB) *Query {
 		AmAPI:                       q.AmAPI.clone(db),
 		AmAPICase:                   q.AmAPICase.clone(db),
 		AmDoc:                       q.AmDoc.clone(db),
+		AmEnvironmentManage:         q.AmEnvironmentManage.clone(db),
 		AmFolder:                    q.AmFolder.clone(db),
 		GsTrafficManager:            q.GsTrafficManager.clone(db),
 		GsTrafficManagerHeader:      q.GsTrafficManagerHeader.clone(db),
@@ -121,6 +126,7 @@ func (q *Query) ReplaceDB(db *gorm.DB) *Query {
 		AmAPI:                       q.AmAPI.replaceDB(db),
 		AmAPICase:                   q.AmAPICase.replaceDB(db),
 		AmDoc:                       q.AmDoc.replaceDB(db),
+		AmEnvironmentManage:         q.AmEnvironmentManage.replaceDB(db),
 		AmFolder:                    q.AmFolder.replaceDB(db),
 		GsTrafficManager:            q.GsTrafficManager.replaceDB(db),
 		GsTrafficManagerHeader:      q.GsTrafficManagerHeader.replaceDB(db),
@@ -138,6 +144,7 @@ type queryCtx struct {
 	AmAPI                       IAmAPIDo
 	AmAPICase                   IAmAPICaseDo
 	AmDoc                       IAmDocDo
+	AmEnvironmentManage         IAmEnvironmentManageDo
 	AmFolder                    IAmFolderDo
 	GsTrafficManager            IGsTrafficManagerDo
 	GsTrafficManagerHeader      IGsTrafficManagerHeaderDo
@@ -155,6 +162,7 @@ func (q *Query) WithContext(ctx context.Context) *queryCtx {
 		AmAPI:                       q.AmAPI.WithContext(ctx),
 		AmAPICase:                   q.AmAPICase.WithContext(ctx),
 		AmDoc:                       q.AmDoc.WithContext(ctx),
+		AmEnvironmentManage:         q.AmEnvironmentManage.WithContext(ctx),
 		AmFolder:                    q.AmFolder.WithContext(ctx),
 		GsTrafficManager:            q.GsTrafficManager.WithContext(ctx),
 		GsTrafficManagerHeader:      q.GsTrafficManagerHeader.WithContext(ctx),

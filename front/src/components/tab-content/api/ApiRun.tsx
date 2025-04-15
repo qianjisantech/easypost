@@ -1,7 +1,7 @@
 "use client";
 import { useEffect, useRef, useState } from "react";
 
-import { Button, Divider, Empty, Form, type FormProps, Select, type SelectProps, Space } from "antd";
+import { Button, Divider, Empty, Form, type FormProps, message, Select, type SelectProps, Space } from "antd";
 import { nanoid } from "nanoid";
 import { ApiDetailCreate, ApiDetailUpdate, ApiRunDetail } from "src/api/api";
 
@@ -19,8 +19,13 @@ import type { ApiDetails, GlobalParameter } from "@/types";
 import { request } from "@/utils/request";
 import { GroupTitle } from "./components/GroupTitle";
 import { PathInput, type PathInputProps } from "./components/PathInput";
-import { PrimitiveSchema, RefSchema } from "@/components/JsonSchema/JsonSchema.type";
 
+interface JavaParseResult {
+  className?: string;
+  methods: { name: string; returnType: string }[];
+  fields: { name: string; type: string }[];
+  parseError?: string;
+}
 const DEFAULT_NAME = '未命名接口'
 
 const methodOptions: SelectProps['options'] = Object.entries(HTTP_METHOD_CONFIG).map(
@@ -49,7 +54,9 @@ export function ApiRun({ activeKey }: { activeKey: string }) {
   const { addTabItem } = useMenuTabHelpers()
   const { tabData } = useTabContentContext()
   const [loading, setLoading] = useState(false)
-
+// 在 ApiRun 组件的顶部添加这些状态
+  const [parsedVariables, setParsedVariables] = useState<{name: string, value: any}[]>([]);
+  const [parseError, setParseError] = useState<string | null>(null);
   const isCreating = tabData.data?.tabStatus === PageTabStatus.Create
   const loadingApiDetails = async (id: string) => {
     try {
@@ -74,6 +81,66 @@ export function ApiRun({ activeKey }: { activeKey: string }) {
       console.error('加载 API 详情失败:', error)
     }
   }
+  const parseJavaCode = (javaCode: string): JavaParseResult => {
+    try {
+      const ast = parse(javaCode);
+      const classDecl = ast.types[0];
+
+      if (!classDecl || classDecl.type !== "ClassDeclaration") {
+        throw new Error("未找到有效的 Java 类定义");
+      }
+
+      // 提取类名
+      const className = classDecl.name;
+
+      // 提取方法
+      const methods = classDecl.body
+        .filter((node) => node.type === "MethodDeclaration")
+        .map((method) => ({
+          name: method.name,
+          returnType: method.returnType || "void",
+        }));
+
+      // 提取字段
+      const fields = classDecl.body
+        .filter((node) => node.type === "FieldDeclaration")
+        .flatMap((field) =>
+          field.declarators.map((declarator) => ({
+            name: declarator.name,
+            type: field.type,
+          }))
+        );
+
+      // 提取静态变量赋值 (如 pm.environment.set)
+      const envVariables: {name: string, value: any}[] = [];
+      classDecl.body.forEach(node => {
+        if (node.type === "ExpressionStatement" &&
+          node.expression.type === "MethodInvocation" &&
+          node.expression.expression?.expression?.name === "pm" &&
+          node.expression.expression?.name === "environment" &&
+          node.expression.name === "set") {
+          const name = node.expression.arguments[0]?.value;
+          const value = node.expression.arguments[1]?.value;
+          if (name && value !== undefined) {
+            envVariables.push({name, value});
+          }
+        }
+      });
+
+      return {
+        className,
+        methods,
+        fields,
+        ...(envVariables.length > 0 && {envVariables})
+      };
+    } catch (error) {
+      return {
+        methods: [],
+        fields: [],
+        parseError: error instanceof Error ? error.message : "解析失败",
+      };
+    }
+  };
   useEffect(() => {
     if (isCreating) {
       form.setFieldsValue(initialCreateApiDetailsData)
@@ -83,7 +150,11 @@ export function ApiRun({ activeKey }: { activeKey: string }) {
       }
     }
   }, [activeKey, isCreating, tabData.key])
-
+  useEffect(() => {
+    if (parseError) {
+      message.error(`解析错误:[${JSON.stringify(parsedVariables)},失败原因：${parseError}]`)
+    }
+  }, [parsedVariables, parseError])
   const handleSaveCase: FormProps<ApiDetails>['onFinish'] = async (values) => {
     const menuName = values.name || DEFAULT_NAME
 
@@ -112,7 +183,57 @@ export function ApiRun({ activeKey }: { activeKey: string }) {
       })
     }
   }
+  // eslint-disable-next-line @typescript-eslint/require-await
+  const parseEnvironmentSets = async (codeString: string) => {
+    try {
+      const wrappedCode = `
+      (function() {
+        const pm = {
+          environment: {
+            sets: [],
+            set: function(name, value) {
+              this.sets.push({ name, value });
+            },
+            get: function(name) {
+              const found = this.sets.find(item => item.name === name);
+              return found ? found.value : undefined;
+            }
+          }
+        };
+        
+        ${codeString}
+        return pm.environment.sets;
+      })();
+    `;
 
+      const sets = eval(wrappedCode);
+
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
+      if (sets && sets.length > 0) {
+        setParsedVariables(sets);
+        setParseError(null);
+
+        // 将解析出的变量添加到全局参数列表
+        // eslint-disable-next-line @typescript-eslint/no-unsafe-call
+        sets.forEach(({name, value}) => {
+          if (!globalParameterList.some(p => p.name === name)) {
+            globalParameterList.push({
+              id: '',
+              name,
+              value: String(value),
+              description: '由预处理脚本生成'
+            });
+          }
+        })
+        console.log('globalParameterList解析出的变量:', globalParameterList);
+      } else {
+        setParseError('未找到有效的 pm.environment.set() 调用');
+      }
+    } catch (error) {
+      setParseError(error instanceof Error ? error.message : String(error));
+      console.error('解析错误:', error);
+    }
+  };
   const handleFinish: FormProps<ApiDetails>['onFinish'] = async (values) => {
     const menuName = values.name || DEFAULT_NAME
 
@@ -230,41 +351,80 @@ export function ApiRun({ activeKey }: { activeKey: string }) {
     // 对于其他类型（数字、布尔值、对象、数组等），直接返回原值
     return data;
   };
-  const globalParameterList: GlobalParameter[] = [
-    {
-      id: '1',
-      name: 'tracking_number',
-      value: 'UAT450000014284',
-      description: '描述',
-    },
-    {
-      id: '2',
-      name: 'message',
-      value: '这是一个message',
-      description: '描述',
-    },
-  ]
+  const globalParameterList: GlobalParameter[] = []
+// 示例的Java代码执行函数（需要后端支持）
 
-  const handleJsPreScripts = (script: string) => {
-    console.log('handleJsPreScripts', script)
-  }
+
+// 示例的Python代码执行函数（需要后端支持）
+  const executePythonCode = async (pythonCode: string) => {
+    try {
+      const response = await request({
+        method: 'POST',
+        url: '/api/execute/python',
+        data: {
+          code: pythonCode
+        }
+      });
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-return
+      return response.data;
+    } catch (error) {
+      throw new Error('执行Python代码失败');
+    }
+  };
   const send = async (values: ApiDetails) => {
     console.log('values.parameters?.prescripts:', values.parameters?.prescripts);
     console.log('values.parameters?.prescripts.data:', values.parameters?.prescripts.data);
     console.log('values.parameters?.prescripts.type:', values.parameters?.prescripts.type);
-// 检查prescripts是否存在且有data
-    if (values.parameters?.prescripts?.data) {
+    if (values.parameters?.prescripts.data) {
       // 使用正确的switch语法检查type
       switch (values.parameters.prescripts.type) {
         case ScriptsType.JavaScript:
           console.log('执行JavaScript预处理脚本');
-          handleJsPreScripts(values.parameters.prescripts.data);
+          try {
+            await parseEnvironmentSets(values.parameters.prescripts.data);
+          } catch (error) {
+            console.error('解析预处理脚本失败:', error);
+          }
           break;
         case ScriptsType.Java:
-          console.log('Java脚本');
+          console.log('执行Java预处理脚本');
+          try {
+            const result = parseJavaCode(values.parameters.prescripts.data);
+
+            if (result.parseError) {
+              message.error(`Java解析错误: ${result.parseError}`);
+              return;
+            }
+
+            // 处理提取的环境变量
+            if (result.envVariables) {
+              setParsedVariables(result.envVariables);
+              result.envVariables.forEach(({name, value}) => {
+                if (!globalParameterList.some(p => p.name === name)) {
+                  globalParameterList.push({
+                    id: '',
+                    name,
+                    value: String(value),
+                    description: '由Java预处理脚本生成'
+                  });
+                }
+              });
+            }
+
+            console.log('Java解析结果:', {
+              className: result.className,
+              methods: result.methods,
+              fields: result.fields,
+              envVariables: result.envVariables
+            });
+
+          } catch (error) {
+            console.error('解析Java脚本失败:', error);
+            message.error('解析Java脚本失败');
+          }
           break;
         case ScriptsType.Python:
-          console.log('Python脚本');
+          console.log('执行Python预处理脚本');
           break;
         default:
           console.log('未知脚本类型');
@@ -351,7 +511,7 @@ export function ApiRun({ activeKey }: { activeKey: string }) {
     console.log('values.parameters.payload', values.parameters?.payload)
 
     if (values.parameters?.payload?.jsonSchema) {
-
+      console.log('replaceRawParameter', globalParameterList)
       requestConfig.data = replaceRawParameter(values.parameters.payload.jsonSchema, globalParameterList)
 
     } else if (values.parameters?.payload?.parameters) {

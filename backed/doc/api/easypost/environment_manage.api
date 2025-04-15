@@ -1,0 +1,56 @@
+syntax = "v1"
+
+info(
+    title: "easypost后端"
+    desc: "qianji"
+    author: "qianji"
+    email: "2497822530@qq.com"
+    version: "0.1"
+)
+
+type (
+
+    EnvironmentManageSaveRequest {
+    Id               string   `form:"id"`
+    GlobalParameter string  `form:"globalParameter"`
+    GlobalVariable  string  `form:"globalVariable"`
+    KeyStores         string `form:"keyStores"`
+    EnvironmentSettings string `form:"environmentSettings"`
+    LocalMock         string `form:"localMock"`
+    CloudMock         string `form:"cloudMock"`
+    SelfHostMock      string  `form:"selfHostMock"`
+    }
+    EnvironmentManageSaveResp {
+        Success bool `json:"success"`
+        Message string `json:"message"`
+    }
+    EnvironmentManageDetailRequest {
+    Id string  `path:"id"`
+    }
+    EnvironmentManageDetailResp {
+        Success bool `json:"success"`
+        Message string `json:"message"`
+        Data EnvironmentManageDetailData `json:"data"`
+    }
+    EnvironmentManageDetailData {
+        Id string `json:"id"`
+        GlobalParameter interface{}  `json:"globalParameter"`
+        GlobalVariable  interface{}  `json:"globalVariable"`
+        KeyStores         interface{} `json:"keyStores"`
+        EnvironmentSettings interface{} `json:"environmentSettings"`
+        LocalMock         interface{} `json:"localMock"`
+        CloudMock        interface{} `json:"cloudMock"`
+        SelfHostMock      interface{}  `json:"selfHostMock"`
+    }
+)
+@server(
+    group: environmentmanage
+    prefix: /api
+)
+service easypost-api {
+
+    @handler EnvironmentManageSave    //文件夹保存
+    post /am/environmentmanage/save (EnvironmentManageSaveRequest) returns (EnvironmentManageSaveResp)
+    @handler EnvironmentManageDetail  //文件夹详情
+    get /am/environmentmanage/detail/:id (EnvironmentManageDetailRequest) returns (EnvironmentManageDetailResp)
+}

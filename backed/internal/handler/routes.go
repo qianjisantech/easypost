@@ -9,6 +9,7 @@ import (
 	auth "backed/internal/handler/auth"
 	deepseek "backed/internal/handler/deepseek"
 	doc "backed/internal/handler/doc"
+	environmentmanage "backed/internal/handler/environmentmanage"
 	es "backed/internal/handler/es"
 	folder "backed/internal/handler/folder"
 	project "backed/internal/handler/project"
@@ -181,6 +182,22 @@ func RegisterHandlers(server *rest.Server, serverCtx *svc.ServiceContext) {
 				Method:  http.MethodPost,
 				Path:    "/am/doc/save",
 				Handler: doc.DocSaveHandler(serverCtx),
+			},
+		},
+		rest.WithPrefix("/api"),
+	)
+
+	server.AddRoutes(
+		[]rest.Route{
+			{
+				Method:  http.MethodGet,
+				Path:    "/am/environmentmanage/detail/:id",
+				Handler: environmentmanage.EnvironmentManageDetailHandler(serverCtx),
+			},
+			{
+				Method:  http.MethodPost,
+				Path:    "/am/environmentmanage/save",
+				Handler: environmentmanage.EnvironmentManageSaveHandler(serverCtx),
 			},
 		},
 		rest.WithPrefix("/api"),

@@ -49,6 +49,7 @@ func main() {
 		"am_api",
 		"am_folder",
 		"am_doc",
+		"am_environment_manage",
 		"sys_project",
 		"sys_user",
 		"sys_team",

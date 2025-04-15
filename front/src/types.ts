@@ -167,8 +167,71 @@ export type RecycleCatalogType = CatalogType.Http | CatalogType.Schema | Catalog
 export type RecycleData = Record<RecycleCatalogType, { list?: RecycleDataItem[] }>
 
 export interface GlobalParameter {
+  header: GlobalParameterChildren[]
+  cookie: GlobalParameterChildren[]
+  query: GlobalParameterChildren[]
+  body: GlobalParameterChildren[]
+}
+export interface GlobalVariable{
+  team: GlobalVariableChildren[]
+  project: GlobalVariableChildren[]
+}
+export interface GlobalVariableChildren{
   id: string
   name: string
+  type: string
   value: string
   description: string
+}
+
+
+export interface KeyStore {
+  id: string
+  name: string
+  type:string
+  value: string
+  description: string
+}
+export interface Server {
+  id: string
+  name: string
+  frontUrl:string
+}
+
+export interface EnvironmentSetting {
+  id: string
+  name: string
+  servers: Server[]
+  globalVariables: GlobalVariable[]
+}
+export interface LocalMock {
+  servers: Server[]
+  globalVariables: GlobalVariable[]
+}
+
+export interface CloudMock {
+  servers: Server[]
+  globalVariables: GlobalVariable[]
+}
+
+export interface SelfHostMock {
+  servers: Server[]
+  globalVariables: GlobalVariable[]
+}
+export interface GlobalParameterChildren {
+  id: string
+  key: string
+  type:string
+  value: string
+  description: string
+}
+export  interface  EnvironmentManagement {
+  id: string
+  globalParameter: GlobalParameter
+  globalVariable: GlobalVariable
+  keyStores: KeyStore[]
+  environmentSettings: EnvironmentSetting[]
+  localMock: LocalMock
+  cloudMock: CloudMock
+  selfHostMock: SelfHostMock
 }
