@@ -1,4 +1,4 @@
-import request from '@/api'
+import request from '@/api/index.ts'
 
 export function TrafficQueryPage(body) {
   return request({
