@@ -1,4 +1,4 @@
-import request from '@/api/index.js'
+import request from '@/api/index.ts'
 
 export function EnvironmentManageDetail(id) {
   return request({
