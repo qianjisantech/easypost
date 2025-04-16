@@ -55,6 +55,18 @@ type (
         Message string `json:"message"`
         Data ApiDetailCreateOrUpdateRespData `json:"data"`
     }
+    ApiRunSaveRequest {
+        Id string `form:"id,optional"`
+        Method  string  `form:"method,optional"`
+        Path string `form:"path,optional"`
+        Parameters string `form:"parameters,optional"`
+        Responses string `form:"responses,optional"`
+    }
+    ApiRunSaveResp {
+        Success bool `json:"success"`
+        Message string `json:"message"`
+        Data ApiDetailCreateOrUpdateRespData `json:"data"`
+    }
     ApiDetailCreateOrUpdateRespData {
         Id string `json:"id"`
     }
@@ -207,7 +219,8 @@ service easypost-api {
     get /ams/api/doc/detail/:id (ApiDocDetailRequest) returns( ApiDocDetailResp)
     @handler ApiRunDetail  //接口文档详情
     get /ams/api/run/detail/:id (ApiRunDetailRequest) returns( ApiRunDetailResp)
-
+    @handler ApiRunSave  //接口文档详情
+    post /ams/api/run/save (ApiRunSaveRequest) returns( ApiRunSaveResp)
     @handler ApiDelete  //接口删除
     get /ams/api/delete/:id (ApiDeleteRequest) returns (ApiDeleteResp)
     @handler ApiCopy   //接口复制

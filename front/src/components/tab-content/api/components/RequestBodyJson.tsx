@@ -10,7 +10,7 @@ interface TextInputProps {
   defaultValue?: string
 }
 
-export function RequestBodyRaw(props: TextInputProps) {
+export function RequestBodyJson(props: TextInputProps) {
   const { defaultValue, value = defaultValue, onChange } = props
 
   // 初始化输入框的值

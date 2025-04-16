@@ -26,18 +26,12 @@ import { nanoid } from "nanoid";
 
 
 
+// eslint-disable-next-line @typescript-eslint/no-empty-interface
 interface EnvironmentManagerProps {
-  initialEnv?: string
-  onEnvChange?: (envKey: string) => void
-  values?: EnvironmentSetting[]
 }
 
-const EnvironmentManager: React.FC<EnvironmentManagerProps> = ({
-  initialEnv,
-  onEnvChange,
-                                                                 values,
-}) => {
-  const [currentEnv, setCurrentEnv] = useState<string | undefined>(initialEnv)
+const EnvironmentManager: React.FC<EnvironmentManagerProps> = () => {
+  const [currentEnv, setCurrentEnv] = useState<string | undefined>('')
   const [modalState, setModalState] = useState({
     visible: false,
     tab: 'globalVariable' as
@@ -63,6 +57,7 @@ const EnvironmentManager: React.FC<EnvironmentManagerProps> = ({
       if (response.data.success) {
         setEnvironmentManagement(response.data.data)
         setEnvConfigs(response.data.data.environmentSettings)
+        setCurrentEnv(response.data.data.environmentSettings[0].name)
         // // 如果API返回了环境配置，使用API的数据
         // if (response.data.data?.environments) {
         //   setEnvConfigs(response.data.data.environments);
@@ -141,12 +136,15 @@ const EnvironmentManager: React.FC<EnvironmentManagerProps> = ({
 
   // 合并自定义配置和默认配置
   useEffect(() => {
-    if (values && values.length > 0) {
-      setEnvConfigs(values)
+    if (
+      environmentManagement?.environmentSettings &&
+      environmentManagement.environmentSettings.length > 0
+    ) {
+      setEnvConfigs(environmentManagement.environmentSettings)
     } else  {
       setEnvConfigs(environmentManagement?.environmentSettings)
     }
-  }, [values])
+  }, [environmentManagement?.environmentSettings])
 
   // 管理环境弹窗内容
   const renderContent = () => {
@@ -278,16 +276,13 @@ const EnvironmentManager: React.FC<EnvironmentManagerProps> = ({
   }
   const handleEnvChange = (value: string) => {
     setCurrentEnv(value)
-    if (onEnvChange) {
-      onEnvChange(value)
-    }
     const selectedEnv = envConfigs.find((env) => env.id === value)
     if (selectedEnv) {
       message.success(`已切换到${selectedEnv.name}`)
     }
   }
   const handleAddEnvironment = () => {
-    const newEnv: EnvironmentSetting = {
+    const newEnv: { servers: any[]; name: string; globalVariable: any[]; id: string; type: string; url: string } = {
       id: nanoid(6), // 使用nanoid生成唯一ID
       name: '新环境',
       type: 'custom',
@@ -296,7 +291,7 @@ const EnvironmentManager: React.FC<EnvironmentManagerProps> = ({
       globalVariable: []
     };
 
-    setEnvironmentManagement(prev => ({
+    setEnvironmentManagement((prev) => ({
       ...prev,
       environmentSettings: [
         ...(prev?.environmentSettings || []),
@@ -305,7 +300,7 @@ const EnvironmentManager: React.FC<EnvironmentManagerProps> = ({
     }));
 
     // 自动选中新创建的环境
-    setModalState(prev => ({
+    setModalState((prev) => ({
       ...prev,
       subTab: newEnv.id
     }));
@@ -315,7 +310,7 @@ const EnvironmentManager: React.FC<EnvironmentManagerProps> = ({
     if (key === 'create-new-environment') {
       handleAddEnvironment();
     } else {
-      setModalState(prev => ({
+      setModalState((prev) => ({
         ...prev,
         subTab: key
       }));
@@ -324,7 +319,6 @@ const EnvironmentManager: React.FC<EnvironmentManagerProps> = ({
   return (
     <div className="environment-manager">
       <Select
-        onDropdownVisibleChange={handleDropdownVisibleChange}
         dropdownRender={(menu) => (
           <>
             {menu}
@@ -347,18 +341,20 @@ const EnvironmentManager: React.FC<EnvironmentManagerProps> = ({
             </div>
           </>
         )}
+        defaultValue={currentEnv}
         loading={loading}
+        notFoundContent={envConfigs && envConfigs.length === 0 ? '暂无环境配置' : null}
         placeholder="请选择环境"
         style={{ width: 150, marginLeft: 8 }}
         suffixIcon={<SearchOutlined />}
         value={currentEnv}
         onChange={handleEnvChange}
 
-        notFoundContent={envConfigs && envConfigs.length === 0 ? '暂无环境配置' : null}
+        onDropdownVisibleChange={handleDropdownVisibleChange}
       >
         {envConfigs &&envConfigs.length > 0 ? (
           envConfigs.map((config) => (
-            <Select.Option key={config.id} value={config.id}>
+            <Select.Option  key={config.id} value={config.id}>
               <Tooltip
                 mouseEnterDelay={0.3}
                 placement="right"

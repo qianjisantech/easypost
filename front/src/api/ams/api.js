@@ -49,6 +49,16 @@ export function ApiRunDetail(id) {
     method: 'get',
   })
 }
+export function ApiRunSave(body) {
+  return request({
+    url: '/ams/api/run/save',
+    method: 'post',
+    headers: {
+      'Content-Type': 'multipart/form-data',
+    },
+    data: body,
+  })
+}
 export function ApiDelete(id) {
   return request({
     url: `/ams/api/delete/${id}`,

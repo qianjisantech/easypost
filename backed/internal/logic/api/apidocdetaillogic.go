@@ -53,12 +53,6 @@ func (l *ApiDocDetailLogic) ApiDocDetail(req *types.ApiDocDetailRequest) (resp *
 		responseExamples = []ResponseExample{}
 	}
 
-	//if amAPI.Responsible != nil {
-	//	err = json.Unmarshal([]byte(*amAPI.Responsible), &responsible)
-	//} else {
-	//	requestBody = RequestBody{}
-	//}
-
 	return &types.ApiDocDetailResp{
 		Success: true,
 		Message: "加载成功",

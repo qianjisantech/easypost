@@ -43,7 +43,7 @@ const methodOptions: SelectProps['options'] = Object.entries(HTTP_METHOD_CONFIG)
 /**
  * API 「修改文档」部分。
  */
-export function ApiDocEditing({ activeKey }: { activeKey: string }) {
+export function ApiDocEditing({ activeKey,setActiveKey }: { activeKey: string,setActiveKey: (key:string)=>void }) {
   const [form] = Form.useForm<ApiDetails>()
   const { messageApi } = useGlobalContext()
   const msgKey = useRef<string>()
@@ -321,7 +321,9 @@ export function ApiDocEditing({ activeKey }: { activeKey: string }) {
 
           {!isCreating && (
             <>
-              <Button>运行</Button>
+              <Button
+                onClick={() => { setActiveKey('run'); }}
+              >运行</Button>
               <ApiRemoveButton tabKey={tabData.key} />
             </>
           )}

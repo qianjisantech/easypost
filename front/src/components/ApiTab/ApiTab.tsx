@@ -15,18 +15,13 @@ import {
 } from '@dnd-kit/sortable'
 import { CSS } from '@dnd-kit/utilities'
 import {
-  Button,
+
   ConfigProvider,
-  Divider,
   Dropdown,
-  Menu,
-  Modal,
   Popconfirm,
-  Select,
   Tabs,
   type TabsProps,
   theme,
-  Tooltip,
 } from 'antd'
 
 import { BadgeInfoIcon, XIcon } from 'lucide-react'
@@ -275,22 +270,7 @@ export function ApiTab(props: TabsProps) {
       }
     }
   }
-  // 自定义环境配置（可选）
-  const customEnvConfig = {
-    dev: {
-      name: 'DEV',
-      url: 'https://dev.myapi.com',
-    },
-    prod: {
-      name: 'PROD',
-      url: 'https://api.myapp.com',
-    },
-  }
 
-  const handleEnvChange = (envKey: string) => {
-    console.log('环境已切换至:', envKey)
-    // 这里可以执行环境切换后的逻辑，如更新API客户端配置等
-  }
   return (
     <ConfigProvider
       theme={{
@@ -310,9 +290,6 @@ export function ApiTab(props: TabsProps) {
         renderTabBar={renderTabBar}
         tabBarExtraContent={
           <EnvironmentManager
-            customEnvConfig={customEnvConfig}
-            initialEnv=""
-            onEnvChange={handleEnvChange}
           />
         }
         tabBarStyle={{ width: '100%', marginBottom: 0 }}

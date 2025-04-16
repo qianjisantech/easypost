@@ -71,6 +71,11 @@ func RegisterHandlers(server *rest.Server, serverCtx *svc.ServiceContext) {
 			},
 			{
 				Method:  http.MethodPost,
+				Path:    "/ams/api/run/save",
+				Handler: api.ApiRunSaveHandler(serverCtx),
+			},
+			{
+				Method:  http.MethodPost,
 				Path:    "/ams/api/tree/page",
 				Handler: api.ApiTreeQueryPageHandler(serverCtx),
 			},

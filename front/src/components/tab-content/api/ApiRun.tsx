@@ -3,7 +3,7 @@ import { useEffect, useRef, useState } from "react";
 
 import { Button, Divider, Empty, Form, type FormProps, message, Select, type SelectProps, Space } from "antd";
 import { nanoid } from "nanoid";
-import { ApiDetailCreate, ApiDetailUpdate, ApiRunDetail } from "@/api/ams/api";
+import { ApiDetailCreate, ApiDetailUpdate, ApiRunDetail, ApiRunSave } from "@/api/ams/api";
 
 import { PageTabStatus } from "@/components/ApiTab/ApiTab.enum";
 import { useTabContentContext } from "@/components/ApiTab/TabContentContext";
@@ -50,10 +50,11 @@ export function ApiRun({ activeKey }: { activeKey: string }) {
   const { messageApi } = useGlobalContext()
   const msgKey = useRef<string>()
 
-  const { addMenuItem, updateMenuItem } = useMenuHelpersContext()
+  // const { addMenuItem, updateMenuItem } = useMenuHelpersContext()
   const { addTabItem } = useMenuTabHelpers()
   const { tabData } = useTabContentContext()
-  const [loading, setLoading] = useState(false)
+  const [sendLoading, setSendLoading] = useState(false)
+  const [saveLoading, setSaveLoading] = useState(false)
 // 在 ApiRun 组件的顶部添加这些状态
   const [parsedVariables, setParsedVariables] = useState<{name: string, value: any}[]>([]);
   const [parseError, setParseError] = useState<string | null>(null);
@@ -234,6 +235,26 @@ export function ApiRun({ activeKey }: { activeKey: string }) {
       console.error('解析错误:', error);
     }
   };
+  const saveApiForm = async (values) => {
+    setSaveLoading(true)
+
+    const formData = new FormData()
+    // 添加普通字段
+    formData.append('id', values.id)
+    formData.append('method', values.data.method || 'GET')
+    formData.append('path', values.data.path || '')
+    formData.append('parameters', JSON.stringify(values.data.parameters))
+    formData.append('responses', JSON.stringify(values.data.responses|| []))
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-call
+    const response = await ApiRunSave(formData)
+    console.log('response.data.data.id', response.data.data.id)
+    if (response.data.success) {
+      message.success(response.data.message)
+      loadingApiDetails(response.data.data.id)
+
+    }
+    setSaveLoading(false)
+  }
   const handleFinish: FormProps<ApiDetails>['onFinish'] = async (values) => {
     const menuName = values.name || DEFAULT_NAME
 
@@ -251,14 +272,13 @@ export function ApiRun({ activeKey }: { activeKey: string }) {
       } catch (err) {
         console.error('保存接口失败', err)
       }
-
-      addMenuItem({
+      const menuItemData={
         id: menuItemId,
         name: menuName,
         type: MenuItemType.ApiDetail,
         data: { ...values, name: menuName },
-      })
-
+      }
+      saveApiForm(menuItemData)
       addTabItem(
         {
           key: menuItemId,
@@ -268,11 +288,12 @@ export function ApiRun({ activeKey }: { activeKey: string }) {
         { replaceTab: tabData.key }
       )
     } else {
-      updateMenuItem({
+      const menuItemData = {
         id: tabData.key,
-        name: menuName,
+        type: MenuItemType.ApiDetail,
         data: { ...values, name: menuName },
-      })
+      }
+      saveApiForm(menuItemData)
     }
   }
 
@@ -445,7 +466,7 @@ export function ApiRun({ activeKey }: { activeKey: string }) {
       {} as Record<string, string>
     )
 
-    setLoading(true)
+    setSendLoading(true)
 
     // 从 path 中提取域名作为 Host
     let host = ''
@@ -456,7 +477,7 @@ export function ApiRun({ activeKey }: { activeKey: string }) {
       host = url.hostname
     } catch (e) {
       console.error('无法从 path 中解析域名:', e)
-      setLoading(false)
+      setSendLoading(false)
       return // 如果无法解析域名，直接返回不发送请求
     }
 
@@ -603,24 +624,25 @@ export function ApiRun({ activeKey }: { activeKey: string }) {
         </Space.Compact>
 
         <Space className="ml-auto pl-2">
-          <Button loading={loading} type="primary" onClick={() => send(form.getFieldsValue())}>
+          <Button loading={sendLoading} type="primary" onClick={() => send(form.getFieldsValue())}>
             发送
           </Button>
           <Button
+            loading={saveLoading}
             onClick={() => {
               handleFinish(form.getFieldsValue(), true)
             }}
           >
             暂存
           </Button>
-          <Button
-            htmlType="submit"
-            onClick={() => {
-              handleSaveCase(form.getFieldsValue(), true)
-            }}
-          >
-            保存为用例
-          </Button>
+          {/*<Button*/}
+          {/*  htmlType="submit"*/}
+          {/*  onClick={() => {*/}
+          {/*    handleSaveCase(form.getFieldsValue(), true)*/}
+          {/*  }}*/}
+          {/*>*/}
+          {/*  保存为用例*/}
+          {/*</Button>*/}
         </Space>
       </div>
 
