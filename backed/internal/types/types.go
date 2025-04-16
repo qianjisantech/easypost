@@ -333,6 +333,20 @@ type ApiRunDetailResp struct {
 	Data    ApiRunDetailData `json:"data"`
 }
 
+type ApiRunSaveRequest struct {
+	Id         string `form:"id,optional"`
+	Method     string `form:"method,optional"`
+	Path       string `form:"path,optional"`
+	Parameters string `form:"parameters,optional"`
+	Responses  string `form:"responses,optional"`
+}
+
+type ApiRunSaveResp struct {
+	Success bool                            `json:"success"`
+	Message string                          `json:"message"`
+	Data    ApiDetailCreateOrUpdateRespData `json:"data"`
+}
+
 type ApiTreeQueryPageData struct {
 	Id       string `json:"id"`
 	ParentId string `json:"parentId"`
