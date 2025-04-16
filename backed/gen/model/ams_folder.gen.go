@@ -8,10 +8,10 @@ import (
 	"time"
 )
 
-const TableNameAmFolder = "am_folder"
+const TableNameAmsFolder = "ams_folder"
 
-// AmFolder mapped from table <am_folder>
-type AmFolder struct {
+// AmsFolder mapped from table <ams_folder>
+type AmsFolder struct {
 	ID           int64      `gorm:"column:id;primaryKey" json:"id"`
 	Name         *string    `gorm:"column:name" json:"name"`
 	CreateBy     *int64     `gorm:"column:create_by;default:1;->" json:"create_by"`
@@ -26,7 +26,7 @@ type AmFolder struct {
 	ProjectID    *int64     `gorm:"column:project_id" json:"project_id"`
 }
 
-// TableName AmFolder's table name
-func (*AmFolder) TableName() string {
-	return TableNameAmFolder
+// TableName AmsFolder's table name
+func (*AmsFolder) TableName() string {
+	return TableNameAmsFolder
 }

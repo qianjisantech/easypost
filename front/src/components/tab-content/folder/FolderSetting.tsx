@@ -2,7 +2,7 @@ import { useEffect, useMemo } from 'react'
 
 import { Button, Form, Input, message } from 'antd'
 
-import { FolderDetail, FolderDetailSave } from '@/api/folder'
+import { FolderDetail, FolderDetailSave } from '@/api/ams/folder'
 import { useTabContentContext } from '@/components/ApiTab/TabContentContext'
 import { SelectorCatalog } from '@/components/SelectorCatalog'
 import { SelectorService } from '@/components/SelectorService'

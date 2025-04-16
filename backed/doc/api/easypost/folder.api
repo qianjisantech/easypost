@@ -43,7 +43,7 @@ type (
 service easypost-api {
 
     @handler FolderDetailSave    //文件夹保存
-    post /am/folder/detail/save (FolderDetailSaveRequest) returns (FolderDetailSaveResp)
+    post /ams/folder/detail/save (FolderDetailSaveRequest) returns (FolderDetailSaveResp)
     @handler FolderDetail  //文件夹详情
-    get /am/folder/detail/:id (FolderDetailRequest) returns (FolderDetailResp)
+    get /ams/folder/detail/:id (FolderDetailRequest) returns (FolderDetailResp)
 }

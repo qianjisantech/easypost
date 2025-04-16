@@ -39,7 +39,7 @@ func (l *ApiDetailUpdateLogic) ApiDetailUpdate(req *types.ApiDetailCreateOrUpdat
 	if len(req.Tags) > 0 {
 		tags = strings.Join(req.Tags, ",")
 	}
-	amApi := &model.AmAPI{
+	amApi := &model.AmsAPI{
 		Path:             &req.Path,
 		Status:           &req.Status,
 		Remark:           &req.Description,

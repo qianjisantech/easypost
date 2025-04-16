@@ -32,7 +32,7 @@ func (l *FolderDetailSaveLogic) FolderDetailSave(req *types.FolderDetailSaveRequ
 	contentInfo := l.ctx.Value("contentInfo").(*middleware.ContentInfo)
 	projectId := contentInfo.ProjectId
 	folderId, _ := strconv.ParseInt(req.Id, 10, 64)
-	amFolder := &model.AmFolder{
+	amFolder := &model.AmsFolder{
 		Name:     &req.Name,
 		ParentID: &folderId,
 	}

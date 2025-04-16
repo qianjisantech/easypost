@@ -1,14 +1,14 @@
-import request from '@/api'
+import request from '@/api/index.js'
 
 export function EnvironmentManageDetail(id) {
   return request({
-    url: `/am/environmentmanage/detail/${id}`,
+    url: `/ams/environmentmanage/detail/${id}`,
     method: 'get',
   })
 }
 export function EnvironmentManageSave(body) {
   return request({
-    url: '/am/environmentmanage/save',
+    url: '/ams/environmentmanage/save',
     method: 'post',
     headers: {
       'Content-Type': 'multipart/form-data',

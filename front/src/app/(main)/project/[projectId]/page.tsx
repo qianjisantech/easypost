@@ -1,17 +1,16 @@
 'use client'
 import  React, { ReactNode,useEffect, useState } from 'react'
 
-import { usePathname, useRouter } from 'next/navigation'
+import { usePathname } from 'next/navigation'
 import { HomeOutlined } from '@ant-design/icons'
 import { Button, ConfigProvider, Dropdown, Flex, Space, theme, Tooltip } from 'antd'
 import { FilterIcon, PlusIcon } from 'lucide-react'
 
-import { ApiTreeQueryPage } from 'src/api/api'
+import { ApiTreeQueryPage } from '@/api/ams/api'
 import { ApiMenu } from '@/components/ApiMenu'
 import { ApiMenuContextProvider } from '@/components/ApiMenu/ApiMenuContext'
 import { ApiTab } from '@/components/ApiTab'
 import { FileIcon } from '@/components/icons/FileIcon'
-import { IconLogo } from '@/components/icons/IconLogo'
 import { IconText } from '@/components/IconText'
 import { InputSearch } from '@/components/InputSearch'
 import { API_MENU_CONFIG } from '@/configs/static'
@@ -25,7 +24,7 @@ import { useStyles } from '@/hooks/useStyle'
 import { PanelLayout } from '../../components/PanelLayout'
 
 import { css } from '@emotion/css'
-import GosmoMenu from "@/app/(main)/gosmo/Menu/page";
+import GosmoMenu from '@/app/(main)/gosmo/Menu/page'
 
 interface NavItemProps {
   active?: boolean
@@ -78,7 +77,9 @@ function ProjectContent() {
 
   const loadingMenuTree = async (projectId: string) => {
     const response = await ApiTreeQueryPage({ projectId })
-    if (response.data.success && setMenuRawList) {
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
+    if (response.data?.success && setMenuRawList) {
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
       setMenuRawList(response.data?.data)
     }
   }
@@ -88,7 +89,15 @@ function ProjectContent() {
      <div style={{marginTop:40}}>
        <Flex direction="row" style={{ height: '100%'}}>
          {/* 左侧导航栏 */}
-         <div className="flex h-full shrink-0 basis-[80px] flex-col items-center overflow-y-auto overflow-x-hidden px-1 pt-layoutHeader" style={{backgroundColor: '#f0f0f0',  height: 'calc(200vh - 64px)',top:0}}>
+         <div className="flex h-full shrink-0 basis-[80px] flex-col items-center overflow-y-auto overflow-x-hidden px-1 pt-layoutHeader"
+              style={{
+                backgroundColor: '#f0f0f0',
+                height: 'calc(100vh - 40px)',
+                width: '80px',
+                position: 'fixed',
+                left: 0,
+                top: 40
+              }}>
            <div
              className="mb-5 mt-2 size-10 rounded-xl p-[6px]"
              style={{ color: token.colorText, border: `1px solid ${token.colorBorder}` }}
@@ -117,19 +126,19 @@ function ProjectContent() {
                active={selectedMenu === "接口管理"}
                icon={<HomeOutlined />}
                name="接口管理"
-               onClick={() => setSelectedMenu("接口管理")}
+               onClick={() => { setSelectedMenu("接口管理"); }}
              />
              <NavItem
                active={selectedMenu === "Gosmo"}
                icon={<FilterIcon />}
                name="Gosmo"
-               onClick={() => setSelectedMenu("Gosmo")}
+               onClick={() => { setSelectedMenu("Gosmo"); }}
              />
            </Space>
          </div>
 
          {/* 右侧内容区域 */}
-         <div style={{ flex: 1, padding: '20px 20px 20px 20px' }}>
+         <div style={{ flex: 1, padding: '20px 20px 20px 20px', marginLeft: '80px'}}>
            {selectedMenu === "接口管理" ? (
              <PanelLayout
                layoutName="接口管理"
@@ -161,7 +170,7 @@ function ProjectContent() {
                                  key: t,
                                  label: t === MenuItemType.Doc ? '新建 Markdown' : API_MENU_CONFIG[getCatalogType(t)].newLabel,
                                  icon: <FileIcon size={16} style={{ color: token.colorPrimary }} type={t} />,
-                                 onClick: () => createTabItem(t),
+                                 onClick: () => { createTabItem(t); },
                                })
                              ),
                            ],

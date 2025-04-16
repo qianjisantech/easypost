@@ -32,7 +32,7 @@ func (l *EnvironmentManageSaveLogic) EnvironmentManageSave(req *types.Environmen
 	db := l.svcCtx.DB.Begin().Debug()
 	contentInfo := l.ctx.Value("contentInfo").(*middleware.ContentInfo)
 	projectId := contentInfo.ProjectId
-	amEnvironmentManage := &model.AmEnvironmentManage{
+	amEnvironmentManage := &model.AmsEnvironmentManage{
 		GlobalVariable:      &req.GlobalVariable,
 		GlobalParameter:     &req.GlobalParameter,
 		KeyStores:           &req.KeyStores,

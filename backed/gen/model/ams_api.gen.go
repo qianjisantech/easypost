@@ -8,10 +8,10 @@ import (
 	"time"
 )
 
-const TableNameAmAPI = "am_api"
+const TableNameAmsAPI = "ams_api"
 
-// AmAPI 接口表
-type AmAPI struct {
+// AmsAPI 接口表
+type AmsAPI struct {
 	ID               int64      `gorm:"column:id;primaryKey;autoIncrement:true" json:"id"`
 	Name             *string    `gorm:"column:name" json:"name"`
 	Path             *string    `gorm:"column:path" json:"path"`
@@ -36,7 +36,7 @@ type AmAPI struct {
 	ResponseExamples *string    `gorm:"column:response_examples" json:"response_examples"`
 }
 
-// TableName AmAPI's table name
-func (*AmAPI) TableName() string {
-	return TableNameAmAPI
+// TableName AmsAPI's table name
+func (*AmsAPI) TableName() string {
+	return TableNameAmsAPI
 }

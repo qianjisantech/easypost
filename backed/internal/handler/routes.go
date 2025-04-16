@@ -26,57 +26,57 @@ func RegisterHandlers(server *rest.Server, serverCtx *svc.ServiceContext) {
 		[]rest.Route{
 			{
 				Method:  http.MethodPost,
-				Path:    "/am/api/copy",
+				Path:    "/ams/api/copy",
 				Handler: api.ApiCopyHandler(serverCtx),
 			},
 			{
 				Method:  http.MethodGet,
-				Path:    "/am/api/delete/:id",
+				Path:    "/ams/api/delete/:id",
 				Handler: api.ApiDeleteHandler(serverCtx),
 			},
 			{
 				Method:  http.MethodGet,
-				Path:    "/am/api/detail/:id",
+				Path:    "/ams/api/detail/:id",
 				Handler: api.ApiDetailHandler(serverCtx),
 			},
 			{
 				Method:  http.MethodPost,
-				Path:    "/am/api/detail/create",
+				Path:    "/ams/api/detail/create",
 				Handler: api.ApiDetailCreateHandler(serverCtx),
 			},
 			{
 				Method:  http.MethodPost,
-				Path:    "/am/api/detail/update",
+				Path:    "/ams/api/detail/update",
 				Handler: api.ApiDetailUpdateHandler(serverCtx),
 			},
 			{
 				Method:  http.MethodGet,
-				Path:    "/am/api/doc/detail/:id",
+				Path:    "/ams/api/doc/detail/:id",
 				Handler: api.ApiDocDetailHandler(serverCtx),
 			},
 			{
 				Method:  http.MethodPost,
-				Path:    "/am/api/move",
+				Path:    "/ams/api/move",
 				Handler: api.ApiMoveHandler(serverCtx),
 			},
 			{
 				Method:  http.MethodPost,
-				Path:    "/am/api/rename",
+				Path:    "/ams/api/rename",
 				Handler: api.ApiRenameHandler(serverCtx),
 			},
 			{
 				Method:  http.MethodGet,
-				Path:    "/am/api/run/detail/:id",
+				Path:    "/ams/api/run/detail/:id",
 				Handler: api.ApiRunDetailHandler(serverCtx),
 			},
 			{
 				Method:  http.MethodPost,
-				Path:    "/am/api/tree/page",
+				Path:    "/ams/api/tree/page",
 				Handler: api.ApiTreeQueryPageHandler(serverCtx),
 			},
 			{
 				Method:  http.MethodPost,
-				Path:    "/am/responsible/search",
+				Path:    "/ams/responsible/search",
 				Handler: api.ResponsibleSearchHandler(serverCtx),
 			},
 		},
@@ -87,42 +87,42 @@ func RegisterHandlers(server *rest.Server, serverCtx *svc.ServiceContext) {
 		[]rest.Route{
 			{
 				Method:  http.MethodPost,
-				Path:    "/am/apicase/copy",
+				Path:    "/ams/apicase/copy",
 				Handler: apicase.ApiCaseCopyHandler(serverCtx),
 			},
 			{
 				Method:  http.MethodGet,
-				Path:    "/am/apicase/delete/:id",
+				Path:    "/ams/apicase/delete/:id",
 				Handler: apicase.ApiCaseDeleteHandler(serverCtx),
 			},
 			{
 				Method:  http.MethodGet,
-				Path:    "/am/apicase/detail/:id",
+				Path:    "/ams/apicase/detail/:id",
 				Handler: apicase.ApiCaseDetailHandler(serverCtx),
 			},
 			{
 				Method:  http.MethodPost,
-				Path:    "/am/apicase/detail/create",
+				Path:    "/ams/apicase/detail/create",
 				Handler: apicase.ApiCaseDetailCreateHandler(serverCtx),
 			},
 			{
 				Method:  http.MethodPost,
-				Path:    "/am/apicase/detail/update",
+				Path:    "/ams/apicase/detail/update",
 				Handler: apicase.ApiCaseDetailUpdateHandler(serverCtx),
 			},
 			{
 				Method:  http.MethodPost,
-				Path:    "/am/apicase/move",
+				Path:    "/ams/apicase/move",
 				Handler: apicase.ApiCaseMoveHandler(serverCtx),
 			},
 			{
 				Method:  http.MethodPost,
-				Path:    "/am/apicase/rename",
+				Path:    "/ams/apicase/rename",
 				Handler: apicase.ApiCaseRenameHandler(serverCtx),
 			},
 			{
 				Method:  http.MethodGet,
-				Path:    "/am/apicase/run/detail/:id",
+				Path:    "/ams/apicase/run/detail/:id",
 				Handler: apicase.ApiCaseRunDetailHandler(serverCtx),
 			},
 		},
@@ -164,7 +164,7 @@ func RegisterHandlers(server *rest.Server, serverCtx *svc.ServiceContext) {
 		[]rest.Route{
 			{
 				Method:  http.MethodPost,
-				Path:    "/am/deepseek/chat",
+				Path:    "/ams/deepseek/chat",
 				Handler: deepseek.DeepSeekChatHandler(serverCtx),
 			},
 		},
@@ -175,12 +175,12 @@ func RegisterHandlers(server *rest.Server, serverCtx *svc.ServiceContext) {
 		[]rest.Route{
 			{
 				Method:  http.MethodGet,
-				Path:    "/am/doc/detail/:id",
+				Path:    "/ams/doc/detail/:id",
 				Handler: doc.DocDetailHandler(serverCtx),
 			},
 			{
 				Method:  http.MethodPost,
-				Path:    "/am/doc/save",
+				Path:    "/ams/doc/save",
 				Handler: doc.DocSaveHandler(serverCtx),
 			},
 		},
@@ -191,12 +191,12 @@ func RegisterHandlers(server *rest.Server, serverCtx *svc.ServiceContext) {
 		[]rest.Route{
 			{
 				Method:  http.MethodGet,
-				Path:    "/am/environmentmanage/detail/:id",
+				Path:    "/ams/environmentmanage/detail/:id",
 				Handler: environmentmanage.EnvironmentManageDetailHandler(serverCtx),
 			},
 			{
 				Method:  http.MethodPost,
-				Path:    "/am/environmentmanage/save",
+				Path:    "/ams/environmentmanage/save",
 				Handler: environmentmanage.EnvironmentManageSaveHandler(serverCtx),
 			},
 		},
@@ -223,12 +223,12 @@ func RegisterHandlers(server *rest.Server, serverCtx *svc.ServiceContext) {
 		[]rest.Route{
 			{
 				Method:  http.MethodGet,
-				Path:    "/am/folder/detail/:id",
+				Path:    "/ams/folder/detail/:id",
 				Handler: folder.FolderDetailHandler(serverCtx),
 			},
 			{
 				Method:  http.MethodPost,
-				Path:    "/am/folder/detail/save",
+				Path:    "/ams/folder/detail/save",
 				Handler: folder.FolderDetailSaveHandler(serverCtx),
 			},
 		},

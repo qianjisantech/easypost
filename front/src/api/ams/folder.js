@@ -1,7 +1,7 @@
-import request from '@/api'
+import request from '@/api/index.ts'
 export function ApiTreeQueryPage(body) {
   return request({
-    url: '/am/api/tree/page',
+    url: '/ams/api/tree/page',
     method: 'post',
     headers: {
       'Content-Type': 'application/json',
@@ -12,7 +12,7 @@ export function ApiTreeQueryPage(body) {
 
 export function FolderDetailSave(body) {
   return request({
-    url: '/am/folder/detail/save',
+    url: '/ams/folder/detail/save',
     method: 'post',
     headers: {
       'Content-Type': 'application/json',
@@ -23,7 +23,7 @@ export function FolderDetailSave(body) {
 
 export function ApiDetailUpdate(body) {
   return request({
-    url: '/am/api/detail/update',
+    url: '/ams/api/detail/update',
     method: 'post',
     headers: {
       'Content-Type': 'multipart/form-data',
@@ -33,25 +33,25 @@ export function ApiDetailUpdate(body) {
 }
 export function FolderDetail(id) {
   return request({
-    url: `/am/folder/detail/${id}`,
+    url: `/ams/folder/detail/${id}`,
     method: 'get',
   })
 }
 export function ApiDocDetail(id) {
   return request({
-    url: `/am/api/doc/detail/${id}`,
+    url: `/ams/api/doc/detail/${id}`,
     method: 'get',
   })
 }
 export function ApiDelete(id) {
   return request({
-    url: `/am/api/delete/${id}`,
+    url: `/ams/api/delete/${id}`,
     method: 'get',
   })
 }
 export function ApiCopy(body) {
   return request({
-    url: `/am/api/copy`,
+    url: `/ams/api/copy`,
     method: 'post',
     headers: {
       'Content-Type': 'application/json',
@@ -61,7 +61,7 @@ export function ApiCopy(body) {
 }
 export function ApiRename(body) {
   return request({
-    url: `/am/api/rename`,
+    url: `/ams/api/rename`,
     method: 'post',
     headers: {
       'Content-Type': 'application/json',
@@ -71,13 +71,13 @@ export function ApiRename(body) {
 }
 export function DocDetail(id) {
   return request({
-    url: `/am/doc/detail/${id}`,
+    url: `/ams/doc/detail/${id}`,
     method: 'get',
   })
 }
 export function DocSave(body) {
   return request({
-    url: '/am/doc/save',
+    url: '/ams/doc/save',
     method: 'post',
     headers: {
       'Content-Type': 'application/json',
@@ -88,7 +88,7 @@ export function DocSave(body) {
 
 export function ResponsibleSearch(body) {
   return request({
-    url: '/am/responsible/search',
+    url: '/ams/responsible/search',
     method: 'post',
     headers: {
       'Content-Type': 'application/json',

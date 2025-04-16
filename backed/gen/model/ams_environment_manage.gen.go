@@ -8,10 +8,10 @@ import (
 	"time"
 )
 
-const TableNameAmEnvironmentManage = "am_environment_manage"
+const TableNameAmsEnvironmentManage = "ams_environment_manage"
 
-// AmEnvironmentManage mapped from table <am_environment_manage>
-type AmEnvironmentManage struct {
+// AmsEnvironmentManage mapped from table <ams_environment_manage>
+type AmsEnvironmentManage struct {
 	ID                  int64      `gorm:"column:id;primaryKey;autoIncrement:true" json:"id"`
 	GlobalParameter     *string    `gorm:"column:global_parameter;comment:全局参数" json:"global_parameter"` // 全局参数
 	GlobalVariable      *string    `gorm:"column:global_variable" json:"global_variable"`
@@ -30,7 +30,7 @@ type AmEnvironmentManage struct {
 	ProjectID           *int64     `gorm:"column:project_id" json:"project_id"`
 }
 
-// TableName AmEnvironmentManage's table name
-func (*AmEnvironmentManage) TableName() string {
-	return TableNameAmEnvironmentManage
+// TableName AmsEnvironmentManage's table name
+func (*AmsEnvironmentManage) TableName() string {
+	return TableNameAmsEnvironmentManage
 }

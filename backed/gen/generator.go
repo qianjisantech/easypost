@@ -45,11 +45,11 @@ func main() {
 
 	// Tables to generate
 	tables := []string{
-		"am_api_case",
-		"am_api",
-		"am_folder",
-		"am_doc",
-		"am_environment_manage",
+		"ams_api_case",
+		"ams_api",
+		"ams_folder",
+		"ams_doc",
+		"ams_environment_manage",
 		"sys_project",
 		"sys_user",
 		"sys_team",

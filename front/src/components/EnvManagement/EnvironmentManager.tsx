@@ -17,7 +17,7 @@ import {
 import { Button, ConfigProvider, Form, Input, Menu, message, Modal, Select, Tooltip } from 'antd'
 import zhCN from 'antd/lib/locale/zh_CN'
 
-import { EnvironmentManageDetail, EnvironmentManageSave } from '@/api/environmentmanage'
+import { EnvironmentManageDetail, EnvironmentManageSave } from '@/api/ams/environmentmanage'
 import type { EnvironmentManagement, EnvironmentSetting } from "@/types";
 import EnvironmentSettingsMenu from './EnvironmentSettingsMenu'
 import GlobalParameter from './GlobalParameter'
@@ -116,10 +116,11 @@ const EnvironmentManager: React.FC<EnvironmentManagerProps> = ({
   }
 
   useEffect(() => {
+
     if (modalState.visible){
       loadEnvironmentManager()
     }
-
+    loadEnvironmentManager()
   }, [modalState.visible])
 // 在 EnvironmentManager.tsx 中添加
 

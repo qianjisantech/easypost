@@ -1,14 +1,14 @@
-import request from '@/api'
+import request from '@/api/index.ts'
 
 export function DocDetail(id) {
   return request({
-    url: `/am/doc/detail/${id}`,
+    url: `/ams/doc/detail/${id}`,
     method: 'get',
   })
 }
 export function DocSave(body) {
   return request({
-    url: '/am/doc/save',
+    url: '/ams/doc/save',
     method: 'post',
     headers: {
       'Content-Type': 'application/json',

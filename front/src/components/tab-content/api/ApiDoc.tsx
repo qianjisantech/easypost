@@ -5,7 +5,7 @@ import { Button, Card, Form, Input, Select, type SelectProps, Space, Tabs, theme
 import dayjs from 'dayjs'
 import { Code2Icon, ZapIcon } from 'lucide-react'
 import jsonBeautify from 'json-beautify';
-import {  ApiDocDetail } from "src/api/api";
+import {  ApiDocDetail } from "@/api/ams/api";
 import { useTabContentContext } from '@/components/ApiTab/TabContentContext'
 import { IconText } from '@/components/IconText'
 

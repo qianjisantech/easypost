@@ -29,7 +29,7 @@ func NewEnvironmentManageDetailLogic(ctx context.Context, svcCtx *svc.ServiceCon
 func (l *EnvironmentManageDetailLogic) EnvironmentManageDetail(req *types.EnvironmentManageDetailRequest) (resp *types.EnvironmentManageDetailResp, err error) {
 	db := l.svcCtx.DB.Debug()
 	id, err := strconv.ParseInt(req.Id, 10, 64)
-	var amEnvironmentManage *model.AmEnvironmentManage
+	var amEnvironmentManage *model.AmsEnvironmentManage
 	tx := db.First(&amEnvironmentManage, id)
 	if tx.Error != nil {
 		logx.Errorf("Error query EnvironmentManage: %v", tx.Error)

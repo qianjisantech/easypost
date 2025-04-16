@@ -3,7 +3,7 @@ import { useEffect, useRef, useState } from "react";
 import { Button, Form, type FormProps, message, Select, type SelectProps, Space } from 'antd'
 import { nanoid } from 'nanoid'
 // eslint-disable-next-line import/no-unresolved
-import { ApiDetail, ApiDetailCreate, ApiDetailUpdate, ApiTreeQueryPage } from "src/api/api";
+import { ApiDetail, ApiDetailCreate, ApiDetailUpdate, ApiTreeQueryPage } from "@/api/ams/api";
 
 import { PageTabStatus } from '@/components/ApiTab/ApiTab.enum'
 import { useTabContentContext } from '@/components/ApiTab/TabContentContext'

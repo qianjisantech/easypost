@@ -28,5 +28,5 @@ type (
 )
 service easypost-api {
     @handler DeepSeekChat
-    post /am/deepseek/chat (DeepSeekChatRequest) returns (DeepSeekChatResp)
+    post /ams/deepseek/chat (DeepSeekChatRequest) returns (DeepSeekChatResp)
 }

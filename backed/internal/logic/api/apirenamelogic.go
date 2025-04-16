@@ -35,7 +35,7 @@ func (l *ApiRenameLogic) ApiRename(req *types.ApiRenameRequest) (resp *types.Api
 	}
 
 	// 查询数据库中的记录 (假设你有一个名为 `db` 的数据库实例)
-	var amA model.AmAPI // 假设 ApiRecord 是一个模型结构体
+	var amA model.AmsAPI // 假设 ApiRecord 是一个模型结构体
 	err = db.Where("id = ?", id).First(&amA).Error
 	if err != nil {
 		return nil, errorx.NewDefaultError(err.Error()) // 如果没有找到记录，返回错误

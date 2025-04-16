@@ -8,10 +8,10 @@ import (
 	"time"
 )
 
-const TableNameAmDoc = "am_doc"
+const TableNameAmsDoc = "ams_doc"
 
-// AmDoc mapped from table <am_doc>
-type AmDoc struct {
+// AmsDoc mapped from table <ams_doc>
+type AmsDoc struct {
 	ID           int64      `gorm:"column:id;primaryKey;autoIncrement:true" json:"id"`
 	Name         *string    `gorm:"column:name" json:"name"`
 	CreateBy     *int64     `gorm:"column:create_by;default:1;->" json:"create_by"`
@@ -27,7 +27,7 @@ type AmDoc struct {
 	Content      *string    `gorm:"column:content" json:"content"`
 }
 
-// TableName AmDoc's table name
-func (*AmDoc) TableName() string {
-	return TableNameAmDoc
+// TableName AmsDoc's table name
+func (*AmsDoc) TableName() string {
+	return TableNameAmsDoc
 }

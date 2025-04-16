@@ -48,7 +48,7 @@ func (l *ApiDetailCreateLogic) ApiDetailCreate(req *types.ApiDetailCreateOrUpdat
 	//} else {
 	//	requestBody = "{\"type\":\"text/plain\",\"parameters\":[],\"jsonSchema\":\"\"}"
 	//}
-	amApi := &model.AmAPI{
+	amApi := &model.AmsAPI{
 		Path:             &req.Path,
 		Status:           &req.Status,
 		Remark:           &req.Description,

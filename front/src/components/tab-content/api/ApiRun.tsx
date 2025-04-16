@@ -3,7 +3,7 @@ import { useEffect, useRef, useState } from "react";
 
 import { Button, Divider, Empty, Form, type FormProps, message, Select, type SelectProps, Space } from "antd";
 import { nanoid } from "nanoid";
-import { ApiDetailCreate, ApiDetailUpdate, ApiRunDetail } from "src/api/api";
+import { ApiDetailCreate, ApiDetailUpdate, ApiRunDetail } from "@/api/ams/api";
 
 import { PageTabStatus } from "@/components/ApiTab/ApiTab.enum";
 import { useTabContentContext } from "@/components/ApiTab/TabContentContext";

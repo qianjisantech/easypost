@@ -91,9 +91,9 @@ func (l *ApiDocDetailLogic) ApiDocDetail(req *types.ApiDocDetailRequest) (resp *
 }
 
 // QueryApiDetailById 根据id查询api详情
-func (l *ApiDocDetailLogic) QueryApiDetailById(id int64) (*model.AmAPI, error) {
+func (l *ApiDocDetailLogic) QueryApiDetailById(id int64) (*model.AmsAPI, error) {
 	db := l.svcCtx.DB.Debug()
-	var amApi *model.AmAPI
+	var amApi *model.AmsAPI
 	tx := db.First(&amApi, id)
 	if tx.Error != nil {
 		logx.Errorf("Error QueryApiDetailById: %v", tx.Error)

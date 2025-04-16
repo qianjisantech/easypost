@@ -8,10 +8,10 @@ import (
 	"time"
 )
 
-const TableNameAmAPICase = "am_api_case"
+const TableNameAmsAPICase = "ams_api_case"
 
-// AmAPICase 接口用例表
-type AmAPICase struct {
+// AmsAPICase 接口用例表
+type AmsAPICase struct {
 	ID           int64      `gorm:"column:id;primaryKey;autoIncrement:true" json:"id"`
 	Name         *string    `gorm:"column:name" json:"name"`
 	Path         *string    `gorm:"column:path" json:"path"`
@@ -29,7 +29,7 @@ type AmAPICase struct {
 	RequestBody  *string    `gorm:"column:request_body" json:"request_body"`
 }
 
-// TableName AmAPICase's table name
-func (*AmAPICase) TableName() string {
-	return TableNameAmAPICase
+// TableName AmsAPICase's table name
+func (*AmsAPICase) TableName() string {
+	return TableNameAmsAPICase
 }
