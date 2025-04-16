@@ -1,7 +1,7 @@
 import request from '@/api/index.ts'
 export function ApiTreeQueryPage(body) {
   return request({
-    url: '/am/api/tree/page',
+    url: '/ams/api/tree/page',
     method: 'post',
     headers: {
       'Content-Type': 'application/json',
@@ -12,7 +12,7 @@ export function ApiTreeQueryPage(body) {
 
 export function ApiDetailCreate(body) {
   return request({
-    url: '/am/api/detail/create',
+    url: '/ams/api/detail/create',
     method: 'post',
     headers: {
       'Content-Type': 'multipart/form-data',
@@ -23,7 +23,7 @@ export function ApiDetailCreate(body) {
 
 export function ApiDetailUpdate(body) {
   return request({
-    url: '/am/api/detail/update',
+    url: '/ams/api/detail/update',
     method: 'post',
     headers: {
       'Content-Type': 'multipart/form-data',
@@ -33,7 +33,7 @@ export function ApiDetailUpdate(body) {
 }
 export function ApiDetail(id) {
   return request({
-    url: `/am/api/detail/${id}`,
+    url: `/ams/api/detail/${id}`,
     method: 'get',
   })
 }
