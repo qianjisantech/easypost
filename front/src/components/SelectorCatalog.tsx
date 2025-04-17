@@ -23,7 +23,8 @@ export function SelectorCatalog(props: SelectorCatalogProps) {
 
   const { menuRawList } = useMenuHelpersContext()
   const { catalogOptions } = useCatalog({ type, exclued })
-
+  console.log('type',type)
+  console.log('catalogOptions',catalogOptions)
   const internalValue = useMemo(() => {
     if (menuRawList && value) {
       const group = findFolders(menuRawList, [], value).map(({ id }) => id)

@@ -202,7 +202,6 @@ export function ApiTab(props: TabsProps) {
               }}
             >
               {(node) => {
-                console.log('node', node)
                 const isLastTab = node.props['data-node-key'] === tabItems[tabItems.length - 1].key
                 return (
                   <DraggableTabNode {...node.props} key={node.key}>

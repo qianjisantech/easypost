@@ -102,10 +102,12 @@ export function DropdownActions(props: React.PropsWithChildren<DropdownActionsPr
       onClick: (ev) => {
         ev.domEvent.stopPropagation()
         handleActionClick('move', catalog)
-        void show(ModalMoveMenu, {
+        const args = {
           menuItemType: catalog.type,
           formData: { id: catalog.id },
-        })
+        }
+        console.log('移动到 args', args)
+        void show(ModalMoveMenu, args)
       },
     },
   ]

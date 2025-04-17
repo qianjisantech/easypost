@@ -551,8 +551,9 @@ export function ApiRun({ activeKey }: { activeKey: string }) {
       form.setFieldValue('responses', res)
     } catch (e) {
       console.error('Error:', e)
+      message.error('请求失败',e)
     } finally {
-      setLoading(false)
+      setSendLoading(false)
     }
   }
   const handleParseQueryParams: PathInputProps['onParseQueryParams'] = (parsedParams) => {

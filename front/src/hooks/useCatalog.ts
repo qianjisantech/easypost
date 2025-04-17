@@ -27,6 +27,8 @@ export function useCatalog({ type, exclued }: UseCatalogParmas): {
   catalogOptions: CascaderOptions
 } {
   const { menuRawList } = useMenuHelpersContext()
+  console.log('type',type)
+  console.log('exclued',exclued)
 
   const catalogOptions = useMemo<CascaderOptions>(() => {
     const menuList = menuRawList

@@ -1,12 +1,8 @@
 import request from '@/api/index.ts'
-export function ApiTreeQueryPage(body) {
+export function ApiTreeQueryPage() {
   return request({
     url: '/ams/api/tree/page',
-    method: 'post',
-    headers: {
-      'Content-Type': 'application/json',
-    },
-    data: body,
+    method: 'get',
   })
 }
 
@@ -85,7 +81,16 @@ export function ApiRename(body) {
     data: body,
   })
 }
-
+export function ApiMove(body) {
+  return request({
+    url: `/ams/api/move`,
+    method: 'post',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    data: body,
+  })
+}
 
 export function ResponsibleSearch(body) {
   return request({

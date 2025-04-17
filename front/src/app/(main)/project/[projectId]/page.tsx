@@ -59,24 +59,15 @@ function ProjectContent() {
   const { createTabItem } = useHelpers()
   const { token } = theme.useToken()
   const { setMenuRawList } = useMenuHelpersContext()
-  const pathname = usePathname()
   const [selectedMenu, setSelectedMenu] = useState<string>('接口管理')
 
 
   useEffect(() => {
-    if (pathname) {
-      const match = pathname.match(/project\/([^/]+)/)
-      if (match) {
-        const projectId = match[1]
-        if (projectId) {
-          loadingMenuTree(projectId)
-        }
-      }
-    }
-  }, [pathname])
+    loadingMenuTree()
+  }, [])
 
-  const loadingMenuTree = async (projectId: string) => {
-    const response = await ApiTreeQueryPage({ projectId })
+  const loadingMenuTree = async () => {
+    const response = await ApiTreeQueryPage()
     // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
     if (response.data?.success && setMenuRawList) {
       // eslint-disable-next-line @typescript-eslint/no-unsafe-argument

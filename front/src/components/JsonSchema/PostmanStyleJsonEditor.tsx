@@ -2,7 +2,7 @@ import React, { useEffect, useRef, useState } from 'react'
 import { ExpandOutlined, QuestionCircleOutlined, ShrinkOutlined } from '@ant-design/icons'
 import MonacoEditor from '@monaco-editor/react'
 import { Button, Divider, Space } from 'antd'
-import DynamicValueModal from "@/components/DynamicValueModal";
+import DynamicValueModal from "@/components/DynamicValue/DynamicValueModal";
 
 interface PostmanStyleJsonEditorProps {
   value?: string
@@ -60,37 +60,58 @@ function PostmanStyleJsonEditor(props: PostmanStyleJsonEditorProps) {
 
   // 处理动态值插入
   const handleInsertDynamicValue = (value: string) => {
-    try {
-      const parsed = rawJson ? JSON.parse(rawJson) : {};
-      // 根据不同的动态值类型插入不同的内容
-      switch(value) {
-        case '{{timestamp}}':
-          parsed.timestamp = Date.now();
-          break;
-        case '{{randomId}}':
-          parsed.randomId = Math.random().toString(36).substring(2, 10);
-          break;
-        case '{{uuid}}':
-          parsed.uuid = 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {
-            const r = Math.random() * 16 | 0, v = c === 'x' ? r : (r & 0x3 | 0x8);
-            return v.toString(16);
-          });
-          break;
-        case '{{date}}':
-          parsed.date = new Date().toISOString().split('T')[0];
-          break;
-        case '{{datetime}}':
-          parsed.datetime = new Date().toISOString();
-          break;
-        default:
-          parsed.dynamicValue = value;
-      }
-      const newJson = JSON.stringify(parsed, null, 2);
-      setRawJson(newJson);
-      onChange?.(newJson); // 通知父组件值已变更
-      setError(null);
-    } catch (err) {
-      setError(err instanceof Error ? err.message : String(err));
+    if (!editorRef.current) return;
+
+    const editor = editorRef.current;
+    const selection = editor.getSelection();
+
+    if (selection) {
+      // 在当前光标位置执行编辑操作
+      editor.executeEdits('insert-dynamic-value', [
+        {
+          range: selection, // 使用当前选择范围
+          text: value,     // 要插入的文本
+          forceMoveMarkers: true // 强制移动标记
+        }
+      ]);
+
+      // 将光标移动到插入内容之后
+      const position = selection.getEndPosition();
+      editor.setPosition(position);
+      editor.focus();
+
+      // 更新状态
+      const newValue = editor.getValue();
+      setRawJson(newValue);
+      onChange?.(newValue);
+    } else {
+      // 如果没有选择范围，在文档末尾插入
+      const model = editor.getModel();
+      const fullRange = model.getFullModelRange();
+      const endPosition = model.getPositionAt(model.getValueLength());
+
+      editor.executeEdits('insert-dynamic-value', [
+        {
+          range: {
+            startLineNumber: endPosition.lineNumber,
+            startColumn: endPosition.column,
+            endLineNumber: endPosition.lineNumber,
+            endColumn: endPosition.column
+          },
+          text: value,
+          forceMoveMarkers: true
+        }
+      ]);
+
+      // 将光标移动到新插入内容之后
+      const newPosition = model.getPositionAt(model.getValueLength());
+      editor.setPosition(newPosition);
+      editor.focus();
+
+      // 更新状态
+      const newValue = editor.getValue();
+      setRawJson(newValue);
+      onChange?.(newValue);
     }
   };
 

@@ -82,8 +82,8 @@ export function ApiDocEditing({ activeKey,setActiveKey }: { activeKey: string,se
 
     }
   }, [activeKey, isCreating, tabData.key])
-  const loadingMenuTree = async (projectId: string) => {
-    const response = await ApiTreeQueryPage({ projectId })
+  const loadingMenuTree = async () => {
+    const response = await ApiTreeQueryPage()
     if (response.data.success && setMenuRawList) {
       setMenuRawList(response.data?.data)
     }
@@ -125,7 +125,7 @@ export function ApiDocEditing({ activeKey,setActiveKey }: { activeKey: string,se
     console.log('response.data.data.id', response.data.data.id)
     if (response.data.success) {
       message.success(response.data.message)
-      loadingMenuTree("22")
+      loadingMenuTree()
       loadingApiDetails(response.data.data.id)
 
     }
@@ -158,7 +158,7 @@ export function ApiDocEditing({ activeKey,setActiveKey }: { activeKey: string,se
     console.log('response.data.data.id', response.data.data.id)
     if (response.data.success) {
       message.success(response.data.message)
-      loadingMenuTree("22")
+      loadingMenuTree()
       loadingApiDetails(response.data.data.id)
     }
     setLoading(false)

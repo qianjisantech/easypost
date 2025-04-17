@@ -356,7 +356,6 @@ type ApiTreeQueryPageData struct {
 }
 
 type ApiTreeQueryPageRequest struct {
-	ProjectId string `json:"projectId"`
 }
 
 type ApiTreeQueryPageResp struct {
@@ -414,11 +413,12 @@ type AuthLogoutResp struct {
 }
 
 type DeepSeekChatData struct {
-	Conetent string `json:"conetent"`
+	Content string `json:"content"`
 }
 
 type DeepSeekChatRequest struct {
-	Conetent string `json:"conetent"`
+	Content string `form:"content,optional"`
+	File    string `form:"file,optional"` // 用于文件上传的字段
 }
 
 type DeepSeekChatResp struct {

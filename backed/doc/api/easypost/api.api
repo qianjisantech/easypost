@@ -10,7 +10,6 @@ info(
 
 type (
     ApiTreeQueryPageRequest {
-        ProjectId string `json:"projectId"`
     }
 
     ApiTreeQueryPageResp {
@@ -208,7 +207,7 @@ type (
 )
 service easypost-api {
     @handler ApiTreeQueryPage  //接口树
-    post /ams/api/tree/page (ApiTreeQueryPageRequest) returns (ApiTreeQueryPageResp)
+    get /ams/api/tree/page (ApiTreeQueryPageRequest) returns (ApiTreeQueryPageResp)
     @handler ApiDetailCreate    //接口新增
     post /ams/api/detail/create (ApiDetailCreateOrUpdateRequest) returns (ApiDetailCreateOrUpdateResp)
     @handler ApiDetailUpdate   //接口新增

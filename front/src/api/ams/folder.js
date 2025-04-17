@@ -1,14 +1,4 @@
 import request from '@/api/index.ts'
-export function ApiTreeQueryPage(body) {
-  return request({
-    url: '/ams/api/tree/page',
-    method: 'post',
-    headers: {
-      'Content-Type': 'application/json',
-    },
-    data: body,
-  })
-}
 
 export function FolderDetailSave(body) {
   return request({
