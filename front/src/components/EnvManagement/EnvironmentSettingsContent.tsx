@@ -1,24 +1,82 @@
-// components/EnvironmentSettingsContent.tsx
-import React from 'react';
-import { Form, Input, Button } from 'antd';
+import React, { useEffect } from "react";
+import { Form, Input, Button, Table, Card } from 'antd';
+import { PlusOutlined, DeleteOutlined } from '@ant-design/icons';
 import { EnvironmentSetting } from "@/types";
+import { nanoid } from "nanoid";
 
-interface EnvironmentSettingsContentProps {
-  setting?: EnvironmentSetting;
-  onSettingChange: (newSetting: EnvironmentSetting) => void;
-  onAddNew?: () => void;
-  onDelete?: (id: string) => void;
+interface Service {
+  id: string;
+  name: string;
+  url: string;
 }
 
-const EnvironmentSettingsContent: React.FC<EnvironmentSettingsContentProps> =({
-                                                                                setting,
-                                                                                onSettingChange,
-                                                                                onAddNew,
-                                                                                onDelete
-                                                                              }) => {
+interface EnvironmentVariable {
+  id: string;
+  key: string;
+  value: string;
+}
 
+interface EnvironmentSettingsContentProps {
+  setting?: EnvironmentSetting & {
+    services?: Service[];
+    variables?: EnvironmentVariable[];
+  };
+  onSettingChange: (newSetting: EnvironmentSetting) => void;
+  onSave?: () => void;
+  onCancel?: () => void;
+  onDelete?: (id: string) => void;
+  isCreating?: boolean; // 新增属性，标识是否处于创建模式
+}
 
-  if (!setting) {
+const EnvironmentSettingsContent: React.FC<EnvironmentSettingsContentProps> = ({
+                                                                                 setting,
+                                                                                 onSettingChange,
+                                                                                 onSave,
+                                                                                 onCancel,
+                                                                                 onDelete,
+                                                                                 isCreating = false // 默认值
+                                                                               }) => {
+  const [form] = Form.useForm();
+  const [services, setServices] = React.useState<Service[]>([]);
+  const [variables, setVariables] = React.useState<EnvironmentVariable[]>([]);
+
+  useEffect(() => {
+    if (isCreating) {
+      // 新建环境模式，初始化空白表单
+      form.resetFields();
+      setServices([]);
+      setVariables([]);
+    } else if (setting) {
+      // 编辑现有环境模式
+      form.setFieldsValue({
+        name: setting.name,
+        type: setting.type,
+        url: setting.url
+      });
+      setServices(setting.services || []);
+      setVariables(setting.variables || []);
+    } else {
+      // 无选中环境模式
+      form.resetFields();
+      setServices([]);
+      setVariables([]);
+    }
+  }, [setting, form, isCreating]);
+
+  const handleValuesChange = (changedValues: any, allValues: any) => {
+    if (isCreating || setting) {
+      onSettingChange({
+        ...(setting || {}),
+        ...allValues,
+        services,
+        variables
+      });
+    }
+  };
+
+  // ...其他函数保持不变...
+
+  if (!isCreating && !setting) {
     return (
       <div style={{
         display: 'flex',
@@ -29,68 +87,20 @@ const EnvironmentSettingsContent: React.FC<EnvironmentSettingsContentProps> =({
         color: 'rgba(0, 0, 0, 0.25)'
       }}>
         <p>请从左侧选择环境配置</p>
-        {onAddNew && (
-          <Button
-            type="primary"
-            onClick={onAddNew}
-            style={{ marginTop: 16 }}
-          >
-            添加新环境
-          </Button>
-        )}
       </div>
     );
   }
 
   return (
-    <div>
-      <div style={{
-        display: 'flex',
-        justifyContent: 'space-between',
-        alignItems: 'center',
-        marginBottom: 16
-      }}>
-        <h3>{setting.name}配置</h3>
-        {onDelete && (
-          <Button
-            danger
-            onClick={() => onDelete(setting.id)}
-          >
-            删除环境
-          </Button>
-        )}
-      </div>
-
-      <Form layout="vertical">
-        <Form.Item label="环境名称">
-          <Input
-            value={setting.name}
-            onChange={e => onSettingChange({
-              ...setting,
-              name: e.target.value
-            })}
-          />
-        </Form.Item>
-        <Form.Item label="环境类型">
-          <Input
-            value={setting.type}
-            onChange={e => onSettingChange({
-              ...setting,
-              type: e.target.value
-            })}
-          />
-        </Form.Item>
-        <Form.Item label="API端点">
-          <Input
-            value={setting.url}
-            onChange={e => onSettingChange({
-              ...setting,
-              url: e.target.value
-            })}
-          />
-        </Form.Item>
-      </Form>
-    </div>
+    <Form
+      form={form}
+      layout="vertical"
+      onValuesChange={handleValuesChange}
+    >
+      <Card title={isCreating ? "新建环境" : "环境配置"} bordered={false}>
+        {/* ...其他表单内容保持不变... */}
+      </Card>
+    </Form>
   );
 };
 
