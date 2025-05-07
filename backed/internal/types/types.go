@@ -192,7 +192,7 @@ type ApiDetailCreateOrUpdateRequest struct {
 	ServerId         string   `form:"serverId,optional"`
 	Description      string   `form:"description,optional"`
 	Parameters       string   `form:"parameters,optional"`
-	Responses        string   `form:"responses,optional"`
+	Response         string   `form:"response,optional"`
 	ResponseExamples string   `form:"responseExamples,optional"`
 }
 
@@ -225,7 +225,7 @@ type ApiDetailDataData struct {
 	ServerId         string      `json:"serverId"`
 	Description      string      `json:"description"`
 	Parameters       interface{} `json:"parameters"`
-	Responses        interface{} `json:"responses"`
+	Response         interface{} `json:"response"`
 	ResponseExamples interface{} `json:"responseExamples"`
 }
 
@@ -258,7 +258,7 @@ type ApiDocDetailDataData struct {
 	ServerId         string      `json:"serverId"`
 	Description      string      `json:"description"`
 	Parameters       interface{} `json:"parameters"`
-	Responses        interface{} `json:"responses"`
+	Response         interface{} `json:"response"`
 	ResponseExamples interface{} `json:"responseExamples"`
 	CreatBy          string      `json:"createBy"`
 	CreatByName      string      `json:"createByName"`
@@ -338,7 +338,7 @@ type ApiRunSaveRequest struct {
 	Method     string `form:"method,optional"`
 	Path       string `form:"path,optional"`
 	Parameters string `form:"parameters,optional"`
-	Responses  string `form:"responses,optional"`
+	Response   string `form:"response,optional"`
 }
 
 type ApiRunSaveResp struct {
@@ -471,13 +471,21 @@ type EnvironmentManageDetailData struct {
 }
 
 type EnvironmentManageDetailRequest struct {
-	Id string `path:"id"`
 }
 
 type EnvironmentManageDetailResp struct {
 	Success bool                        `json:"success"`
 	Message string                      `json:"message"`
 	Data    EnvironmentManageDetailData `json:"data"`
+}
+
+type EnvironmentManageDynamicValueRequest struct {
+}
+
+type EnvironmentManageDynamicValueResp struct {
+	Success bool        `json:"success"`
+	Message string      `json:"message"`
+	Data    interface{} `json:"data"`
 }
 
 type EnvironmentManageSaveRequest struct {

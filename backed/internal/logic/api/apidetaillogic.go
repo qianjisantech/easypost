@@ -75,7 +75,7 @@ func (l *ApiDetailLogic) ApiDetail(req *types.ApiDetailRequest) (resp *types.Api
 				Description:      ep.StringIfNotNil(amAPI.Remark, ""),
 				Responsible:      ep.StringIfNotNil(amAPI.Responsible, "{}"),
 				Parameters:       parameters,
-				Responses:        responses,
+				Response:         responses,
 				ResponseExamples: responseExamples,
 			},
 		},

@@ -2,6 +2,7 @@ package environmentmanage
 
 import (
 	"backed/gen/model"
+	"backed/internal/middleware"
 	"context"
 	"encoding/json"
 	"strconv"
@@ -27,10 +28,11 @@ func NewEnvironmentManageDetailLogic(ctx context.Context, svcCtx *svc.ServiceCon
 }
 
 func (l *EnvironmentManageDetailLogic) EnvironmentManageDetail(req *types.EnvironmentManageDetailRequest) (resp *types.EnvironmentManageDetailResp, err error) {
+	contentInfo := l.ctx.Value("contentInfo").(*middleware.ContentInfo)
+	projectId := contentInfo.ProjectId
 	db := l.svcCtx.DB.Debug()
-	id, err := strconv.ParseInt(req.Id, 10, 64)
 	var amEnvironmentManage *model.AmsEnvironmentManage
-	tx := db.First(&amEnvironmentManage, id)
+	tx := db.First(&amEnvironmentManage, projectId)
 	if tx.Error != nil {
 		logx.Errorf("Error query EnvironmentManage: %v", tx.Error)
 		return nil, tx.Error
@@ -139,10 +141,19 @@ type KeyStore struct {
 	Description string `json:"description"`
 }
 type EnvironmentSetting struct {
-	Id              string           `json:"id"`
-	Name            string           `json:"name"`
-	Servers         []Server         `json:"servers"`
-	GlobalVariables []GlobalVariable `json:"globalVariables"`
+	Id        string     `json:"id"`
+	Name      string     `json:"name"`
+	IsActive  bool       `json:"isActive"`
+	Servers   []Server   `json:"servers"`
+	Variables []Variable `json:"variables"`
+}
+
+type Variable struct {
+	Id          string `json:"id"`
+	Key         string `json:"key"`
+	Type        string `json:"type"`
+	Value       string `json:"value"`
+	Description string `json:"description"`
 }
 type Server struct {
 	Id       string `json:"id"`
@@ -151,16 +162,16 @@ type Server struct {
 }
 
 type LocalMock struct {
-	Servers         []Server         `json:"servers"`
-	GlobalVariables []GlobalVariable `json:"globalVariables"`
+	Servers   []Server   `json:"servers"`
+	Variables []Variable `json:"variables"`
 }
 
 type CloudMock struct {
-	Servers         []Server         `json:"servers"`
-	GlobalVariables []GlobalVariable `json:"globalVariables"`
+	Servers   []Server   `json:"servers"`
+	Variables []Variable `json:"variables"`
 }
 
 type SelfHostMock struct {
-	Servers         []Server         `json:"servers"`
-	GlobalVariables []GlobalVariable `json:"globalVariables"`
+	Servers   []Server   `json:"servers"`
+	Variables []Variable `json:"variables"`
 }

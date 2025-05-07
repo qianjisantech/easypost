@@ -71,7 +71,7 @@ func (l *ApiDocDetailLogic) ApiDocDetail(req *types.ApiDocDetailRequest) (resp *
 				Description:      ep.StringIfNotNil(amAPI.Remark, ""),
 				Responsible:      ep.StringIfNotNil(amAPI.Responsible, "{}"),
 				Parameters:       parameters,
-				Responses:        responses,
+				Response:         responses,
 				ResponseExamples: responseExamples,
 				CreatBy:          strconv.FormatInt(*amAPI.CreateBy, 10),
 				CreatByName:      *amAPI.CreateByName,

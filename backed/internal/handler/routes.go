@@ -196,8 +196,13 @@ func RegisterHandlers(server *rest.Server, serverCtx *svc.ServiceContext) {
 		[]rest.Route{
 			{
 				Method:  http.MethodGet,
-				Path:    "/ams/environmentmanage/detail/:id",
+				Path:    "/ams/environmentmanage/detail",
 				Handler: environmentmanage.EnvironmentManageDetailHandler(serverCtx),
+			},
+			{
+				Method:  http.MethodGet,
+				Path:    "/ams/environmentmanage/dynamic",
+				Handler: environmentmanage.EnvironmentManageDynamicValueHandler(serverCtx),
 			},
 			{
 				Method:  http.MethodPost,

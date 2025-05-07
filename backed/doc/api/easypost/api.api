@@ -45,7 +45,7 @@ type (
         ServerId string `form:"serverId,optional"`
         Description string `form:"description,optional"`
         Parameters string `form:"parameters,optional"`
-        Responses string `form:"responses,optional"`
+        Response string `form:"response,optional"`
         ResponseExamples string `form:"responseExamples,optional"`
     }
 
@@ -59,7 +59,7 @@ type (
         Method  string  `form:"method,optional"`
         Path string `form:"path,optional"`
         Parameters string `form:"parameters,optional"`
-        Responses string `form:"responses,optional"`
+        Response string `form:"response,optional"`
     }
     ApiRunSaveResp {
         Success bool `json:"success"`
@@ -95,7 +95,7 @@ type (
         ServerId string `json:"serverId"`
         Description string `json:"description"`
         Parameters interface{} `json:"parameters"`
-        Responses interface{} `json:"responses"`
+        Response interface{} `json:"response"`
         ResponseExamples interface{} `json:"responseExamples"`
         CreatBy  string `json:"createBy"`
         CreatByName  string `json:"createByName"`
@@ -130,7 +130,7 @@ type (
         ServerId string `json:"serverId"`
         Description string `json:"description"`
         Parameters interface{} `json:"parameters"`
-        Responses interface{} `json:"responses"`
+        Response interface{} `json:"response"`
         ResponseExamples interface{} `json:"responseExamples"`
     }
 

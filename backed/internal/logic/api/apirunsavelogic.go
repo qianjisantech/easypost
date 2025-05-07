@@ -34,7 +34,7 @@ func (l *ApiRunSaveLogic) ApiRunSave(req *types.ApiRunSaveRequest) (resp *types.
 		Method:     &req.Method,
 		Path:       &req.Path,
 		Parameters: &req.Parameters,
-		Responses:  &req.Responses,
+		Responses:  &req.Response,
 	}
 	if req.Id != "" {
 		amApi.ID, _ = strconv.ParseInt(req.Id, 10, 64)
