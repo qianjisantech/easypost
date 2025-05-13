@@ -3,12 +3,10 @@ import {
   PlusOutlined,
   SearchOutlined,
   EditOutlined,
-  CheckOutlined,
-  CloseOutlined,
   DeleteOutlined
 } from "@ant-design/icons";
 import type { TabsProps } from 'antd';
-import { Button, Form, Input, Space, Table, Select, Tabs, Typography } from "antd";
+import { Button, Form, Input, Space, Table, Select, Tabs } from "antd";
 import { nanoid } from "nanoid";
 
 interface Parameter {
@@ -31,8 +29,6 @@ interface GlobalParameterProps {
   onChange?: (newData: GlobalParameterData) => void;
 }
 
-const { Text } = Typography;
-
 const typeOptions = [
   { value: 'string', label: 'string', color: '#1890ff' },
   { value: 'number', label: 'number', color: '#52c41a' },
@@ -41,14 +37,14 @@ const typeOptions = [
 ];
 
 const GlobalParameter: React.FC<GlobalParameterProps> = ({
-                                                             data = {
-                                                               header: [],
-                                                               cookie: [],
-                                                               query: [],
-                                                               body: []
-                                                             },
-                                                             onChange
-                                                           }) => {
+                                                           data = {
+                                                             header: [],
+                                                             cookie: [],
+                                                             query: [],
+                                                             body: []
+                                                           },
+                                                           onChange
+                                                         }) => {
   const [activeTab, setActiveTab] = useState<string>('header');
   const [searchText, setSearchText] = useState('');
   const [editingKey, setEditingKey] = useState<string>('');
@@ -58,40 +54,22 @@ const GlobalParameter: React.FC<GlobalParameterProps> = ({
     cookie: [],
     query: [],
     body: [],
-    ...data // 合并传入的数据
+    ...data
   });
-  // 3. 添加调试日志
-  useEffect(() => {
-    console.log('GlobalParameter Current internalData:', internalData);
-    console.log('GlobalParameter Active tab:', activeTab);
-    console.log('GlobalParameter Current tab data:', internalData[activeTab as keyof GlobalParameterData]);
-  }, [internalData, activeTab]);
-  // 同步外部数据变化
+
   useEffect(() => {
     setInternalData(data);
   }, [data]);
 
-  // 4. 获取当前标签页数据的辅助函数
   const getCurrentTabData = () => {
     // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
     return internalData[activeTab as keyof GlobalParameterData] || [];
   };
+
   const getTypeColor = (type: string) => {
     const option = typeOptions.find(opt => opt.value === type);
     return option ? option.color : '#000000';
   };
-  // 5. 修改表格数据源为动态获取
-  const renderTable = () => (
-    <Form form={form} component={false}>
-      <Table
-        bordered
-        columns={columns}
-        dataSource={getCurrentTabData()}
-        rowKey="id"
-        pagination={false}
-      />
-    </Form>
-  );
 
   const isEditing = (record: Parameter) => record.id === editingKey;
 
@@ -104,10 +82,6 @@ const GlobalParameter: React.FC<GlobalParameterProps> = ({
       description: record.description
     });
     setEditingKey(record.id);
-  };
-
-  const cancel = () => {
-    setEditingKey('');
   };
 
   const save = async (id: string) => {
@@ -139,7 +113,7 @@ const GlobalParameter: React.FC<GlobalParameterProps> = ({
 
   const handleAdd = () => {
     const newParam = {
-      id:nanoid(6),
+      id: nanoid(6),
       key: '',
       type: 'string',
       value: '',
@@ -179,7 +153,11 @@ const GlobalParameter: React.FC<GlobalParameterProps> = ({
             <Input />
           </Form.Item>
         ) : (
-          <Text>{record.key}</Text>
+          <Input
+            bordered={false}
+            value={record.key}
+            style={{ padding: 0, backgroundColor: 'transparent' }}
+          />
         );
       },
     },
@@ -209,9 +187,16 @@ const GlobalParameter: React.FC<GlobalParameterProps> = ({
             />
           </Form.Item>
         ) : (
-          <span style={{ color: getTypeColor(record.type) }}>
-            {record.type}
-          </span>
+          <Input
+            bordered={false}
+            readOnly
+            value={record.type}
+            style={{
+              padding: 0,
+              backgroundColor: 'transparent',
+              color: getTypeColor(record.type)
+            }}
+          />
         );
       },
     },
@@ -232,9 +217,9 @@ const GlobalParameter: React.FC<GlobalParameterProps> = ({
         ) : (
           <Input
             bordered={false}
-            style={{ width: '100%' }}
+            readOnly
             value={record.value}
-            visibilityToggle={false}
+            style={{ padding: 0, backgroundColor: 'transparent' }}
           />
         );
       },
@@ -253,7 +238,12 @@ const GlobalParameter: React.FC<GlobalParameterProps> = ({
             <Input />
           </Form.Item>
         ) : (
-          <Text>{record.description}</Text>
+          <Input
+            bordered={false}
+            readOnly
+            value={record.description}
+            style={{ padding: 0, backgroundColor: 'transparent' }}
+          />
         );
       },
     },
@@ -266,14 +256,10 @@ const GlobalParameter: React.FC<GlobalParameterProps> = ({
           <Space size="middle">
             <Button
               type="link"
-              icon={<CheckOutlined />}
               onClick={() => save(record.id)}
-            />
-            <Button
-              type="link"
-              icon={<CloseOutlined />}
-              onClick={cancel}
-            />
+            >
+              保存
+            </Button>
           </Space>
         ) : (
           <Space size="middle">
@@ -287,7 +273,7 @@ const GlobalParameter: React.FC<GlobalParameterProps> = ({
               type="link"
               danger
               icon={<DeleteOutlined />}
-              onClick={() => handleDelete(record)}
+              onClick={() => { handleDelete(record); }}
             />
           </Space>
         );
@@ -295,7 +281,18 @@ const GlobalParameter: React.FC<GlobalParameterProps> = ({
     },
   ];
 
-  // 6. 简化Tabs配置
+  const renderTable = () => (
+    <Form form={form} component={false}>
+      <Table
+        bordered
+        columns={columns}
+        dataSource={getCurrentTabData()}
+        rowKey="id"
+        pagination={false}
+      />
+    </Form>
+  );
+
   const items: TabsProps['items'] = ['header', 'cookie', 'query', 'body'].map(tab => ({
     key: tab,
     label: tab.charAt(0).toUpperCase() + tab.slice(1),
@@ -306,7 +303,7 @@ const GlobalParameter: React.FC<GlobalParameterProps> = ({
             <Input
               placeholder="搜索参数名或说明"
               prefix={<SearchOutlined />}
-              onChange={e => setSearchText(e.target.value)}
+              onChange={e => { setSearchText(e.target.value); }}
               style={{ width: 250 }}
             />
             <Button

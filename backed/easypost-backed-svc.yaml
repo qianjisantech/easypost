@@ -1,0 +1,12 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: easypost-backed-svc
+spec:
+  type: ClusterIP  # 默认类型，可省略
+  selector:
+    app: easypost-backed  # 必须与 Pod 的 labels 匹配
+  ports:
+    - protocol: TCP
+      port: 80       # Service 的虚拟端口
+      targetPort: 8888  # 对应 Pod 的容器端口

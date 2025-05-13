@@ -1,7 +1,8 @@
-import { useState } from 'react';
+import { useEffect, useState } from "react";
 import { Select, Button, Divider, Modal, message } from "antd";
 import ModalHeader from './ModalHeader';
 import { PlusOutlined } from "@ant-design/icons";
+import { EnvironmentManageDynamic } from "@/api/ams/environmentmanage";
 
 interface ReadVariableModalProps {
   visible: boolean;
@@ -9,33 +10,40 @@ interface ReadVariableModalProps {
   onClose: () => void;
   onInsert: (value: string) => void;
 }
-
+interface Option {
+  value: string
+  key: string
+  type: string
+  id: string
+}
 const ReadVariableModal = ({ visible, onBack, onClose, onInsert }: ReadVariableModalProps) => {
   const [selectedValue, setSelectedValue] = useState<string>('');
-
-  // 变量选项数据（包含预览值）
-  const variableOptions = [
-    {
-      value: 'message',
-      label: 'message',
-      preview: 'Hello World'
-    },
-    {
-      value: 'url',
-      label: 'url',
-      preview: 'https://example.com/api'
+  const [variableOptions, setVariableOptions]=useState<Option[]>([])
+  const loadingVariableOptions =async()=>{
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-call
+    const response =await EnvironmentManageDynamic()
+    if (response.data.success){
+      console.log('读取变量成功',response.data.data)
+      setVariableOptions(response.data.data.map((item:any)=>{
+        return {
+          value:item.value,
+          key:item.key,
+          type:item.type,
+          id:item.id
+        }
+      }))
     }
-  ];
+  }
 
   // 获取当前选中项的预览值
   const getPreviewValue = () => {
-    const selectedOption = variableOptions.find(opt => opt.value === selectedValue);
-    return selectedOption ? selectedOption.preview : '';
+    const selectedOption = variableOptions.find(opt => opt.key === selectedValue);
+    return selectedOption ? selectedOption.value : '';
   };
 
   // 处理变量选择
-  const handleSelect = (value: string) => {
-    setSelectedValue(value);
+  const handleSelect = (value: string, option: Option) => {
+    setSelectedValue(option.key); // 使用option.key而不是value
   };
 
   // 处理清空
@@ -74,12 +82,27 @@ const ReadVariableModal = ({ visible, onBack, onClose, onInsert }: ReadVariableM
           <div style={{ margin: '10px', fontSize: '14px',color: '#595959' }}>变量名</div>
           <Select
             placeholder="选择变量"
+            fieldNames={{
+              label: 'key',  // 显示key作为标签
+              value: 'value' // 但实际值仍使用value
+            }}
             style={{ width: '100%' }}
             options={variableOptions}
-            onChange={handleSelect}
+            onChange={(value, option) => { handleSelect(value, option)}}
             onClear={handleClear}
             allowClear
-            value={selectedValue || ''}
+            optionRender={(option) => (
+              <div style={{ display: 'flex', justifyContent: 'space-between' }}>
+                <span>{option.data.key}</span>
+                <span style={{ color: '#888' }}>{option.data.type}</span>
+              </div>
+            )}
+            value={variableOptions.find(opt => opt.key === selectedValue)?.value || ''}
+            onDropdownVisibleChange={(open) => {
+              if (open) {
+                loadingVariableOptions()
+              }
+            }}
           />
         </div>
         {/* 空白分割区域 */}

@@ -1,68 +1,90 @@
-import { useEffect, useRef, useState } from "react";
-import { Prism as SyntaxHighlighter } from 'react-syntax-highlighter'
-import { docco } from 'react-syntax-highlighter/dist/cjs/styles/hljs'
-
-import { Divider, Segmented, Space, Statistic, Table, Tabs, Tooltip } from "antd";
-
-import type { JsonSchemaEditorProps } from '@/components/JsonSchema'
-import { JsonSchemaCard } from '@/components/JsonSchemaCard'
-import { JsonViewer } from '@/components/JsonViewer'
+import React, { useState, useEffect, useMemo } from 'react';
+import { Tabs, Space, Statistic, Tooltip, Segmented, Table } from "antd";
+import { Prism as SyntaxHighlighter } from 'react-syntax-highlighter';
+import { docco } from 'react-syntax-highlighter/dist/cjs/styles/hljs';
 import PostmanStyleJsonEditor from "@/components/JsonSchema/PostmanStyleJsonEditor";
-
-interface JsonSchemaCardProps extends Pick<JsonSchemaEditorProps, 'value' | 'onChange'> {
-  editorProps?: JsonSchemaEditorProps
-  headers?: Record<string, string>
-  cookies?: { name: string; value: string; domain?: string; path?: string; expires?: string }[]
+interface RunResponseProps {
+  value?: string;
+  headers?: Record<string, string>;
+  cookies?: {
+    name: string;
+    value: string;
+    domain?: string;
+    path?: string;
+    expires?: string;
+  }[];
   actualRequest?: {
-    method: string
-    url: string
-    headers: Record<string, string>
-    body?: any
-  }
+    method: string;
+    url: string;
+    headers: Record<string, string>;
+    body?: any;
+  };
+  responseStatus?: number;
+  responseTime?: number;
 }
 
-export function RunResponse(props: JsonSchemaCardProps) {
-  const { value = {}, onChange, editorProps, cookies = [], actualRequest } = props
-  // 只有当value.data有值时才渲染组件
-  const [body, setBodyStr] = useState<string>('')
-  const [headers, setHeaders] = useState<string>('')
+export const RunResponse: React.FC<RunResponseProps> = ({
+                                                          value = {},
+                                                          headers = {},
+                                                          cookies = [],
+                                                          actualRequest,
+                                                          responseStatus = 200,
+                                                          responseTime = 0,
+                                                        }) => {
+  const [body, setBody] = useState<string>('');
   const [sidebarWidth, setSidebarWidth] = useState(280);
   const [isDragging, setIsDragging] = useState(false);
   const [startX, setStartX] = useState(0);
   const [startWidth, setStartWidth] = useState(0);
-  const containerRef = useRef(null);
-  const sidebarRef = useRef(null);
+  const [alignValue, setAlignValue] = useState<'pretty' | 'raw' | 'preview'>('pretty');
   const [isEditorReady, setIsEditorReady] = useState(false);
-  // 计算响应信息
-  const responseSize = props.value?.data
-    ? new Blob([JSON.stringify(props.value.data)]).size
-    : 0;
-  const requestSize = props.actualRequest?.body
-    ? new Blob([JSON.stringify(props.actualRequest.body)]).size
-    : 0;
-  const responseTime = props.responseTime || 0;
+  // 计算响应大小
+  const responseSize = useMemo(() =>
+      value?.data ? new Blob([JSON.stringify(value.data)]).size : 0,
+    [value.data]
+  );
 
-  // 处理鼠标按下事件
-  const handleMouseDown = (e) => {
+  const requestSize = useMemo(() =>
+      actualRequest?.body ? new Blob([JSON.stringify(actualRequest.body)]).size : 0,
+    [actualRequest?.body]
+  );
+  useEffect(() => {
+    console.log('RunResponse value', value)
+  }, [value]);
+  // 处理响应数据
+  useEffect(() => {
+    try {
+      if (typeof value === 'object') {
+        setBody(JSON.stringify(value, null, 2));
+      } else {
+        // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
+        setBody(value || '');
+      }
+    } catch (error) {
+      console.error('Error parsing response data:', error);
+      setBody('Invalid response data');
+    }
+  }, [value]);
+
+  // 拖拽逻辑
+  const handleMouseDown = (e: React.MouseEvent) => {
     setIsDragging(true);
     setStartX(e.clientX);
     setStartWidth(sidebarWidth);
     document.body.style.cursor = 'col-resize';
     document.body.style.userSelect = 'none';
   };
+
+  const handleMouseMove = (e: MouseEvent) => {
+    if (!isDragging) return;
+    const newWidth = startWidth + (startX - e.clientX);
+    setSidebarWidth(Math.max(200, Math.min(400, newWidth)));
+  };
   useEffect(() => {
     if (body && !isEditorReady) {
       setIsEditorReady(true);
     }
   }, [body]);
-  // 处理鼠标移动事件
-  const handleMouseMove = (e) => {
-    if (!isDragging) return;
-    const newWidth = startWidth + (startX - e.clientX);
-    setSidebarWidth(Math.max(200, Math.min(400, newWidth)));
-  };
-
-  // 处理鼠标抬起事件
   const handleMouseUp = () => {
     if (!isDragging) return;
     setIsDragging(false);
@@ -70,7 +92,6 @@ export function RunResponse(props: JsonSchemaCardProps) {
     document.body.style.userSelect = '';
   };
 
-  // 添加全局事件监听
   useEffect(() => {
     document.addEventListener('mousemove', handleMouseMove);
     document.addEventListener('mouseup', handleMouseUp);
@@ -79,35 +100,14 @@ export function RunResponse(props: JsonSchemaCardProps) {
       document.removeEventListener('mouseup', handleMouseUp);
     };
   }, [isDragging, startX, startWidth]);
-  useEffect(() => {
-      console.log('value.headers', value.headers)
-    const data = value.data
-    if (typeof data === 'object') {
-      setBodyStr(JSON.stringify(data, null, 2))
-    } else {
-      setBodyStr(data || '')
-    }
-  // const headers =  value.headers.get('Api-H0')
-  // if (headers){
-  //   setHeaders(headers)
-  // }
-  }, [value.data,value.headers])
 
-  const isJson = (str: string) => {
-    try {
-      JSON.parse(str)
-      return true
-    } catch (e) {
-      return false
-    }
-  }
-
-  const [alignValue, setAlignValue] = useState<Align>('pretty')
-  type Align = 'pretty' | 'raw' | 'preview'
-
+  // 渲染响应体
   const renderResponseBody = () => {
+    if (!body) return <div>No response data available</div>;
+
     switch (alignValue) {
       case 'pretty':
+
         return isEditorReady ? (
           <PostmanStyleJsonEditor
             value={body}
@@ -121,102 +121,45 @@ export function RunResponse(props: JsonSchemaCardProps) {
             </SyntaxHighlighter>
           </div>
         );
+
       case 'raw':
         return (
           <SyntaxHighlighter language="json" style={docco}>
             {body}
           </SyntaxHighlighter>
-        )
+        );
       case 'preview':
-        return <div>{body}</div>
+        return <div>{body}</div>;
       default:
-        return null
+        return null;
     }
-  }
+  };
 
-  // 响应头表格列配置
-  const headerColumns = [
-    {
-      title: '名称',
-      dataIndex: 'key',
-      key: 'key',
-    },
-    {
-      title: '值',
-      dataIndex: 'value',
-      key: 'value',
-    },
-  ]
-
-  // Cookie表格列配置
+  // 表格配置
   const cookieColumns = [
-    {
-      title: 'Name',
-      dataIndex: 'name',
-      key: 'name',
-    },
+    { title: 'Name', dataIndex: 'name', key: 'name' },
+    { title: 'Value', dataIndex: 'value', key: 'value' },
+    { title: 'Domain', dataIndex: 'domain', key: 'domain' },
+    { title: 'Path', dataIndex: 'path', key: 'path' },
+    { title: 'Expires', dataIndex: 'expires', key: 'expires' },
+  ];
+
+  const headerColumns = [
+    { title: 'Name', dataIndex: 'name', key: 'name' },
     {
       title: 'Value',
       dataIndex: 'value',
       key: 'value',
+      render: (value: string) => (
+        <SyntaxHighlighter language="text" style={docco}>
+          {value}
+        </SyntaxHighlighter>
+      )
     },
-    {
-      title: 'Domain',
-      dataIndex: 'domain',
-      key: 'domain',
-    },
-    {
-      title: 'Path',
-      dataIndex: 'path',
-      key: 'path',
-    },
-    {
-      title: 'Expires',
-      dataIndex: 'expires',
-      key: 'expires',
-    },
-    {
-      title: 'MaxAge',
-      dataIndex: 'maxAge',
-      key: 'maxAge',
-    },
-    {
-      title: 'HttpOnly',
-      dataIndex: 'httpOnly',
-      key: 'httpOnly',
-    },
-    {
-      title: 'Secure',
-      dataIndex: 'secure',
-      key: 'secure',
-    },
-  ]
+  ];
 
-  // 实际请求表单数据
-  const actualRequestData = [
-    {
-      key: 'method',
-      name: 'Method',
-      value: actualRequest?.method || 'GET',
-    },
-    {
-      key: 'url',
-      name: 'URL',
-      value: actualRequest?.url || '',
-    },
-    {
-      key: 'headers',
-      name: 'Headers',
-      value: JSON.stringify(actualRequest?.headers || {}, null, 2),
-    },
-    {
-      key: 'body',
-      name: 'Body',
-      value: actualRequest?.body ? JSON.stringify(actualRequest.body, null, 2) : 'None',
-    },
-  ]
-
-  const ResponseInfoItem = [
+  // Tabs 配置
+  const tabItems = [
     {
       key: 'body',
       label: 'Body',
@@ -228,138 +171,82 @@ export function RunResponse(props: JsonSchemaCardProps) {
               { label: 'Raw', value: 'raw' },
               { label: 'Preview', value: 'preview' },
             ]}
-            style={{ marginBottom: 8 }}
             value={alignValue}
-            onChange={setAlignValue}
+            onChange={(value) => setAlignValue(value as typeof alignValue)}
+            style={{ marginBottom: 16 }}
           />
           {renderResponseBody()}
         </div>
       ),
     },
     {
-      key: 'cookie',
-      label: 'Cookie',
-      children: (
-        <Table columns={cookieColumns} dataSource={cookies} pagination={false} size="small" />
-      ),
-    },
-    {
-      key: 'header',
-      label: 'Header',
+      key: 'headers',
+      label: 'Headers',
       children: (
         <Table
-          columns={[
-            {
-              title: '名称',
-              dataIndex: 'key',
-              key: 'key',
-              render: (text) => <span style={{ fontWeight: 500 }}>{text}</span>,
-            },
-            {
-              title: '值',
-              dataIndex: 'value',
-              key: 'value',
-              render: (value) => {
-                // 特殊处理 Set-Cookie 头
-                if (value.includes('Set-Cookie')) {
-                  const cookies = value.split(/(?<=; path=\/)\s/);
-                  return (
-                    <div>
-                      {cookies.map((cookie, index) => (
-                        <div key={index} style={{ marginBottom: index < cookies.length - 1 ? 8 : 0 }}>
-                          <SyntaxHighlighter language="text" style={docco}>
-                            {cookie.trim()}
-                          </SyntaxHighlighter>
-                        </div>
-                      ))}
-                    </div>
-                  );
-                }
-                // 其他头值
-                return (
-                  <SyntaxHighlighter language="text" style={docco}>
-                    {value}
-                  </SyntaxHighlighter>
-                );
-              },
-            },
-          ]}
-          dataSource={Object.entries(headers).map(([name, value]) => ({
+          columns={headerColumns}
+          dataSource={Object.entries(headers || {}).map(([name, value]) => ({
             name,
             value,
-            key: name
+            key: name,
           }))}
           pagination={false}
           size="small"
-          bordered
           rowKey="name"
         />
       ),
     },
     {
-      key: 'console',
-      label: '控制台',
-      children: <div> 没有内容</div>,
-    },
-      {
-          key: 'actualRequest',
-          label: '实际请求',
-          children: (
-            <div style={{ padding: '16px' }}>
-                {/* 请求URL部分 - 表单样式 */}
-                <div style={{ marginBottom: '24px' }}>
-                    <div style={{ fontWeight: 500, marginBottom: '8px', fontSize: '16px', color: '#333' }}>请求URL</div>
-                  <div style={{ marginBottom: "8px" }}>
-                    <span style={{ flex: 1, wordBreak: "break-all" }}>{actualRequest?.method || "GET"}</span>
-                    <span style={{ flex: 1, wordBreak: "break-all" }}>{actualRequest?.url || ""}</span>
-                  </div>
-                </div>
-
-                {/* Header部分 - 表格样式 */}
-                <div style={{ marginBottom: '24px' }}>
-                    <div style={{ fontWeight: 500, marginBottom: '8px', fontSize: '16px', color: '#333' }}>Headers</div>
-                    <Table
-                      columns={[
-                          { title: '名称', dataIndex: 'key', key: 'key' },
-                          { title: '值', dataIndex: 'value', key: 'value' },
-                      ]}
-                      dataSource={Object.entries(actualRequest?.headers || {}).map(([name, value]) => ({
-                          name,
-                          value,
-                          key: name,
-                      }))}
-                      pagination={false}
-                      size="small"
-                      bordered
-                    />
-                </div>
-
-                {/* Body部分 - 表单样式 */}
-                <div>
-                    <div style={{ fontWeight: 500, marginBottom: '8px', fontSize: '16px', color: '#333' }}>Body</div>
-                    {actualRequest?.body ? (
-                      <SyntaxHighlighter language="json" style={docco}>
-                          {JSON.stringify(actualRequest.body, null, 2)}
-                      </SyntaxHighlighter>
-                    ) : (
-                      <div style={{ color: '#999' }}>No request body</div>
-                    )}
-                </div>
+      key: 'request',
+      label: 'Request',
+      children: actualRequest ? (
+        <div style={{ padding: 16 }}>
+          <div style={{ marginBottom: 24 }}>
+            <div style={{ fontWeight: 500, marginBottom: 8, fontSize: 16 }}>
+              Request URL
             </div>
-          ),
-      }
-  ]
+            <div>
+              <span style={{ marginRight: 16 }}>{actualRequest.method}</span>
+              <span>{actualRequest.url}</span>
+            </div>
+          </div>
+
+          <div style={{ marginBottom: 24 }}>
+            <div style={{ fontWeight: 500, marginBottom: 8, fontSize: 16 }}>
+              Headers
+            </div>
+            <Table
+              columns={headerColumns}
+              dataSource={Object.entries(actualRequest.headers || {}).map(([name, value]) => ({
+                name,
+                value,
+                key: name,
+              }))}
+              pagination={false}
+              size="small"
+              rowKey="name"
+            />
+          </div>
+
+          <div>
+            <div style={{ fontWeight: 500, marginBottom: 8, fontSize: 16 }}>
+              Body
+            </div>
+            {actualRequest.body ? (
+              <SyntaxHighlighter language="json" style={docco}>
+                {JSON.stringify(actualRequest.body, null, 2)}
+              </SyntaxHighlighter>
+            ) : (
+              <div style={{ color: '#999' }}>No request body</div>
+            )}
+          </div>
+        </div>
+      ) : <div>No request data</div>,
+    },
+  ];
 
   return (
-    <div
-
-      ref={containerRef}
-      style={{
-        display: 'flex',
-        height: '100%',
-        position: 'relative'
-      }}
-    >
+    <div style={{ display: 'flex', height: '100%', position: 'relative' }}>
       {/* 主内容区域 */}
       <div style={{
         flex: 1,
@@ -369,14 +256,12 @@ export function RunResponse(props: JsonSchemaCardProps) {
       }}>
         <Tabs
           defaultActiveKey="body"
-          indicator={{ size: (origin) => origin - 20, align: 'center' }}
-          items={ResponseInfoItem}
+          items={tabItems}
         />
       </div>
 
-      {/* 可拖动的侧边栏 */}
+      {/* 侧边栏 */}
       <div
-        ref={sidebarRef}
         style={{
           position: 'absolute',
           right: 0,
@@ -403,67 +288,53 @@ export function RunResponse(props: JsonSchemaCardProps) {
           }}
           onMouseDown={handleMouseDown}
         />
+
+        {/* 统计信息 */}
         <Space
           direction="horizontal"
           size="middle"
           style={{
             width: '100%',
             justifyContent: 'space-between',
-            padding: '12px 16px', // 增加上下内边距
+            padding: '12px 16px',
             fontSize: '12px',
-            backgroundColor: '#f5f5f5', // 淡灰色背景
-            borderRadius: '4px', // 添加圆角
-            border: '1px solid #e8e8e8' // 添加细边框
+            backgroundColor: '#f5f5f5',
+            borderRadius: '4px',
+            border: '1px solid #e8e8e8'
           }}
         >
-          <Tooltip title="状态码" placement="top">
+          <Tooltip title="Status Code">
             <Statistic
-              value={props.responseStatus || 200}
+              value={responseStatus}
               valueStyle={{
-                color: '#52c41a',
-                fontSize: '12px',
-                cursor: 'help'
+                color: responseStatus >= 400 ? '#ff4d4f' :
+                  responseStatus >= 300 ? '#faad14' : '#52c41a',
+                fontSize: '12px'
               }}
             />
           </Tooltip>
 
-
-          <Tooltip title="响应时间" placement="top">
+          <Tooltip title="Response Time">
             <Statistic
               value={responseTime}
-              valueStyle={{
-                color: '#52c41a',
-                fontSize: '12px',
-                cursor: 'help'
-              }}
+              valueStyle={{ color: '#52c41a', fontSize: '12px' }}
               suffix="ms"
               precision={2}
             />
           </Tooltip>
 
-
-          <Tooltip title="请求体大小" placement="top">
+          <Tooltip title="Request Size">
             <Statistic
               value={requestSize}
-              valueStyle={{
-                color: '#52c41a',
-                fontSize: '12px',
-                cursor: 'help'
-              }}
+              valueStyle={{ color: '#52c41a', fontSize: '12px' }}
               suffix="bytes"
             />
           </Tooltip>
 
-
-
-          <Tooltip title="响应体大小" placement="top">
+          <Tooltip title="Response Size">
             <Statistic
               value={responseSize}
-              valueStyle={{
-                color: '#52c41a',
-                fontSize: '12px',
-                cursor: 'help'
-              }}
+              valueStyle={{ color: '#52c41a', fontSize: '12px' }}
               suffix="bytes"
             />
           </Tooltip>
@@ -471,4 +342,6 @@ export function RunResponse(props: JsonSchemaCardProps) {
       </div>
     </div>
   );
-}
+};
+
+export default RunResponse;

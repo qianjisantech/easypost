@@ -1,3 +1,4 @@
+import MonacoWebpackPlugin from 'monaco-editor-webpack-plugin';
 export default {
   reactStrictMode: false, // 启用严格模式，帮助识别潜在的错误
   eslint: {
@@ -20,4 +21,11 @@ export default {
       },
     ]
   },
+  webpack: (config) => {
+    config.plugins.push(new MonacoWebpackPlugin({
+      languages: ['javascript', 'typescript', 'json'],
+      filename: 'static/[name].worker.js'
+    }));
+    return config;
+  }
 }

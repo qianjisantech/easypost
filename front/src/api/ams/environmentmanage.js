@@ -1,8 +1,8 @@
 import request from '@/api/index.ts'
 
-export function EnvironmentManageDetail(id) {
+export function EnvironmentManageDetail() {
   return request({
-    url: `/ams/environmentmanage/detail/${id}`,
+    url: `/ams/environmentmanage/detail`,
     method: 'get',
   })
 }
@@ -14,5 +14,11 @@ export function EnvironmentManageSave(body) {
       'Content-Type': 'multipart/form-data',
     },
     data: body,
+  })
+}
+export function EnvironmentManageDynamic() {
+  return request({
+    url: `/ams/environmentmanage/dynamic`,
+    method: 'get',
   })
 }

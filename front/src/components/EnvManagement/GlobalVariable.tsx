@@ -24,7 +24,7 @@ interface GlobalVariableProps {
     team: Parameter[];
     project: Parameter[];
   };
-  onChange?: (newData: { team: Parameter[]; project: Parameter[] }) => void;
+  onChange?: (newData: { [p: string]: any[]; cookie: any[]; query: any[]; header: any[]; body: any[] }) => void;
 }
 
 const { Text } = Typography;
@@ -69,6 +69,7 @@ const GlobalVariable: React.FC<GlobalVariableProps> = ({
     const form = getCurrentForm();
     form.setFieldsValue({
       id: record.id,
+      key:record.key,
       type: record.type,
       value: record.value,
       description: record.description
@@ -102,16 +103,17 @@ const GlobalVariable: React.FC<GlobalVariableProps> = ({
   };
 
   const handleDelete = (record: Parameter) => {
-    const newData = { ...internalData };  // 改为使用 internalData
-    if (activeTab === 'project') {
-      newData.project = newData.project.filter(item => item.id !== record.id);
-    } else {
-      newData.team = newData.team.filter(item => item.id !== record.id);
-    }
-    setInternalData(newData);  // 更新内部状态
-    onChange?.(newData);      // 通知父组件
-  };
+    const newData = { ...internalData };
 
+    // 使用类型断言确保 activeTab 是有效的 key
+    const tabKey = activeTab as keyof GlobalParameterData;
+
+    // 过滤掉要删除的项目
+    newData[tabKey] = newData[tabKey].filter(item => item.id !== record.id);
+
+    setInternalData(newData);
+    onChange?.(newData);
+  };
   const handleAdd = () => {
     const newParam = {
       id: nanoid(6),
@@ -159,13 +161,17 @@ const GlobalVariable: React.FC<GlobalVariableProps> = ({
         return editable ? (
           <Form.Item
             name="key"
-            style={{ margin: 0 }}
             rules={[{ required: true, message: '请输入参数名' }]}
+            style={{ margin: 0 }}
           >
             <Input />
           </Form.Item>
         ) : (
-          <Text>{record.key}</Text>
+          <Input
+            bordered={false}
+            value={record.key}
+            style={{ padding: 0, backgroundColor: 'transparent' }}
+          />
         );
       },
     },
@@ -292,7 +298,8 @@ const GlobalVariable: React.FC<GlobalVariableProps> = ({
               <Input
                 placeholder="搜索变量名或说明"
                 prefix={<SearchOutlined />}
-                onChange={e => setSearchText(e.target.value)}
+
+                onChange={e => { setSearchText(e.target.value); }}
                 style={{ width: 250 }}
               />
               <Button
@@ -326,7 +333,7 @@ const GlobalVariable: React.FC<GlobalVariableProps> = ({
               <Input
                 placeholder="搜索变量名或说明"
                 prefix={<SearchOutlined />}
-                onChange={e => setSearchText(e.target.value)}
+                onChange={e => { setSearchText(e.target.value); }}
                 style={{ width: 250 }}
               />
               <Button

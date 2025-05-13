@@ -181,7 +181,7 @@ export default function TrafficManage() {
           />
         </Descriptions.Item>
         <Descriptions.Item label="请求体">
-          <JsonView src={record.details.requestBody || '-'} />
+          <JsonView src={record.details.payload || '-'} />
         </Descriptions.Item>
 
         <Descriptions.Item label="响应">

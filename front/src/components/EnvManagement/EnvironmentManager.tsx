@@ -1,72 +1,95 @@
 // components/EnvironmentManager.tsx
 import type React from 'react'
-import { useEffect, useState } from 'react'
+import { useCallback, useEffect, useState } from 'react'
 
 import {
-  CloudServerOutlined,
-  CodeOutlined,
-  ExperimentOutlined,
+  CloudOutlined,
+  DeleteOutlined,
+  EditOutlined,
   GlobalOutlined,
+  MoreOutlined,
+  PlusOutlined,
   SearchOutlined,
   SettingOutlined,
 } from '@ant-design/icons'
-import { Button, Card, ConfigProvider, Form, Input, Menu, message, Modal, Select, Tooltip } from "antd";
+import {
+  Button,
+  Card,
+  ConfigProvider,
+  Dropdown,
+  Form,
+  Input,
+  Menu,
+  message,
+  Modal,
+  Select,
+  Table,
+  Tooltip,
+} from 'antd'
 import zhCN from 'antd/lib/locale/zh_CN'
+import { isEqual } from 'lodash-es'
+import { nanoid } from 'nanoid'
 
 import { EnvironmentManageDetail, EnvironmentManageSave } from '@/api/ams/environmentmanage'
-import type { EnvironmentManagement, EnvironmentSetting } from "@/types";
-import EnvironmentSettingsMenu from './EnvironmentSettingsMenu'
+import EnvironmentCustomContent from '@/components/EnvManagement/EnvironmentCustomContent'
+import type { EnvironmentManagement, EnvironmentSetting } from '@/types'
+
 import GlobalParameter from './GlobalParameter'
 import GlobalVariable from './GlobalVariable'
-import { nanoid } from "nanoid";
-import EnvironmentSettingsContent from "@/components/EnvManagement/EnvironmentSettingsContent";
 
-
+import { css } from '@emotion/css'
 
 // eslint-disable-next-line @typescript-eslint/no-empty-interface
-interface EnvironmentManagerProps {
-}
+interface EnvironmentManagerProps {}
 
 const EnvironmentManager: React.FC<EnvironmentManagerProps> = () => {
-  type TabKey = 'globalVariable' | 'globalParameter' | 'environmentSettings';
-
-// 2. 修改状态初始化
-  const [activeTab, setActiveTab] = useState<TabKey>('globalVariable');
-
-  const [activeEnvId, setActiveEnvId] = useState<string>();
+  const [form] = Form.useForm() // 在组件顶部添加表单实例
+  const [currentEnvData, setCurrentEnvData] = useState<EnvironmentSetting | null>(null)
+  const [activeEnvId, setActiveEnvId] = useState<string>('')
   const [currentEnv, setCurrentEnv] = useState<string | undefined>('')
-  const [modalState, setModalState] = useState({
+  type ModalTab =
+    | 'globalVariable'
+    | 'globalParameter'
+    | 'environmentSettings'
+    | 'keyStores'
+    | 'localMock'
+    | 'cloudMock'
+    | 'selfHostedMock'
+
+  const [modalState, setModalState] = useState<{
+    visible: boolean
+    tab: ModalTab
+  }>({
     visible: false,
-    tab: 'globalVariable' as
-      | 'globalVariable'
-      | 'globalParameter'
-      | 'environmentSettings'
-      | 'keyStores'
-      | 'localMock'
-      | 'cloudMock'
-      | 'selfHostedMock',
+    tab: 'globalVariable',
   })
   const [environmentManagement, setEnvironmentManagement] = useState<EnvironmentManagement | null>(
     null
   )
-  const [isCreating, setIsCreating] = useState(false);
-  const [environmentSettings, setEnvironmentSettings] = useState<EnvironmentManagement['environmentSettings']>([]);
+  const [environmentSettings, setEnvironmentSettings] = useState<
+    EnvironmentManagement['environmentSettings']
+  >([])
+  const [isCreating, setIsCreating] = useState(false)
   const [loading, setLoading] = useState(false)
-  const [envConfigs, setEnvConfigs] = useState<EnvironmentSetting[]>([])
   const [saving, setSaving] = useState(false)
   // 加载环境管理数据
+  // 优化环境数据加载
   const loadEnvironmentManager = async () => {
     setLoading(true)
     try {
-      const response = await EnvironmentManageDetail('22')
-      if (response.data.success) {
-        setEnvironmentManagement(response.data.data)
-        setEnvConfigs(response.data.data.environmentSettings)
-        setCurrentEnv(response.data.data.environmentSettings[0].name)
-        // // 如果API返回了环境配置，使用API的数据
-        // if (response.data.data?.environments) {
-        //   setEnvConfigs(response.data.data.environments);
-        // }
+      const response = await EnvironmentManageDetail()
+      if (response.data?.success) {
+        const data = response.data.data
+        setEnvironmentManagement(data)
+        const settings = data.environmentSettings || []
+        setEnvironmentSettings(settings)
+
+        // 设置当前环境时添加null检查
+
+        if (settings.length > 0) {
+          setCurrentEnv(settings.find((env) => env.isActive)?.name || settings[0]?.name || '')
+          setActiveEnvId(settings.find((env) => env.isActive)?.id || settings[0]?.id || '')
+        }
       }
     } catch (error) {
       message.error('加载环境配置失败')
@@ -75,203 +98,180 @@ const EnvironmentManager: React.FC<EnvironmentManagerProps> = () => {
       setLoading(false)
     }
   }
-  const handleDropdownVisibleChange = (open: boolean) => {
-     if (open){
-       loadEnvironmentManager()
-     }
-  };
 
-  // 保存环境配置
-  const handleEnvironmentManageSave = async () => {
-    if (isCreating) {
-      // 创建新环境
-      const newEnv = {
-        id: Date.now().toString(),
-        name: activeEnv?.name || '',
-        type: activeEnv?.type || 'dev',
-        url: activeEnv?.url || '',
-        services: activeEnv?.services || [],
-        variables: activeEnv?.variables || []
-      };
-      setEnvironmentSettings([...environmentSettings, newEnv]);
-      setActiveEnvId(newEnv.id);
+  const handleDropdownVisibleChange = (open: boolean) => {
+    if (open) {
+      loadEnvironmentManager()
     }
+  }
+  useEffect(() => {
+    let newEnvData: EnvironmentSetting | null = null
+
+    if (isCreating) {
+      newEnvData = {
+        id: activeEnvId,
+        name: '',
+        isActive: true,
+        servers: [],
+        variables: [],
+      }
+    } else {
+      newEnvData = environmentSettings.find((env) => env.id === activeEnvId) ?? null
+    }
+
+    // 使用深比较避免不必要的更新
+    if (!isEqual(newEnvData, currentEnvData)) {
+      setCurrentEnvData(newEnvData)
+
+      // 更新表单值
+      if (newEnvData) {
+        form.resetFields()
+        form.setFieldsValue(newEnvData)
+      }
+    }
+  }, [isCreating, activeEnvId, environmentSettings, form, currentEnvData])
+  const handleEnvironmentManageSave = async () => {
     try {
+      setSaving(true)
+
+      // 确保 environmentSettings 是数组
+      const currentSettings = Array.isArray(environmentSettings) ? environmentSettings : []
+
+      // 创建要保存的设置
+      let settingsToSave: EnvironmentSetting[]
+
+      if (isCreating) {
+        // 新建环境：添加到现有列表
+        settingsToSave = [...currentSettings, currentEnvData]
+      } else {
+        // 更新现有环境
+        settingsToSave = currentSettings.map((env) =>
+          env.id === currentEnvData.id ? currentEnvData : env
+        )
+      }
+
+      // 调试日志
+      console.log('准备保存的环境设置:', settingsToSave)
+
+      // 创建可序列化的数据副本
+      const serializableSettings = settingsToSave.map((env) => ({
+        id: env.id,
+        name: env.name,
+        servers: env.servers || [],
+        variables: env.variables || [],
+        isActive: env.isActive || false,
+      }))
+
       const formdata = new FormData()
-      formdata.append('id', '22')
-      formdata.append('globalParameter', JSON.stringify(environmentManagement?.globalParameter))
-      formdata.append('globalVariable', JSON.stringify(environmentManagement?.globalVariable))
-      formdata.append('keyStores', JSON.stringify(environmentManagement?.keyStores))
+      formdata.append('id', environmentManagement?.id || '')
       formdata.append(
-        'environmentSettings',
-        JSON.stringify(environmentManagement?.environmentSettings)
+        'globalParameter',
+        JSON.stringify(environmentManagement?.globalParameter || {})
       )
-      formdata.append('localMock', JSON.stringify(environmentManagement?.localMock))
-      formdata.append('cloudMock', JSON.stringify(environmentManagement?.cloudMock))
-      formdata.append('selfHostMock', JSON.stringify(environmentManagement?.selfHostMock))
-      console.log('保存环境配置数据:', formdata)
+      formdata.append('globalVariable', JSON.stringify(environmentManagement?.globalVariable || {}))
+      formdata.append('environmentSettings', JSON.stringify(serializableSettings))
+      formdata.append('keyStores', JSON.stringify(environmentManagement?.keyStores || {}))
+      formdata.append('localMock', JSON.stringify(environmentManagement?.localMock || {}))
+      formdata.append('cloudMock', JSON.stringify(environmentManagement?.cloudMock || {}))
+      formdata.append('selfHostMock', JSON.stringify(environmentManagement?.selfHostMock || {}))
+
       const response = await EnvironmentManageSave(formdata)
 
-      if (response.data.success) {
+      if (response.data?.success) {
+        await loadEnvironmentManager()
         message.success('保存成功')
+        setIsCreating(false) // 保存成功后取消创建状态
       } else {
-        message.error(response.data.message || '保存失败')
+        message.error(response.data?.message || '保存失败')
       }
-      loadEnvironmentManager()
     } catch (error) {
-      message.error('保存失败')
       console.error('保存环境配置失败:', error)
+      message.error('保存失败')
     } finally {
       setSaving(false)
     }
   }
-
   useEffect(() => {
-
-    if (modalState.visible){
-      loadEnvironmentManager()
-    }
     loadEnvironmentManager()
-  }, [modalState.visible])
-// 在 EnvironmentManager.tsx 中添加
+  }, [])
 
-  // const handleDeleteEnvironment = (envId: string) => {
-  //   setEnvironmentManagement(prev => ({
-  //     ...prev,
-  //     environmentSettings: prev?.environmentSettings?.filter(env => env.id !== envId) || []
-  //   }));
-  //
-  //   // 如果删除的是当前选中的环境，清空选择
-  //   if (modalState.subTab === envId) {
-  //     setModalState(prev => ({
-  //       ...prev,
-  //       subTab: undefined
-  //     }));
-  //   }
-  // };
-
+  // 在组件挂载时初始化表单
+  useEffect(() => {
+    if (activeEnvId && !isCreating) {
+      const envData = environmentSettings.find((env) => env.id === activeEnvId)
+      if (envData) {
+        form.resetFields()
+        form.setFieldsValue(envData)
+      }
+    }
+  }, [activeEnvId, isCreating])
   // 合并自定义配置和默认配置
   useEffect(() => {
     if (
       environmentManagement?.environmentSettings &&
       environmentManagement.environmentSettings.length > 0
     ) {
-      setEnvConfigs(environmentManagement.environmentSettings)
-    } else  {
-      setEnvConfigs(environmentManagement?.environmentSettings)
+      setEnvironmentSettings(environmentManagement.environmentSettings)
+    } else {
+      setEnvironmentSettings([])
     }
   }, [environmentManagement?.environmentSettings])
-  const activeEnv = environmentManagement?.environmentSettings.find(env => env.id === activeEnvId);
-  const handleMenuClick = (key: string) => {
-    if (key === 'create-new-environment') {
-      // 创建新环境
-      const newEnv = {
-        id: Date.now().toString(),
-        type: 'new',
-        name: '新环境',
-        url: ''
-      };
-      setEnvironments([...environments, newEnv]);
-      setActiveEnvId(newEnv.id);
-    } else {
-      setActiveEnvId(key);
+  useEffect(() => {
+    if (activeEnvId && !isCreating) {
+      const envData = environmentSettings.find((env) => env.id === activeEnvId)
+      if (envData) {
+        form.resetFields()
+        form.setFieldsValue(envData)
+      }
     }
-  };
-
-  const handleSettingChange = (updatedSetting: any) => {
-    setEnvironments(environments.map(env =>
-      env.id === updatedSetting.id ? updatedSetting : env
-    ));
-  };
-
-  const handleDelete = (id: string) => {
-    setEnvironmentSettings(environmentSettings.filter(env => env.id !== id));
-    if (activeEnvId === id) {
-      setActiveEnvId(undefined);
-    }
-  };
+  }, [activeEnvId, isCreating, environmentSettings])
 
   // 管理环境弹窗内容
-  const renderContent = (tab: TabKey) => {
+  const renderContent = (tab: string) => {
     console.log('environmentManagement', environmentManagement)
     switch (tab) {
       case 'globalVariable':
         return (
           <div>
-            <h3>全局变量管理</h3>
+            <h3>全局变量</h3>
             <ConfigProvider locale={zhCN}>
               <GlobalVariable
                 data={environmentManagement?.globalVariable || { team: [], project: [] }}
                 onChange={(newData) => {
-                  setEnvironmentManagement(prev => ({
+                  setEnvironmentManagement((prev) => ({
                     ...prev,
                     globalVariable: newData,
-                  }));
+                  }))
                 }}
               />
             </ConfigProvider>
           </div>
-        );
+        )
       case 'globalParameter':
         return (
           <div>
-            <h3>全局参数管理</h3>
+            <h3>全局参数</h3>
             <ConfigProvider locale={zhCN}>
               <GlobalParameter
-                data={environmentManagement?.globalParameter || { header: [], query: [], body: [], cookie: [] }}
+                data={
+                  environmentManagement?.globalParameter || {
+                    header: [],
+                    query: [],
+                    body: [],
+                    cookie: [],
+                  }
+                }
                 onChange={(newData) => {
-                  setEnvironmentManagement(prev => ({
+                  setEnvironmentManagement((prev) => ({
                     ...prev,
                     globalParameter: newData,
-                  }));
+                  }))
                 }}
               />
             </ConfigProvider>
           </div>
-        );
-      case 'environmentSettings':
-       return (
-        <div style={{ flex: 1, padding: '24px' }}>
-          <Card>
-            <EnvironmentSettingsContent
-              setting={activeEnv}
-              isCreating={isCreating}
-              onSettingChange={(updated) => {
-                if (isCreating) {
-                  // 暂存新建环境的数据
-                } else {
-                  // 更新现有环境
-                  setEnvironmentSettings(environmentSettings.map(env =>
-                    env.id === updated.id ? updated : env
-                  ));
-                }
-              }}
-              onSave={() => {
-                if (isCreating) {
-                  // 创建新环境
-                  const newEnv = {
-                    id: nanoid(),
-                    name: form.getFieldValue('name'),
-                    type: form.getFieldValue('type'),
-                    url: form.getFieldValue('url'),
-                    services,
-                    variables
-                  };
-                  setEnvironments([...environments, newEnv]);
-                  setActiveEnvId(newEnv.id);
-                }
-                setIsCreating(false);
-              }}
-              onCancel={() => {
-                setIsCreating(false);
-                if (environments.length > 0) {
-                  setActiveEnvId(environments[0].id);
-                }
-              }}
-            />
-          </Card>
-        </div>
-       )
+        )
+
       case 'keyStores':
         return (
           <div>
@@ -302,97 +302,204 @@ const EnvironmentManager: React.FC<EnvironmentManagerProps> = () => {
           </div>
         )
       default:
-        return null
+        return (
+          <div style={{ flex: 1, padding: '24px' }}>
+            {currentEnvData &&
+            (isCreating || environmentSettings.some((env) => env.id === activeEnvId)) ? (
+              <EnvironmentCustomContent
+                data={currentEnvData}
+                onChange={(newData) => {
+                  setCurrentEnvData(newData)
+                  // 如果是编辑现有环境，立即更新环境列表
+                  if (!isCreating) {
+                    setEnvironmentSettings((prev) =>
+                      prev.map((env) => (env.id === newData.id ? newData : env))
+                    )
+                  }
+                }}
+              />
+            ) : (
+              <div>请选择一个环境或创建新环境</div>
+            )}
+          </div>
+        )
     }
   }
-  // 获取环境图标
-  const getEnvironmentIcon = (type: string) => {
-    switch (type) {
-      case 'dev':
-        return <CodeOutlined />
-      case 'test':
-        return <ExperimentOutlined />
-      case 'prod':
-        return <CloudServerOutlined />
-      default:
-        return <CloudServerOutlined />
+  // 在组件顶部添加
+  const styles = {
+    menuItem: css`
+      &:hover .env-item-more {
+        visibility: visible !important;
+      }
+    `,
+  }
+  const handleEnvChange = async (value: string) => {
+    try {
+      // 1. 更新当前选中的环境名称
+      const selectedName = environmentSettings.find((env) => env.id === value)?.name || ''
+      setCurrentEnv(selectedName)
+
+      // 2. 更新所有环境的 isActive 状态
+      const updatedSettings = environmentSettings.map((env) => ({
+        ...env,
+        isActive: env.id === value,
+      }))
+
+      // 3. 更新本地状态
+      setEnvironmentSettings(updatedSettings)
+      setActiveEnvId(value)
+
+      const selectedEnv = updatedSettings.find((env) => env.id === value)
+      if (selectedEnv) {
+        // 4. 更新当前环境数据
+        setCurrentEnvData(selectedEnv)
+
+        // 5. 更新到 environmentManagement
+        setEnvironmentManagement((prev) => ({
+          ...prev,
+          environmentSettings: updatedSettings,
+        }))
+
+        // 6. 创建可序列化的数据副本
+        const serializableSettings = updatedSettings.map((env) => ({
+          id: env.id,
+          name: env.name,
+          servers: env.servers || [],
+          variables: env.variables || [],
+          isActive: env.isActive,
+        }))
+
+        // 7. 创建 FormData 并保存
+        const formdata = new FormData()
+        formdata.append('id', environmentManagement?.id || '')
+        formdata.append(
+          'globalParameter',
+          JSON.stringify(environmentManagement?.globalParameter || {})
+        )
+        formdata.append(
+          'globalVariable',
+          JSON.stringify(environmentManagement?.globalVariable || {})
+        )
+        formdata.append('environmentSettings', JSON.stringify(serializableSettings))
+        formdata.append('keyStores', JSON.stringify(environmentManagement?.keyStores || {}))
+        formdata.append('localMock', JSON.stringify(environmentManagement?.localMock || {}))
+        formdata.append('cloudMock', JSON.stringify(environmentManagement?.cloudMock || {}))
+        formdata.append('selfHostMock', JSON.stringify(environmentManagement?.selfHostMock || {}))
+
+        // 8. 调用保存API
+        const response = await EnvironmentManageSave(formdata)
+
+        if (response.data?.success) {
+          message.success(`已切换到${selectedEnv.name}`)
+        } else {
+          message.error(response.data?.message || '保存环境配置失败')
+        }
+      }
+    } catch (error) {
+      console.error('切换环境失败:', error)
+      message.error('切换环境失败')
     }
   }
-  const handleEnvChange = (value: string) => {
-    setCurrentEnv(value)
-    const selectedEnv = envConfigs.find((env) => env.id === value)
-    if (selectedEnv) {
-      message.success(`已切换到${selectedEnv.name}`)
+
+  const handleAddEnvironment = useCallback(() => {
+    const newEnvId = nanoid(6)
+    const newEnv: EnvironmentSetting = {
+      id: newEnvId,
+      name: '未命名环境',
+      isActive: false,
+      servers: [
+        {
+          id: nanoid(),
+          name: '',
+          frontUrl: '',
+        },
+      ],
+      variables: [
+        {
+          id: nanoid(),
+          key: '',
+          type: 'string',
+          value: '',
+          description: '',
+        },
+      ],
     }
-  }
-  const handleAddEnvironment = () => {
-    const newEnv: { servers: any[]; name: string; globalVariable: any[]; id: string; type: string; url: string } = {
-      id: nanoid(6), // 使用nanoid生成唯一ID
-      name: '新环境',
-      type: 'custom',
-      url: '',
-      servers: [],
-      globalVariable: []
-    };
+
+    // 处理空数组情况
+    const updatedSettings =
+      environmentSettings.length > 0 ? [...environmentSettings, newEnv] : [newEnv]
+
+    setEnvironmentSettings(updatedSettings)
+    setActiveEnvId(newEnvId)
+    setIsCreating(true)
+    setCurrentEnvData(newEnv)
+    setCurrentEnv(newEnv.name)
+
+    // 重置表单
+    form.resetFields()
+    form.setFieldsValue(newEnv)
 
     setEnvironmentManagement((prev) => ({
-      ...prev,
-      environmentSettings: [
-        ...(prev?.environmentSettings || []),
-        newEnv
-      ]
-    }));
+      // 1. 保留现有状态或提供默认值
+      ...(prev || {
+        id: nanoid(),
+        globalParameter: { header: [], query: [], body: [], cookie: [] },
+        globalVariable: { team: [], project: [] },
+        environmentSettings: [],
+        localMock: {},
+        cloudMock: {},
+        selfHostMock: {},
+        keyStores: [],
+      }),
+      // 2. 更新特定的状态字段
+      environmentSettings: updatedSettings,
+    }))
 
-    // 自动选中新创建的环境
+    // 确保打开编辑界面
     setModalState((prev) => ({
       ...prev,
-      subTab: newEnv.id
-    }));
-  };
-// 处理函数示例
-// 在父组件中添加以下逻辑
+      visible: true,
+      tab: 'environmentSettings',
+    }))
+  }, [environmentSettings, form])
   const handleDeleteEnvironment = (id: string) => {
     Modal.confirm({
       title: '确认删除',
       content: '确定要删除这个环境吗？',
       onOk: () => {
         // 1. 删除环境
-        const newEnvironments = environmentSettings.filter(env => env.id !== id);
-        setEnvironmentSettings(newEnvironments);
+        const newEnvironments = environmentSettings.filter((env) => env.id !== id)
+        setEnvironmentSettings(newEnvironments)
 
         // 2. 如果删除的是当前选中的环境
         if (activeEnvId === id) {
           // 3. 自动定位到第一个环境（如果有）
           if (newEnvironments.length > 0) {
-            setActiveEnvId(newEnvironments[0].id);
+            setActiveEnvId(newEnvironments[0].id)
           } else {
-            setActiveEnvId(undefined); // 没有环境时清空选择
+            setActiveEnvId(undefined) // 没有环境时清空选择
           }
         }
-      }
-    });
-
-  };
+      },
+    })
+  }
 
   const handleDuplicateEnvironment = (id: string) => {
     // 复制环境逻辑
-    const original = environmentSettings.find(env => env.id === id);
+    const original = environmentSettings.find((env) => env.id === id)
     if (original) {
       const newEnv = {
         ...original,
-        id: nanoid(),
-        name: `${original.name} (副本)`
-      };
-      setEnvironmentSettings(prev => [...prev, newEnv]);
+        id: nanoid(6),
+        name: `${original.name} (副本)`,
+      }
+      setEnvironmentSettings((prev) => [...prev, newEnv])
     }
-  };
-  const handleEnvironmentSettingsMenuClick = (key: string, env?: EnvironmentSetting) => {
-    setActiveEnvId(key);
-    setActiveTab('environmentSettings');
-  };
+  }
   return (
     <div className="environment-manager">
       <Select
+        defaultValue={currentEnv}
         dropdownRender={(menu) => (
           <>
             {menu}
@@ -402,12 +509,12 @@ const EnvironmentManager: React.FC<EnvironmentManagerProps> = () => {
                 size="small"
                 type="link"
                 onClick={(e) => {
-                  e.stopPropagation();
-                  setModalState(prev => ({
+                  e.stopPropagation()
+                  setModalState((prev) => ({
                     ...prev,
                     visible: true,
-                    tab: 'environmentSettings' // 默认打开环境配置标签
-                  }));
+                    tab: 'environmentSettings', // 默认打开环境配置标签
+                  }))
                 }}
               >
                 管理环境
@@ -415,25 +522,20 @@ const EnvironmentManager: React.FC<EnvironmentManagerProps> = () => {
             </div>
           </>
         )}
-        defaultValue={currentEnv}
         loading={loading}
-        notFoundContent={envConfigs && envConfigs.length === 0 ? '暂无环境配置' : null}
+        notFoundContent={environmentSettings.length === 0 ? '暂无环境配置' : null}
         placeholder="请选择环境"
         style={{ width: 150, marginLeft: 8 }}
         suffixIcon={<SearchOutlined />}
         value={currentEnv}
         onChange={handleEnvChange}
-
         onDropdownVisibleChange={handleDropdownVisibleChange}
       >
-        {envConfigs &&envConfigs.length > 0 ? (
-          envConfigs.map((config) => (
-            <Select.Option  key={config.id} value={config.id}>
-              <Tooltip
-                mouseEnterDelay={0.3}
-                placement="right"
-                title={config.name}
-              >
+        {/* eslint-disable-next-line @typescript-eslint/no-unnecessary-condition */}
+        {environmentSettings && environmentSettings.length > 0 ? (
+          environmentSettings.map((config) => (
+            <Select.Option key={config.id} value={config.id}>
+              <Tooltip mouseEnterDelay={0.3} placement="right" title={config.name}>
                 <span>{config.name}</span>
               </Tooltip>
             </Select.Option>
@@ -472,32 +574,119 @@ const EnvironmentManager: React.FC<EnvironmentManagerProps> = () => {
           <Menu
             mode="inline"
             selectedKeys={[modalState.tab]}
-            style={{ width: 220, borderRight: '1px solid #f0f0f0' }}
-            onClick={(e) => {
-              // 确保只处理我们定义的tab key
-              if (['globalVariable', 'globalParameter', 'environmentSettings'].includes(e.key)) {
-                setActiveTab(e.key as TabKey);
-              }
-            }}
+            style={{ width: 180, borderRight: '1px solid #f0f0f0' }}
           >
             <Menu.ItemGroup key="globalSettings" title="全局设置">
-              <Menu.Item key="globalVariable" icon={<GlobalOutlined />}>
+              <Menu.Item
+                key="globalVariable"
+                icon={<GlobalOutlined />}
+                onClick={(e) => {
+                  setActiveEnvId(e.key)
+                }}
+              >
                 全局变量
               </Menu.Item>
-              <Menu.Item key="globalParameter" icon={<GlobalOutlined />}>
+              <Menu.Item
+                key="globalParameter"
+                icon={<GlobalOutlined />}
+                onClick={(e) => {
+                  setActiveEnvId(e.key)
+                }}
+              >
                 全局参数
               </Menu.Item>
               {/*<Menu.Item key="keyStores" icon={<LockOutlined />}>*/}
               {/*  密钥库*/}
               {/*</Menu.Item>*/}
             </Menu.ItemGroup>
-            <EnvironmentSettingsMenu
-              values={environmentManagement}
-              activeKey={activeEnvId}
-              onChange={handleEnvironmentSettingsMenuClick}
-              onDelete={handleDeleteEnvironment}
-              onDuplicate={handleDuplicateEnvironment}
-            />
+            <Menu.ItemGroup key="environmentSettings" title="环境配置">
+              {environmentSettings.map((env) => (
+                <Menu.Item
+                  key={env.id}
+                  className={styles.menuItem}
+                  style={{
+                    display: 'flex',
+                    alignItems: 'center',
+                  }}
+                  onClick={() => {
+                    setActiveEnvId(env.id)
+                    setIsCreating(false)
+                  }}
+                >
+                  <span
+                    style={{
+                      color: ['local-mock', 'remote-mock', 'self-host-mock'].includes(env.id)
+                        ? '#1890ff'
+                        : 'inherit',
+                    }}
+                  >
+                    {['local-mock', 'remote-mock', 'self-host-mock'].includes(env.id) && (
+                      <CloudOutlined />
+                    )}
+                    {env.name}
+                  </span>
+                  <Dropdown
+                    overlay={
+                      <Menu>
+                        <Menu.Item
+                          key="duplicate"
+                          disabled={
+                            env.id === 'local-mock' ||
+                            env.id === 'remote-mock' ||
+                            env.id === 'self-host-mock'
+                          }
+                          icon={<EditOutlined />}
+                          onClick={(e) => {
+                            e.domEvent.stopPropagation()
+                            handleDuplicateEnvironment(env.id)
+                          }}
+                        >
+                          复制
+                        </Menu.Item>
+                        <Menu.Item
+                          key="delete"
+                          danger
+                          disabled={
+                            env.id === 'local-mock' ||
+                            env.id === 'remote-mock' ||
+                            env.id === 'self-host-mock'
+                          }
+                          icon={<DeleteOutlined />}
+                          onClick={(e) => {
+                            e.domEvent.stopPropagation()
+                            handleDeleteEnvironment(env.id)
+                          }}
+                        >
+                          删除
+                        </Menu.Item>
+                      </Menu>
+                    }
+                    placement="topRight"
+                    trigger={['hover']}
+                  >
+                    <MoreOutlined
+                      className="env-item-more"
+                      style={{
+                        padding: 4,
+                        marginLeft: 16,
+                        visibility: 'hidden',
+                      }}
+                      onClick={(e) => {
+                        e.stopPropagation()
+                      }}
+                    />
+                  </Dropdown>
+                </Menu.Item>
+              ))}
+              <Menu.Item
+                key="create-new-environment"
+                icon={<PlusOutlined />}
+                style={{ marginTop: 8, color: 'rgb(114,173,236)' }}
+                onClick={handleAddEnvironment}
+              >
+                新建环境
+              </Menu.Item>
+            </Menu.ItemGroup>
             {/*<Menu.ItemGroup key="mockServices" title="Mock服务">*/}
             {/*  <Menu.Item key="localMock" icon={<DesktopOutlined />}>*/}
             {/*    本地Mock*/}
@@ -512,7 +701,7 @@ const EnvironmentManager: React.FC<EnvironmentManagerProps> = () => {
           </Menu>
 
           {/* 右侧内容区 */}
-          <div style={{ flex: 1, padding: '0 24px' }}>{renderContent(activeTab)}</div>
+          <div style={{ flex: 1, padding: '0 24px' }}>{renderContent(activeEnvId)}</div>
         </div>
       </Modal>
     </div>

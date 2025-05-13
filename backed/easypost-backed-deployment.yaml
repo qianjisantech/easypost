@@ -1,0 +1,47 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: easypost-backed
+  labels:
+    app: easypost-backed
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: easypost-backed
+  template:
+    metadata:
+      labels:
+        app: easypost-backed
+    spec:
+      # 镜像拉取认证配置
+      imagePullSecrets:
+        - name: aliyun-registry-secret
+
+      containers:
+        - name: easypost-backed
+          image: registry.cn-shanghai.aliyuncs.com/qianjisan/easypost-backed:latest
+          ports:
+            - containerPort: 8888
+          resources:
+            limits:
+              cpu: "1"
+              memory: "512Mi"
+            requests:
+              cpu: "0.5"
+              memory: "256Mi"
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: easypost-backed
+spec:
+  type: NodePort
+  selector:
+    app: easypost-backed
+  ports:
+    - protocol: TCP
+      port: 80
+      targetPort: 8888
+      nodePort: 30080

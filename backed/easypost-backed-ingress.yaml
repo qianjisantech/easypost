@@ -1,0 +1,17 @@
+# easypost-backed-ingress.yaml
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: easypost-backed-ingress
+spec:
+  rules:
+    - host: easypost.qianjisan.com  # 域名
+      http:
+        paths:
+          - path: /api
+            pathType: Prefix
+            backend:
+              service:
+                name: easypost-backed
+                port:
+                  number: 80

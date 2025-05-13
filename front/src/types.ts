@@ -112,7 +112,7 @@ export interface ApiDetails {
   }
 
   /** 返回响应 */
-  responses?: ApiDetailsResponse[]
+  response?: ApiDetailsResponse
   /** 响应示例 */
   responseExamples?: ApiDetailsResponseExample[]
   /** 接口文档创建时间 */
@@ -197,26 +197,33 @@ export interface Server {
   name: string
   frontUrl:string
 }
-
+export interface Variable {
+  id: string
+  key: string
+  type:string
+  value: string
+  description: string
+}
 export interface EnvironmentSetting {
   id: string
   name: string
+  isActive: boolean
   servers: Server[]
-  globalVariables: GlobalVariable[]
+  variables: Variable[]
 }
 export interface LocalMock {
   servers: Server[]
-  globalVariables: GlobalVariable[]
+  variables: Variable[]
 }
 
 export interface CloudMock {
   servers: Server[]
-  globalVariables: GlobalVariable[]
+  variables: Variable[]
 }
 
 export interface SelfHostMock {
   servers: Server[]
-  globalVariables: GlobalVariable[]
+  variables: Variable[]
 }
 export interface GlobalParameterChildren {
   id: string
