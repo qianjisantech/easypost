@@ -22,7 +22,7 @@ spec:
         - name: easypost-backed
           image: registry.cn-shanghai.aliyuncs.com/qianjisan/easypost-proxy:latest
           ports:
-            - containerPort: 8999
+            - containerPort: 80
           resources:
             limits:
               cpu: "1"
@@ -42,6 +42,6 @@ spec:
     app: easypost-proxy
   ports:
     - protocol: TCP
-      port: 8080
-      targetPort: 8999
+      port: 80
+      targetPort: 80
       nodePort: 30081
