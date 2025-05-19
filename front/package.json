@@ -5,7 +5,7 @@
   "license": "UNLECENSED",
   "type": "module",
   "scripts": {
-    "build": "NEXT_IGNORE_ESLINT=1 NEXT_IGNORE_TYPECHECK=1 next build ",
+    "build": "next build ",
     "deps": "pnpm up --interactive --latest",
     "dev": "next dev",
     "lint": "run-p lint:ts lint:es lint:css",
@@ -16,7 +16,7 @@
   },
   "dependencies": {
     "@ant-design/cssinjs": "^1.21.1",
-    "@ant-design/icons": "^5.5.1",
+    "@ant-design/icons": "^5.6.1",
     "@ant-design/nextjs-registry": "^1.0.1",
     "@bytemd/plugin-gfm": "^1.21.0",
     "@bytemd/react": "^1.21.0",
@@ -33,6 +33,7 @@
     "@reduxjs/toolkit": "^2.5.1",
     "@uiw/react-textarea-code-editor": "^3.1.0",
     "ace-builds": "^1.37.0",
+    "ali-oss": "^6.x",
     "antd": "^5.21.2",
     "array-to-tree": "^3.3.2",
     "axios": "^1.7.9",
@@ -60,6 +61,7 @@
     "react": "18.3.1",
     "react-ace": "^13.0.0",
     "react-dom": "18.3.1",
+    "react-dropzone": "^14.3.8",
     "react-flow": "^1.0.3",
     "react-json-editor-ajrm": "^2.5.14",
     "react-masonry-css": "^1.0.16",
@@ -78,6 +80,7 @@
   },
   "devDependencies": {
     "@babel/preset-react": "^7.25.7",
+    "@types/ali-oss": "^6.16.11",
     "@types/lodash-es": "^4.17.12",
     "@types/node": "22.7.4",
     "@types/prismjs": "^1.26.5",
@@ -91,12 +94,9 @@
     "postcss": "^8.4.47",
     "prefer-code-style": "2.1.7",
     "stylelint": "^16.9.0",
+    "stylelint-config-prettier": "^9.0.5",
     "tailwindcss": "^3.4.13",
     "typescript": "5.5.4",
     "workbox-webpack-plugin": "^7.3.0"
-  },
-  "engines": {
-    "node": "18.x",
-    "pnpm": "^8 || ^9"
   }
 }
