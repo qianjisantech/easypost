@@ -1,0 +1,16 @@
+# easypost-proxy-ingress.yaml
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: easypost-proxy-ingress
+spec:
+  rules:
+    - http:
+        paths:
+          - path: /proxy
+            pathType: Prefix
+            backend:
+              service:
+                name: easypost-proxy
+                port:
+                  number: 80
