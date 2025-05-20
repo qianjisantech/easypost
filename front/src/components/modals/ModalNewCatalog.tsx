@@ -8,7 +8,7 @@ import type { ApiMenuData } from '@/components/ApiMenu/ApiMenu.type'
 import { SelectorCatalog } from '@/components/SelectorCatalog'
 import { ROOT_CATALOG } from '@/configs/static'
 import { useMenuHelpersContext } from '@/contexts/menu-helpers'
-import {ApiDetailCreate} from "src/api/api";
+import {ApiDetailCreate} from "@/api/ams/api";
 
 interface ModalNewCatalogProps extends Omit<ModalProps, 'open' | 'onOk'> {
   formData?: Pick<ApiMenuData, 'parentId' | 'type'>

@@ -192,7 +192,7 @@ type ApiDetailCreateOrUpdateRequest struct {
 	ServerId         string   `form:"serverId,optional"`
 	Description      string   `form:"description,optional"`
 	Parameters       string   `form:"parameters,optional"`
-	Responses        string   `form:"responses,optional"`
+	Response         string   `form:"response,optional"`
 	ResponseExamples string   `form:"responseExamples,optional"`
 }
 
@@ -225,7 +225,7 @@ type ApiDetailDataData struct {
 	ServerId         string      `json:"serverId"`
 	Description      string      `json:"description"`
 	Parameters       interface{} `json:"parameters"`
-	Responses        interface{} `json:"responses"`
+	Response         interface{} `json:"response"`
 	ResponseExamples interface{} `json:"responseExamples"`
 }
 
@@ -258,7 +258,7 @@ type ApiDocDetailDataData struct {
 	ServerId         string      `json:"serverId"`
 	Description      string      `json:"description"`
 	Parameters       interface{} `json:"parameters"`
-	Responses        interface{} `json:"responses"`
+	Response         interface{} `json:"response"`
 	ResponseExamples interface{} `json:"responseExamples"`
 	CreatBy          string      `json:"createBy"`
 	CreatByName      string      `json:"createByName"`
@@ -333,6 +333,20 @@ type ApiRunDetailResp struct {
 	Data    ApiRunDetailData `json:"data"`
 }
 
+type ApiRunSaveRequest struct {
+	Id         string `form:"id,optional"`
+	Method     string `form:"method,optional"`
+	Path       string `form:"path,optional"`
+	Parameters string `form:"parameters,optional"`
+	Response   string `form:"response,optional"`
+}
+
+type ApiRunSaveResp struct {
+	Success bool                            `json:"success"`
+	Message string                          `json:"message"`
+	Data    ApiDetailCreateOrUpdateRespData `json:"data"`
+}
+
 type ApiTreeQueryPageData struct {
 	Id       string `json:"id"`
 	ParentId string `json:"parentId"`
@@ -342,7 +356,6 @@ type ApiTreeQueryPageData struct {
 }
 
 type ApiTreeQueryPageRequest struct {
-	ProjectId string `json:"projectId"`
 }
 
 type ApiTreeQueryPageResp struct {
@@ -400,11 +413,12 @@ type AuthLogoutResp struct {
 }
 
 type DeepSeekChatData struct {
-	Conetent string `json:"conetent"`
+	Content string `json:"content"`
 }
 
 type DeepSeekChatRequest struct {
-	Conetent string `json:"conetent"`
+	Content string `form:"content,optional"`
+	File    string `form:"file,optional"` // 用于文件上传的字段
 }
 
 type DeepSeekChatResp struct {
@@ -443,6 +457,51 @@ type DocSaveResp struct {
 	Success bool        `json:"success"`
 	Message string      `json:"message"`
 	Data    DocSaveData `json:"data"`
+}
+
+type EnvironmentManageDetailData struct {
+	Id                  string      `json:"id"`
+	GlobalParameter     interface{} `json:"globalParameter"`
+	GlobalVariable      interface{} `json:"globalVariable"`
+	KeyStores           interface{} `json:"keyStores"`
+	EnvironmentSettings interface{} `json:"environmentSettings"`
+	LocalMock           interface{} `json:"localMock"`
+	CloudMock           interface{} `json:"cloudMock"`
+	SelfHostMock        interface{} `json:"selfHostMock"`
+}
+
+type EnvironmentManageDetailRequest struct {
+}
+
+type EnvironmentManageDetailResp struct {
+	Success bool                        `json:"success"`
+	Message string                      `json:"message"`
+	Data    EnvironmentManageDetailData `json:"data"`
+}
+
+type EnvironmentManageDynamicValueRequest struct {
+}
+
+type EnvironmentManageDynamicValueResp struct {
+	Success bool        `json:"success"`
+	Message string      `json:"message"`
+	Data    interface{} `json:"data"`
+}
+
+type EnvironmentManageSaveRequest struct {
+	Id                  string `form:"id"`
+	GlobalParameter     string `form:"globalParameter"`
+	GlobalVariable      string `form:"globalVariable"`
+	KeyStores           string `form:"keyStores"`
+	EnvironmentSettings string `form:"environmentSettings"`
+	LocalMock           string `form:"localMock"`
+	CloudMock           string `form:"cloudMock"`
+	SelfHostMock        string `form:"selfHostMock"`
+}
+
+type EnvironmentManageSaveResp struct {
+	Success bool   `json:"success"`
+	Message string `json:"message"`
 }
 
 type EsSearchQuery struct {

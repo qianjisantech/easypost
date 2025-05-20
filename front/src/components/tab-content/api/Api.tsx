@@ -35,7 +35,7 @@ export function Api() {
         label: '文档',
         children: (
           <ApiTabContentWrapper key={`doc-${renderKey}`}>
-            <ApiDoc  activeKey={activeKey} />
+            <ApiDoc  activeKey={activeKey} setActiveKey={setActiveKey} />
           </ApiTabContentWrapper>
         ),
       },
@@ -44,7 +44,7 @@ export function Api() {
         label: '修改文档',
         children: (
           <ApiTabContentWrapper key={`docEdit-${renderKey}`}>
-            <ApiDocEditing  activeKey={activeKey}  />
+            <ApiDocEditing  activeKey={activeKey} setActiveKey={setActiveKey} />
           </ApiTabContentWrapper>
         ),
       },
@@ -65,9 +65,8 @@ export function Api() {
     ]
   }, [activeKey,renderKey])
   const handleTabChange = (key: string) => {
+    console.log('Tab changing to:', key);  // 添加调试日志
     setActiveKey(key);
-    // 每次切换Tab时增加renderKey，强制子组件重新渲染
-    setRenderKey(prev => prev + 1);
   };
   return (
     <div className="h-full overflow-hidden">
@@ -93,9 +92,9 @@ export function Api() {
         ) : (
           <div className="flex h-full overflow-hidden">
             <Tabs
+              activeKey={activeKey}
               animated={false}
               className="api-details-tabs flex-1"
-              defaultActiveKey="docEdit"
               items={apiTabItems}
               onChange={handleTabChange}
               tabBarExtraContent={

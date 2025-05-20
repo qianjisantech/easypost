@@ -43,8 +43,8 @@ type (
 )
 service easypost-api {
     @handler DocDetail //文档详情
-    get /am/doc/detail/:id (DocDetailRequest) returns (DocDetailResp)
+    get /ams/doc/detail/:id (DocDetailRequest) returns (DocDetailResp)
     @handler DocSave  //文档保存
-    post /am/doc/save (DocSaveRequest) returns (DocSaveResp)
+    post /ams/doc/save (DocSaveRequest) returns (DocSaveResp)
 }
 

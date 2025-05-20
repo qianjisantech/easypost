@@ -53,12 +53,6 @@ func (l *ApiDocDetailLogic) ApiDocDetail(req *types.ApiDocDetailRequest) (resp *
 		responseExamples = []ResponseExample{}
 	}
 
-	//if amAPI.Responsible != nil {
-	//	err = json.Unmarshal([]byte(*amAPI.Responsible), &responsible)
-	//} else {
-	//	requestBody = RequestBody{}
-	//}
-
 	return &types.ApiDocDetailResp{
 		Success: true,
 		Message: "加载成功",
@@ -77,7 +71,7 @@ func (l *ApiDocDetailLogic) ApiDocDetail(req *types.ApiDocDetailRequest) (resp *
 				Description:      ep.StringIfNotNil(amAPI.Remark, ""),
 				Responsible:      ep.StringIfNotNil(amAPI.Responsible, "{}"),
 				Parameters:       parameters,
-				Responses:        responses,
+				Response:         responses,
 				ResponseExamples: responseExamples,
 				CreatBy:          strconv.FormatInt(*amAPI.CreateBy, 10),
 				CreatByName:      *amAPI.CreateByName,
@@ -91,9 +85,9 @@ func (l *ApiDocDetailLogic) ApiDocDetail(req *types.ApiDocDetailRequest) (resp *
 }
 
 // QueryApiDetailById 根据id查询api详情
-func (l *ApiDocDetailLogic) QueryApiDetailById(id int64) (*model.AmAPI, error) {
+func (l *ApiDocDetailLogic) QueryApiDetailById(id int64) (*model.AmsAPI, error) {
 	db := l.svcCtx.DB.Debug()
-	var amApi *model.AmAPI
+	var amApi *model.AmsAPI
 	tx := db.First(&amApi, id)
 	if tx.Error != nil {
 		logx.Errorf("Error QueryApiDetailById: %v", tx.Error)

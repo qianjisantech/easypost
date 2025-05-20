@@ -28,7 +28,7 @@ func NewDocDetailLogic(ctx context.Context, svcCtx *svc.ServiceContext) *DocDeta
 func (l *DocDetailLogic) DocDetail(req *types.DocDetailRequest) (resp *types.DocDetailResp, err error) {
 	id, err := strconv.ParseInt(strconv.Itoa(req.Id), 10, 64)
 	db := l.svcCtx.DB.Debug()
-	var amDoc *model.AmDoc
+	var amDoc *model.AmsDoc
 	tx := db.First(&amDoc, id)
 	if tx.Error != nil {
 		logx.Errorf("Error query team: %v", tx.Error)

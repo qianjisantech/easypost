@@ -31,7 +31,7 @@ func (l *DocSaveLogic) DocSave(req *types.DocSaveRequest) (resp *types.DocSaveRe
 	contentInfo := l.ctx.Value("contentInfo").(*middleware.ContentInfo)
 	projectId := contentInfo.ProjectId
 	defaultParentId := int64(0)
-	amDoc := &model.AmDoc{
+	amDoc := &model.AmsDoc{
 		Name:      &req.Name,
 		Content:   &req.Content,
 		ParentID:  &defaultParentId,

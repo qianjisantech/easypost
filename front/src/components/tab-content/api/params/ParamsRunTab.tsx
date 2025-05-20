@@ -2,7 +2,7 @@ import { Form, Tabs, theme, Typography } from 'antd'
 import { useForm } from 'antd/es/form/Form'
 import type { ApiDetails } from '@/types'
 import { ParamsEditableTable } from '../components/ParamsEditableTable'
-import { ParamsBody, ParamsPayload } from "./ParamsPayload";
+import { ParamsPayload } from "./ParamsPayload";
 import { Authorization } from "@/components/tab-content/api/authorization/Authorization"
 import { PreScripts } from "@/components/tab-content/api/scripts/PreScripts"
 import { ParamsEditableRunTable } from "@/components/tab-content/api/components/ParamsEditableRunTable"

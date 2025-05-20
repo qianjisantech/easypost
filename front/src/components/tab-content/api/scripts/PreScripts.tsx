@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import dynamic from 'next/dynamic';
-import { Card, Collapse, Space, Button } from 'antd';
+import { Card, Collapse, Space, Button, Select } from "antd";
 import { ApiDetails } from "@/types";
 import { ScriptsType } from "@/enums";
 
@@ -17,7 +17,7 @@ export function PreScripts(props: PreScriptsProps) {
   const { value = {}, onChange } = props;
   const [body, setBody] = useState<string>('');
   const [activeKey, setActiveKey] = useState<string | string[]>(['1','2']);
-
+  const [language, setLanguage] = useState<string>(value?.type||ScriptsType.JavaScript); // 默认语言为 JavaScript
   useEffect(() => {
     // 安全访问 value.data，提供默认值
     const data = value?.data || ''
@@ -31,6 +31,15 @@ export function PreScripts(props: PreScriptsProps) {
     const newValue = body ? `${body}\n${snippet}` : snippet;
     setBody(newValue);
     onChange?.({ data: newValue, type: ScriptsType.JavaScript })
+  };
+  // 处理语言切换
+  const handleLanguageChange = (value: string) => {
+    setLanguage(value);
+    // 根据选择的语言更新脚本类型
+    const scriptType = value === 'javascript' ? ScriptsType.JavaScript :
+      value === 'java' ? ScriptsType.Java :
+        ScriptsType.Python;
+    onChange?.({ data: body, type: scriptType });
   };
 
   // 代码片段数据
@@ -123,8 +132,36 @@ export function PreScripts(props: PreScriptsProps) {
     <div style={{ height: '100%' }}>
       <div style={{ display: 'flex', height: '100%', gap: 16 }}>
         <div style={{ flex: 1 }}>
+            {/* 添加语言选择横条 */}
+            <div style={{
+              background: 'white',
+              padding: '8px 16px',
+              borderBottom: '1px solid #f0f0f0',
+              display: 'flex',
+              alignItems: 'center',
+              gap: '16px'
+            }}>
+              <Select
+                size={'small'}
+                value={language}
+                onChange={handleLanguageChange}
+                style={{ width: 100,borderRadius: '4px' }}
+                options={[
+                  { value: 'javascript', label: 'JavaScript' },
+                  { value: 'java', label: 'Java' },
+                  { value: 'python', label: 'Python' },
+                ]}
+              />
+              <Button type="link">
+                <div style={{ color: "#2f3a81", fontSize: 12 }}>
+                  当前语言: {language === "javascript" ? "JavaScript" :
+                  language === "java" ? "Java" : "Python"}
+                </div>
+              </Button>
+
+            </div>
           <MonacoEditor
-            language="javascript"
+            language={language}
             value={body}
             theme="vs-light"
             onChange={(newValue) => {

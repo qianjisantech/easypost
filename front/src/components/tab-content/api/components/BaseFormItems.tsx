@@ -4,7 +4,7 @@ import Link from 'next/link'
 import { Col, Form, message, Row, Select, type SelectProps } from 'antd'
 import useResizeObserver from 'use-resize-observer'
 
-import { ResponsibleSearch } from 'src/api/api'
+import { ResponsibleSearch } from '@/api/ams/api'
 import { SelectorService } from '@/components/SelectorService'
 import { InputDesc } from '@/components/tab-content/api/components/InputDesc'
 import { API_STATUS_CONFIG } from '@/configs/static'

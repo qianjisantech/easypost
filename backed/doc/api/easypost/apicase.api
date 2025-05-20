@@ -158,20 +158,20 @@ type (
 )
 service easypost-api{
     @handler ApiCaseDetailCreate    //接口新增
-    post /am/apicase/detail/create (ApiCaseDetailCreateOrUpdateRequest) returns (ApiCaseDetailCreateOrUpdateResp)
+    post /ams/apicase/detail/create (ApiCaseDetailCreateOrUpdateRequest) returns (ApiCaseDetailCreateOrUpdateResp)
     @handler ApiCaseDetailUpdate   //接口新增
-    post /am/apicase/detail/update (ApiCaseDetailCreateOrUpdateRequest) returns (ApiCaseDetailCreateOrUpdateResp)
+    post /ams/apicase/detail/update (ApiCaseDetailCreateOrUpdateRequest) returns (ApiCaseDetailCreateOrUpdateResp)
     @handler ApiCaseDetail  //接口详情
-    get /am/apicase/detail/:id (ApiCaseDetailRequest) returns (ApiCaseDetailResp)
+    get /ams/apicase/detail/:id (ApiCaseDetailRequest) returns (ApiCaseDetailResp)
     @handler ApiCaseRunDetail  //接口文档详情
-    get /am/apicase/run/detail/:id (ApiCaseRunDetailRequest) returns( ApiCaseRunDetailResp)
+    get /ams/apicase/run/detail/:id (ApiCaseRunDetailRequest) returns( ApiCaseRunDetailResp)
     @handler ApiCaseDelete  //接口删除
-    get /am/apicase/delete/:id (ApiCaseDeleteRequest) returns (ApiCaseDeleteResp)
+    get /ams/apicase/delete/:id (ApiCaseDeleteRequest) returns (ApiCaseDeleteResp)
     @handler ApiCaseCopy   //接口复制
-    post /am/apicase/copy (ApiCaseCopyRequest) returns (ApiCaseCopyResp)
+    post /ams/apicase/copy (ApiCaseCopyRequest) returns (ApiCaseCopyResp)
     @handler ApiCaseRename   //接口重命名
-    post /am/apicase/rename (ApiCaseRenameRequest) returns (ApiCaseRenameResp)
+    post /ams/apicase/rename (ApiCaseRenameRequest) returns (ApiCaseRenameResp)
     @handler ApiCaseMove  //接口移动
-    post /am/apicase/move (ApiCaseMoveRequest) returns (ApiCaseMoveResp)
+    post /ams/apicase/move (ApiCaseMoveRequest) returns (ApiCaseMoveResp)
 
 }

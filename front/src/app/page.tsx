@@ -6,7 +6,7 @@ import { useRouter } from 'next/navigation'
 
 export default function RootPage() {
   const router = useRouter()
-
+  const protectedRoutes = ['/dashboard', '/profile']; // 需要保护的路径
   const checkAccessToken = () => {
     const access_token = localStorage.getItem('access_token')
     if (!access_token) {

@@ -3,7 +3,7 @@ import { useEffect, useRef, useState } from "react";
 import { Button, Form, type FormProps, message, Select, type SelectProps, Space } from 'antd'
 import { nanoid } from 'nanoid'
 // eslint-disable-next-line import/no-unresolved
-import { ApiDetail, ApiDetailCreate, ApiDetailUpdate, ApiTreeQueryPage } from "src/api/api";
+import { ApiDetail, ApiDetailCreate, ApiDetailUpdate, ApiTreeQueryPage } from "@/api/ams/api";
 
 import { PageTabStatus } from '@/components/ApiTab/ApiTab.enum'
 import { useTabContentContext } from '@/components/ApiTab/TabContentContext'
@@ -43,7 +43,7 @@ const methodOptions: SelectProps['options'] = Object.entries(HTTP_METHOD_CONFIG)
 /**
  * API 「修改文档」部分。
  */
-export function ApiDocEditing({ activeKey }: { activeKey: string }) {
+export function ApiDocEditing({ activeKey,setActiveKey }: { activeKey: string,setActiveKey: (key:string)=>void }) {
   const [form] = Form.useForm<ApiDetails>()
   const { messageApi } = useGlobalContext()
   const msgKey = useRef<string>()
@@ -82,8 +82,8 @@ export function ApiDocEditing({ activeKey }: { activeKey: string }) {
 
     }
   }, [activeKey, isCreating, tabData.key])
-  const loadingMenuTree = async (projectId: string) => {
-    const response = await ApiTreeQueryPage({ projectId })
+  const loadingMenuTree = async () => {
+    const response = await ApiTreeQueryPage()
     if (response.data.success && setMenuRawList) {
       setMenuRawList(response.data?.data)
     }
@@ -125,7 +125,7 @@ export function ApiDocEditing({ activeKey }: { activeKey: string }) {
     console.log('response.data.data.id', response.data.data.id)
     if (response.data.success) {
       message.success(response.data.message)
-      loadingMenuTree("22")
+      loadingMenuTree()
       loadingApiDetails(response.data.data.id)
 
     }
@@ -158,7 +158,7 @@ export function ApiDocEditing({ activeKey }: { activeKey: string }) {
     console.log('response.data.data.id', response.data.data.id)
     if (response.data.success) {
       message.success(response.data.message)
-      loadingMenuTree("22")
+      loadingMenuTree()
       loadingApiDetails(response.data.data.id)
     }
     setLoading(false)
@@ -321,7 +321,9 @@ export function ApiDocEditing({ activeKey }: { activeKey: string }) {
 
           {!isCreating && (
             <>
-              <Button>运行</Button>
+              <Button
+                onClick={() => { setActiveKey('run'); }}
+              >运行</Button>
               <ApiRemoveButton tabKey={tabData.key} />
             </>
           )}

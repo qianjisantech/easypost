@@ -1,13 +1,13 @@
 Name: easypost-api
 Host: 0.0.0.0
 Port: 8888
-Timeout: 20000
+Timeout: 10000
 
 Mysql:
   Datasource: root:Sy122812@tcp(rm-uf6vr2e018e95e4hz6o.mysql.rds.aliyuncs.com:3306)/easypost?charset=utf8mb4&parseTime=true&loc=Asia%2FShanghai
 
 Redis:
-  Host: 47.94.96.190
+  Host: 8.153.195.236
   Port: "6379"
   Password:
   Tls: false

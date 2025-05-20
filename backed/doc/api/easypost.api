@@ -9,6 +9,7 @@ import "easypost/trafficmanage.api"
 import "easypost/es.api"
 import "easypost/apicase.api"
 import "easypost/deepseek.api"
+import "easypost/environment_manage.api"
 
 info (
 	title:   "easypost后端"

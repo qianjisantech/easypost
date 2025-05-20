@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import dynamic from 'next/dynamic';
-import { Card, Collapse, Space, Button } from 'antd';
+import { Card, Collapse, Space, Button, Select } from "antd";
 import { ApiDetails } from "@/types";
 import { ScriptsType } from "@/enums";
 
@@ -15,9 +15,9 @@ interface PostScriptsProps {
 
 export function PostScripts(props: PostScriptsProps) {
   const { value = {}, onChange } = props;
-  const [body, setBody] = useState<string>('');
+  const [body, setBody] = useState<string>('')
   const [activeKey, setActiveKey] = useState<string | string[]>(['1','2']);
-
+  const [language, setLanguage] = useState<string>(ScriptsType.JavaScript); // 默认语言为 JavaScript
   useEffect(() => {
     // 安全访问 value.data，提供默认值
     const data = value?.data || ''
@@ -32,7 +32,14 @@ export function PostScripts(props: PostScriptsProps) {
     setBody(newValue);
     onChange?.({ data: newValue, type: ScriptsType.JavaScript })
   };
-
+  const handleLanguageChange = (value: string) => {
+    setLanguage(value);
+    // 根据选择的语言更新脚本类型
+    const scriptType = value === 'javascript' ? ScriptsType.JavaScript :
+      value === 'java' ? ScriptsType.Java :
+        ScriptsType.Python;
+    onChange?.({ data: body, type: scriptType });
+  };
   // 代码片段数据
   const snippetItems = [
     {
@@ -123,6 +130,30 @@ export function PostScripts(props: PostScriptsProps) {
     <div style={{ height: '100%' }}>
       <div style={{ display: 'flex', height: '100%', gap: 16 }}>
         <div style={{ flex: 1 }}>
+          {/* 添加语言选择横条 */}
+          <div style={{
+            background: 'white',
+            padding: '8px 16px',
+            borderBottom: '1px solid #f0f0f0',
+            display: 'flex',
+            alignItems: 'center',
+            gap: '16px'
+          }}>
+            <Select
+              value={language}
+              onChange={handleLanguageChange}
+              style={{ width: 120 }}
+              options={[
+                { value: 'javascript', label: 'JavaScript' },
+                { value: 'java', label: 'Java' },
+                { value: 'python', label: 'Python' },
+              ]}
+            />
+            <div style={{ color: '#666', fontSize: 12 }}>
+              当前语言: {language === 'javascript' ? 'JavaScript' :
+              language === 'java' ? 'Java' : 'Python'}
+            </div>
+          </div>
           <MonacoEditor
             language="javascript"
             value={body}
@@ -187,7 +218,6 @@ export function PostScripts(props: PostScriptsProps) {
         </div>
       </div>
     </div>
-  );
+  )
 }
-
 export default PostScripts;

@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from "react";
 import {
   PlusOutlined,
   SearchOutlined,
@@ -9,18 +9,26 @@ import {
 } from "@ant-design/icons";
 import type { TabsProps } from 'antd';
 import { Button, Form, Input, Space, Table, Select, Tabs, Typography } from "antd";
+import { nanoid } from "nanoid";
 
 interface Parameter {
+  id: string;  // 统一使用 id 作为唯一标识
   key: string;
-  name: string;
   type: string;
   value: string;
   description: string;
 }
 
+interface GlobalVariableProps {
+  data: {
+    team: Parameter[];
+    project: Parameter[];
+  };
+  onChange?: (newData: { [p: string]: any[]; cookie: any[]; query: any[]; header: any[]; body: any[] }) => void;
+}
+
 const { Text } = Typography;
 
-// 类型选项配置
 const typeOptions = [
   { value: 'string', label: 'string', color: '#1890ff' },
   { value: 'number', label: 'number', color: '#52c41a' },
@@ -28,92 +36,66 @@ const typeOptions = [
   { value: 'object', label: 'object', color: '#722ed1' },
 ];
 
-const GlobalVariable = () => {
+const GlobalVariable: React.FC<GlobalVariableProps> = ({
+                                                         data = { header: [], cookie: [],query: [],body: [] }, // 确保默认值
+                                                         onChange
+                                                       }) => {
   const [activeTab, setActiveTab] = useState<string>('project');
   const [searchText, setSearchText] = useState('');
   const [editingKey, setEditingKey] = useState<string>('');
-  const [form] = Form.useForm();
+  const [projectForm] = Form.useForm();
+  const [teamForm] = Form.useForm();
+  const [internalData, setInternalData] = useState(data);
+  const getCurrentForm = () => activeTab === 'project' ? projectForm : teamForm;
 
-  // 模拟数据 - 项目内共享参数
-  const [projectParameters, setProjectParameters] = useState<Parameter[]>([
-    {
-      key: '1',
-      name: 'api_url',
-      type: 'string',
-      value: 'https://api.example.com',
-      description: '项目API基础地址',
-    },
-    {
-      key: '2',
-      name: 'max_retry',
-      type: 'number',
-      value: '3',
-      description: '最大重试次数',
-    },
-  ]);
-
-  // 模拟数据 - 团队内共享参数
-  const [teamParameters, setTeamParameters] = useState<Parameter[]>([
-    {
-      key: '1',
-      name: 'auth_token',
-      type: 'string',
-      value: 'token123',
-      description: '团队认证令牌',
-    },
-    {
-      key: '2',
-      name: 'timeout',
-      type: 'number',
-      value: '5000',
-      description: '请求超时时间(ms)',
-    },
-  ]);
-
-  // 获取类型颜色
   const getTypeColor = (type: string) => {
     const option = typeOptions.find(opt => opt.value === type);
     return option ? option.color : '#000000';
   };
 
-  const isEditing = (record: Parameter) => record.key === editingKey;
 
-  const edit = (record: Partial<Parameter> & { key: React.Key }) => {
-    form.setFieldsValue({ ...record });
-    setEditingKey(record.key);
+  useEffect(() => {
+    setInternalData(data);
+  }, [data]);
+  useEffect(() => {
+    console.log('当前渲染数据:', data[activeTab]);
+    console.log('Current data:', data);
+  }, [data]);
+
+  // 统一使用 id 作为标识
+  const isEditing = (record: Parameter) => record.id === editingKey;
+
+  const edit = (record: Parameter) => {
+    const form = getCurrentForm();
+    form.setFieldsValue({
+      id: record.id,
+      key:record.key,
+      type: record.type,
+      value: record.value,
+      description: record.description
+    });
+    setEditingKey(record.id);
   };
-
   const cancel = () => {
     setEditingKey('');
   };
 
-  const save = async (key: React.Key) => {
+  const save = async (id: string) => {
     try {
-      const row = (await form.validateFields()) as Parameter;
+      const form = getCurrentForm();
+      const row = await form.validateFields(); // 获取表单当前值
 
-      if (activeTab === 'project') {
-        const newData = [...projectParameters];
-        const index = newData.findIndex(item => key === item.key);
-        if (index > -1) {
-          const item = newData[index];
-          newData.splice(index, 1, {
-            ...item,
-            ...row,
-          });
-          setProjectParameters(newData);
-        }
-      } else {
-        const newData = [...teamParameters];
-        const index = newData.findIndex(item => key === item.key);
-        if (index > -1) {
-          const item = newData[index];
-          newData.splice(index, 1, {
-            ...item,
-            ...row,
-          });
-          setTeamParameters(newData);
-        }
-      }
+      const newData = { ...internalData };
+      const currentTabData = newData[activeTab as keyof typeof newData];
+
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-call
+      newData[activeTab as keyof typeof newData] = currentTabData.map(item =>
+        item.id === id ? { ...item, ...row } : item
+      );
+
+      setInternalData(newData);
+      onChange?.(newData);
+      console.log('全局变量newData', newData);
       setEditingKey('');
     } catch (errInfo) {
       console.log('Validate Failed:', errInfo);
@@ -121,54 +103,75 @@ const GlobalVariable = () => {
   };
 
   const handleDelete = (record: Parameter) => {
-    if (activeTab === 'project') {
-      setProjectParameters(projectParameters.filter((item) => item.key !== record.key));
-    } else {
-      setTeamParameters(teamParameters.filter((item) => item.key !== record.key));
-    }
-  };
+    const newData = { ...internalData };
 
+    // 使用类型断言确保 activeTab 是有效的 key
+    const tabKey = activeTab as keyof GlobalParameterData;
+
+    // 过滤掉要删除的项目
+    newData[tabKey] = newData[tabKey].filter(item => item.id !== record.id);
+
+    setInternalData(newData);
+    onChange?.(newData);
+  };
   const handleAdd = () => {
     const newParam = {
-      key: Date.now().toString(),
-      name: '',
+      id: nanoid(6),
+      key: '',
       type: 'string',
       value: '',
       description: '',
     };
 
-    if (activeTab === 'project') {
-      setProjectParameters([...projectParameters, newParam]);
-    } else {
-      setTeamParameters([...teamParameters, newParam]);
-    }
-    edit(newParam);
+    const newData = {
+      ...internalData,
+      [activeTab]: [...internalData[activeTab as keyof typeof internalData], newParam]
+    };
+
+    setInternalData(newData);
+    onChange?.(newData);
+    setEditingKey(newParam.id);
+
+    // 立即设置表单值
+    const form = getCurrentForm();
+    form.setFieldsValue({
+      key: newParam.key,
+      type: newParam.type,
+      value: newParam.value,
+      description: newParam.description
+    });
   };
 
+// 在组件返回前添加调试
+  console.log('Current data to render:', data[activeTab as keyof typeof data]);
   const columns = [
     {
-      title: '变量名',
-      dataIndex: 'name',
-      key: 'name',
+      title: '参数名',
+      dataIndex: 'key',
+      key: 'key',
       filteredValue: [searchText],
       onFilter: (value: string, record: Parameter) => {
         return (
-          record.name.toLowerCase().includes(value.toLowerCase()) ||
-          record.description.toLowerCase().includes(value.toLowerCase())
+          record.key.includes(value.toLowerCase()) ||
+          record.description.includes(value.toLowerCase())
         );
       },
       render: (_: any, record: Parameter) => {
         const editable = isEditing(record);
         return editable ? (
           <Form.Item
-            name="name"
+            name="key"
+            rules={[{ required: true, message: '请输入参数名' }]}
             style={{ margin: 0 }}
-            rules={[{ required: true, message: '请输入变量名' }]}
           >
             <Input />
           </Form.Item>
         ) : (
-          <Text>{record.name}</Text>
+          <Input
+            bordered={false}
+            value={record.key}
+            style={{ padding: 0, backgroundColor: 'transparent' }}
+          />
         );
       },
     },
@@ -191,16 +194,16 @@ const GlobalVariable = () => {
                 value: opt.value,
                 label: (
                   <span style={{ color: opt.color }}>
-                {opt.label}
-              </span>
+                    {opt.label}
+                  </span>
                 ),
               }))}
             />
           </Form.Item>
         ) : (
           <span style={{ color: getTypeColor(record.type) }}>
-        {record.type}
-      </span>
+            {record.type}
+          </span>
         );
       },
     },
@@ -238,7 +241,6 @@ const GlobalVariable = () => {
           <Form.Item
             name="description"
             style={{ margin: 0 }}
-
           >
             <Input />
           </Form.Item>
@@ -257,7 +259,7 @@ const GlobalVariable = () => {
             <Button
               type="link"
               icon={<CheckOutlined />}
-              onClick={() => save(record.key)}
+              onClick={() => save(record.id)}
             />
             <Button
               type="link"
@@ -283,7 +285,7 @@ const GlobalVariable = () => {
         );
       },
     },
-  ]
+  ];
 
   const items: TabsProps['items'] = [
     {
@@ -296,7 +298,8 @@ const GlobalVariable = () => {
               <Input
                 placeholder="搜索变量名或说明"
                 prefix={<SearchOutlined />}
-                onChange={e => setSearchText(e.target.value)}
+
+                onChange={e => { setSearchText(e.target.value); }}
                 style={{ width: 250 }}
               />
               <Button
@@ -309,11 +312,11 @@ const GlobalVariable = () => {
               </Button>
             </Space>
           </div>
-          <Form form={form} component={false}>
+          <Form component={false} form={projectForm}>
             <Table
-              bordered
+              dataSource={internalData[activeTab as keyof typeof internalData]}
+              rowKey="id"
               columns={columns}
-              dataSource={projectParameters}
               pagination={false}
             />
           </Form>
@@ -330,7 +333,7 @@ const GlobalVariable = () => {
               <Input
                 placeholder="搜索变量名或说明"
                 prefix={<SearchOutlined />}
-                onChange={e => setSearchText(e.target.value)}
+                onChange={e => { setSearchText(e.target.value); }}
                 style={{ width: 250 }}
               />
               <Button
@@ -343,11 +346,11 @@ const GlobalVariable = () => {
               </Button>
             </Space>
           </div>
-          <Form form={form} component={false}>
+          <Form form={teamForm} component={false}>
             <Table
-              bordered
+              dataSource={internalData[activeTab as keyof typeof internalData]}
+              rowKey="id"
               columns={columns}
-              dataSource={teamParameters}
               pagination={false}
             />
           </Form>
@@ -371,4 +374,4 @@ const GlobalVariable = () => {
   );
 };
 
-export default GlobalVariable
+export default GlobalVariable;

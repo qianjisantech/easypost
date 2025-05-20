@@ -1,12 +1,13 @@
-import { useEffect } from 'react'
+import { useEffect } from "react";
 
-import { create, useModal } from '@ebay/nice-modal-react'
-import { Form, Input, Modal, type ModalProps } from 'antd'
+import { create, useModal } from "@ebay/nice-modal-react";
+import { Form, Input, message, Modal, type ModalProps } from "antd";
 
-import type { ApiMenuData } from '@/components/ApiMenu/ApiMenu.type'
-import { SelectorCatalog } from '@/components/SelectorCatalog'
-import { useMenuHelpersContext } from '@/contexts/menu-helpers'
-import { MenuItemType } from '@/enums'
+import type { ApiMenuData } from "@/components/ApiMenu/ApiMenu.type";
+import { SelectorCatalog } from "@/components/SelectorCatalog";
+import { useMenuHelpersContext } from "@/contexts/menu-helpers";
+import { MenuItemType } from "@/enums";
+import { ApiMove, ApiTreeQueryPage } from "@/api/ams/api";
 
 interface ModalMoveMenuProps extends Omit<ModalProps, 'open' | 'onOk'> {
   menuItemType?: MenuItemType
@@ -17,6 +18,7 @@ type FormData = Pick<ApiMenuData, 'id' | 'parentId'>
 
 export const ModalMoveMenu = create(({ menuItemType, formData, ...props }: ModalMoveMenuProps) => {
   const modal = useModal()
+  const { setMenuRawList } = useMenuHelpersContext()
 
   const [form] = Form.useForm<FormData>()
 
@@ -26,13 +28,36 @@ export const ModalMoveMenu = create(({ menuItemType, formData, ...props }: Modal
     }
   }, [form, formData])
 
-  const { updateMenuItem } = useMenuHelpersContext()
-
+  // const { updateMenuItem } = useMenuHelpersContext()
+  const loadingMenuTree = async () => {
+    const response = await ApiTreeQueryPage()
+    if (response.data.success && setMenuRawList) {
+      setMenuRawList(response.data?.data)
+    }
+  }
   const handleHide = () => {
     form.resetFields()
     void modal.hide()
   }
-
+  const moveApi = async (values) => {
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-call
+    const response = await ApiMove(values)
+    if (response.data.success){
+      message.success(response.data.message)
+      loadingMenuTree()
+      handleHide()
+    }
+  }
+  const moveApiFolder =  (values) => {
+    console.log('moveApiFolder',values)
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-call
+    // const response = await ApiMove(values)
+    // if (response.data.success){
+    //   message.success(response.data.message)
+    //   loadingMenuTree()
+    //   handleHide()
+    // }
+  }
   return (
     <Modal
       title="移动到..."
@@ -45,9 +70,14 @@ export const ModalMoveMenu = create(({ menuItemType, formData, ...props }: Modal
       }}
       onOk={() => {
         form.validateFields().then((values) => {
-          updateMenuItem(values)
-          console.log('接口移动到', values)
-          handleHide()
+          switch (menuItemType){
+            case  MenuItemType.ApiDetail:
+              moveApi(values)
+              break
+            case MenuItemType.Doc:
+              moveApiFolder(values)
+              message.error('暂不支持移动文档')
+          }
         })
       }}
     >

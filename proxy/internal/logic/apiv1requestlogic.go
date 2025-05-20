@@ -59,7 +59,7 @@ func (l *ApiV1RequestLogic) ApiV1Request() (resp any, err error) {
 	log.Printf("请求目标: 方法=%s, URL=%s", method, url)
 	// 创建 HTTP 客户端（带超时）
 	client := &http.Client{
-		Timeout: 10 * time.Second,
+		Timeout: 5 * time.Minute,
 	}
 
 	// 构造 HTTP 请求

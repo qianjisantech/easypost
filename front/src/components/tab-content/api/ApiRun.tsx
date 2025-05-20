@@ -1,9 +1,9 @@
 "use client";
 import { useEffect, useRef, useState } from "react";
 
-import { Button, Divider, Empty, Form, type FormProps, Select, type SelectProps, Space } from "antd";
+import { Button, Divider, Empty, Form, type FormProps, message, Select, type SelectProps, Space } from "antd";
 import { nanoid } from "nanoid";
-import { ApiDetailCreate, ApiDetailUpdate, ApiRunDetail } from "src/api/api";
+import { ApiDetailCreate, ApiDetailUpdate, ApiRunDetail, ApiRunSave } from "@/api/ams/api";
 
 import { PageTabStatus } from "@/components/ApiTab/ApiTab.enum";
 import { useTabContentContext } from "@/components/ApiTab/TabContentContext";
@@ -11,16 +11,22 @@ import { ParamsRunTab } from "@/components/tab-content/api/params/ParamsRunTab";
 import { RunResponse } from "@/components/tab-content/api/response/RunResponse";
 import { HTTP_METHOD_CONFIG } from "@/configs/static";
 import { useGlobalContext } from "@/contexts/global";
-import { useMenuHelpersContext } from "@/contexts/menu-helpers";
 import { useMenuTabHelpers } from "@/contexts/menu-tab-settings";
 import { initialCreateApiDetailsData } from "@/data/remote";
-import { AuthorizationType, MenuItemType, ParamType, ScriptsType } from "@/enums";
+import { AuthorizationType, BodyType, MenuItemType, ParamType, ScriptsType } from "@/enums";
 import type { ApiDetails, GlobalParameter } from "@/types";
+import { GlobalParameterChildren } from "@/types";
 import { request } from "@/utils/request";
 import { GroupTitle } from "./components/GroupTitle";
 import { PathInput, type PathInputProps } from "./components/PathInput";
-import { PrimitiveSchema, RefSchema } from "@/components/JsonSchema/JsonSchema.type";
+import { PrimitiveSchema } from "@/components/JsonSchema/JsonSchema.type";
 
+interface JavaParseResult {
+  className?: string;
+  methods: { name: string; returnType: string }[];
+  fields: { name: string; type: string }[];
+  parseError?: string;
+}
 const DEFAULT_NAME = '未命名接口'
 
 const methodOptions: SelectProps['options'] = Object.entries(HTTP_METHOD_CONFIG).map(
@@ -45,11 +51,14 @@ export function ApiRun({ activeKey }: { activeKey: string }) {
   const { messageApi } = useGlobalContext()
   const msgKey = useRef<string>()
 
-  const { addMenuItem, updateMenuItem } = useMenuHelpersContext()
+  // const { addMenuItem, updateMenuItem } = useMenuHelpersContext()
   const { addTabItem } = useMenuTabHelpers()
   const { tabData } = useTabContentContext()
-  const [loading, setLoading] = useState(false)
-
+  const [sendLoading, setSendLoading] = useState(false)
+  const [saveLoading, setSaveLoading] = useState(false)
+// 在 ApiRun 组件的顶部添加这些状态
+  const [parsedVariables, setParsedVariables] = useState<{name: string, value: any}[]>([]);
+  const [parseError, setParseError] = useState<string | null>(null);
   const isCreating = tabData.data?.tabStatus === PageTabStatus.Create
   const loadingApiDetails = async (id: string) => {
     try {
@@ -74,6 +83,66 @@ export function ApiRun({ activeKey }: { activeKey: string }) {
       console.error('加载 API 详情失败:', error)
     }
   }
+  const parseJavaCode = (javaCode: string): void => {
+    // try {
+    //   const ast = parse(javaCode);
+    //   const classDecl = ast.types[0];
+    //
+    //   if (!classDecl || classDecl.type !== "ClassDeclaration") {
+    //     throw new Error("未找到有效的 Java 类定义");
+    //   }
+    //
+    //   // 提取类名
+    //   const className = classDecl.name;
+    //
+    //   // 提取方法
+    //   const methods = classDecl.body
+    //     .filter((node) => node.type === "MethodDeclaration")
+    //     .map((method) => ({
+    //       name: method.name,
+    //       returnType: method.returnType || "void",
+    //     }));
+    //
+    //   // 提取字段
+    //   const fields = classDecl.body
+    //     .filter((node) => node.type === "FieldDeclaration")
+    //     .flatMap((field) =>
+    //       field.declarators.map((declarator) => ({
+    //         name: declarator.name,
+    //         type: field.type,
+    //       }))
+    //     );
+    //
+    //   // 提取静态变量赋值 (如 pm.environment.set)
+    //   const envVariables: {name: string, value: any}[] = [];
+    //   classDecl.body.forEach(node => {
+    //     if (node.type === "ExpressionStatement" &&
+    //       node.expression.type === "MethodInvocation" &&
+    //       node.expression.expression?.expression?.name === "pm" &&
+    //       node.expression.expression?.name === "environment" &&
+    //       node.expression.name === "set") {
+    //       const name = node.expression.arguments[0]?.value;
+    //       const value = node.expression.arguments[1]?.value;
+    //       if (name && value !== undefined) {
+    //         envVariables.push({name, value});
+    //       }
+    //     }
+    //   });
+    //
+    //   return {
+    //     className,
+    //     methods,
+    //     fields,
+    //     ...(envVariables.length > 0 && {envVariables})
+    //   };
+    // } catch (error) {
+    //   return {
+    //     methods: [],
+    //     fields: [],
+    //     parseError: error instanceof Error ? error.message : "解析失败",
+    //   };
+    // }
+  };
   useEffect(() => {
     if (isCreating) {
       form.setFieldsValue(initialCreateApiDetailsData)
@@ -83,7 +152,11 @@ export function ApiRun({ activeKey }: { activeKey: string }) {
       }
     }
   }, [activeKey, isCreating, tabData.key])
-
+  useEffect(() => {
+    if (parseError) {
+      message.error(`解析错误:[${JSON.stringify(parsedVariables)},失败原因：${parseError}]`)
+    }
+  }, [parsedVariables, parseError])
   const handleSaveCase: FormProps<ApiDetails>['onFinish'] = async (values) => {
     const menuName = values.name || DEFAULT_NAME
 
@@ -112,7 +185,79 @@ export function ApiRun({ activeKey }: { activeKey: string }) {
       })
     }
   }
+  // eslint-disable-next-line @typescript-eslint/require-await
+  const parseEnvironmentSets = async (codeString: string) => {
+    try {
+      const wrappedCode = `
+      (function() {
+        const pm = {
+          environment: {
+            sets: [],
+            set: function(name, value) {
+              this.sets.push({ name, value });
+            },
+            get: function(name) {
+              const found = this.sets.find(item => item.name === name);
+              return found ? found.value : undefined;
+            }
+          }
+        };
+        
+        ${codeString}
+        return pm.environment.sets;
+      })();
+    `;
 
+      const sets = eval(wrappedCode);
+
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
+      if (sets && sets.length > 0) {
+        // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
+        setParsedVariables(sets);
+        setParseError(null);
+
+        // 将解析出的变量添加到全局参数列表
+        // eslint-disable-next-line @typescript-eslint/no-unsafe-call,@typescript-eslint/no-unsafe-member-access
+        sets.forEach(({name, value}) => {
+          if (!globalParameterList.some(p => p.name === name)) {
+            globalParameterList.push({
+              id: nanoid(6),
+              key:name,
+              value: String(value),
+              type: 'string',
+              description: '由预处理脚本生成'
+            });
+          }
+        })
+        console.log('globalParameterList解析出的变量:', globalParameterList);
+      } else {
+        setParseError('未找到有效的 pm.environment.set() 调用');
+      }
+    } catch (error) {
+      setParseError(error instanceof Error ? error.message : String(error));
+      console.error('解析错误:', error);
+    }
+  };
+  const saveApiForm = async (values) => {
+    setSaveLoading(true)
+
+    const formData = new FormData()
+    // 添加普通字段
+    formData.append('id', values.id)
+    formData.append('method', values.data.method || 'GET')
+    formData.append('path', values.data.path || '')
+    formData.append('parameters', JSON.stringify(values.data.parameters))
+    formData.append('response', JSON.stringify(values.data.response|| []))
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-call
+    const response = await ApiRunSave(formData)
+    console.log('response.data.data.id', response.data.data.id)
+    if (response.data.success) {
+      message.success(response.data.message)
+      loadingApiDetails(response.data.data.id)
+
+    }
+    setSaveLoading(false)
+  }
   const handleFinish: FormProps<ApiDetails>['onFinish'] = async (values) => {
     const menuName = values.name || DEFAULT_NAME
 
@@ -130,14 +275,13 @@ export function ApiRun({ activeKey }: { activeKey: string }) {
       } catch (err) {
         console.error('保存接口失败', err)
       }
-
-      addMenuItem({
+      const menuItemData={
         id: menuItemId,
         name: menuName,
         type: MenuItemType.ApiDetail,
         data: { ...values, name: menuName },
-      })
-
+      }
+      saveApiForm(menuItemData)
       addTabItem(
         {
           key: menuItemId,
@@ -147,11 +291,12 @@ export function ApiRun({ activeKey }: { activeKey: string }) {
         { replaceTab: tabData.key }
       )
     } else {
-      updateMenuItem({
+      const menuItemData = {
         id: tabData.key,
-        name: menuName,
+        type: MenuItemType.ApiDetail,
         data: { ...values, name: menuName },
-      })
+      }
+      saveApiForm(menuItemData)
     }
   }
 
@@ -204,7 +349,7 @@ export function ApiRun({ activeKey }: { activeKey: string }) {
     }
   }
   //替换参数
-  const replaceRawParameter = (
+  const replaceJSONParameter = (
     data: PrimitiveSchema | ObjectSchema | ArraySchema | RefSchema | undefined,
     globalParameterList: GlobalParameter[]
   ): PrimitiveSchema | ObjectSchema | ArraySchema | RefSchema | undefined => {
@@ -230,50 +375,55 @@ export function ApiRun({ activeKey }: { activeKey: string }) {
     // 对于其他类型（数字、布尔值、对象、数组等），直接返回原值
     return data;
   };
-  const globalParameterList: GlobalParameter[] = [
-    {
-      id: '1',
-      name: 'tracking_number',
-      value: 'UAT450000014284',
-      description: '描述',
-    },
-    {
-      id: '2',
-      name: 'message',
-      value: '这是一个message',
-      description: '描述',
-    },
-  ]
+  const globalParameterList: GlobalParameterChildren[] = []
+// 示例的Java代码执行函数（需要后端支持）
 
-  const handleJsPreScripts = (script: string) => {
-    console.log('handleJsPreScripts', script)
-  }
-  const send = async (values: ApiDetails) => {
-    console.log('values.parameters?.prescripts:', values.parameters?.prescripts);
-    console.log('values.parameters?.prescripts.data:', values.parameters?.prescripts.data);
-    console.log('values.parameters?.prescripts.type:', values.parameters?.prescripts.type);
-// 检查prescripts是否存在且有data
-    if (values.parameters?.prescripts?.data) {
+
+// 示例的Python代码执行函数（需要后端支持）
+  const executePythonCode = async (pythonCode: string) => {
+    try {
+      const response = await request({
+        method: 'POST',
+        url: '/api/execute/python',
+        data: {
+          code: pythonCode
+        }
+      });
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-return
+      return response.data;
+    } catch (error) {
+      throw new Error('执行Python代码失败');
+    }
+  };
+  const handlePrescripts=async (prescripts:ApiDetails["parameters"]["prescripts"])=>{
+    if (prescripts){
+      console.log('脚本数据',prescripts)
       // 使用正确的switch语法检查type
-      switch (values.parameters.prescripts.type) {
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
+      switch (prescripts.type) {
         case ScriptsType.JavaScript:
           console.log('执行JavaScript预处理脚本');
-          handleJsPreScripts(values.parameters.prescripts.data);
+          await  parseEnvironmentSets(prescripts.data);
           break;
         case ScriptsType.Java:
-          console.log('Java脚本');
+          console.log('执行Java预处理脚本');
+
           break;
         case ScriptsType.Python:
-          console.log('Python脚本');
+          console.log('执行Python预处理脚本');
           break;
         default:
           console.log('未知脚本类型');
           break;
       }
-    } else {
+    }else {
       console.log('未设置预处理脚本或脚本数据为空');
     }
-    console.log('apiDetail', values)
+  }
+
+  const send = async (values: ApiDetails) => {
+    await handlePrescripts(values.parameters?.prescripts)
+    console.log('apiDetail', values.parameters?.prescripts)
     // 1. 处理 headers
     const headers = values.parameters?.header?.reduce(
       (acc, item) => {
@@ -285,7 +435,7 @@ export function ApiRun({ activeKey }: { activeKey: string }) {
       {} as Record<string, string>
     )
 
-    setLoading(true)
+    setSendLoading(true)
 
     // 从 path 中提取域名作为 Host
     let host = ''
@@ -296,7 +446,7 @@ export function ApiRun({ activeKey }: { activeKey: string }) {
       host = url.hostname
     } catch (e) {
       console.error('无法从 path 中解析域名:', e)
-      setLoading(false)
+      setSendLoading(false)
       return // 如果无法解析域名，直接返回不发送请求
     }
 
@@ -332,7 +482,7 @@ export function ApiRun({ activeKey }: { activeKey: string }) {
 
     const easypostHeaders = {
       'Api-u': values.path,
-      'Api-o0': `method=${values.method},timings=true,timeout=300000,rejectUnauthorized=false,followRedirect=true`,
+      'Api-o0': `method=${values.method}`,
       'Api-H0': Object.entries(allHeaders)
         .map(([key, value]) => `${key}=${value}`)
         .join(', '),
@@ -340,26 +490,39 @@ export function ApiRun({ activeKey }: { activeKey: string }) {
     }
 
     // 2. 组装 requestConfig
-    const requestConfig: Record<string, any> = {
+    const requestConfig = {
       method: 'POST',
       headers: {
+        'Content-Type': 'application/json', // 确保设置内容类型
         ...allHeaders,
         ...easypostHeaders,
       },
       baseURL: '/proxy/v1/request',
+    };
+    console.log('values.parameters?.payload?.type', values.parameters?.payload?.type)
+    switch (values.parameters?.payload?.type){
+      case BodyType.Json:
+        if (values.parameters?.payload?.jsonSchema) {
+          console.log('replaceRawParameter', globalParameterList)
+          requestConfig.body = replaceJSONParameter(values.parameters.payload.jsonSchema, globalParameterList)
     }
-    console.log('values.parameters.payload', values.parameters?.payload)
 
-    if (values.parameters?.payload?.jsonSchema) {
-
-      requestConfig.data = replaceRawParameter(values.parameters.payload.jsonSchema, globalParameterList)
-
-    } else if (values.parameters?.payload?.parameters) {
-      const formData = new FormData()
-      values.parameters.payload.parameters.forEach((item) => {
-        formData.append(item.name!, item.example)
-      })
-      requestConfig.data = formData
+      case BodyType.UrlEncoded:
+        if (values.parameters?.payload?.parameters) {
+          const formData = new FormData()
+          values.parameters.payload.parameters.forEach((item) => {
+            formData.append(item.name!, item.example)
+          })
+          requestConfig.body = formData
+        }
+      case BodyType.FormData:
+        if (values.parameters?.payload?.parameters) {
+          const formData = new FormData()
+          values.parameters.payload.parameters.forEach((item) => {
+            formData.append(item.name!, item.example)
+          })
+          requestConfig.body = formData
+        }
     }
 
     console.log('requestConfig', requestConfig)
@@ -367,13 +530,17 @@ export function ApiRun({ activeKey }: { activeKey: string }) {
     // 3. 发送请求
     try {
       const res = await request(requestConfig)
-      form.setFieldValue('responses', res)
+      form.setFieldValue('response', {
+        values:res
+      })
     } catch (e) {
       console.error('Error:', e)
+      message.error('请求失败',e)
     } finally {
-      setLoading(false)
+      setSendLoading(false)
     }
   }
+
   const handleParseQueryParams: PathInputProps['onParseQueryParams'] = (parsedParams) => {
     if (Array.isArray(parsedParams)) {
       type Param = NonNullable<ApiDetails['parameters']>['query']
@@ -443,24 +610,25 @@ export function ApiRun({ activeKey }: { activeKey: string }) {
         </Space.Compact>
 
         <Space className="ml-auto pl-2">
-          <Button loading={loading} type="primary" onClick={() => send(form.getFieldsValue())}>
+          <Button loading={sendLoading} type="primary" onClick={() => send(form.getFieldsValue())}>
             发送
           </Button>
           <Button
+            loading={saveLoading}
             onClick={() => {
               handleFinish(form.getFieldsValue(), true)
             }}
           >
             暂存
           </Button>
-          <Button
-            htmlType="submit"
-            onClick={() => {
-              handleSaveCase(form.getFieldsValue(), true)
-            }}
-          >
-            保存为用例
-          </Button>
+          {/*<Button*/}
+          {/*  htmlType="submit"*/}
+          {/*  onClick={() => {*/}
+          {/*    handleSaveCase(form.getFieldsValue(), true)*/}
+          {/*  }}*/}
+          {/*>*/}
+          {/*  保存为用例*/}
+          {/*</Button>*/}
         </Space>
       </div>
 
@@ -470,8 +638,8 @@ export function ApiRun({ activeKey }: { activeKey: string }) {
         </Form.Item>
         <Divider style={{ borderColor: '#737b83' }}></Divider>
         <GroupTitle className="mb-3 mt-8">返回响应</GroupTitle>
-        <Form.Item noStyle name="responses">
-          {form.getFieldValue('responses') ? (
+        <Form.Item noStyle name="response">
+          {form.getFieldValue('response') ? (
             <RunResponse />
           ) : (
             <Empty

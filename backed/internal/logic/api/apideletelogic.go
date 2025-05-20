@@ -47,7 +47,7 @@ func (l *ApiDeleteLogic) ApiDelete(req *types.ApiDeleteRequest) (resp *types.Api
 	}()
 
 	// 5. 执行逻辑删除
-	tx := db.Model(&model.AmAPI{}).
+	tx := db.Model(&model.AmsAPI{}).
 		Where("id = ? AND is_deleted = 0", id). // 只删除未删除的记录
 		Updates(map[string]interface{}{
 			"is_deleted": 1,

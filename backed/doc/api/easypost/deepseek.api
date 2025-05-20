@@ -10,7 +10,8 @@ info(
 
 type (
     DeepSeekChatRequest {
-     Conetent string  `json:"conetent"`
+        Content string `form:"content,optional"`
+        File    string `form:"file,optional"` // 用于文件上传的字段
     }
     DeepSeekChatResp {
      Success bool `json:"success"`
@@ -18,7 +19,7 @@ type (
      Data DeepSeekChatData `json:"data"`
     }
     DeepSeekChatData {
-    Conetent string `json:"conetent"`
+        Content string `json:"content"`
     }
 
 )
@@ -28,5 +29,5 @@ type (
 )
 service easypost-api {
     @handler DeepSeekChat
-    post /am/deepseek/chat (DeepSeekChatRequest) returns (DeepSeekChatResp)
+    post /ams/deepseek/chat (DeepSeekChatRequest) returns (DeepSeekChatResp)
 }

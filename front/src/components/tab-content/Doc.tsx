@@ -3,8 +3,8 @@ import { useEffect, useState } from 'react'
 import { Viewer } from '@bytemd/react'
 import { Button, Space, theme } from 'antd'
 
-import {  DocDetail, DocSave } from "src/api/doc";
-import { ApiTreeQueryPage, } from "src/api/api";
+import {  DocDetail, DocSave } from "@/api/ams/doc";
+import { ApiTreeQueryPage } from "@/api/ams/api";
 import { PageTabStatus } from '@/components/ApiTab/ApiTab.enum'
 import { useTabContentContext } from '@/components/ApiTab/TabContentContext'
 import { InputUnderline } from '@/components/InputUnderline'
@@ -34,7 +34,7 @@ export function Doc() {
       const match = pathname.match(/project\/([^/]+)/)
       if (match) {
         const projectId = match[1]
-        const response = await ApiTreeQueryPage({ projectId:projectId })
+        const response = await ApiTreeQueryPage()
         if (response.data.success && setMenuRawList) {
           setMenuRawList(response.data?.data)
         }

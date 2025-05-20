@@ -1,16 +1,16 @@
 import { Flex, Tag } from 'antd'
-import { RequestBodyRaw } from '@/components/tab-content/api/components/RequestBodyRaw'
+import { RequestBodyJson } from '@/components/tab-content/api/components/RequestBodyJson'
 import { BodyType } from '@/enums'
 import { useStyles } from '@/hooks/useStyle'
 import type { ApiDetails } from '@/types'
 import { ParamsEditableTable } from '../components/ParamsEditableTable'
-import { useEffect } from 'react'
+
 
 const types = [
   { name: 'none', type: BodyType.None },
   { name: 'form-data', type: BodyType.FormData },
   { name: 'x-www-form-urlencoded', type: BodyType.UrlEncoded },
-  { name: 'raw', type: BodyType.Raw },
+  { name: 'json', type: BodyType.Json },
 ]
 
 interface BodyCompProps {
@@ -63,9 +63,9 @@ function BodyComp(props: BodyCompProps) {
         />
       )
 
-    case BodyType.Raw:
+    case BodyType.Json:
       return (
-        <RequestBodyRaw
+        <RequestBodyJson
           value={safeValue.jsonSchema || ''}
           onChange={(values) => {
             onChange?.({ ...safeValue, jsonSchema: values || '' })

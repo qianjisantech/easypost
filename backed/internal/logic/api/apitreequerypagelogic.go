@@ -138,9 +138,9 @@ func (l *ApiTreeQueryPageLogic) ApiTreeQueryPage(req *types.ApiTreeQueryPageRequ
 }
 
 // QueryAmAPI 获取 API 详情
-func (l *ApiTreeQueryPageLogic) QueryAmAPI(projectId int64) ([]*model.AmAPI, error) {
+func (l *ApiTreeQueryPageLogic) QueryAmAPI(projectId int64) ([]*model.AmsAPI, error) {
 	db := l.svcCtx.DB.Debug()
-	var amAPIs []*model.AmAPI
+	var amAPIs []*model.AmsAPI
 	err := db.WithContext(l.ctx).
 		Select("id", "name", "parent_id", "method").
 		Where("project_id = ?", projectId).
@@ -148,15 +148,15 @@ func (l *ApiTreeQueryPageLogic) QueryAmAPI(projectId int64) ([]*model.AmAPI, err
 		Find(&amAPIs).Error
 	if err != nil {
 		logx.Debug("Error QueryAmAPIs: %v", err)
-		return []*model.AmAPI{}, err // 返回空切片，而不是 nil
+		return []*model.AmsAPI{}, err // 返回空切片，而不是 nil
 	}
 	return amAPIs, nil
 }
 
 // QueryAmFolders 获取文件夹详情
-func (l *ApiTreeQueryPageLogic) QueryAmFolders(projectId int64) ([]*model.AmFolder, error) {
+func (l *ApiTreeQueryPageLogic) QueryAmFolders(projectId int64) ([]*model.AmsFolder, error) {
 	db := l.svcCtx.DB.Debug()
-	var amFolders []*model.AmFolder
+	var amFolders []*model.AmsFolder
 	err := db.WithContext(l.ctx).
 		Select("id", "name", "parent_id").
 		Where("project_id = ?", projectId).
@@ -164,16 +164,16 @@ func (l *ApiTreeQueryPageLogic) QueryAmFolders(projectId int64) ([]*model.AmFold
 		Find(&amFolders).Error
 	if err != nil {
 		logx.Debug("Error QueryAmFolders: %v", err)
-		return []*model.AmFolder{}, err // 返回空切片，而不是 nil
+		return []*model.AmsFolder{}, err // 返回空切片，而不是 nil
 
 	}
 	return amFolders, nil
 }
 
 // QueryAmDocs 获取文档详情
-func (l *ApiTreeQueryPageLogic) QueryAmDocs(projectId int64) ([]*model.AmDoc, error) {
+func (l *ApiTreeQueryPageLogic) QueryAmDocs(projectId int64) ([]*model.AmsDoc, error) {
 	db := l.svcCtx.DB.Debug()
-	var amDocs []*model.AmDoc
+	var amDocs []*model.AmsDoc
 	err := db.WithContext(l.ctx).
 		Select("id", "name", "parent_id").
 		Where("project_id = ?", projectId).
@@ -181,13 +181,13 @@ func (l *ApiTreeQueryPageLogic) QueryAmDocs(projectId int64) ([]*model.AmDoc, er
 		Find(&amDocs).Error
 	if err != nil {
 		logx.Debug("Error QueryAmDocs: %v", err)
-		return []*model.AmDoc{}, err // 返回空切片，而不是 nil
+		return []*model.AmsDoc{}, err // 返回空切片，而不是 nil
 	}
 	return amDocs, nil
 }
-func (l *ApiTreeQueryPageLogic) QueryAmApiCase(apiIds []int64) ([]*model.AmAPICase, error) {
+func (l *ApiTreeQueryPageLogic) QueryAmApiCase(apiIds []int64) ([]*model.AmsAPICase, error) {
 	db := l.svcCtx.DB.Debug()
-	var amAPICases []*model.AmAPICase
+	var amAPICases []*model.AmsAPICase
 	err := db.WithContext(l.ctx).
 		Select("id", "name", "api_id").
 		Where("api_id in ?", apiIds).
@@ -195,7 +195,7 @@ func (l *ApiTreeQueryPageLogic) QueryAmApiCase(apiIds []int64) ([]*model.AmAPICa
 		Find(&amAPICases).Error
 	if err != nil {
 		logx.Debug("Error QueryAmApiCases: %v", err)
-		return []*model.AmAPICase{}, err // 返回空切片，而不是 nil
+		return []*model.AmsAPICase{}, err // 返回空切片，而不是 nil
 	}
 	return amAPICases, nil
 }

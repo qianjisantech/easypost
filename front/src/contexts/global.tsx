@@ -11,6 +11,7 @@ import { MenuHelpersContextProvider } from '@/contexts/menu-helpers'
 import { ROUTES } from "@/utils/routes";
 import { TeamQueryPage } from "@/api/team";
 import { useSession } from "next-auth/react";
+import { EnvironmentSetting } from "@/types";
 
 type ModalHookApi = ReturnType<typeof Modal.useModal>[0]
 type MessageApi = ReturnType<typeof message.useMessage>[0]
@@ -28,6 +29,8 @@ interface GlobalContextData {
   fetchTeams: () => Promise<Team[]>
   needSetPassword: boolean
   setNeedSetPassword: React.Dispatch<React.SetStateAction<boolean>>
+  setEnvironmentSettingContext: (environmentSetting: EnvironmentSetting) => void
+  environmentSettingContext: EnvironmentSetting
 }
 
 const GlobalContext = createContext({} as GlobalContextData)
@@ -41,6 +44,7 @@ export function GlobalContextProvider(props: React.PropsWithChildren) {
   const pathname = usePathname()
   const [teams, setTeams] = useState<Team[]>([]) // 存储菜单数据
   const [needSetPassword, setNeedSetPassword]=useState(false)
+  const [environmentSettingContext,setEnvironmentSettingContext]=useState({} as EnvironmentSetting)
   // 获取菜单数据
   const fetchTeams = async () => {
     try {
@@ -101,6 +105,8 @@ export function GlobalContextProvider(props: React.PropsWithChildren) {
             teams,
             needSetPassword,
             setNeedSetPassword,
+            setEnvironmentSettingContext,
+            environmentSettingContext
           }}
         >
           {children}

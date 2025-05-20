@@ -10,7 +10,6 @@ info(
 
 type (
     ApiTreeQueryPageRequest {
-        ProjectId string `json:"projectId"`
     }
 
     ApiTreeQueryPageResp {
@@ -46,11 +45,23 @@ type (
         ServerId string `form:"serverId,optional"`
         Description string `form:"description,optional"`
         Parameters string `form:"parameters,optional"`
-        Responses string `form:"responses,optional"`
+        Response string `form:"response,optional"`
         ResponseExamples string `form:"responseExamples,optional"`
     }
 
      ApiDetailCreateOrUpdateResp {
+        Success bool `json:"success"`
+        Message string `json:"message"`
+        Data ApiDetailCreateOrUpdateRespData `json:"data"`
+    }
+    ApiRunSaveRequest {
+        Id string `form:"id,optional"`
+        Method  string  `form:"method,optional"`
+        Path string `form:"path,optional"`
+        Parameters string `form:"parameters,optional"`
+        Response string `form:"response,optional"`
+    }
+    ApiRunSaveResp {
         Success bool `json:"success"`
         Message string `json:"message"`
         Data ApiDetailCreateOrUpdateRespData `json:"data"`
@@ -84,7 +95,7 @@ type (
         ServerId string `json:"serverId"`
         Description string `json:"description"`
         Parameters interface{} `json:"parameters"`
-        Responses interface{} `json:"responses"`
+        Response interface{} `json:"response"`
         ResponseExamples interface{} `json:"responseExamples"`
         CreatBy  string `json:"createBy"`
         CreatByName  string `json:"createByName"`
@@ -119,7 +130,7 @@ type (
         ServerId string `json:"serverId"`
         Description string `json:"description"`
         Parameters interface{} `json:"parameters"`
-        Responses interface{} `json:"responses"`
+        Response interface{} `json:"response"`
         ResponseExamples interface{} `json:"responseExamples"`
     }
 
@@ -196,27 +207,28 @@ type (
 )
 service easypost-api {
     @handler ApiTreeQueryPage  //接口树
-    post /am/api/tree/page (ApiTreeQueryPageRequest) returns (ApiTreeQueryPageResp)
+    get /ams/api/tree/page (ApiTreeQueryPageRequest) returns (ApiTreeQueryPageResp)
     @handler ApiDetailCreate    //接口新增
-    post /am/api/detail/create (ApiDetailCreateOrUpdateRequest) returns (ApiDetailCreateOrUpdateResp)
+    post /ams/api/detail/create (ApiDetailCreateOrUpdateRequest) returns (ApiDetailCreateOrUpdateResp)
     @handler ApiDetailUpdate   //接口新增
-    post /am/api/detail/update (ApiDetailCreateOrUpdateRequest) returns (ApiDetailCreateOrUpdateResp)
+    post /ams/api/detail/update (ApiDetailCreateOrUpdateRequest) returns (ApiDetailCreateOrUpdateResp)
     @handler ApiDetail  //接口详情
-    get /am/api/detail/:id (ApiDetailRequest) returns (ApiDetailResp)
+    get /ams/api/detail/:id (ApiDetailRequest) returns (ApiDetailResp)
     @handler ApiDocDetail  //接口文档详情
-    get /am/api/doc/detail/:id (ApiDocDetailRequest) returns( ApiDocDetailResp)
+    get /ams/api/doc/detail/:id (ApiDocDetailRequest) returns( ApiDocDetailResp)
     @handler ApiRunDetail  //接口文档详情
-    get /am/api/run/detail/:id (ApiRunDetailRequest) returns( ApiRunDetailResp)
-
+    get /ams/api/run/detail/:id (ApiRunDetailRequest) returns( ApiRunDetailResp)
+    @handler ApiRunSave  //接口文档详情
+    post /ams/api/run/save (ApiRunSaveRequest) returns( ApiRunSaveResp)
     @handler ApiDelete  //接口删除
-    get /am/api/delete/:id (ApiDeleteRequest) returns (ApiDeleteResp)
+    get /ams/api/delete/:id (ApiDeleteRequest) returns (ApiDeleteResp)
     @handler ApiCopy   //接口复制
-    post /am/api/copy (ApiCopyRequest) returns (ApiCopyResp)
+    post /ams/api/copy (ApiCopyRequest) returns (ApiCopyResp)
     @handler ApiRename   //接口重命名
-    post /am/api/rename (ApiRenameRequest) returns (ApiRenameResp)
+    post /ams/api/rename (ApiRenameRequest) returns (ApiRenameResp)
     @handler ApiMove  //接口移动
-    post /am/api/move (ApiMoveRequest) returns (ApiMoveResp)
+    post /ams/api/move (ApiMoveRequest) returns (ApiMoveResp)
 
     @handler  ResponsibleSearch   //查询负责人
-    post /am/responsible/search (ResponsibleSearchRequest) returns (ResponsibleSearchResp)
+    post /ams/responsible/search (ResponsibleSearchRequest) returns (ResponsibleSearchResp)
 }

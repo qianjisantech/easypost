@@ -112,7 +112,7 @@ export interface ApiDetails {
   }
 
   /** 返回响应 */
-  responses?: ApiDetailsResponse[]
+  response?: ApiDetailsResponse
   /** 响应示例 */
   responseExamples?: ApiDetailsResponseExample[]
   /** 接口文档创建时间 */
@@ -167,8 +167,78 @@ export type RecycleCatalogType = CatalogType.Http | CatalogType.Schema | Catalog
 export type RecycleData = Record<RecycleCatalogType, { list?: RecycleDataItem[] }>
 
 export interface GlobalParameter {
+  header: GlobalParameterChildren[]
+  cookie: GlobalParameterChildren[]
+  query: GlobalParameterChildren[]
+  body: GlobalParameterChildren[]
+}
+export interface GlobalVariable{
+  team: GlobalVariableChildren[]
+  project: GlobalVariableChildren[]
+}
+export interface GlobalVariableChildren{
   id: string
   name: string
+  type: string
   value: string
   description: string
+}
+
+
+export interface KeyStore {
+  id: string
+  name: string
+  type:string
+  value: string
+  description: string
+}
+export interface Server {
+  id: string
+  name: string
+  frontUrl:string
+}
+export interface Variable {
+  id: string
+  key: string
+  type:string
+  value: string
+  description: string
+}
+export interface EnvironmentSetting {
+  id: string
+  name: string
+  isActive: boolean
+  servers: Server[]
+  variables: Variable[]
+}
+export interface LocalMock {
+  servers: Server[]
+  variables: Variable[]
+}
+
+export interface CloudMock {
+  servers: Server[]
+  variables: Variable[]
+}
+
+export interface SelfHostMock {
+  servers: Server[]
+  variables: Variable[]
+}
+export interface GlobalParameterChildren {
+  id: string
+  key: string
+  type:string
+  value: string
+  description: string
+}
+export  interface  EnvironmentManagement {
+  id: string
+  globalParameter: GlobalParameter
+  globalVariable: GlobalVariable
+  keyStores: KeyStore[]
+  environmentSettings: EnvironmentSetting[]
+  localMock: LocalMock
+  cloudMock: CloudMock
+  selfHostMock: SelfHostMock
 }

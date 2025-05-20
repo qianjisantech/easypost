@@ -3,7 +3,7 @@ import { Dropdown, type DropDownProps, type MenuProps, message, theme } from 'an
 import { CopyIcon, FolderInputIcon, FolderPlusIcon, PencilIcon, TrashIcon } from 'lucide-react'
 import { nanoid } from 'nanoid'
 
-import { ApiCopy, ApiDelete } from 'src/api/api'
+import { ApiCopy, ApiDelete } from '@/api/ams/api'
 import type { ApiMenuData } from '@/components/ApiMenu/ApiMenu.type'
 import { FileIcon } from '@/components/icons/FileIcon'
 import { ModalMoveMenu } from '@/components/modals/ModalMoveMenu'
@@ -102,10 +102,12 @@ export function DropdownActions(props: React.PropsWithChildren<DropdownActionsPr
       onClick: (ev) => {
         ev.domEvent.stopPropagation()
         handleActionClick('move', catalog)
-        void show(ModalMoveMenu, {
+        const args = {
           menuItemType: catalog.type,
           formData: { id: catalog.id },
-        })
+        }
+        console.log('移动到 args', args)
+        void show(ModalMoveMenu, args)
       },
     },
   ]

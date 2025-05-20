@@ -29,7 +29,7 @@ func (l *FolderDetailLogic) FolderDetail(req *types.FolderDetailRequest) (resp *
 	db := l.svcCtx.DB.Debug()
 
 	id, err := strconv.ParseInt(req.Id, 10, 64)
-	var amFolder *model.AmFolder
+	var amFolder *model.AmsFolder
 	tx := db.First(&amFolder, id)
 	if tx.Error != nil {
 		logx.Errorf("Error query team: %v", tx.Error)
