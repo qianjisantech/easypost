@@ -20,11 +20,11 @@ RUN echo "Rebuild required"
 RUN apt-get update && apt-get install -y ca-certificates
 
 # 构建应用程序
-RUN go build -o easypost-backed
+RUN go build -o easypost-app
 
 
 # 暴露应用程序的端口
-EXPOSE 8888 25
+EXPOSE 80
 
 # 运行应用程序
-CMD ["./easypost-backed"]
+CMD ["./easypost-app"]
