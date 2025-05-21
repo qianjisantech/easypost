@@ -4,8 +4,7 @@ metadata:
   name: easypost-app-ingress
 spec:
   rules:
-    - host: easypost.qianjisan.com  # 域名
-      http:
+    - http:  # 去掉host字段
         paths:
           - path: /app
             pathType: Prefix
@@ -13,4 +12,4 @@ spec:
               service:
                 name: easypost-app
                 port:
-                  number: 80
+                  number: 8080
