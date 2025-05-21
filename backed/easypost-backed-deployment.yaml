@@ -1,18 +1,18 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: easypost-backed
+  name: easypost-app
   labels:
-    app: easypost-backed
+    app: easypost-app
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app: easypost-backed
+      app: easypost-app
   template:
     metadata:
       labels:
-        app: easypost-backed
+        app: easypost-app
     spec:
       # 添加节点选择器，指定工作节点
       nodeSelector:
@@ -23,10 +23,10 @@ spec:
         - name: aliyun-registry-secret
 
       containers:
-        - name: easypost-backed
+        - name: easypost-app
           image: registry.cn-shanghai.aliyuncs.com/qianjisan/easypost-backed:latest
           ports:
-            - containerPort: 8888
+            - containerPort: 80
           resources:
             limits:
               cpu: "1"
@@ -39,13 +39,13 @@ spec:
 apiVersion: v1
 kind: Service
 metadata:
-  name: easypost-backed
+  name: easypost-app
 spec:
   type: NodePort
   selector:
-    app: easypost-backed
+    app: easypost-app
   ports:
     - protocol: TCP
       port: 80
-      targetPort: 8888
+      targetPort: 80
       nodePort: 30080

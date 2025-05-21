@@ -12,7 +12,7 @@ interface ApiResponse<T = any> {
 }
 
 const request: AxiosInstance = axios.create({
-  baseURL: '/api',
+  baseURL: '/app',
   timeout: 10000,
 })
 

@@ -28,9 +28,9 @@ type ContentInfo struct {
 func NewAuthMiddleware(db *gorm.DB) *AuthMiddleware {
 	mw := &AuthMiddleware{
 		whitelist: map[string]bool{
-			"/api/auth/email/login":    true,
-			"/api/auth/email/sendCode": true,
-			"/api/auth/email/register": true,
+			"/app/auth/email/login":    true,
+			"/app/auth/email/sendCode": true,
+			"/app/auth/email/register": true,
 		},
 		db: db,
 	}
