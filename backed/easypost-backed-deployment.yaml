@@ -14,6 +14,10 @@ spec:
       labels:
         app: easypost-backed
     spec:
+      # 添加节点选择器，指定工作节点
+      nodeSelector:
+        node-role.kubernetes.io/worker: "true"
+
       # 镜像拉取认证配置
       imagePullSecrets:
         - name: aliyun-registry-secret
