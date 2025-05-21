@@ -7,7 +7,7 @@ spec:
     - host: easypost.qianjisan.com  # 域名
       http:
         paths:
-          - path: /api
+          - path: /app
             pathType: Prefix
             backend:
               service:

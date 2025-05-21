@@ -203,7 +203,7 @@ type (
 )
 @server(
     group: api
-    prefix: /api
+    prefix: /app
 )
 service easypost-api {
     @handler ApiTreeQueryPage  //接口树

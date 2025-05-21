@@ -38,7 +38,7 @@ type (
 )
 @server(
     group: folder
-    prefix: /api
+    prefix: /app
 )
 service easypost-api {
 

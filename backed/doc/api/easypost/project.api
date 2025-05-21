@@ -61,7 +61,7 @@ type (
 
 @server(
     group: project
-    prefix: /api
+    prefix: /app
 )
 service easypost-api {
     @handler ProjectQueryPage   //项目分页查询

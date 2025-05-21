@@ -50,7 +50,7 @@ type (
 )
 @server(
     group: environmentmanage
-    prefix: /api
+    prefix: /app
 )
 service easypost-api {
 

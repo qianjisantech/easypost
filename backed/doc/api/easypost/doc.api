@@ -39,7 +39,7 @@ type (
 )
 @server(
     group: doc
-    prefix: /api
+    prefix: /app
 )
 service easypost-api {
     @handler DocDetail //文档详情

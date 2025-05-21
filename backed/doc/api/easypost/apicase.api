@@ -154,7 +154,7 @@ type (
 )
 @server(
     group: apicase
-    prefix: /api
+    prefix: /app
 )
 service easypost-api{
     @handler ApiCaseDetailCreate    //接口新增

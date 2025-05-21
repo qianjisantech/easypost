@@ -62,7 +62,7 @@ type (
 
 @server(
     group: auth
-    prefix: /api
+    prefix: /app
 )
 service easypost-api {
     @handler GetQRCode

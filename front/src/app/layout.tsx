@@ -1,8 +1,6 @@
 import type { Metadata, Viewport } from 'next'
 import { AntdRegistry } from '@ant-design/nextjs-registry'
 import { App } from 'antd'
-
-import HeaderPage from '@/components/main/Header'
 import { ThemeProviderClient } from '@/components/ThemeEditor'
 import { GlobalContextProvider } from '@/contexts/global'
 

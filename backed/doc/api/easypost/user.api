@@ -68,7 +68,7 @@ type (
 
 @server(
     group: user
-    prefix: /api
+    prefix: /app
 )
 service easypost-api {
     @handler UserQueryPage

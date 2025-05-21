@@ -41,7 +41,7 @@ type (
 
 @server(
     group: es
-    prefix: /api
+    prefix: /app
 )
 service easypost-api {
     @handler EsSearch //es查询

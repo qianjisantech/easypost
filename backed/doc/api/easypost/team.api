@@ -136,7 +136,7 @@ type (
 
 @server(
     group: team
-    prefix: /api
+    prefix: /app
 )
 service easypost-api {
     @handler TeamQueryPage   //项目分页查询

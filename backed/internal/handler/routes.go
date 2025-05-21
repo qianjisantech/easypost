@@ -85,7 +85,7 @@ func RegisterHandlers(server *rest.Server, serverCtx *svc.ServiceContext) {
 				Handler: api.ResponsibleSearchHandler(serverCtx),
 			},
 		},
-		rest.WithPrefix("/api"),
+		rest.WithPrefix("/app"),
 	)
 
 	server.AddRoutes(
@@ -131,7 +131,7 @@ func RegisterHandlers(server *rest.Server, serverCtx *svc.ServiceContext) {
 				Handler: apicase.ApiCaseRunDetailHandler(serverCtx),
 			},
 		},
-		rest.WithPrefix("/api"),
+		rest.WithPrefix("/app"),
 	)
 
 	server.AddRoutes(
@@ -162,7 +162,7 @@ func RegisterHandlers(server *rest.Server, serverCtx *svc.ServiceContext) {
 				Handler: auth.AuthLogoutHandler(serverCtx),
 			},
 		},
-		rest.WithPrefix("/api"),
+		rest.WithPrefix("/app"),
 	)
 
 	server.AddRoutes(
@@ -173,7 +173,7 @@ func RegisterHandlers(server *rest.Server, serverCtx *svc.ServiceContext) {
 				Handler: deepseek.DeepSeekChatHandler(serverCtx),
 			},
 		},
-		rest.WithPrefix("/api"),
+		rest.WithPrefix("/app"),
 	)
 
 	server.AddRoutes(
@@ -189,7 +189,7 @@ func RegisterHandlers(server *rest.Server, serverCtx *svc.ServiceContext) {
 				Handler: doc.DocSaveHandler(serverCtx),
 			},
 		},
-		rest.WithPrefix("/api"),
+		rest.WithPrefix("/app"),
 	)
 
 	server.AddRoutes(
@@ -210,7 +210,7 @@ func RegisterHandlers(server *rest.Server, serverCtx *svc.ServiceContext) {
 				Handler: environmentmanage.EnvironmentManageSaveHandler(serverCtx),
 			},
 		},
-		rest.WithPrefix("/api"),
+		rest.WithPrefix("/app"),
 	)
 
 	server.AddRoutes(
@@ -226,7 +226,7 @@ func RegisterHandlers(server *rest.Server, serverCtx *svc.ServiceContext) {
 				Handler: es.EsSynchronizeHandler(serverCtx),
 			},
 		},
-		rest.WithPrefix("/api"),
+		rest.WithPrefix("/app"),
 	)
 
 	server.AddRoutes(
@@ -242,7 +242,7 @@ func RegisterHandlers(server *rest.Server, serverCtx *svc.ServiceContext) {
 				Handler: folder.FolderDetailSaveHandler(serverCtx),
 			},
 		},
-		rest.WithPrefix("/api"),
+		rest.WithPrefix("/app"),
 	)
 
 	server.AddRoutes(
@@ -273,7 +273,7 @@ func RegisterHandlers(server *rest.Server, serverCtx *svc.ServiceContext) {
 				Handler: project.ProjectUpdateHandler(serverCtx),
 			},
 		},
-		rest.WithPrefix("/api"),
+		rest.WithPrefix("/app"),
 	)
 
 	server.AddRoutes(
@@ -324,7 +324,7 @@ func RegisterHandlers(server *rest.Server, serverCtx *svc.ServiceContext) {
 				Handler: team.TeamUserSearchHandler(serverCtx),
 			},
 		},
-		rest.WithPrefix("/api"),
+		rest.WithPrefix("/app"),
 	)
 
 	server.AddRoutes(
@@ -340,7 +340,7 @@ func RegisterHandlers(server *rest.Server, serverCtx *svc.ServiceContext) {
 				Handler: trafficmanage.TrafficQueryPageHandler(serverCtx),
 			},
 		},
-		rest.WithPrefix("/api"),
+		rest.WithPrefix("/app"),
 	)
 
 	server.AddRoutes(
@@ -366,6 +366,6 @@ func RegisterHandlers(server *rest.Server, serverCtx *svc.ServiceContext) {
 				Handler: user.UserSetPasswordHandler(serverCtx),
 			},
 		},
-		rest.WithPrefix("/api"),
+		rest.WithPrefix("/app"),
 	)
 }

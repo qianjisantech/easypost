@@ -70,7 +70,7 @@ type (
 
 @server(
     group: trafficmanage
-    prefix: /api
+    prefix: /app
 )
 service easypost-api {
     @handler TrafficQueryPage //文件夹详情
